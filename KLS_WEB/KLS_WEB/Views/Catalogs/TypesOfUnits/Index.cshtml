@@ -1,0 +1,180 @@
+﻿@{
+    ViewData["Title"] = "Tipos de unidades";
+}
+
+<div class="p-4">
+    <div class="text-left d-flex mb-3">
+        <a href="/Catalogs">
+            <div class="material-icons icon-red">arrow_back</div>
+        </a>
+        <div class="text-uppercase poppins medium size-24 pl-2">TIPOS DE UNIDADES</div>
+        <div style="padding-left:10%;">
+            <button class="btn btn-sm btn-dark" onclick="showModal('AGREGAR');">
+                <span class="material-icons">
+                    add
+                </span>
+            </button>
+        </div>
+    </div>
+    <div class="p-4 shadow bg-white">
+        <table id="table" class="table table-striped table-bordered display table-hover table-viajes" width="100%">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Mantenimiento</th>
+                    <th>Llantas</th>
+                    <th>Litros</th>
+                    <th>Operador</th>
+                    <th>Administrativo</th>
+                    <th>Limite Peso</th>
+                    <th>Limite Volumen</th>
+                    <th>Ejes</th>
+                    <th>Estatus</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="table-info"></tbody>
+        </table>
+    </div>
+</div>
+
+<!--Modal global-->
+<div class="modal fade" id="modalDiv" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo-modal"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                <form id="frmRegister" action="#" method="post">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="">Nombre</label>
+                                <input type="text" class="form-control" name="nombre" required />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="">Dirección</label>
+                            <input type="text" class="form-control" name="ejes" value="" required />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="">Estatus</label>
+                            <select class="form-control" name="estatus">
+                                <option value="1">Activo</option>
+                                <option value="2">Inactivo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <h3>Costos por kilómetro</h3>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="">Comentarios</label>
+                                <input type="text" class="form-control" name="mantenimiento" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="">Correo</label>
+                            <input type="text" class="form-control" required name="llantas"/>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="">Notas</label>
+                            <input type="text" class="form-control" name="litros" value="" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="">Notas</label>
+                            <input type="text" class="form-control" name="rendimiento" value="" />
+                        </div>
+                    </div>
+                    
+                    <h3>Límites</h3>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="">Peso</label>
+                                <input type="text" class="form-control" name="peso" value="" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="">Volumen</label>
+                            <input type="text" class="form-control" required name="volumen"/>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-dark guardar" style="width:15%;">
+                        Guardar
+                    </button>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
+                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal global-->
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            loadTable();
+            $("#frmRegister").submit(function (event) {
+                event.preventDefault();
+                var jsonData = convertJson($("#frmRegister"));
+                $.post("TypesOfUnits/setUnidades", jsonData, function (res) {
+                    loadTable();
+                    dToast("success", "Se guardo el registro", "Registrado");
+                    $(".guardar").attr("disabled", false);
+                    $('#frmRegister').trigger("reset");
+                }).fail(function (error) {
+                    dToast("error", "Error al tratar de guardar el registro", "Error");
+                    $(".guardar").attr("disabled", false);
+                });
+
+            });
+        });
+
+        function showModal(titulo = "Title") {
+            $("#titulo-modal").empty("");
+            $("#titulo-modal").html(titulo);
+            $("#modalDiv").modal("show");
+        }
+
+        function loadTable() {
+            var stable = $('.table-viajes').DataTable();
+            stable.destroy();
+            $("#table-info").empty();
+            $.get("TypesOfUnits/getUnidades", function (res) {
+                $.each(res, function (item, key) {
+                    $("#table-info").append(`
+                         <tr>
+                            <td>${nCon(key.nombre)}</td>
+                            <td>$12 km</td>
+                            <td>$12km</td>
+                            <td>$12km</td>
+                            <td>$12km</td>
+                            <td>$12km</td>
+                            <td>$12km</td>
+                            <td>--</td>
+                            <td>2011/04/25</td>
+                            <td>`+ statusTable(key.estatus) + `</td>
+                            <td>
+                                <span class="material-icons">
+                                    mode_edit
+                                </span>
+                            </td>
+                        </tr>`);
+                });
+                dTable("table-viajes");
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+            });
+        }
+    </script>
+} 

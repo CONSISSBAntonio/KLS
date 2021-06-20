@@ -1,0 +1,19 @@
+#login {
+    overflow-y: auto;
+}
+#login .arrow-back {
+    position: relative;
+    right: 85%;
+}
+#login .modal-login h5 {
+    font-size: 32px;
+}
+#login .modal-login.modal-content {
+    margin: 0px auto;
+    width: 400px;
+    padding: 0 65px;
+}
+.bg-image {
+    background-image: url('../img/KLSfondo.jpg');
+    background-size: cover;
+}

@@ -1,0 +1,229 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - KLS_WEB</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/theme.css">
+    <link rel="stylesheet" href="~/css/toastr.css">
+    <link href="/css/dataTable.css" rel="stylesheet">
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <div id="app">
+        <!-- CONTENT -->
+        <div>
+            <!-- TOP BAR -->
+            <div class="top-bar">
+                <div class="pl-4 text-left">
+                    <a href="/" class="d-block pt-2 mt-1">
+                        <img src="/img/LogoKLSNET.png" height="36" alt="KLS">
+                    </a>
+                </div>
+                <div class="pr-4 text-right">
+                    <div class="d-block pt-2 mt-2">
+                        <div class="d-inline size-12">Hola @User.Identity.Name!</div>
+                        <a asp-controller="Login" asp-action="Logout">
+                            <div class="d-inline material-icons pl-2 c-pointer" style="vertical-align: -8px;">logout</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- END TOP BAR -->
+            <div class="wrapper">
+                <!-- LEFT BAR -->
+                <div class="left-bar bg-dark text-white pt-2 expand">
+                    <div class="bar-container">
+                        <div class="expand-control unselectable">
+                            <div class="material-icons arrow-bar size-32 c-pointer pl-3">chevron_right</div>
+                        </div>
+                        <ul class="list-unstyled text-left">
+                            <li class="pt-2 pl-4">
+                                <a href="/Catalogs">
+                                    <div class="material-icons size-18 pr-1">settings</div>
+                                    <label>Catálogos</label>
+                                </a>
+                            </li>
+                            <li class="pt-2 pl-4">
+                                <a href="">
+                                    <div class="material-icons size-18 pr-1">flight_takeoff</div>
+                                    <label>Viajes</label>
+                                </a>
+                            </li>
+
+                            <li class="pt-2 pl-4">
+                                <a href="">
+                                    <div class="material-icons size-18 pr-1" style="transform: rotate(-45deg);">send</div>
+                                    <label>Monitoreo</label>
+                                </a>
+                            </li>
+
+                            <li class="pt-2 pl-4">
+                                <a href="">
+                                    <div class="material-icons size-18 pr-1">article</div>
+                                    <label>Oferta</label>
+                                </a>
+                            </li>
+
+                            <li class="pt-2 pl-4">
+                                <a href="">
+                                    <div class="material-icons size-18 pr-1">search</div>
+                                    <label>Demanda</label>
+                                </a>
+                            </li>
+
+                            <li class="pt-2 pl-4">
+                                <a href="">
+                                    <div class="material-icons size-18 pr-1">map</div>
+                                    <label>Rutas</label>
+                                </a>
+                            </li>
+
+                            <li class="pt-2 pl-4">
+                                <a href="">
+                                    <div class="material-icons size-18 pr-1">person</div>
+                                    <label>Clientes</label>
+                                </a>
+                            </li>
+
+                            <li class="pt-2 pl-4">
+                                <a href="">
+                                    <div class="material-icons size-18 pr-1">local_shipping</div>
+                                    <label>Transportistas</label>
+                                </a>
+                            </li>
+
+                            <li class="pt-2 pl-4">
+                                <a href="">
+                                    <div class="material-icons size-18 pr-1">security</div>
+                                    <label>Seguridad</label>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- END LEFT BAR -->
+                <div class="data-content pt-4 mt-40">
+                    @RenderBody()
+                </div>
+
+            </div>
+        </div>
+        <!-- END CONTENT -->
+    </div>
+
+    <div class="modal fade" id="modalDetalle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="htmlTitulo"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="htmlDetalle"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="~/js/toastr.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!--Datatable-->
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        function dTable(table) {
+            $('.' + table).DataTable({
+                language: {
+                    "decimal": "",
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+            });
+        }
+
+        function dToast(tipo = "success", mensaje = "Vacio", titulo = "Atención", posicion = "toast-top-right") {
+            //toast-bottom-right-toast-bottom-left-toast-top-left-toast-top-full-width
+            toastr.options =
+            {
+                "debug": false,
+                "positionClass": posicion,
+                "onclick": null,
+                "fadeIn": 300,
+                "fadeOut": 100,
+                "timeOut": 3000,
+                "extendedTimeOut": 3000
+            }
+            toastr[tipo](mensaje, titulo);
+        }
+
+        function dSwal(tipo = "confirmation", descripcion = "", titulo = "Atención") {
+            Swal.fire(titulo, descripcion, tipo);
+        }
+
+        function statusTable(status) {
+            if (parseInt(status) == 1) {
+                return "Activo";
+            } else {
+                return "Inactivo";
+            }
+        }
+
+        function convertJson(form) {
+            var array = jQuery(form).serializeArray();
+            var json = {};
+
+            jQuery.each(array, function () {
+                json[this.name] = this.value || '';
+            });
+            return json;
+        }
+
+        function nCon(key) {
+            return key == null ? "" : key;
+        }
+
+        function showNota(notaDetalle, titulo = "Descripcion") {
+            $("#htmlDetalle").empty();
+            $("#htmlTitulo").empty();
+            $("#htmlDetalle").append(notaDetalle);
+            $("#htmlTitulo").append(titulo);
+            $("#modalDetalle").modal("show");
+        }
+
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

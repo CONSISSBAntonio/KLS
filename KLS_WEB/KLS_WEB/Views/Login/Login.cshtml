@@ -1,0 +1,61 @@
+﻿@model User
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+@section Styles{
+    <link href="~/css/login.css" rel="stylesheet">
+}
+<div class="row justify-content-center">
+    <!-- Modal -->
+    <div class="modal show d-block bg-image" id="login" tabindex="-1" role="dialog" aria-labelledby="login-form" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content modal-login pb-4 pt-4">
+                <div class="modal-header border-0 d-block text-center pb-0 px-0">
+                    <img src="../../img/LogoKLSNET.png" height="40" alt="AP Fiscal" />
+                    <h5 class="w-100 modal-title text-center pt-3 size-32 font-barlow text-light-grey">INICIA SESIÓN</h5>
+                </div>
+                <div class="modal-body">
+                    <form method="post" asp-action="Login">
+                        <div class="form-group">
+                            <label class="size-14 mt-2 d-block text-left" asp-for="Email">Email</label>
+                            <input type="email" class="form-control" asp-for="Email" class="border-0 form-control mb-1 lock pr-4 bottom-border"
+                                   autofocus>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="size-14 mb-0 d-block text-left mt-4" asp-for="Password"></label>
+                            <input type="password" class="form-control" asp-for="Password" class="border-0 form-control mb-1 pr-4 bottom-border" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <label class="size-14 p-2" for="session-check">
+                            Mantener la sesión iniciada
+                            <input class="float-left mr-1" id="session-check" type="checkbox" name="mantenerSesionIniciada" />
+                        </label>
+                        <div class="form-group">
+                            @*<button type="submit" class="btn btn-info form-control">Iniciar Sesión</button>*@
+                            <button type="submit" class="w-100 btn btn-primary btn-center mt-1">Iniciar sesión</button>
+                        </div>
+                    </form>
+
+                    @if (Model.Errors.Count > 0)
+                    {
+                        foreach (var item in Model.Errors)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert" style="width:100%">
+                                <span>@item.ErrorMessage</span>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        }
+                    }
+
+                </div>
+                <a class="w-100 btn-link text-center d-block pt-3 pb-3 c-pointer size-12">Olvidé mi contraseña</a>
+            </div>
+        </div>
+    </div>
+</div>
+
