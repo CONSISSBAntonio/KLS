@@ -19,6 +19,81 @@ namespace KLS_API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("KLS_API.Models.Carriers.Transportista", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Banco")
+                        .HasColumnType("varchar(90)");
+
+                    b.Property<string>("Comentario")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Contrasena")
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<string>("Cuenta")
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<string>("DireccionFiscal")
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<string>("DireccionOficinas")
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<string>("DireccionPatio")
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<int>("Estatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Facebook")
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<string>("FechaUltimoViaje")
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("GoogleMaps")
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<string>("GradoConfiabilidad")
+                        .HasColumnType("varchar(15)");
+
+                    b.Property<int>("NivelServicio")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NombreComercial")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("OtraRed")
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<string>("PaginaWeb")
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<string>("RazonSocial")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Rfc")
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<string>("Servicio")
+                        .HasColumnType("varchar(15)");
+
+                    b.Property<string>("Tamanio")
+                        .HasColumnType("varchar(22)");
+
+                    b.Property<string>("UsuarioMaster")
+                        .HasColumnType("varchar(35)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Transportista");
+                });
+
             modelBuilder.Entity("KLS_API.Models.Cat_Aerolinea", b =>
                 {
                     b.Property<int>("id")
@@ -341,8 +416,32 @@ namespace KLS_API.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("ejes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("estatus")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("limite_peso")
+                        .HasColumnType("decimal(3,2)");
+
+                    b.Property<string>("limite_volumen")
+                        .HasColumnType("Varchar(35)");
+
+                    b.Property<decimal>("litros")
+                        .HasColumnType("decimal(2,2)");
+
+                    b.Property<decimal>("llantas")
+                        .HasColumnType("decimal(2,2)");
+
+                    b.Property<decimal>("mantenimiento")
+                        .HasColumnType("decimal(2,2)");
+
                     b.Property<string>("nombre")
                         .HasColumnType("varchar(50)");
+
+                    b.Property<decimal>("rendimiento")
+                        .HasColumnType("decimal(10,2)");
 
                     b.HasKey("id");
 

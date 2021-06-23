@@ -179,9 +179,7 @@
             $("#titulo-modal").empty("");
             $("#titulo-modal").html(titulo);
             $("#idEditar").val(idEditar);
-
             btnGroup.length = 0;
-
             if (accion == "Editar") {
                 try {
                     let indice = dataRegions.findIndex(service => service.id === idEditar);
@@ -235,10 +233,9 @@
                 dataRegions = res;
                 $.each(res, function (item, key) {
                     let estado = "";
-
                     $.each(key.region_Has_Estados, function (item_r, key_r) {
                         let indice_e = catEstado.findIndex(service => service.id === key_r.id_estado);
-                        estado += catEstado[key_r.id_estado].nombre+",";
+                        estado += catEstado[indice_e].nombre+",";
                     });
 
                     $("#table-info").append(`

@@ -1,0 +1,325 @@
+﻿@{
+    ViewData["Title"] = "Configuracion transportista";
+}
+
+@{ int id = ViewBag.id; }
+
+@section Styles{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+}
+
+<div class="data-content p-4 text-left">
+    <div class="p-4">
+        <div class="text-left d-flex mb-3">
+            <a href="/Carriers">
+                <div class="material-icons icon-red">arrow_back</div>
+            </a>
+            <div class="text-uppercase poppins medium size-24 pl-2">Transportista</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 text-right">
+                
+                <form id="frmRegister" action="#" method="post">
+                    
+                    <button class="btn btn-sm" type="submit" style="background-color:transparent;">
+                        <span class="material-icons" style="color:cornflowerblue;">
+                            save
+                        </span>
+                    </button>
+
+                    <div class="p-4 shadow bg-white">
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Id</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="idTransportista" disabled="disabled" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label col-form-label-sm">Nombre Comercial</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="NombreComercial" name="NombreComercial" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label col-form-label-sm">Tamaño</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="Tamanio" name="Tamanio" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label col-form-label-sm">Servicio</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="Servicio" name="Servicio" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label col-form-label-sm">Grado Confiabilidad (P)</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="GradoConfiabilidad" name="GradoConfiabilidad" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label col-form-label-sm">Nivel Servicio Interno</label>
+                            <div class="col-sm-7">
+                                <div id="rateYo"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label col-form-label-sm">Comentario</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="Comentario" name="Comentario">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label col-form-label-sm">Fecha último viaje</label>
+                            <div class="col-sm-7">
+                                <input type="date" class="form-control form-control-sm" id="FechaUltimoViaje" name="FechaUltimoViaje">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label col-form-label-sm">Estatus</label>
+                            <div class="col-sm-7">
+                                <select class="form-control form-control-sm" id="Estatus" name="Estatus">
+                                    <option value="1">Activo</option>
+                                    <option value="0">Inactivo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label col-form-label-sm">Razón Social</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="RazonSocial" name="RazonSocial">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label col-form-label-sm">RFC</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="Rfc" name="Rfc">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label col-form-label-sm">Dirección Fiscal</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="DireccionFiscal" name="DireccionFiscal">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label col-form-label-sm">Dirección Oficinas</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="DireccionOficinas" name="DireccionOficinas">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label col-form-label-sm">Dirección Patio</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="DireccionPatio" name="DireccionPatio">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label col-form-label-sm">Google Maps</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="GoogleMaps" name="GoogleMaps">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label col-form-label-sm">Página Web</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="PaginaWeb" name="PaginaWeb">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label col-form-label-sm">Facebook</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="Facebook" name="Facebook">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label col-form-label-sm">Otra res social</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="OtraRed" name="OtraRed">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label col-form-label-sm">Banco</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="Banco" name="Banco">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label col-form-label-sm">Cuenta</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="Cuenta" name="Cuenta">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label col-form-label-sm">Usuario Master</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="UsuarioMaster" name="UsuarioMaster">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label col-form-label-sm">Contraseña</label>
+                            <div class="col-sm-7">
+                                <input type="password" class="form-control form-control-sm" id="Contrasena" name="Contrasena">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-md-8">
+                <div class="catalog-list">
+
+                    <a href="/Carriers/Operators" class="catalog">
+                        <div class="content">
+                            <span class="material-icons">
+                                people
+                            </span>
+                            <div class="name font-barlow">Operadores</div>
+                        </div>
+                    </a>
+
+                    <a href="/Carriers/Inventory" class="catalog">
+                        <div class="content">
+                            <span class="material-icons">
+                                local_shipping
+                            </span>
+                            <div class="name font-barlow">Inventario</div>
+                        </div>
+                    </a>
+
+                    <a href="/Carriers/Library" class="catalog">
+                        <div class="content">
+                            <span class="material-icons">
+                                store
+                            </span>
+                            <div class="name font-barlow">Biblioteca digital</div>
+                        </div>
+                    </a>
+
+                    <a href="/Carriers/Contacts" class="catalog">
+                        <div class="content">
+                            <span class="material-icons">
+                                call
+                            </span>
+                            <div class="name font-barlow">Contactos</div>
+                        </div>
+                    </a>
+
+                    <a href="/Carriers/Certifications" class="catalog">
+                        <div class="content">
+                            <span class="material-icons">
+                                workspace_premium
+                            </span>
+                            <div class="name font-barlow">Certificaciones</div>
+                        </div>
+                    </a>
+
+                    <a href="/Carriers/Box" class="catalog">
+                        <div class="content">
+                            <span class="material-icons">
+                                all_inbox
+                            </span>
+                            <div class="name font-barlow">Tipos de Mercancia</div>
+                        </div>
+                    </a>
+
+                    <a href="/Carriers/Routes" class="catalog">
+                        <div class="content">
+                            <span class="material-icons">
+                                commute
+                            </span>
+                            <div class="name font-barlow">Rutas</div>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+    <script>
+        $(window).ready(function () {
+            valId();
+            $("#frmRegister").submit(function (event) {
+                event.preventDefault();
+                var jsonData = convertJson($("#frmRegister"));
+                var normalFill = $("#rateYo").rateYo("option", "rating");
+                jsonData["NivelServicio"] = normalFill;
+                jsonData["id"] = @id;
+                console.log(jsonData);
+
+                if (parseInt(@id) == 0) {
+                    $.post("/Carriers/setCarriers", jsonData, function (res) {
+                        console.log(res);
+                        $(location).attr('href', '/Carriers/formCarriers/' + res.id);
+                        dToast("success", "Registro guardado exitosamente.", "Registrado");
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de guardar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                } else {
+                    $.post("/Carriers/putCarriers",jsonData, function (res) {
+                        console.log(res);
+                        dToast("success", "Registro actualizado exitosamente.", "Registrado");
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de actualizar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                }
+                
+            });
+        });
+
+        function valId(){
+            if (parseInt(@id) != 0) {
+                $("#idTransportista").val(@id);
+                $.get("/Carriers/getCarrier/", { "id":@id}, function (res) {
+
+                    $("#rateYo").rateYo({
+                        normalFill: "#A0A0A0",
+                        rating: res.nivelServicio,
+                        fullStar: true
+                    });
+
+                    console.log(res);
+                    $("#Banco").val(res.banco);
+                    $("#Comentario").val(res.comentario);
+                    $("#Contrasena").val(res.contrasena);
+                    $("#Cuenta").val(res.cuenta);
+                    $("#DireccionFiscal").val(res.direccionFiscal);
+                    $("#DireccionOficinas").val(res.direccionOficinas);
+                    $("#DireccionPatio").val(res.direccionPatio);
+                    $("#Estatus").val(res.estatus);
+                    $("#Facebook").val(res.facebook);
+                    $("#FechaUltimoViaje").val(res.fechaUltimoViaje);
+                    $("#GoogleMaps").val(res.googleMaps);
+                    $("#GradoConfiabilidad").val(res.gradoConfiabilidad);
+                    $("#NivelServicio").val(res.nivelServicio);
+                    $("#NombreComercial").val(res.nombreComercial);
+                    $("#OtraRed").val(res.otraRed);
+                    $("#PaginaWeb").val(res.paginaWeb);
+                    $("#RazonSocial").val(res.razonSocial);
+                    $("#Rfc").val(res.rfc);
+                    $("#Servicio").val(res.servicio);
+                    $("#Tamanio").val(res.tamanio);
+                    $("#UsuarioMaster").val(res.usuarioMaster);
+                }).fail(function (error, xhr, status) {
+                    console.log(error);
+                });
+
+            } else {
+                $("#rateYo").rateYo({
+                    normalFill: "#A0A0A0",
+                    rating: 0,
+                    fullStar: true
+                });
+                $("#idTransportista").val("0000");
+            }
+        }
+
+    </script>
+}
