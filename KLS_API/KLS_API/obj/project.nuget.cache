@@ -1,14 +1,8 @@
 {
   "version": 2,
-<<<<<<< HEAD
-  "dgSpecHash": "SH4JQ/4lw8QhSPeb0gpvBbAPXll0MpwkxVJWhqsMuiQ6p1Gmg2yZV2Fg2jbmE5lGI5f+YLEDvjha1kiHWvaJBg==",
+  "dgSpecHash": "OqEP7Hk6alH48lCsLZqiF/kBHxUmpx1nOCoO/5T83UqpJnmCRP/Ndi+Is4npcOTQ0GMX9Q6F2IuxMZ2h4NVI5g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Consiss\\Source\\Repos\\KLS\\KLS_API\\KLS_API\\KLS_API.csproj",
-=======
-  "dgSpecHash": "YW+mQCVwaN/QUIW+c6po4AAss19GA3SveWhXu2q1KUQl9KUQgofxIszz64ksmv6X/QsVMSqORcc/f/EpTPxIpg==",
-  "success": true,
-  "projectFilePath": "C:\\Users\\Consiss\\Documents\\DOCS\\KLS\\DESARROLLO\\KLS_API\\KLS_API\\KLS_API.csproj",
->>>>>>> de46122a56f4e616a7bbad877eda86cde025bea9
+  "projectFilePath": "C:\\Users\\Consiss\\source\\repos\\KLS\\KLS_API\\KLS_API\\KLS_API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Consiss\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\3.1.10\\microsoft.aspnetcore.authentication.jwtbearer.3.1.10.nupkg.sha512",
     "C:\\Users\\Consiss\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\3.1.10\\microsoft.aspnetcore.cryptography.internal.3.1.10.nupkg.sha512",
@@ -117,5 +111,12 @@
     "C:\\Users\\Consiss\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
     "C:\\Users\\Consiss\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file C:\\Users\\Consiss\\source\\repos\\KLS\\KLS_API\\KLS_API\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+    }
+  ]
 }

@@ -9,7 +9,6 @@
     <Compile Remove="Migrations\20210617203522_RegionUps.Designer.cs" />
     <Compile Remove="Migrations\20210617204237_InitialOne.cs" />
     <Compile Remove="Migrations\20210617204237_InitialOne.Designer.cs" />
-<<<<<<< HEAD
     <Compile Remove="Migrations\20210622190324_ruta.cs" />
     <Compile Remove="Migrations\20210622190324_ruta.Designer.cs" />
     <Compile Remove="Migrations\20210622190938_ruta.cs" />
@@ -18,12 +17,10 @@
     <Compile Remove="Migrations\20210623002729_rutaok.Designer.cs" />
     <Compile Remove="Migrations\20210623002948_rutaok.cs" />
     <Compile Remove="Migrations\20210623002948_rutaok.Designer.cs" />
-=======
     <Compile Remove="Migrations\20210622173757_Initial22.cs" />
     <Compile Remove="Migrations\20210622173757_Initial22.Designer.cs" />
     <Compile Remove="Migrations\20210623010345_Transportistas1.cs" />
     <Compile Remove="Migrations\20210623010345_Transportistas1.Designer.cs" />
->>>>>>> de46122a56f4e616a7bbad877eda86cde025bea9
   </ItemGroup>
 
   <ItemGroup>
