@@ -855,3 +855,14 @@ C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcore
 C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Carriers\Routes\Index.cshtml.g.cs
 C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Carriers\Routes\formRoutes.cshtml.g.cs
 >>>>>>> de46122a56f4e616a7bbad877eda86cde025bea9
+C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Carriers\Box\Index.cshtml.g.cs
+C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Carriers\Certifications\Index.cshtml.g.cs
+C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Carriers\Contacts\Index.cshtml.g.cs
+C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Carriers\formCarriers.cshtml.g.cs
+C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Carriers\Index.cshtml.g.cs
+C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Carriers\Inventory\Index.cshtml.g.cs
+C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Carriers\Library\Index.cshtml.g.cs
+C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Carriers\Operators\Index.cshtml.g.cs
+C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Carriers\Routes\formRoutes.cshtml.g.cs
+C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Carriers\Routes\Index.cshtml.g.cs
+C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Security\Index.cshtml.g.cs
