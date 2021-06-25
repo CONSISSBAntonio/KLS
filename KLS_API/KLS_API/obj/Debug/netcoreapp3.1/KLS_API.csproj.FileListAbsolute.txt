@@ -52,6 +52,7 @@ C:\Users\Consiss\source\repos\KLS\KLS_API\KLS_API\bin\Debug\netcoreapp3.1\runtim
 C:\Users\Consiss\source\repos\KLS\KLS_API\KLS_API\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.0\System.Runtime.Caching.dll
 C:\Users\Consiss\source\repos\KLS\KLS_API\KLS_API\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Runtime.Caching.dll
 C:\Users\Consiss\source\repos\KLS\KLS_API\KLS_API\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\Consiss\source\repos\KLS\KLS_API\KLS_API\obj\Debug\netcoreapp3.1\KLS_API.csproj.AssemblyReference.cache
 C:\Users\Consiss\source\repos\KLS\KLS_API\KLS_API\obj\Debug\netcoreapp3.1\KLS_API.AssemblyInfoInputs.cache
 C:\Users\Consiss\source\repos\KLS\KLS_API\KLS_API\obj\Debug\netcoreapp3.1\KLS_API.AssemblyInfo.cs
 C:\Users\Consiss\source\repos\KLS\KLS_API\KLS_API\obj\Debug\netcoreapp3.1\KLS_API.csproj.CoreCompileInputs.cache
