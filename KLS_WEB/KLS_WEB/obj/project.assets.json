@@ -7025,11 +7025,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Consiss\\Source\\Repos\\KLS\\KLS_WEB\\KLS_WEB\\KLS_WEB.csproj",
+      "projectUniqueName": "C:\\Users\\Consiss\\source\\repos\\KLS\\KLS_WEB\\KLS_WEB\\KLS_WEB.csproj",
       "projectName": "KLS_WEB",
-      "projectPath": "C:\\Users\\Consiss\\Source\\Repos\\KLS\\KLS_WEB\\KLS_WEB\\KLS_WEB.csproj",
+      "projectPath": "C:\\Users\\Consiss\\source\\repos\\KLS\\KLS_WEB\\KLS_WEB\\KLS_WEB.csproj",
       "packagesPath": "C:\\Users\\Consiss\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Consiss\\Source\\Repos\\KLS\\KLS_WEB\\KLS_WEB\\obj\\",
+      "outputPath": "C:\\Users\\Consiss\\source\\repos\\KLS\\KLS_WEB\\KLS_WEB\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Consiss\\AppData\\Roaming\\NuGet\\NuGet.Config",
