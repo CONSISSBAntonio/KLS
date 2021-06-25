@@ -1,0 +1,389 @@
+﻿@model KLS_WEB.Models.Route
+
+<style>
+    .col-form-label-sm {
+        font-size: 12px;
+        font-weight: 500;
+        text-align: left;
+    }
+
+    form .row {
+        margin-bottom: .5rem;
+    }
+</style>
+
+<div class="text-left d-flex mb-3">
+    <div>
+        <a href="/Route" class="btn btn-link btn-lg" style="color: #EC2028;">
+            <span class="material-icons">
+                arrow_back
+            </span>
+        </a>
+    </div>
+    <div class="text-uppercase poppins medium size-24 pl-2">Nueva ruta</div>
+</div>
+
+<div class="row">
+    <div class="col-6 card">
+        <form id="frmRegister" action="#" method="post" class="mt-4 mb-3 frmRegister">
+            <div class="row d-flex justify-content-end">
+                <div class="mr-3">
+                    <button class="btn btn-outline-secondary btn-sm savedit"><i class="material-icons">edit</i></button>
+                </div>
+            </div>
+            <div class="row fid">
+                <label for="fid" class="col-sm-4 col-form-label col-form-label-sm">ID</label>
+                <div class="col-sm-8">
+                    @Html.TextBoxFor(x => x.id, new { @type = "text", @class = "form-control form-control-sm", @id = "fid", @required = "" })
+                </div>
+            </div>
+            <div class="row">
+                <label for="festadoorigen" class="col-sm-4 col-form-label col-form-label-sm">Estado Origen</label>
+                <div class="col-sm-8">
+                    @Html.DropDownListFor(x => x.id_estadoorigen, ViewBag.EstadoList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "festadoorigen", @required = "" })
+                </div>
+            </div>
+            <div class="row">
+                <label for="fciudadorigen" class="col-sm-4 col-form-label col-form-label-sm">Ciudad Origen</label>
+                <div class="col-sm-8">
+                    @Html.DropDownListFor(x => x.id_ciudadorigen, ViewBag.CiudadList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "fciudadorigen", @required = "" })
+                </div>
+            </div>
+            <div class="row">
+                <label for="festadodestino" class="col-sm-4 col-form-label col-form-label-sm">Estado Destino</label>
+                <div class="col-sm-8">
+                    @Html.DropDownListFor(x => x.id_estadodestino, ViewBag.EstadoList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "festadodestino", @required = "" })
+                </div>
+            </div>
+            <div class="row">
+                <label for="fciudaddestino" class="col-sm-4 col-form-label col-form-label-sm">Ciudad Destino</label>
+                <div class="col-sm-8">
+                    @Html.DropDownListFor(x => x.id_ciudaddestino, ViewBag.CiudadList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "fciudaddestino", @required = "" })
+                </div>
+            </div>
+            <div class="row">
+                <label for="ftotalkilometros" class="col-sm-4 col-form-label col-form-label-sm">Total de kilometros</label>
+                <div class="col-sm-8">
+                    @Html.TextBoxFor(x => x.totalkilometros, new { @type = "text", @class = "form-control form-control-sm", @id = "ftotalkilometros", @required = "" })
+                </div>
+            </div>
+            <div class="row">
+                <label for="feficiencia" class="col-sm-4 col-form-label col-form-label-sm">% Eficiencia</label>
+                <div class="col-sm-8">
+                    @Html.TextBoxFor(x => x.eficiencia, new { @type = "text", @class = "form-control form-control-sm", @id = "feficiencia", @required = "" })
+                </div>
+            </div>
+            <div class="row">
+                <label for="ftotalhoras" class="col-sm-4 col-form-label col-form-label-sm">Total de horas</label>
+                <div class="col-sm-8">
+                    @Html.TextBoxFor(x => x.totalhoras, new { @type = "text", @class = "form-control form-control-sm", @id = "ftotalhoras", @required = "" })
+                </div>
+            </div>
+            <div class="row">
+                <label for="fseguridad" class="col-sm-4 col-form-label col-form-label-sm">Seguridad</label>
+                <div class="col-sm-8">
+                    @Html.DropDownListFor(x => x.seguridad, new List<SelectListItem>
+                    {
+                        new SelectListItem() {Text = "Bajo", Value="Bajo"},
+                        new SelectListItem() {Text = "Medio", Value="Medio"},
+                        new SelectListItem() {Text = "Alto", Value="Alto"}
+                    }, new { @class = "form-control form-control-sm", @id = "fseguridad", @required = "" })
+                </div>
+            </div>
+            <div class="row">
+                <label for="fdemanda" class="col-sm-4 col-form-label col-form-label-sm">Demanda</label>
+                <div class="col-sm-8">
+                    @Html.DropDownListFor(x => x.demanda, new List<SelectListItem>
+                    {
+                        new SelectListItem() {Text = "Baja", Value="Baja"},
+                        new SelectListItem() {Text = "Media", Value="Media"},
+                        new SelectListItem() {Text = "Alta", Value="Alta"}
+                    }, new { @class = "form-control form-control-sm", @id = "fdemanda", @required = "" })
+                </div>
+            </div>
+            <div class="row">
+                <label for="ftipoviaje" class="col-sm-4 col-form-label col-form-label-sm">Tipo de viaje</label>
+                <div class="col-sm-8">
+                    @Html.DropDownListFor(x => x.tipodeviaje, new List<SelectListItem>
+                    {
+                        new SelectListItem() {Text = "One Way", Value="One Way"},
+                        new SelectListItem() {Text = "Two Way", Value="Two Way"},
+                        new SelectListItem() {Text = "Circuiteable", Value="Circuiteable"}
+                    }, new { @class = "form-control form-control-sm", @id = "ftipoviaje", @required = "" })
+                </div>
+            </div>
+            <div class="row">
+                <label for="festatus" class="col-sm-4 col-form-label col-form-label-sm">Estatus</label>
+                <div class="col-sm-8">
+                    @Html.DropDownListFor(x => x.estatus, new List<SelectListItem>
+                    {
+                        new SelectListItem() {Text = "Activo", Value="1", Selected=true},
+                        new SelectListItem() {Text = "Inactivo", Value="0"}
+                    }, new { @class = "form-control form-control-sm", @id = "festatus", @required = "" })
+                </div>
+            </div>
+            <div id="updateinfo" style="display: none;">
+                <div class="row">
+                    <label for="fultimocambio" class="col-sm-4 col-form-label col-form-label-sm">Último cambio:</label>
+                    <div class="col-sm-8 text-left mt-0">
+                        <label id="fultimocambio" class="col-form-label col-form-label-sm"></label>
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="factualizadopor" class="col-sm-4 col-form-label col-form-label-sm">Realizado por:</label>
+                    <div class="col-sm-8 text-left mt-0">
+                        <label id="factualizadopor" class="col-form-label col-form-label-sm"></label>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-6">
+        <div class="col-12 card">
+            <div class="poppins medium size-14 text-left mt-4 mb-3">Monitoreo</div>
+            <form class="frmRegister">
+                <div class="row">
+                    <label for="ffrecvalidacion" class="col-sm-4 col-form-label col-form-label-sm">Frec. de validación</label>
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(x => x.frecvalidacion, new { @type = "text", @class = "form-control form-control-sm", @id = "ffrecvalidacion" })
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="frestriccioncirc" class="col-sm-4 col-form-label col-form-label-sm">Restricción de Circ.</label>
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(x => x.restriccioncirc, new { @type = "text", @class = "form-control form-control-sm", @id = "frestriccioncirc" })
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="fobservaciones" class="col-sm-4 col-form-label col-form-label-sm">Observaciones</label>
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(x => x.observaciones, new { @type = "text", @class = "form-control form-control-sm", @id = "fobservaciones" })
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-12 card mt-3">
+            <div class="row d-flex justify-content-between">
+                <div class="poppins medium size-14 text-left mt-3 mb-3 ml-3">Checkpoints</div>
+                <div class="my-auto mr-3">
+                    <button class="btn btn-outline-secondary btn-sm" onclick="showModal('AGREGAR','Agregar',0);"><i class="material-icons">add</i></button>
+                </div>
+            </div>
+            <table id="tableCheckpoint" class="table table-striped table-bordered display table-hover table-checkpoint" width="100%">
+                <thead class="text-uppercase">
+                    <tr>
+                        <th>Checkpoint</th>
+                        <th>Tiempo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="table-checkpoint" class="text-uppercase"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!--Modal global-->
+<div class="modal fade" id="modalDiv" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo-modal"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                <form id="frmCheckpoint" action="#" method="post">
+                    <input type="hidden" name="id" id="idEditar" value="0" />
+                    <input type="hidden" name="RutaId" id="idRuta" value="0" />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="">Checkpoint</label><br />
+                                <select class="form-control myselect" name="Cat_CiudadId" id="id_ciudad" style="width: 100%;">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="">Tiempo</label>
+                            <input type="text" class="form-control" name="tiempo" id="tiempo" value="" required />
+                        </div>
+                    </div>
+                    <br />
+                    <button type="submit" class="btn btn-dark guardar" style="width:20%;" id="btnAccion">
+                        Guardar
+                    </button>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
+                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal global-->
+
+
+<script>
+    rutaid = @Model.id;
+    $(document).ready(function () {
+        loadCheckpoint();
+        $("#id_ciudad").empty();
+        $.each(catCiudad, function (item, key) {
+            $("#id_ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
+        });
+        $(".myselect").select2();
+        if (rutaid === 0) {
+            $('#frmRegister').attr('rel', 'save');
+            $('.fid').remove();
+            $('[type="text"]').val('');
+            $('.savedit').removeClass('btn-outline-secondary').addClass('btn-outline-info').html(`<i class="material-icons">save</i>`);
+        } else {
+            const actualizadopor = '@(Model.actualizadopor is null ? "-" : Model.actualizadopor)';
+            const ultimocambio = '@(Model.ultimocambio)';
+            $('#frmRegister').attr('rel', 'edit');
+            $('#updateinfo').show();
+            $('#factualizadopor').html(actualizadopor);
+            $('#fultimocambio').html(ultimocambio === '' ? '-' : ultimocambio);
+            $('.frmRegister :input').prop("disabled", true);
+            $('.savedit').removeClass('btn-outline-info').addClass('btn-outline-secondary').html(`<i class="material-icons">edit</i>`).prop('disabled', false);
+        }
+
+        $("#frmRegister").submit(function (event) {
+            event.preventDefault();
+            var jsonData = convertJson($(".frmRegister"));
+            const action = $(this).attr('rel');
+            const botonse = $('.savedit');
+            if (rutaid != 0) {
+                if (action === 'edit') {
+                    botonse.removeClass('btn-outline-secondary').addClass('btn-outline-info').html(`<i class="material-icons">save</i>`);
+                    $('.frmRegister :input').prop("disabled", false);
+                    $(this).attr('rel', 'post');
+                } else {
+                    $('.frmRegister :input').prop("disabled", true);
+                    botonse.removeClass('btn-outline-info').addClass('btn-outline-secondary').html(`<i class="material-icons">edit</i>`).attr('disabled', true);
+                    $(this).attr('rel', 'edit');
+                    $.post("Route/putRoute", jsonData, function (res) {
+                        $('#factualizadopor').html(res.actualizadopor);
+                        $('#fultimocambio').html(new Date(res.ultimocambio).toLocaleString());
+                        dToast("success", "Registro actualizado exitosamente.", "Registrado");
+                        botonse.attr("disabled", false);
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de guardar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                }
+            } else {
+                botonse.attr('disabled', true);
+                $.post("Route/setRoute", jsonData, function (res) {
+                    $('.body').html(res);
+                    loadTable();
+                }).fail(function (error) {
+                    dToast("error", "Error al tratar de guardar el registro", "Error");
+                    $(".guardar").attr("disabled", false);
+                });
+            }
+        });
+
+        $("#frmCheckpoint").submit(function (event) {
+            $('#idRuta').val(rutaid);
+            event.preventDefault();
+            var jsonData = convertJson($("#frmCheckpoint"));
+            if (parseInt($("#idEditar").val()) != 0) {
+                $.post("RouteHasCheckpoint/putRouteHasCheckpoint", jsonData, function (res) {
+                    loadCheckpoint();
+                    dToast("success", "Registro actualizado exitosamente.", "Registrado");
+                    $(".guardar").attr("disabled", false);
+                }).fail(function (error) {
+                    dToast("error", "Error al tratar de guardar el registro", "Error");
+                    $(".guardar").attr("disabled", false);
+                });
+            } else {
+                $.post("RouteHasCheckpoint/setRouteHasCheckpoint", jsonData, function (res) {
+                    loadCheckpoint();
+                    dToast("success", "Se guardo el registro", "Registrado");
+                    $(".guardar").attr("disabled", false);
+                    $('#frmCheckpoint').trigger("reset");
+                }).fail(function (error) {
+                    dToast("error", "Error al tratar de guardar el registro", "Error");
+                    $(".guardar").attr("disabled", false);
+                });
+            }
+        });
+    });
+
+    function showModal(titulo = "Title", accion, idEditar = 0) {
+        $('#frmCheckpoint').trigger("reset");
+        $(".guardar").html(accion);
+        $("#titulo-modal").empty("");
+        $("#titulo-modal").html(titulo);
+        $("#idEditar").val(idEditar);
+
+        if (accion == "Editar") {
+            try {
+                let indice = dataCheckpoint.findIndex(service => service.id === idEditar);
+                $('#id_ciudad').val(dataCheckpoint[indice].cat_CiudadId);
+                $('#id_ciudad').trigger('change');
+
+                $("#tiempo").val(dataCheckpoint[indice].tiempo);
+
+                $("#modalDiv").modal("show");
+            } catch (error) {
+                dToast("error", "Error al tratar de editar, intenta recargar la página.", "Error");
+                $("#modalDiv").modal("hide");
+            }
+        } else {
+            $("#modalDiv").modal("show");
+        }
+    }
+
+    function remove(checkpointid) {
+        let indice = dataCheckpoint.findIndex(service => service.id === checkpointid);
+        var jsonData = dataCheckpoint[indice];
+
+        $.post("RouteHasCheckpoint/deleteRouteHasCheckpoint", jsonData, function (res) {
+            loadCheckpoint();
+            dToast("success", "Se eliminó el registro", "Registrado");
+        }).fail(function (error) {
+            dToast("error", "Error al tratar de eliminar el registro", "Error");
+        });
+    }
+
+    function loadCheckpoint() {
+        var chtable = $('.table-checkpoint').DataTable();
+        chtable.destroy();
+        $("#table-checkpoint").empty();
+        $.get(`RouteHasCheckpoint/getRouteCheckpoint/${rutaid}`, function (res) {
+            dataCheckpoint = res;
+            $.each(res, function (item, key) {
+                let indice_c = catCiudad.findIndex(service => service.id === key.cat_CiudadId);
+                $("#table-checkpoint").append(`
+                        <tr>
+                        <td>${catCiudad[indice_c].nombre}</td>
+                        <td>${nCon(key.tiempo)}</td>
+                        <td class="text-center">
+                            <a href="#">
+                                <span class="material-icons" onclick="showModal('EDITAR','Editar',${nCon(key.id)});">
+                                    mode_edit
+                                </span>
+                            </a>
+                            <a href="#">
+                                <span class="material-icons text-danger" onclick="remove(${nCon(key.id)});">
+                                    delete
+                                </span>
+                            </a>
+                        </td>
+                    </tr>`);
+            });
+            dTable("table-checkpoint");
+            $('#tableCheckpoint_length').hide();
+        }).fail(function (error) {
+            dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+        });
+    }
+</script>

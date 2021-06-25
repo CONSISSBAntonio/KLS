@@ -601,6 +601,87 @@ namespace KLS_API.Migrations
                     b.ToTable("Region_Has_Estado");
                 });
 
+            modelBuilder.Entity("KLS_API.Models.Ruta", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("actualizadopor")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("demanda")
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("eficiencia")
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<int>("estatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("frecvalidacion")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("id_ciudaddestino")
+                        .HasColumnType("int");
+
+                    b.Property<int>("id_ciudadorigen")
+                        .HasColumnType("int");
+
+                    b.Property<int>("id_estadodestino")
+                        .HasColumnType("int");
+
+                    b.Property<int>("id_estadoorigen")
+                        .HasColumnType("int");
+
+                    b.Property<string>("observaciones")
+                        .HasColumnType("text");
+
+                    b.Property<string>("restriccioncirc")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("seguridad")
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("tipodeviaje")
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<string>("totalhoras")
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<int>("totalkilometros")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ultimocambio")
+                        .HasColumnType("DateTime");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Ruta");
+                });
+
+            modelBuilder.Entity("KLS_API.Models.Ruta_Has_Checkpoint", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Cat_CiudadId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RutaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("tiempo")
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Ruta_Has_Checkpoint");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
