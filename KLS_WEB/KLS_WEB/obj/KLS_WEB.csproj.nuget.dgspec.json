@@ -1,27 +1,21 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Consiss\\Documents\\DOCS\\KLS\\DESARROLLO\\KLS_WEB\\KLS_WEB\\KLS_WEB.csproj": {}
+    "C:\\Users\\Consiss\\source\\repos\\KLS\\KLS_WEB\\KLS_WEB\\KLS_WEB.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Consiss\\Documents\\DOCS\\KLS\\DESARROLLO\\KLS_WEB\\KLS_WEB\\KLS_WEB.csproj": {
+    "C:\\Users\\Consiss\\source\\repos\\KLS\\KLS_WEB\\KLS_WEB\\KLS_WEB.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Consiss\\Documents\\DOCS\\KLS\\DESARROLLO\\KLS_WEB\\KLS_WEB\\KLS_WEB.csproj",
+        "projectUniqueName": "C:\\Users\\Consiss\\source\\repos\\KLS\\KLS_WEB\\KLS_WEB\\KLS_WEB.csproj",
         "projectName": "KLS_WEB",
-        "projectPath": "C:\\Users\\Consiss\\Documents\\DOCS\\KLS\\DESARROLLO\\KLS_WEB\\KLS_WEB\\KLS_WEB.csproj",
+        "projectPath": "C:\\Users\\Consiss\\source\\repos\\KLS\\KLS_WEB\\KLS_WEB\\KLS_WEB.csproj",
         "packagesPath": "C:\\Users\\Consiss\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Consiss\\Documents\\DOCS\\KLS\\DESARROLLO\\KLS_WEB\\KLS_WEB\\obj\\",
+        "outputPath": "C:\\Users\\Consiss\\source\\repos\\KLS\\KLS_WEB\\KLS_WEB\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
-        ],
         "configFilePaths": [
           "C:\\Users\\Consiss\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
@@ -85,7 +79,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.204\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.301\\RuntimeIdentifierGraph.json"
         }
       }
     }

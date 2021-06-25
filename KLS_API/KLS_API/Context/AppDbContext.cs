@@ -22,6 +22,8 @@ namespace KLS_API.Context
         public DbSet<Cat_Ciudad> Cat_Ciudad { get; set; }
         public DbSet<Cat_Colonia> Cat_Colonia { get; set; }
         public DbSet<Cat_Region> Cat_Region { get; set; }
+        public DbSet<Ruta> Ruta { get; set; }
+        public DbSet<Ruta_Has_Checkpoint> Ruta_Has_Checkpoint { get; set; }
         public DbSet<Region_Has_Estado> Region_Has_Estado { get; set; }
     }
 }
