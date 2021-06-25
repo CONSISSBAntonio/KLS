@@ -19,6 +19,139 @@ namespace KLS_API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("KLS_API.Models.Carriers.Tr_Has_Biblioteca", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Estatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id_Transportista")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("varchar(55)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tr_Has_Biblioteca");
+                });
+
+            modelBuilder.Entity("KLS_API.Models.Carriers.Tr_Has_Box", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Custodia")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("D_Opcional")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<bool>("Densidad")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Derramable")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Id_Transportista")
+                        .HasColumnType("int");
+
+                    b.Property<string>("M_Opcional")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<bool>("Material")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Notas")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<bool>("OlorPenetrante")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Peligroso")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("TipoPresentacion")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Tp_Opcional")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("V_Opcional")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("Valor")
+                        .HasColumnType("varchar(55)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tr_Has_Box");
+                });
+
+            modelBuilder.Entity("KLS_API.Models.Carriers.Tr_Has_Certificacion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("C_Opcional")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<bool>("Ctpat")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Id_Transportista")
+                        .HasColumnType("int");
+
+                    b.Property<string>("O_Opcional")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<bool>("Otro")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tr_Has_Certificacion");
+                });
+
+            modelBuilder.Entity("KLS_API.Models.Carriers.Tr_Has_Contactos", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Correo")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<int>("Estatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id_Transportista")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("Telefono")
+                        .HasColumnType("varchar(35)");
+
+                    b.Property<string>("TipoContacto")
+                        .HasColumnType("varchar(25)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tr_Has_Contactos");
+                });
+
             modelBuilder.Entity("KLS_API.Models.Carriers.Transportista", b =>
                 {
                     b.Property<int>("id")

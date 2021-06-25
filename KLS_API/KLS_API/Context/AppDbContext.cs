@@ -27,6 +27,10 @@ namespace KLS_API.Context
 
         //Transportistas
         public DbSet<Transportista> Transportista { get; set; }
+        public DbSet<Tr_Has_Certificacion> Tr_Has_Certificacion { get; set; }
+        public DbSet<Tr_Has_Box> Tr_Has_Box { get; set; }
+        public DbSet<Tr_Has_Biblioteca> Tr_Has_Biblioteca { get; set; }
+        public DbSet<Tr_Has_Contactos> Tr_Has_Contactos { get; set; }
 
     }
 }

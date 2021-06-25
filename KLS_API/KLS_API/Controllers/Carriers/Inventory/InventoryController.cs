@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace KLS_API.Controllers.Carriers.CarriersOperators
+namespace KLS_API.Controllers.Carriers.Inventory
 {
-    public class CarriersOperatorsController : Controller
+    public class InventoryController : Controller
     {
         public IActionResult Index()
         {
