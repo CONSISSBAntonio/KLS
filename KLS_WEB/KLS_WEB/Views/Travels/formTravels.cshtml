@@ -1,0 +1,146 @@
+﻿@{
+    ViewData["Title"] = "Transportista|Rutas Form";
+}
+
+@{ int id = ViewBag.id; }
+<div class="data-content p-4 text-left">
+    <div class="p-4">
+        <div class="text-left d-flex mb-3">
+            <a href="/Carriers">
+                <div class="material-icons icon-red">arrow_back</div>
+            </a>
+            <div class="text-uppercase poppins medium size-24 pl-2">Transportista</div>
+        </div>
+        <form id="frmRegister" action="#" method="post">
+            <button class="btn btn-sm" type="submit" style="background-color:transparent;">
+                <span class="material-icons" style="color:cornflowerblue;">
+                    save
+                </span>
+            </button>
+            <div class="row">
+                <div class="col-md-4 text-right">
+                    <div class="p-4 shadow bg-white">
+                        <div class="form-group row">
+                            <label class="col-4 col-form-label col-form-label-sm">ID</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control form-control-sm" id="idEditar" name="id">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-4 col-form-label col-form-label-sm">Estado Origen</label>
+                            <div class="col-sm-8">
+                                <select class="form-control form-control-sm" id="EstadoOrigen" name="EstadoOrigen">
+                                    <option value="0">Seleccionar</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-4 col-form-label col-form-label-sm">Ciudad Origen</label>
+                            <div class="col-sm-8">
+                                <select class="form-control form-control-sm" id="CiudadOrigen" name="CiudadOrigen">
+                                    <option value="0">Seleccionar</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-4 col-form-label col-form-label-sm">Estado Destino</label>
+                            <div class="col-sm-8">
+                                <select class="form-control form-control-sm" id="EstadoDestino" name="EstadoDestino">
+                                    <option value="0">Seleccionar</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-4 col-form-label col-form-label-sm">Ciudad Destino</label>
+                            <div class="col-sm-8">
+                                <select class="form-control form-control-sm" id="CiudadDestino" name="CiudadDestino">
+                                    <option value="0">Seleccionar</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-4 col-form-label col-form-label-sm">Total de kilometros</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control form-control-sm" id="TotalKilometros" name="TotalKilometros">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-4 col-form-label col-form-label-sm">% Eficiencia</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control form-control-sm" id="Eficiencia" name="Eficiencia">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-4 col-form-label col-form-label-sm">Total de horas</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control form-control-sm" id="TotalHoras" name="TotalHoras">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-4 col-form-label col-form-label-sm">Seguridad</label>
+                            <div class="col-sm-8">
+                                <select id="Seguridad" name="Seguridad" class="form-control form-control-sm">
+                                    <option value="0">Selecciona</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-4 col-form-label col-form-label-sm">Demanda</label>
+                            <div class="col-sm-8">
+                                <select class="form-control form-control-sm" id="Demanda" name="Demanda">
+                                    <option value="0">Selecciona</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-4 col-form-label col-form-label-sm">Restricción de Circ.</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control form-control-sm" id="RestriccionCircuito" name="Contrasena">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-4 col-form-label col-form-label-sm">Tipo de viaje</label>
+                            <div class="col-sm-8">
+                                <select id="TipoDeViaje" name="TipoDeViaje" class="form-control form-control-sm">
+                                    <option value="0">Selecciona</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-4 col-form-label col-form-label-sm">Estatus</label>
+                            <div class="col-sm-8">
+                                <select id="Estatus" name="Estatus" class="form-control form-control-sm">
+                                    <option value="0">Selecciona</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="p-4 shadow bg-white">
+                        <div class="form-group row">
+                            <label class="col-4 col-form-label col-form-label-sm">Frec. de validación</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="FrecValidacion" id="FrecValidacion" class="form-control form-control-sm"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-4 col-form-label col-form-label-sm">Restricción de Circ.</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="RestriccionCirc" id="RestriccionCirc" class="form-control form-control-sm"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-4 col-form-label col-form-label-sm">Estatus</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="Observaciones" id="Observaciones" class="form-control form-control-sm"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

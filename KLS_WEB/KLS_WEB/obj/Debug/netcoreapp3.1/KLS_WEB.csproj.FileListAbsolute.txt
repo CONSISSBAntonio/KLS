@@ -431,3 +431,6 @@ C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\KLS_WE
 C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\KLS_WEB.dll
 C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\KLS_WEB.pdb
 C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\KLS_WEB.genruntimeconfig.cache
+C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\KLS_WEB.csproj.AssemblyReference.cache
+C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Travels\formTravels.cshtml.g.cs
+C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Travels\Index.cshtml.g.cs
