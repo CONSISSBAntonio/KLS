@@ -39,12 +39,59 @@
 </div>
 @section Scripts{ 
     <script>
-        $(window).ready(function () {
+        var dataCiudad = [];
+        var dataEstado = [];
 
+        $(window).ready(function () {
+            getCiudad();
+            getEstado();
+            loadTable();
         });
 
-        function loadTable() {
+        function getCiudad() {
+            $.get("../../Catalogs/Geography/City/getCity", function (res) {
+                dataCiudad = res;
+                console.log(res);
+            });
+        }
 
+        function getEstado() {
+            $.get("../../Catalogs/Geography/State/getState", function (res) {
+                dataEstado = res;
+            });
+        }
+
+        function loadTable() {
+            var stable = $('.table-viajes').DataTable();
+            stable.destroy();
+            $("#table-info").empty();
+            $.get("/Carriers/Routes/getRoutesAll/", function (res) {
+                console.log(res);
+                $.each(res, function (item, key) {
+
+                     //let cOrigen = dataCiudad.findIndex(ciudad => ciudad.id === key.id_Ciudad_Origen);
+                     //let cDestino = dataCiudad.findIndex(ciudad => ciudad.id === key.id_Ciudad_Destino);
+                     //let eOrigen = dataEstado.findIndex(estado => estado.id === key.id_Estado_Origen);
+                     //let eDestino = dataEstado.findIndex(estado => estado.id === key.id_Estado_Estado); 
+
+                    $("#table-info").append(`
+                             <tr>
+                                <td>${nCon(key.id)}</td>
+                                <td>${dataEstado[0].nombre} - ${dataCiudad[0].nombre}</td>
+                                <td>${dataEstado[0].nombre} - ${dataCiudad[0].nombre}</td>
+                                <td>$$</td>
+                                <td>${statusTable(key.estatus)}</td>
+                                <td>
+                                    <a href="/Carriers/Routes/formRoutes/`+@id+`/${nCon(key.id)}">
+                                        <span class="material-icons">
+                                            mode_edit
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>`);
+                });
+                dTable("table-viajes");
+            });
         }
     </script>
 }

@@ -152,6 +152,66 @@ namespace KLS_API.Migrations
                     b.ToTable("Tr_Has_Contactos");
                 });
 
+            modelBuilder.Entity("KLS_API.Models.Carriers.Tr_Has_Rutas", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Demanda")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Eficiencia")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Estatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FrecValidacion")
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<int>("Id_Ciudad_Destino")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id_Ciudad_Origen")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id_Estado_Destino")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id_Estado_Origen")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id_Transportista")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Observacion")
+                        .HasColumnType("varchar(85)");
+
+                    b.Property<string>("Restriccion")
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<string>("RestriccionCircuito")
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<int>("Seguridad")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TipoDeViaje")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalHoras")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Total_Kilometros")
+                        .HasColumnType("decimal(2,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tr_Has_Rutas");
+                });
+
             modelBuilder.Entity("KLS_API.Models.Carriers.Transportista", b =>
                 {
                     b.Property<int>("id")

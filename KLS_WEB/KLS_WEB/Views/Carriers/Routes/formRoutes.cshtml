@@ -3,10 +3,11 @@
 }
 
 @{ int id = ViewBag.id; }
+@{ int idRuta = ViewBag.idRuta; }
 <div class="data-content p-4 text-left">
     <div class="p-4">
         <div class="text-left d-flex mb-3">
-            <a href="/Carriers">
+            <a href="/Carriers/Routes/@id">
                 <div class="material-icons icon-red">arrow_back</div>
             </a>
             <div class="text-uppercase poppins medium size-24 pl-2">Transportista</div>
@@ -23,13 +24,13 @@
                         <div class="form-group row">
                             <label class="col-4 col-form-label col-form-label-sm">ID</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control form-control-sm" id="idEditar" name="id">
+                                <input type="text" class="form-control form-control-sm" id="idEditar" name="Id">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-4 col-form-label col-form-label-sm">Estado Origen</label>
                             <div class="col-sm-8">
-                                <select class="form-control form-control-sm" id="EstadoOrigen" name="EstadoOrigen">
+                                <select class="form-control form-control-sm" id="Id_Estado_Origen" name="Id_Estado_Origen">
                                     <option value="0">Seleccionar</option>
                                 </select>
                             </div>
@@ -37,7 +38,7 @@
                         <div class="form-group row">
                             <label class="col-4 col-form-label col-form-label-sm">Ciudad Origen</label>
                             <div class="col-sm-8">
-                                <select class="form-control form-control-sm" id="CiudadOrigen" name="CiudadOrigen">
+                                <select class="form-control form-control-sm" id="Id_Ciudad_Origen" name="Id_Ciudad_Origen">
                                     <option value="0">Seleccionar</option>
                                 </select>
                             </div>
@@ -45,7 +46,7 @@
                         <div class="form-group row">
                             <label class="col-4 col-form-label col-form-label-sm">Estado Destino</label>
                             <div class="col-sm-8">
-                                <select class="form-control form-control-sm" id="EstadoDestino" name="EstadoDestino">
+                                <select class="form-control form-control-sm" id="Id_Estado_Destino" name="Id_Estado_Destino">
                                     <option value="0">Seleccionar</option>
                                 </select>
                             </div>
@@ -53,7 +54,7 @@
                         <div class="form-group row">
                             <label class="col-4 col-form-label col-form-label-sm">Ciudad Destino</label>
                             <div class="col-sm-8">
-                                <select class="form-control form-control-sm" id="CiudadDestino" name="CiudadDestino">
+                                <select class="form-control form-control-sm" id="Id_Ciudad_Destino" name="Id_Ciudad_Destino">
                                     <option value="0">Seleccionar</option>
                                 </select>
                             </div>
@@ -116,7 +117,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-md-4">
                     <div class="p-4 shadow bg-white">
                         <div class="form-group row">
@@ -132,9 +132,9 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-4 col-form-label col-form-label-sm">Estatus</label>
+                            <label class="col-4 col-form-label col-form-label-sm">Observaciones</label>
                             <div class="col-sm-8">
-                                <input type="text" name="Observaciones" id="Observaciones" class="form-control form-control-sm"/>
+                                <input type="text" name="Observacion" id="Observacion" class="form-control form-control-sm"/>
                             </div>
                         </div>
                     </div>
@@ -143,4 +143,66 @@
         </form>
     </div>
 </div>
+@section Scripts{ 
+    <script>
+        dataRoutes = [];
+        $(window).ready(function () {
 
+            loadTable();
+
+            $("#frmRegister").submit(function (event) {
+                event.preventDefault();
+                var jsonData = convertJson($("#frmRegister"));
+                jsonData["Id_Transportista"] = @id;
+
+                if (parseInt(@idRuta) == 0) {
+                    $.post("/Carriers/Routes/setRoutes/", jsonData, function (res) {
+                        $('#frmRegister').trigger("reset");
+                        dToast("success", "Registro guardado exitosamente.", "Registrado");
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de guardar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                } else {
+                    $.post("/Carriers/Routes/putRoutes/", jsonData, function (res) {
+                        dToast("success", "Registro actualizado exitosamente.", "Registrado");
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de actualizar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                }
+
+            });
+        });
+
+        function loadTable() {
+            $("#idEditar").attr("disabled", true);
+            if (@idRuta!= 0) {
+                $.get("/Carriers/Routes/getRoutes/", { "Id":@idRuta}, function (res) {
+                    dataRoutes = res;
+                    if (res != null) {
+                        $("#idEditar").val(res.id);
+                        $("#Demanda").val(res.demanda);
+                        $("#Eficiencia").val(res.eficiencia);
+                        $("#Estatus").val(res.estatus);
+                        $("#FrecValidacion").val(res.frecValidacion);
+                        $("#Id_Ciudad_Destino").val(res.id_Ciudad_Destino);
+                        $("#Id_Ciudad_Origen").val(res.id_Ciudad_Origen);
+                        $("#Id_Estado_Destino").val(res.id_Estado_Destino);
+                        $("#Id_Estado_Origen").val(res.id_Estado_Origen);
+                        $("#Id_Transportista").val(res.id_Transportista);
+                        $("#Observacion").val(res.observacion);
+                        $("#Restriccion").val(res.restriccion);
+                        $("#RestriccionCircuito").val(res.restriccionCircuito);
+                        $("#Seguridad").val(res.seguridad);
+                        $("#TipoDeViaje").val(res.tipoDeViaje);
+                        $("#TotalHoras").val(res.totalHoras);
+                        $("#Total_Kilometros").val(res.total_Kilometros);
+                    }
+                    console.log(dataRoutes);
+                });
+            } 
+        }
+
+    </script>
+}

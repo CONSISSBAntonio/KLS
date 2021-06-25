@@ -12,11 +12,14 @@ namespace KLS_API.Models.Carriers
         [Key]
         public int Id { get; set; }
         public int Id_Transportista { get; set; }
-        public int Id_Origen { get; set; }
-        public int Id_Destino { get; set; }
+        public int Id_Estado_Origen { get; set; }
+        public int Id_Ciudad_Origen { get; set; }
+        public int Id_Estado_Destino { get; set; }
+        public int Id_Ciudad_Destino { get; set; }
 
         [Column(TypeName = "decimal(2,2)")]
         public decimal Total_Kilometros { get; set; }
+
         public int Eficiencia { get; set; }
         public int TotalHoras { get; set; }
         public int Seguridad { get; set; }
@@ -25,14 +28,11 @@ namespace KLS_API.Models.Carriers
         public string Restriccion { get; set; }
         public int TipoDeViaje { get; set; }
         public int Estatus { get; set; }
-
         [Column(TypeName = "varchar(25)")]
         public string FrecValidacion { get; set; }
-        
         [Column(TypeName = "varchar(25)")]
         public string RestriccionCircuito { get; set; }
         [Column(TypeName = "varchar(85)")]
         public string Observacion { get; set; }
-        
     }
 }
