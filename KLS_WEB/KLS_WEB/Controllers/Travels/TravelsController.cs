@@ -1,5 +1,6 @@
 ﻿using KLS_WEB.Models;
 using KLS_WEB.Models.Carriers;
+using KLS_WEB.Models.Travels;
 using KLS_WEB.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +44,7 @@ namespace KLS_WEB.Controllers.Travels
             return Json(dataReport);
         }
 
-        [Route("setCarriers")]
+        [Route("setTravels")]
         public async Task<JsonResult> Post(Transportista dataModel)
         {
             Transportista dataReport;
@@ -51,7 +52,7 @@ namespace KLS_WEB.Controllers.Travels
             return Json(dataReport);
         }
 
-        [Route("putCarriers")]
+        [Route("putTravels")]
         public async Task<JsonResult> Put(Transportista dataModel)
         {
             Transportista dataReport;
