@@ -31,10 +31,11 @@ namespace KLS_WEB.Controllers.Carriers.CarriersRoutes
             return View(this._UrlView + "index.cshtml");
         }
         
-        [Route("formRoutes/{id=0}")]
-        public IActionResult formRoutes(int id)
+        [Route("formRoutes/{id=0}/{idruta=0}")]
+        public IActionResult formRoutes(int id,int idRuta)
         {
             ViewBag.id = id;
+            ViewBag.idRuta = idRuta;
             return View(this._UrlView + "formRoutes.cshtml");
         }
         
@@ -43,6 +44,14 @@ namespace KLS_WEB.Controllers.Carriers.CarriersRoutes
         {
             Tr_Has_Rutas dataReport;
             dataReport = await this.AppContext.Execute<Tr_Has_Rutas>(MethodType.GET, _UrlApi, dataModel);
+            return Json(dataReport);
+        }
+        
+        [Route("getRoutesAll")]
+        public async Task<JsonResult> getRoutesAll(Tr_Has_Rutas dataModel)
+        {
+            List<Tr_Has_Rutas> dataReport;
+            dataReport = await this.AppContext.Execute<List<Tr_Has_Rutas>>(MethodType.GET, _UrlApi+"/getRoutes", dataModel);
             return Json(dataReport);
         }
 
