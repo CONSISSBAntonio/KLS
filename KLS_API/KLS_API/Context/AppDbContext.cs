@@ -1,4 +1,5 @@
 ﻿using KLS_API.Models;
+using KLS_API.Models.Carriers;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,5 +26,13 @@ namespace KLS_API.Context
         public DbSet<Ruta> Ruta { get; set; }
         public DbSet<Ruta_Has_Checkpoint> Ruta_Has_Checkpoint { get; set; }
         public DbSet<Region_Has_Estado> Region_Has_Estado { get; set; }
+
+        //Transportistas
+        public DbSet<Transportista> Transportista { get; set; }
+        public DbSet<Tr_Has_Certificacion> Tr_Has_Certificacion { get; set; }
+        public DbSet<Tr_Has_Box> Tr_Has_Box { get; set; }
+        public DbSet<Tr_Has_Biblioteca> Tr_Has_Biblioteca { get; set; }
+        public DbSet<Tr_Has_Contactos> Tr_Has_Contactos { get; set; }
+
     }
 }

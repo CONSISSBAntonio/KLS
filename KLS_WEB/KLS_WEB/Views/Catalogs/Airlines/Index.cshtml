@@ -152,10 +152,11 @@
             $(".guardar").html(accion);
             $("#titulo-modal").empty("");
             $("#titulo-modal").html(titulo);
+            $("#idEditar").val(idEditar);
+
             if (accion == "Editar") {
                 try {
                     let indice = DataAirlines.findIndex(service => service.id === idEditar);
-                    $("#idEditar").val(idEditar);
                     $("#nombre").val(DataAirlines[indice].nombre);
                     $("#telefono").val(DataAirlines[indice].telefono);
                     $("#departamento").val(DataAirlines[indice].departamento);

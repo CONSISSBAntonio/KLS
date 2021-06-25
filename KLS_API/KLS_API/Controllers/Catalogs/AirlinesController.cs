@@ -71,7 +71,7 @@ namespace KLS_API.Controllers.Catalogs
             {
                 context.Entry(cat_aerolinea).State = EntityState.Modified;
                 context.SaveChanges();
-                return CreatedAtRoute("getAirline", new { id = cat_aerolinea.id }, cat_aerolinea);
+                return Ok(cat_aerolinea);
             }
             catch (Exception ex)
             {

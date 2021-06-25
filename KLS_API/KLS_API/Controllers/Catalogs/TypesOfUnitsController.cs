@@ -1,17 +1,15 @@
-﻿using System;
-using System.Linq;
-using KLS_API.Context;
+﻿using KLS_API.Context;
 using KLS_API.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 
 namespace KLS_API.Controllers.Catalogs.TypesOfUnits
 {
     [Route("Catalogs/TypesOfUnits")]
-    [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class TypesOfUnitsController : Controller
     {
         private readonly AppDbContext context;
@@ -54,7 +52,7 @@ namespace KLS_API.Controllers.Catalogs.TypesOfUnits
             {
                 context.Cat_Tipos_Unidades.Add(tipos_Unidades);
                 context.SaveChanges();
-                return CreatedAtRoute("getTipoUnidad",new { id = tipos_Unidades.id }, tipos_Unidades);
+                return Ok(tipos_Unidades);
             }
             catch (Exception ex)
             {
@@ -69,7 +67,7 @@ namespace KLS_API.Controllers.Catalogs.TypesOfUnits
             {
                 context.Entry(tipos_Unidades).State = EntityState.Modified;
                 context.SaveChanges();
-                return CreatedAtRoute("getTipoUnidad", new { id = tipos_Unidades.id }, tipos_Unidades);   
+                return Ok(tipos_Unidades);
             }
             catch (Exception ex)
             {
@@ -77,27 +75,27 @@ namespace KLS_API.Controllers.Catalogs.TypesOfUnits
             }
         }
         
-        [HttpDelete("{id}")]
-        public ActionResult Delete(int id) 
-        {
-            try
-            {
-                var tipo_unidad = context.Cat_Tipos_Unidades.FirstOrDefault(f=>f.id==id);
-                if (tipo_unidad!=null)
-                {
-                    context.Cat_Tipos_Unidades.Remove(tipo_unidad);
-                    context.SaveChanges();
-                    return Ok(id);
-                }
-                else
-                {
-                    return BadRequest();
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        //[HttpDelete("{id}")]
+        //public ActionResult Delete(int id) 
+        //{
+        //    try
+        //    {
+        //        var tipo_unidad = context.Cat_Tipos_Unidades.FirstOrDefault(f=>f.id==id);
+        //        if (tipo_unidad!=null)
+        //        {
+        //            context.Cat_Tipos_Unidades.Remove(tipo_unidad);
+        //            context.SaveChanges();
+        //            return Ok(id);
+        //        }
+        //        else
+        //        {
+        //            return BadRequest();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
     }
 }

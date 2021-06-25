@@ -339,3 +339,7 @@ form .form-group {
     /* For IE6-8 */
     src: local('Material Icons'), local('MaterialIcons-Regular');
 }
+
+input[type=text]{
+    text-transform: uppercase;
+}

@@ -1,6 +1,7 @@
 {
   "format": 1,
   "restore": {
+<<<<<<< HEAD
     "C:\\Users\\Consiss\\Source\\Repos\\KLS\\KLS_API\\KLS_API\\KLS_API.csproj": {}
   },
   "projects": {
@@ -12,6 +13,19 @@
         "projectPath": "C:\\Users\\Consiss\\Source\\Repos\\KLS\\KLS_API\\KLS_API\\KLS_API.csproj",
         "packagesPath": "C:\\Users\\Consiss\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\Consiss\\Source\\Repos\\KLS\\KLS_API\\KLS_API\\obj\\",
+=======
+    "C:\\Users\\Consiss\\Documents\\DOCS\\KLS\\DESARROLLO\\KLS_API\\KLS_API\\KLS_API.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\Consiss\\Documents\\DOCS\\KLS\\DESARROLLO\\KLS_API\\KLS_API\\KLS_API.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Consiss\\Documents\\DOCS\\KLS\\DESARROLLO\\KLS_API\\KLS_API\\KLS_API.csproj",
+        "projectName": "KLS_API",
+        "projectPath": "C:\\Users\\Consiss\\Documents\\DOCS\\KLS\\DESARROLLO\\KLS_API\\KLS_API\\KLS_API.csproj",
+        "packagesPath": "C:\\Users\\Consiss\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Consiss\\Documents\\DOCS\\KLS\\DESARROLLO\\KLS_API\\KLS_API\\obj\\",
+>>>>>>> de46122a56f4e616a7bbad877eda86cde025bea9
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Consiss\\AppData\\Roaming\\NuGet\\NuGet.Config",

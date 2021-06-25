@@ -418,6 +418,7 @@ C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcore
 C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Catalogs\Country\Index.cshtml.g.cs
 C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Catalogs\Regions\Index.cshtml.g.cs
 C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Catalogs\State\Index.cshtml.g.cs
+<<<<<<< HEAD
 C:\Users\Consiss\Source\Repos\KLS\KLS_WEB\KLS_WEB\bin\Debug\netcoreapp3.1\appsettings.Development.json
 C:\Users\Consiss\Source\Repos\KLS\KLS_WEB\KLS_WEB\bin\Debug\netcoreapp3.1\appsettings.json
 C:\Users\Consiss\Source\Repos\KLS\KLS_WEB\KLS_WEB\bin\Debug\netcoreapp3.1\KLS_WEB.exe
@@ -841,3 +842,16 @@ C:\Users\Consiss\Source\Repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\KLS_WE
 C:\Users\Consiss\Source\Repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Route\Index.cshtml.g.cs
 C:\Users\Consiss\Source\Repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Route\_AddEdit.cshtml.g.cs
 C:\Users\Consiss\Source\Repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Route\_Index.cshtml.g.cs
+=======
+C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Security\Index.cshtml.g.cs
+C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Carriers\formCarriers.cshtml.g.cs
+C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Carriers\Index.cshtml.g.cs
+C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Carriers\Operators\Index.cshtml.g.cs
+C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Carriers\Box\Index.cshtml.g.cs
+C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Carriers\Certifications\Index.cshtml.g.cs
+C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Carriers\Contacts\Index.cshtml.g.cs
+C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Carriers\Inventory\Index.cshtml.g.cs
+C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Carriers\Library\Index.cshtml.g.cs
+C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Carriers\Routes\Index.cshtml.g.cs
+C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Carriers\Routes\formRoutes.cshtml.g.cs
+>>>>>>> de46122a56f4e616a7bbad877eda86cde025bea9

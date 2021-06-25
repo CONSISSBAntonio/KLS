@@ -1,0 +1,163 @@
+﻿@{
+    ViewData["Title"] = "Transportista|Biblioteca digital";
+}
+@{ int id = ViewBag.id; }
+<div class="data-content p-4 text-left">
+    <div class="p-4">
+        <div class="text-left d-flex mb-3">
+            <a href="/Carriers/formCarriers/@id">
+                <div class="material-icons icon-red">arrow_back</div>
+            </a>
+            <div class="text-uppercase poppins medium size-24 pl-2">BIBLIOTECA DIGITAL</div>
+            <div style="padding-left:10%;">
+                <button class="btn btn-sm btn-dark" onclick="showModal('AGREGAR','Agregar');">
+                    <span class="material-icons">
+                        add
+                    </span>
+                </button>
+            </div>
+        </div>
+        <div class="p-4 shadow bg-white">
+            <table id="table" class="table table-striped table-bordered display table-hover table-viajes" width="100%">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Estatus</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="table-info"></tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<!--Modal global-->
+<div class="modal fade" id="modalDiv" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo-modal"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                <form id="frmRegister" action="#" method="post">
+                    <input type="hidden" name="id" id="idEditar" value="0" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="">Nombre</label>
+                                <input type="text" class="form-control" name="nombre" id="nombre" required />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="">Estatus</label>
+                            <select class="form-control form-control-sm" name="estatus" id="estatus">
+                                <option value="1">Activo</option>
+                                <option value="2">Inactivo</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-dark guardar" style="width:20%;" id="btnAccion">
+                        Guardar
+                    </button>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
+                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal global-->
+
+@section Scripts{
+    <script>
+        var dataLibrary = [];
+
+        $(window).ready(function () {
+            loadTable();
+
+            $("#frmRegister").submit(function (event) {
+                event.preventDefault();
+                var jsonData = convertJson($("#frmRegister"));
+                jsonData["Id_Transportista"] = @id;
+                console.log(jsonData);
+                if (parseInt($("#idEditar").val()) != 0) {
+                    $.post("/Carriers/Library/putLibrary", jsonData, function (res) {
+                        console.log(res);
+                        loadTable();
+                        dToast("success", "Registro actualizado exitosamente.", "Registrado");
+                        $(".guardar").attr("disabled", false);
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de guardar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                } else {
+                    $.post("/Carriers/Library/setLibrary", jsonData, function (res) {
+                        loadTable();
+                        dToast("success", "Se guardo el registro", "Registrado");
+                        $(".guardar").attr("disabled", false);
+                        $('#frmRegister').trigger("reset");
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de guardar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                }
+            });
+
+        });
+
+        function showModal(titulo = "Title", accion, idEditar = 0) {
+            $('#frmRegister').trigger("reset");
+            $(".guardar").html(accion);
+            $("#titulo-modal").empty("");
+            $("#titulo-modal").html(titulo);
+            $("#idEditar").val(idEditar);
+            if (accion == "Editar") {
+                try {
+                    let indice = dataLibrary.findIndex(service => service.id === idEditar);
+                    $("#Nombre").val(dataLibrary[indice].nombre);
+                    $('#Estatus option[value="' + dataLibrary[indice].estatus + '"]').attr("selected", true);
+                    $("#modalDiv").modal("show");
+                } catch (error) {
+                    dToast("error", "Error al tratar de editar, intenta recargar la página.", "Error");
+                    $("#modalDiv").modal("hide");
+                }
+            } else {
+                $("#modalDiv").modal("show");
+            }
+        }
+
+        function loadTable() {
+            var stable = $('.table-viajes').DataTable();
+            stable.destroy();
+            $("#table-info").empty();
+            $.get("/Carriers/Library/getLibrary/", { "Id_Transportista":@id}, function (res) {
+                dataLibrary = res;
+                console.log(res);
+                $.each(dataLibrary, function (item, key) {
+                    $("#table-info").append(`
+                             <tr>
+                                <td>${nCon(key.nombre)}</td>
+                                <td>`+ statusTable(key.estatus) + `</td>
+                                <td>
+                                    <a href="#">
+                                        <span class="material-icons" onclick="showModal('EDITAR','Editar',${nCon(key.id)});">
+                                            mode_edit
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>`);
+                });
+                dTable("table-viajes");
+            });
+        }
+    </script>
+}

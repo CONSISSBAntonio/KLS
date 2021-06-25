@@ -29,6 +29,7 @@
                 </div>
                 <div class="pr-4 text-right">
                     <div class="d-block pt-2 mt-2">
+                        @*<div class="d-inline size-12">Hola @User.Identity.Name!</div>*@
                         <div class="d-inline size-12">Hola @User.Identity.Name!</div>
                         <a asp-controller="Login" asp-action="Logout">
                             <div class="d-inline material-icons pl-2 c-pointer" style="vertical-align: -8px;">logout</div>
@@ -39,7 +40,7 @@
             <!-- END TOP BAR -->
             <div class="wrapper">
                 <!-- LEFT BAR -->
-                <div class="left-bar bg-dark text-white pt-2 expand">
+                <div id="left_bar" class="left-bar bg-dark text-white pt-2 left_bar expand">
                     <div class="bar-container">
                         <div class="expand-control unselectable">
                             <div class="material-icons arrow-bar size-32 c-pointer pl-3">chevron_right</div>
@@ -94,14 +95,14 @@
                             </li>
 
                             <li class="pt-2 pl-4">
-                                <a href="">
+                                <a href="/Carriers">
                                     <div class="material-icons size-18 pr-1">local_shipping</div>
                                     <label>Transportistas</label>
                                 </a>
                             </li>
 
                             <li class="pt-2 pl-4">
-                                <a href="">
+                                <a href="/Security">
                                     <div class="material-icons size-18 pr-1">security</div>
                                     <label>Seguridad</label>
                                 </a>
@@ -149,6 +150,35 @@
     <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
+
+        $("#left_bar").click(function () {
+            if ($("#left_bar").hasClass("expand")) {
+                $("#left_bar").removeClass("expand");
+            } else {
+                $("#left_bar").addClass("expand");
+            }
+        });
+
+        $(document).ready(function () {
+            updateContainer();
+            $(window).resize(function () {
+                updateContainer();
+            });
+        });
+
+        function updateContainer() {
+            var $containerHeight = $(window).height();
+            if ($containerHeight <= 818) {
+                $("#left_bar").removeClass("expand");
+            }
+            if ($containerHeight > 819) {
+                $("#left_bar").addClass("expand");
+            }
+        }
+
+      
+
+
         function dTable(table) {
             $('.' + table).DataTable({
                 language: {

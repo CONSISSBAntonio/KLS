@@ -40,19 +40,20 @@ namespace KLS_API.Controllers.System
             var user = new IdentityUser { UserName = userDTO.Email, Email = userDTO.Email };
 
             var result = await userManager.CreateAsync(user, userDTO.Password);
+
             if (result.Succeeded)
             {
-                if (!await roleManager.RoleExistsAsync("Admin"))
-                {
-                    await roleManager.CreateAsync(new IdentityRole("Admin"));
-                }
+                //if (!await roleManager.RoleExistsAsync(userDTO.Rol))
+                //{
+                //    await roleManager.CreateAsync(new IdentityRole(userDTO.Rol));
+                //}
 
-                if (!await roleManager.RoleExistsAsync("Customer"))
-                {
-                    await roleManager.CreateAsync(new IdentityRole("Customer"));
-                }
+                //if (!await roleManager.RoleExistsAsync("Customer"))
+                //{
+                //    await roleManager.CreateAsync(new IdentityRole("Customer"));
+                //}
 
-                await userManager.AddToRoleAsync(user, "Customer");
+                await userManager.AddToRoleAsync(user, userDTO.Rol);
 
                 return NoContent();
             }
@@ -82,7 +83,6 @@ namespace KLS_API.Controllers.System
                     Roles = roles
                 };
             }
-
             ModelState.AddModelError("Response", "Nombre de usuario/contraseña no valido");
             return StatusCode(400, ModelState);
         }
@@ -113,6 +113,5 @@ namespace KLS_API.Controllers.System
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
-
     }
 }
