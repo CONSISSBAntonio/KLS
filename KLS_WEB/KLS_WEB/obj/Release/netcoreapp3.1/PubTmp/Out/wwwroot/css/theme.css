@@ -1,0 +1,345 @@
+/* Override Bootstrap */
+a {
+    font-size: 12px;
+    transition: all 0.2s;
+    color: #585858;
+    text-decoration: underline !important;
+}
+
+    a:hover {
+        color: black;
+    }
+
+.left-bar ul li a {
+    height: 22px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: white;
+    text-decoration: none;
+}
+
+.btn.btn-primary {
+    background-color: black;
+    font-size: 14px;
+    padding-top: 9px;
+    padding-bottom: 9px;
+    -webkit-border-radius: 0px !important;
+    -moz-border-radius: 0px !important;
+    border-radius: 0px !important;
+}
+
+    .btn.btn-primary:hover {
+        background-color: #1a1a1a;
+        text-decoration: none;
+    }
+
+    .btn.btn-primary:active {
+        background-color: black !important;
+    }
+
+.btn-success {
+    transition: all 0.2s;
+}
+
+    .btn-success:hover {
+        text-decoration: none;
+    }
+
+.modal .modal-content {
+    border: 1px solid blue;
+    -webkit-border-radius: 4px !important;
+    -moz-border-radius: 4px !important;
+    border-radius: 4px !important;
+}
+/* Miscellaneous */
+body, label {
+    font-size: 18px;
+    font-family: Poppins, Helvetica, Arial;
+    font-weight: 400;
+    color: #585858;
+}
+
+.medium {
+    font-weight: 500;
+}
+
+.font-barlow {
+    font-family: 'Barlow';
+}
+
+.size-8 {
+    font-size: 8px;
+}
+
+.size-8 {
+    font-size: 10px;
+}
+
+.size-12 {
+    font-size: 12px;
+}
+
+.size-14 {
+    font-size: 14px;
+}
+
+.size-18 {
+    font-size: 18px;
+}
+
+.size-20 {
+    font-size: 20px;
+}
+
+.size-24 {
+    font-size: 24px !important;
+}
+
+.size-28 {
+    font-size: 28px !important;
+}
+
+.size-32 {
+    font-size: 32px;
+}
+
+.size-36 {
+    font-size: 36px;
+}
+
+.size-42 {
+    font-size: 42px;
+}
+
+.bg-white {
+    background-color: white;
+}
+
+.bg-light-grey {
+    background-color: #f7f7f7;
+}
+
+.bg-dark {
+    background-color: #2b2b2b !important;
+}
+
+.text-light-grey {
+    color: #585858;
+}
+
+.c-pointer {
+    cursor: pointer;
+}
+
+.unselectable {
+    user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+}
+
+.icon-red {
+    color: #ec2028;
+    font-size: 30px;
+    line-height: 34px;
+}
+
+.shadow {
+    box-shadow: 0px 3px 6px #000 29;
+}
+
+.catalog-list {
+    padding: 20px 0px;
+}
+
+    .catalog-list .catalog {
+        cursor: pointer;
+        text-decoration: none !important;
+        float: left;
+        margin: 20px 20px 0px 0px;
+        display: flex;
+        flex-direction: column;
+        padding: 0px;
+        background-color: white;
+        width: 160px;
+        height: 160px;
+        text-align: center;
+    }
+
+        .catalog-list .catalog .content {
+            padding-bottom: 20px;
+            margin-top: auto;
+        }
+
+            .catalog-list .catalog .content .material-icons {
+                font-size: 60px;
+                margin-bottom: 10px;
+            }
+
+            .catalog-list .catalog .content .name {
+                font-size: 18px;
+            }
+/* Forms */
+form input {
+    border: 0;
+    -webkit-border-radius: 0px !important;
+    -moz-border-radius: 0px !important;
+    border-radius: 0px !important;
+}
+
+    form input.bottom-border {
+        border-bottom: 2px solid #cdcccc !important;
+    }
+
+.form-control {
+    font-size: 11px;
+}
+
+    .form-control label {
+        text-align: left;
+    }
+
+    .form-control input {
+        border: 0;
+        -webkit-border-radius: 4px !important;
+        -moz-border-radius: 4px !important;
+        border-radius: 4px !important;
+    }
+
+.input-icon {
+    font-size: 20px;
+    position: relative;
+    top: -30px;
+    right: 3px;
+    margin-top: 3px;
+    color: #ff0036;
+}
+
+input[type="checkbox"] {
+    position: relative;
+    top: 5px;
+}
+
+form .form-group {
+    position: relative;
+}
+
+    form .form-group .form-control.error {
+        color: #cf6e6e !important;
+        border-color: #cf6e6e !important;
+    }
+
+    form .form-group .form-control.valid {
+        color: black !important;
+        border-color: black !important;
+    }
+
+    form .form-group label.error {
+        color: #cf6e6e !important;
+        font-size: 14px;
+        position: absolute;
+        width: 100%;
+        left: 0px;
+    }
+/* Templates */
+.top-bar {
+    position: fixed;
+    background-color: white;
+    top: 0px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 60px;
+    z-index: 100;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    top: 60px;
+    width: 100%;
+    background-color: #2b2b2b;
+}
+
+    .wrapper > .left-bar {
+        width: 90px;
+    }
+
+    .wrapper > .data-content {
+        flex: 1;
+        background-color: #f7f7f7;
+        text-align: center;
+    }
+
+        .wrapper > .data-content .title {
+            font-size: 24px;
+            text-transform: uppercase;
+        }
+/* Left bar */
+.left-bar {
+    height: 100vh;
+    transition: all 0.15s ease-in;
+}
+
+    .left-bar .expand-control {
+        text-align: left;
+    }
+
+    .left-bar .bar-container {
+        height: 100vh;
+        position: fixed;
+    }
+
+    .left-bar label {
+        background-color: transparent;
+        color: white;
+        font-size: 14px;
+        vertical-align: 4px;
+        cursor: pointer;
+        margin-bottom: 0px;
+        display: none;
+    }
+
+    .left-bar.expand {
+        width: 240px !important;
+    }
+
+        .left-bar.expand .expand-control {
+            text-align: right !important;
+        }
+
+        .left-bar.expand .bar-container {
+            width: 240px;
+        }
+
+        .left-bar.expand .arrow-bar {
+            transform: rotate(180deg);
+        }
+
+        .left-bar.expand label {
+            display: inline-block;
+        }
+
+        .left-bar.expand li a {
+            text-decoration: none !important;
+        }
+
+        .left-bar.expand li:hover {
+            transition: all 0.2s ease-in-out;
+            background-color: #6f6f6f;
+        }
+/* Material icons */
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://example.com/MaterialIcons-Regular.eot);
+    /* For IE6-8 */
+    src: local('Material Icons'), local('MaterialIcons-Regular');
+}
+
+input[type=text]{
+    text-transform: uppercase;
+}
