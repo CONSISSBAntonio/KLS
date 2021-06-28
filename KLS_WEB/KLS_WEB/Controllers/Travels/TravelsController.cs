@@ -32,7 +32,7 @@ namespace KLS_WEB.Controllers.Travels
         public IActionResult formTravels(int id = 0)
         {
             ViewBag.id = id;
-            return View(this._UrlView + "formTravels.cshtml");
+            return View(this._UrlView + (id == 0 ? "New.cshtml" : "Details.cshtml"));
         }
 
         //Servicios
