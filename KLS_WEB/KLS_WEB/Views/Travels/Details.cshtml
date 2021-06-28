@@ -1,20 +1,16 @@
 ﻿@{
-    ViewData["Title"] = "Configuracion transportista";
+    ViewData["Title"] = "Configuracion viajes";
 }
 
 @{ int id = ViewBag.id; }
 
-@section Styles{
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
-}
-
 <div class="data-content p-4 text-left">
     <div class="p-4">
         <div class="text-left d-flex mb-3">
-            <a href="/Carriers">
+            <a href="/Travels">
                 <div class="material-icons icon-red">arrow_back</div>
             </a>
-            <div class="text-uppercase poppins medium size-24 pl-2">Transportista</div>
+            <div class="text-uppercase poppins medium size-24 pl-2">Viaje {folio}</div>
         </div>
         <div class="row">
             <div class="col-md-4 text-right">

@@ -1,0 +1,470 @@
+﻿@{
+    ViewData["Title"] = "Configuracion viajes";
+}
+
+@{
+    int id = ViewBag.id;
+}
+<style>
+    .form-check-label {
+        font-size: 12px !important;
+    }
+
+    li, .selection {
+        text-transform: uppercase !important;
+    }
+</style>
+<div class="data-content p-4 text-left">
+    <div class="p-4">
+        <div class="text-left d-flex mb-3">
+            <a href="/Travels">
+                <div class="material-icons icon-red">arrow_back</div>
+            </a>
+            <div class="text-uppercase poppins medium size-24 pl-2">Nuevo viaje</div>
+        </div>
+
+        <form id="frmRegister" class="viaje" action="#" method="post">
+
+            <div class="p-4 shadow bg-white">
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label class="col-form-label col-form-label-sm">Cliente</label>
+                        <div>
+                            <select class="form-control form-control-sm" id="cliente" name="cliente">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-3">
+                        <label class="col-form-label col-form-label-sm">Fecha de salida</label>
+                        <div>
+                            <input type="date" class="form-control form-control-sm" id="fechasalida" name="fechasalida"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="form-group col-3">
+                        <label class="col-form-label col-form-label-sm">Fecha de llegada</label>
+                        <div>
+                            <input type="date" class="form-control form-control-sm" id="fechallegada"
+                                   name="fechallegada" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-6">
+                        <div class="d-flex justify-content-between">
+                            <label class="col-form-label col-form-label-sm">Origen</label>
+                            <a class="btn btn-link text-primary" onclick="agregarCiudad(this);">Agregar</a>
+                        </div>
+                        <div>
+                            <select class="form-control form-control-sm text-uppercase" id="origen" name="origen" style="width: 100%;">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-6">
+                        <label class="col-form-label col-form-label-sm">Dirección Remitente</label>
+                        <div>
+                            <input type="text" class="form-control form-control-sm" id="direccionremitente"
+                                   name="direccionremitente" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-6">
+                        <div class="d-flex justify-content-between">
+                            <label class="col-form-label col-form-label-sm">Destino</label>
+                            <a class="btn btn-link text-primary" onclick="agregarCiudad(this);">Agregar</a>
+                        </div>
+                        <div>
+                            <select class="form-control form-control-sm" id="destino" name="destino" style="width: 100%;">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-6">
+                        <label class="col-form-label col-form-label-sm">Dirección Destinatario</label>
+                        <div>
+                            <input type="text" class="form-control form-control-sm" id="direcciondestinatario"
+                                   name="direcciondestinatario" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label class="col-form-label col-form-label-sm">Ruta</label>
+                        <div>
+                            <select class="form-control form-control-sm" id="ruta" name="ruta">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-3">
+                        <label class="col-form-label col-form-label-sm">Tipo de Unidad</label>
+                        <div>
+                            <select class="form-control form-control-sm" id="tipounidad" name="tipounidad">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-3">
+                        <label class="col-form-label col-form-label-sm">Tipo de Viaje</label>
+                        <div>
+                            <select class="form-control form-control-sm" id="tipoviaje" name="tipoviaje">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-4">
+                        <label class="col-form-label col-form-label-sm">Orden de compra</label>
+                        <div>
+                            <input type="text" class="form-control form-control-sm" id="ordencompra" name="ordencompra"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="form-group col-4">
+                        <label class="col-form-label col-form-label-sm">Referencia 2</label>
+                        <div>
+                            <input type="text" class="form-control form-control-sm" id="referenciados"
+                                   name="referenciados" required>
+                        </div>
+                    </div>
+                    <div class="form-group col-4">
+                        <label class="col-form-label col-form-label-sm">Referencia 3</label>
+                        <div>
+                            <input type="text" class="form-control form-control-sm" id="referenciatres"
+                                   name="referenciatres" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="form-group col-12 d-flex justify-content-between">
+                        <h6 class="font-weight-bold">Servicios</h6>
+                        <a class="btn btn-outline-secondary btn-sm" onclick="selectServicios(this);">
+                            <i class="material-icons">add</i>
+                        </a>
+                    </div>
+                    <div class="form-group col-12">
+                        <div class="addServicios border rounded d-flex justify-content-center align-items-center font-weight-bolder"
+                             onclick="selectServicios(this);"
+                             style="border: 5px dashed #585858 !important; height: 7rem; opacity: 0.2; cursor: pointer;">
+                            <h3>AGREGA SERVICIOS</h3>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+            <div class="row p-3">
+                <div class="col-3 bg-white">
+                    <p class="font-weight-bolder">Cálculos</p>
+                    <div class="d-flex justify-content-around">
+                        <div class="d-flex align-items-end flex-column">
+                            <span>Sub total</span>
+                            <span>IVA</span>
+                            <span>Costo</span>
+                            <span>Precio Cliente</span>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <b id="subtotal">0.00</b>
+                            <b id="iva">0.00</b>
+                            <b id="costo">0.00</b>
+                            <b id="preciocliente">0.00</b>
+                        </div>
+                    </div>
+                    <button class="btn btn-dark col-12 mt-4">Guardar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--Modal global-->
+<div class="modal fade" id="modalDiv" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo-modal">AGREGAR</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                <form id="frmServicios" class="viaje"
+                      onsubmit="event.preventDefault(); closeModal('agregarServicios');">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="0" name="terestrenacional">
+                        <label class="form-check-label" for="0">
+                            Terrestre nacional
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="1" name="naviera">
+                        <label class="form-check-label" for="1">
+                            Naviera
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="2" name="agenteaduanal">
+                        <label class="form-check-label" for="2">
+                            Agente aduanal
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="3"
+                               name="terrestreinternacional">
+                        <label class="form-check-label" for="3">
+                            Terrestre Internacional
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="4" name="aerolinea">
+                        <label class="form-check-label" for="4">
+                            Aerolinea
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="5" name="coloaders">
+                        <label class="form-check-label" for="5">
+                            Coloaders
+                        </label>
+                    </div>
+                    <br />
+                    <button type="submit" class="btn btn-dark guardar" style="width:100%;" id="btnAccion">
+                        Agregar
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal global-->
+<!--Modal agregar ciudad-->
+<div class="modal fade" id="modalAgregarCiudad" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                <form id="frmAgregarCiudad" onsubmit="event.preventDefault(); closeModal('agregarciudad');">
+                    <input type="hidden" name="id" id="idEditar" value="0" />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="">País</label><br />
+                                <select class="form-control" name="id_pais" id="id_pais" style="width:100%">
+                                    <option value="0">México</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="">Estado</label><br />
+                            <select class="form-control" name="id_estado" id="id_estado" style="width:100%">
+                                <option value="0">Monterrey</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="">ID SEPOMEX</label>
+                            <input type="text" class="form-control" name="id_sepomex" id="id_sepomex" required />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="">Ciudad/Municipio</label>
+                            <input type="text" class="form-control" name="nombre" id="nombre" value="" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="">Estatus</label><br />
+                            <select class="form-control form-control-sm" name="estatus" id="estatus" style="width:100%">
+                                <option value="1">Activo</option>
+                                <option value="2">Inactivo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br />
+                    <button type="submit" class="btn btn-dark guardar" style="width:100%;">
+                        Guardar
+                    </button>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
+                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal agregar ciudad-->
+
+@section Scripts{
+    <script>
+    var dataCity = [];
+    var catPais = [];
+    var catEstado = [];
+
+    $(window).ready(function () {
+        valId();
+        loadState();
+        loadCountry();
+        loadCity();
+        $("#frmRegister").submit(function (event) {
+            event.preventDefault();
+            var jsonData = convertJson($("#frmRegister"));
+            var normalFill = $("#rateYo").rateYo("option", "rating");
+            jsonData["NivelServicio"] = normalFill;
+            jsonData["id"] = @id;
+            console.log(jsonData);
+
+            if (parseInt(@id) == 0) {
+                $.post("/Carriers/setCarriers", jsonData, function (res) {
+                    console.log(res);
+                    $(location).attr('href', '/Carriers/formCarriers/' + res.id);
+                    dToast("success", "Registro guardado exitosamente.", "Registrado");
+                }).fail(function (error) {
+                    dToast("error", "Error al tratar de guardar el registro", "Error");
+                    $(".guardar").attr("disabled", false);
+                });
+            } else {
+                $.post("/Carriers/putCarriers", jsonData, function (res) {
+                    console.log(res);
+                    dToast("success", "Registro actualizado exitosamente.", "Registrado");
+                }).fail(function (error) {
+                    dToast("error", "Error al tratar de actualizar el registro", "Error");
+                    $(".guardar").attr("disabled", false);
+                });
+            }
+        });
+    });
+
+    function agregarCiudad(element) {
+        $('#modalAgregarCiudad').modal('show');
+    }
+
+    function closeModal(action) {
+        $('#modalDiv').modal('hide');
+        if (action == 'agregarciudad') {
+            var jsonData = convertJson($("#frmAgregarCiudad"));
+            $.post("/Catalogs/Geography/City/setCity", jsonData, function (res) {
+                loadCity();
+                $('#modalAgregarCiudad').modal('hide');
+                dToast("success", "Registro actualizado exitosamente.", "Registrado");
+                $(".guardar").attr("disabled", false);
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de guardar el registro", "Error");
+                $(".guardar").attr("disabled", false);
+            });
+        } else {
+            const servicios = $('#frmServicios').serialize();
+            const split = servicios.split('&');
+            let addservicios = ``;
+            if (split[0] != "") {
+                split.map(servicio => {
+                    const servicioselected = servicio.split('=');
+                    const id = $(`[name=${servicioselected[0]}`).attr('id');
+                    const text = $(`[for=${id}]`).text();
+
+                    addservicios += `<p class="mr-1">●${text}</p>`;
+                    $('.addServicios').css('opacity', 1);
+                });
+            } else {
+                addservicios = `<h3>AGREGA SERVICIOS</h3>`;
+                $('.addServicios').css('opacity', 0.2);
+            }
+            $('.addServicios').html(addservicios);
+        }
+    }
+
+    //Cargar ciudades
+    function loadCity() {
+        $.get("/Catalogs/Geography/City/getCity", function (res) {
+            catCiudad = res;
+            $("#origen, #destino").empty();
+            $.each(res, function (item, key) {
+                $("#origen, #destino").append(`<option value="${key.id}">${key.nombre}</option>`);
+            });
+            $("#origen, #destino").select2();
+        }).fail(function (error) {
+            dToast("error", "Error al obtener paises", "Atencion!");
+        });
+    }
+
+    //Cargar paises
+    function loadCountry() {
+        $.get("/Catalogs/Geography/Country/getCountry", function (res) {
+            catPais = res;
+            $("#id_pais").empty();
+            $.each(res, function (item, key) {
+                $("#id_pais").append(`<option value="${key.id}">${key.pais}</option>`);
+            });
+            $("#id_pais").select2();
+        }).fail(function (error) {
+            dToast("error", "Error al obtener paises", "Atencion!");
+        });
+    }
+
+    //Cargar estados
+    function loadState() {
+        $.get("/Catalogs/Geography/State/getState", function (res) {
+            catEstado = res;
+            $("#id_estado").empty();
+            $.each(res, function (item, key) {
+                $("#id_estado").append(`<option value="${key.id}">${key.nombre}</option>`);
+            });
+            $("#id_estado").select2();
+        }).fail(function (error) {
+            dToast("error", "Error al obtener paises", "Atencion!");
+        });
+    }
+
+    function selectServicios(element) {
+        const elemento = jQuery(element);
+        elemento.attr('disabled', true);
+        $("#modalDiv").modal("show");
+    }
+
+    function valId() {
+        if (parseInt(@id) != 0) {
+            $("#idTransportista").val(@id);
+            $.get("/Carriers/getCarrier/", { "id": @id}, function (res) {
+                console.log(res);
+                $("#Banco").val(res.banco);
+                Url("#Comentario").val(res.comentario);
+                $("#Contrasena").val(res.contrasena);
+                $("#Cuenta").val(res.cuenta);
+                $("#DireccionFiscal").val(res.direccionFiscal);
+                $("#DireccionOficinas").val(res.direccionOficinas);
+                $("#DireccionPatio").val(res.direccionPatio);
+                $("#Estatus").val(res.estatus);
+                $("#Facebook").val(res.facebook);
+                $("#FechaUltimoViaje").val(res.fechaUltimoViaje);
+                $("#GoogleMaps").val(res.googleMaps);
+                $("#GradoConfiabilidad").val(res.gradoConfiabilidad);
+                $("#NivelServicio").val(res.nivelServicio);
+                $("#NombreComercial").val(res.nombreComercial);
+                $("#OtraRed").val(res.otraRed);
+                $("#PaginaWeb").val(res.paginaWeb);
+                $("#RazonSocial").val(res.razonSocial);
+                $("#Rfc").val(res.rfc);
+                $("#Servicio").val(res.servicio);
+                $("#Tamanio").val(res.tamanio);
+                $("#UsuarioMaster").val(res.usuarioMaster);
+            }).fail(function (error, xhr, status) {
+                console.log(error);
+            });
+
+        }
+    }
+
+    </script>
+}

@@ -424,7 +424,6 @@ C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\
 C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Shared\Error.cshtml.g.cs
 C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_Layout.cshtml.g.cs
 C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_ValidationScriptsPartial.cshtml.g.cs
-C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Travels\formTravels.cshtml.g.cs
 C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Travels\Index.cshtml.g.cs
 C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\_ViewImports.cshtml.g.cs
 C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\_ViewStart.cshtml.g.cs
@@ -435,3 +434,5 @@ C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\KLS_WE
 C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\KLS_WEB.dll
 C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\KLS_WEB.pdb
 C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\KLS_WEB.genruntimeconfig.cache
+C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Travels\Details.cshtml.g.cs
+C:\Users\Consiss\source\repos\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Travels\New.cshtml.g.cs
