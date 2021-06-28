@@ -130,6 +130,7 @@
             $("#frmRegister").submit(function (event) {
                 event.preventDefault();
                 var jsonData = convertJson($("#frmRegister"));
+                console.log(jsonData);
                 if (parseInt($("#idEditar").val()) != 0) {
                     $.post("TypesOfUnits/putUnidades", jsonData, function (res) {
                         loadTable();
@@ -144,7 +145,7 @@
                         loadTable();
                         dToast("success", "Se guardo el registro", "Registrado");
                         $(".guardar").attr("disabled", false);
-                        $('#frmRegister').trigger("reset");
+                        //$('#frmRegister').trigger("reset");
                     }).fail(function (error) {
                         dToast("error", "Error al tratar de guardar el registro", "Error");
                         $(".guardar").attr("disabled", false);
