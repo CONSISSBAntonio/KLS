@@ -1,162 +1,87 @@
 ﻿@{
-    ViewData["Title"] = "Configuracion viajes";
+    ViewData["Title"] = "Detalle del viaje";
 }
 
 @{ int id = ViewBag.id; }
 
 <div class="data-content p-4 text-left">
     <div class="p-4">
-        <div class="text-left d-flex mb-3">
-            <a href="/Travels">
-                <div class="material-icons icon-red">arrow_back</div>
-            </a>
-            <div class="text-uppercase poppins medium size-24 pl-2">Viaje {folio}</div>
+        <div class="row d-flex b-3 justify-content-between">
+            <div class="d-flex">
+                <a href="/Travels">
+                    <div class="material-icons icon-red">arrow_back</div>
+                </a>
+                <div class="text-uppercase poppins medium size-24 pl-2">Viaje {folio}</div>
+            </div>
+            <div class="d-flex mx-auto">
+                <h4>EN TRÁNSITO</h4>
+                <h4 class="ml-5">A TIEMPO (0HR)</h4>
+            </div>
         </div>
         <div class="row">
-            <div class="col-md-4 text-right">
+            <div class="col-md-4">
 
                 <form id="frmRegister" action="#" method="post">
 
-                    <button class="btn btn-sm" type="submit" style="background-color:transparent;">
-                        <span class="material-icons" style="color:cornflowerblue;">
-                            save
-                        </span>
-                    </button>
-
                     <div class="p-4 shadow bg-white">
                         <div class="form-group row">
-                            <label class="col-sm-5 col-form-label col-form-label-sm">Id</label>
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Folio de viaje</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="idTransportista" disabled="disabled" required>
+                                <input type="text" class="form-control form-control-sm" id="folio" disabled="disabled" required>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-5 col-form-label col-form-label-sm">Nombre Comercial</label>
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Cliente</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="NombreComercial" name="NombreComercial" required>
+                                <input type="text" class="form-control form-control-sm" id="cliente" disabled="disabled" required>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-5 col-form-label col-form-label-sm">Tamaño</label>
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Dirección Origen</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="Tamanio" name="Tamanio" required>
+                                <input type="text" class="form-control form-control-sm" id="direccionorigen" disabled="disabled" required>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-5 col-form-label col-form-label-sm">Servicio</label>
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Dirección Destino</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="Servicio" name="Servicio" required>
+                                <input type="text" class="form-control form-control-sm" id="direcciondestino" disabled="disabled" required>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-5 col-form-label col-form-label-sm">Grado Confiabilidad (P)</label>
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Ruta</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="GradoConfiabilidad" name="GradoConfiabilidad" required>
+                                <input type="text" class="form-control form-control-sm" id="ruta" disabled="disabled" required>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-5 col-form-label col-form-label-sm">Nivel Servicio Interno</label>
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Fecha Salida</label>
                             <div class="col-sm-7">
-                                <div id="rateYo"></div>
+                                <input type="text" class="form-control form-control-sm" id="fechasalida" disabled="disabled" required>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-5 col-form-label col-form-label-sm">Comentario</label>
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Fecha Entrega</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="Comentario" name="Comentario">
+                                <input type="text" class="form-control form-control-sm" id="fechaentrega" disabled="disabled" required>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-5 col-form-label col-form-label-sm">Fecha último viaje</label>
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Costo</label>
                             <div class="col-sm-7">
-                                <input type="date" class="form-control form-control-sm" id="FechaUltimoViaje" name="FechaUltimoViaje">
+                                <input type="text" class="form-control form-control-sm" id="costo" disabled="disabled" required>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-5 col-form-label col-form-label-sm">Estatus</label>
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Precio Cliente</label>
                             <div class="col-sm-7">
-                                <select class="form-control form-control-sm" id="Estatus" name="Estatus">
-                                    <option value="1">Activo</option>
-                                    <option value="0">Inactivo</option>
-                                </select>
+                                <input type="text" class="form-control form-control-sm" id="preciocliente" disabled="disabled" required>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-5 col-form-label col-form-label-sm">Razón Social</label>
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Tipo de Unidad</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="RazonSocial" name="RazonSocial">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-5 col-form-label col-form-label-sm">RFC</label>
-                            <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="Rfc" name="Rfc">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-5 col-form-label col-form-label-sm">Dirección Fiscal</label>
-                            <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="DireccionFiscal" name="DireccionFiscal">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-5 col-form-label col-form-label-sm">Dirección Oficinas</label>
-                            <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="DireccionOficinas" name="DireccionOficinas">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-5 col-form-label col-form-label-sm">Dirección Patio</label>
-                            <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="DireccionPatio" name="DireccionPatio">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-5 col-form-label col-form-label-sm">Google Maps</label>
-                            <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="GoogleMaps" name="GoogleMaps">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-5 col-form-label col-form-label-sm">Página Web</label>
-                            <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="PaginaWeb" name="PaginaWeb">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-5 col-form-label col-form-label-sm">Facebook</label>
-                            <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="Facebook" name="Facebook">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-5 col-form-label col-form-label-sm">Otra res social</label>
-                            <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="OtraRed" name="OtraRed">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-5 col-form-label col-form-label-sm">Banco</label>
-                            <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="Banco" name="Banco">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-5 col-form-label col-form-label-sm">Cuenta</label>
-                            <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="Cuenta" name="Cuenta">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-5 col-form-label col-form-label-sm">Usuario Master</label>
-                            <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="UsuarioMaster" name="UsuarioMaster">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-5 col-form-label col-form-label-sm">Contraseña</label>
-                            <div class="col-sm-7">
-                                <input type="password" class="form-control form-control-sm" id="Contrasena" name="Contrasena">
+                                <input type="text" class="form-control form-control-sm" id="tipounidad" disabled="disabled" required>
                             </div>
                         </div>
                     </div>
@@ -167,66 +92,66 @@
             <div class="col-md-8">
                 <div class="catalog-list">
 
-                    <a href="/Carriers/Operators" class="catalog">
+                    <a href="/Travels/Services" class="catalog">
                         <div class="content">
                             <span class="material-icons">
                                 people
                             </span>
-                            <div class="name font-barlow">Operadores</div>
+                            <div class="name font-barlow">Servicios</div>
                         </div>
                     </a>
 
-                    <a href="/Carriers/Inventory" class="catalog">
+                    <a href="/Travels/Requisites" class="catalog">
                         <div class="content">
                             <span class="material-icons">
-                                local_shipping
+                                inventory_2
                             </span>
-                            <div class="name font-barlow">Inventario</div>
+                            <div class="name font-barlow">Requisitos</div>
                         </div>
                     </a>
 
-                    <a href="/Carriers/Library/@id" class="catalog">
+                    <a href="/Travels/Commodity" class="catalog">
                         <div class="content">
                             <span class="material-icons">
                                 store
                             </span>
-                            <div class="name font-barlow">Biblioteca digital</div>
+                            <div class="name font-barlow">Mercancía</div>
                         </div>
                     </a>
 
-                    <a href="/Carriers/Contacts/@id" class="catalog">
+                    <a href="/Travels/Invoice" class="catalog">
                         <div class="content">
                             <span class="material-icons">
-                                call
+                                receipt_long
                             </span>
-                            <div class="name font-barlow">Contactos</div>
+                            <div class="name font-barlow">Facturación</div>
                         </div>
                     </a>
 
-                    <a href="/Carriers/Certifications/@id" class="catalog">
+                    <a href="/Travels/Documents" class="catalog">
                         <div class="content">
                             <span class="material-icons">
-                                workspace_premium
+                                folder
                             </span>
-                            <div class="name font-barlow">Certificaciones</div>
+                            <div class="name font-barlow">Documentos</div>
                         </div>
                     </a>
 
-                    <a href="/Carriers/Box/@id" class="catalog">
+                    <a href="/Travels/History" class="catalog">
                         <div class="content">
                             <span class="material-icons">
-                                all_inbox
+                                manage_search
                             </span>
-                            <div class="name font-barlow">Tipos de Mercancia</div>
+                            <div class="name font-barlow">Historial</div>
                         </div>
                     </a>
 
-                    <a href="/Carriers/Routes/@id" class="catalog">
+                    <a href="/Travels/Tracking" class="catalog">
                         <div class="content">
                             <span class="material-icons">
-                                commute
+                                pin_drop
                             </span>
-                            <div class="name font-barlow">Rutas</div>
+                            <div class="name font-barlow">Monitoreo</div>
                         </div>
                     </a>
 
