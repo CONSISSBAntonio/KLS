@@ -2,36 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>cc121e11-4874-4002-bd5f-697f04216351</UserSecretsId>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Migrations\20210617203522_RegionUps.cs" />
-    <Compile Remove="Migrations\20210617203522_RegionUps.Designer.cs" />
-    <Compile Remove="Migrations\20210617204237_InitialOne.cs" />
-    <Compile Remove="Migrations\20210617204237_InitialOne.Designer.cs" />
-    <Compile Remove="Migrations\20210622190324_ruta.cs" />
-    <Compile Remove="Migrations\20210622190324_ruta.Designer.cs" />
-    <Compile Remove="Migrations\20210622190938_ruta.cs" />
-    <Compile Remove="Migrations\20210622190938_ruta.Designer.cs" />
-    <Compile Remove="Migrations\20210623002729_rutaok.cs" />
-    <Compile Remove="Migrations\20210623002729_rutaok.Designer.cs" />
-    <Compile Remove="Migrations\20210623002948_rutaok.cs" />
-    <Compile Remove="Migrations\20210623002948_rutaok.Designer.cs" />
-    <Compile Remove="Migrations\20210622173757_Initial22.cs" />
-    <Compile Remove="Migrations\20210622173757_Initial22.Designer.cs" />
-    <Compile Remove="Migrations\20210623010345_Transportistas1.cs" />
-    <Compile Remove="Migrations\20210623010345_Transportistas1.Designer.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.0" />
   </ItemGroup>
 
 

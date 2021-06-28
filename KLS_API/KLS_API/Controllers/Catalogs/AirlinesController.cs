@@ -12,8 +12,8 @@ using System.Threading.Tasks;
 namespace KLS_API.Controllers.Catalogs
 {
     [Route("Catalogs/Airlines")]
-    [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[ApiController]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class AirlinesController : Controller
     {
         private readonly AppDbContext context;

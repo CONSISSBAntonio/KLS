@@ -43,15 +43,15 @@ namespace KLS_API.Controllers.System
 
             if (result.Succeeded)
             {
-                //if (!await roleManager.RoleExistsAsync(userDTO.Rol))
-                //{
-                //    await roleManager.CreateAsync(new IdentityRole(userDTO.Rol));
-                //}
+                if (!await roleManager.RoleExistsAsync(userDTO.Rol))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(userDTO.Rol));
+                }
 
-                //if (!await roleManager.RoleExistsAsync("Customer"))
-                //{
-                //    await roleManager.CreateAsync(new IdentityRole("Customer"));
-                //}
+                if (!await roleManager.RoleExistsAsync("Customer"))
+                {
+                    await roleManager.CreateAsync(new IdentityRole("Customer"));
+                }
 
                 await userManager.AddToRoleAsync(user, userDTO.Rol);
 

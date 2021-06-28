@@ -33,7 +33,7 @@ namespace KLS_API
         {
             
             //Lineas agregadas 10/06/2021
-            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ConnectionString")));
+            services.AddDbContext<AppDbContext>(options => options.UseMySql(Configuration.GetConnectionString("ConnectionString")));
             
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddDefaultTokenProviders()
