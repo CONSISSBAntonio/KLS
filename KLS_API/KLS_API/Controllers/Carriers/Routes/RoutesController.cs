@@ -37,11 +37,12 @@ namespace KLS_API.Controllers.Carriers.Routes
         }
         
         [Route("getRoutes")]
-        public ActionResult getRoutes()
+        public ActionResult getRoutes([FromBody] Tr_Has_Rutas tr_rutas)
         {
             try
             {
-                return Ok(context.Tr_Has_Rutas.ToList());
+                var asd = context.Tr_Has_Rutas.Where(f => f.Id_Transportista == tr_rutas.Id_Transportista).ToList();
+                return Ok(asd);
             }
             catch (Exception ex)
             {

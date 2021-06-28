@@ -6,7 +6,7 @@
 <div class="data-content p-4 text-left">
     <div class="p-4">
         <div class="text-left d-flex mb-3">
-            <a href="/Carriers/Routes/formRoutes/@id">
+            <a href="/Carriers/formCarriers/@id">
                 <div class="material-icons icon-red">arrow_back</div>
             </a>
             <div class="text-uppercase poppins medium size-24 pl-2">RUTAS TRANSPORTISTAS</div>
@@ -44,20 +44,20 @@
 
         $(window).ready(function () {
             getCiudad();
-            getEstado();
-            loadTable();
         });
 
         function getCiudad() {
             $.get("../../Catalogs/Geography/City/getCity", function (res) {
                 dataCiudad = res;
                 console.log(res);
+                getEstado();
             });
         }
 
         function getEstado() {
             $.get("../../Catalogs/Geography/State/getState", function (res) {
                 dataEstado = res;
+                loadTable();
             });
         }
 
@@ -65,30 +65,29 @@
             var stable = $('.table-viajes').DataTable();
             stable.destroy();
             $("#table-info").empty();
-            $.get("/Carriers/Routes/getRoutesAll/", function (res) {
+            $.get("/Carriers/Routes/getRoutesAll/", { "Id_Transportista":@id}, function (res) {
                 console.log(res);
                 $.each(res, function (item, key) {
-
-                     //let cOrigen = dataCiudad.findIndex(ciudad => ciudad.id === key.id_Ciudad_Origen);
-                     //let cDestino = dataCiudad.findIndex(ciudad => ciudad.id === key.id_Ciudad_Destino);
-                     //let eOrigen = dataEstado.findIndex(estado => estado.id === key.id_Estado_Origen);
-                     //let eDestino = dataEstado.findIndex(estado => estado.id === key.id_Estado_Estado); 
+                     let cOrigen = dataCiudad.findIndex(ciudad => ciudad.id === key.id_Ciudad_Origen);
+                     let cDestino = dataCiudad.findIndex(ciudad => ciudad.id === key.id_Ciudad_Destino);
+                     let eOrigen = dataEstado.findIndex(estado => estado.id === key.id_Estado_Origen);
+                     let eDestino = dataEstado.findIndex(estado => estado.id === key.id_Estado_Destino); 
 
                     $("#table-info").append(`
-                             <tr>
-                                <td>${nCon(key.id)}</td>
-                                <td>${dataEstado[0].nombre} - ${dataCiudad[0].nombre}</td>
-                                <td>${dataEstado[0].nombre} - ${dataCiudad[0].nombre}</td>
-                                <td>$$</td>
-                                <td>${statusTable(key.estatus)}</td>
-                                <td>
-                                    <a href="/Carriers/Routes/formRoutes/`+@id+`/${nCon(key.id)}">
-                                        <span class="material-icons">
-                                            mode_edit
-                                        </span>
-                                    </a>
-                                </td>
-                            </tr>`);
+                        <tr>
+                        <td>${nCon(key.id)}</td>
+                        <td>${dataEstado[eOrigen].nombre} - ${dataCiudad[cOrigen].nombre}</td>
+                        <td>${dataEstado[eDestino].nombre} - ${dataCiudad[cDestino].nombre}</td>
+                        <td>$$</td>
+                        <td>${statusTable(key.estatus)}</td>
+                        <td>
+                            <a href="/Carriers/Routes/formRoutes/`+@id+`/${nCon(key.id)}">
+                                <span class="material-icons">
+                                    mode_edit
+                                </span>
+                            </a>
+                        </td>
+                    </tr>`);
                 });
                 dTable("table-viajes");
             });

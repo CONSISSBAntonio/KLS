@@ -30,33 +30,27 @@
                         <div class="form-group row">
                             <label class="col-4 col-form-label col-form-label-sm">Estado Origen</label>
                             <div class="col-sm-8">
-                                <select class="form-control form-control-sm" id="Id_Estado_Origen" name="Id_Estado_Origen">
-                                    <option value="0">Seleccionar</option>
-                                </select>
+                                <select class="form-control form-control-sm" id="Id_Estado_Origen" name="Id_Estado_Origen" style="width:100%;"></select>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-4 col-form-label col-form-label-sm">Ciudad Origen</label>
                             <div class="col-sm-8">
-                                <select class="form-control form-control-sm" id="Id_Ciudad_Origen" name="Id_Ciudad_Origen">
-                                    <option value="0">Seleccionar</option>
+                                <select class="form-control form-control-sm" id="Id_Ciudad_Origen" name="Id_Ciudad_Origen" style="width:100%;">
+   
                                 </select>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-4 col-form-label col-form-label-sm">Estado Destino</label>
                             <div class="col-sm-8">
-                                <select class="form-control form-control-sm" id="Id_Estado_Destino" name="Id_Estado_Destino">
-                                    <option value="0">Seleccionar</option>
-                                </select>
+                                <select class="form-control form-control-sm" id="Id_Estado_Destino" name="Id_Estado_Destino" style="width:100%;"></select>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-4 col-form-label col-form-label-sm">Ciudad Destino</label>
                             <div class="col-sm-8">
-                                <select class="form-control form-control-sm" id="Id_Ciudad_Destino" name="Id_Ciudad_Destino">
-                                    <option value="0">Seleccionar</option>
-                                </select>
+                                <select class="form-control form-control-sm" id="Id_Ciudad_Destino" name="Id_Ciudad_Destino" style="width:100%;"></select>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -146,15 +140,19 @@
 @section Scripts{ 
     <script>
         dataRoutes = [];
-        $(window).ready(function () {
+        var dataCiudad = [];
+        var dataEstado = [];
 
+        $(window).ready(function () {
+            getCiudad();
+            getEstado();
             loadTable();
 
             $("#frmRegister").submit(function (event) {
                 event.preventDefault();
                 var jsonData = convertJson($("#frmRegister"));
                 jsonData["Id_Transportista"] = @id;
-
+                console.log(jsonData);
                 if (parseInt(@idRuta) == 0) {
                     $.post("/Carriers/Routes/setRoutes/", jsonData, function (res) {
                         $('#frmRegister').trigger("reset");
@@ -176,7 +174,7 @@
         });
 
         function loadTable() {
-            $("#idEditar").attr("disabled", true);
+            //$("#idEditar").attr("disabled", true);
             if (@idRuta!= 0) {
                 $.get("/Carriers/Routes/getRoutes/", { "Id":@idRuta}, function (res) {
                     dataRoutes = res;
@@ -202,6 +200,39 @@
                     console.log(dataRoutes);
                 });
             } 
+        }
+
+        function getEstado() {
+            $.get("/../../Catalogs/Geography/State/getState", function (res) {
+                dataEstado = res;
+                $("#Id_Estado_Origen").empty();
+                $("#Id_Estado_Destino").empty();
+                $.each(res, function (item, key) {
+                    $("#Id_Estado_Origen").append(`<option value="${key.id}">${key.nombre}</option>`);
+                    $("#Id_Estado_Destino").append(`<option value="${key.id}">${key.nombre}</option>`);
+                });
+                $("#Id_Estado_Origen").select2();
+                $("#Id_Estado_Destino").select2();
+            }).fail(function (error) {
+                dToast("error", "Error al obtener paises", "Atencion!");
+            });
+        }
+
+        function getCiudad() {
+            $.get("/../../Catalogs/Geography/City/getCity", function (res) {
+                dataCiudad = res;
+                $("#Id_Ciudad_Origen").empty();
+                $("#Id_Ciudad_Destino").empty();
+                $.each(res, function (item, key) {
+                    $("#Id_Ciudad_Origen").append(`<option value="${key.id}">${key.nombre}</option>`);
+                    $("#Id_Ciudad_Destino").append(`<option value="${key.id}">${key.nombre}</option>`);
+                });
+                $("#Id_Ciudad_Origen").select2();
+                $("#Id_Ciudad_Destino").select2();
+                loadTable();
+            }).fail(function (error) {
+                dToast("error", "Error al obtener paises", "Atencion!");
+            });
         }
 
     </script>
