@@ -119,11 +119,13 @@
             $("#titulo-modal").empty("");
             $("#titulo-modal").html(titulo);
             $("#idEditar").val(idEditar);
+            console.log(idEditar);
+            console.log(dataLibrary);
             if (accion == "Editar") {
                 try {
                     let indice = dataLibrary.findIndex(service => service.id === idEditar);
-                    $("#Nombre").val(dataLibrary[indice].nombre);
-                    $('#Estatus option[value="' + dataLibrary[indice].estatus + '"]').attr("selected", true);
+                    $("#nombre").val(dataLibrary[indice].nombre);
+                    $('#estatus option[value="' + dataLibrary[indice].estatus + '"]').attr("selected", true);
                     $("#modalDiv").modal("show");
                 } catch (error) {
                     dToast("error", "Error al tratar de editar, intenta recargar la página.", "Error");
@@ -140,7 +142,6 @@
             $("#table-info").empty();
             $.get("/Carriers/Library/getLibrary/", { "Id_Transportista":@id}, function (res) {
                 dataLibrary = res;
-                console.log(res);
                 $.each(dataLibrary, function (item, key) {
                     $("#table-info").append(`
                              <tr>

@@ -14,8 +14,8 @@
             <input type="hidden" value="0" id="idCertificacion" name="Id"/>
             <div class="text-right" style="width:40%;">
                 <button class="btn btn-sm" type="submit" style="background-color:transparent;">
-                    <span class="material-icons" style="color:cornflowerblue;">
-                        save
+                    <span class="material-icons" style="color:cornflowerblue;" id="span-icon">
+                        
                     </span>
                 </button>
             </div>
@@ -91,6 +91,7 @@
 
         function valId(){
             if (parseInt(@id) != 0) {
+                $("#span-icon").append("edit");
                 $.get("/Carriers/Certifications/getCertifiacions/", { "Id_Transportista":@id}, function (res) {
                     if (res != null) {
                         console.log(res);
@@ -100,7 +101,7 @@
                         $('#Otro').prop('checked', res.otro);
                         $("#O_Opcional").val(res.o_Opcional);
                     } else {
-                        console.log(res);
+                        $("#span-icon").append("save");
                     }
                 }).fail(function (error, xhr, status) {
                     console.log(xhr);

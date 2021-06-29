@@ -148,7 +148,7 @@
                 } else {
                     $.post("TypesOfUnits/setUnidades", jsonData, function (res) {
                         loadTable();
-                        dToast("success", "Se guardo el registro", "Registrado");
+                        dToast("success", "Se guardó el registro", "Registrado");
                         $(".guardar").attr("disabled", false);
                         $('#frmRegister').trigger("reset");
                     }).fail(function (error) {

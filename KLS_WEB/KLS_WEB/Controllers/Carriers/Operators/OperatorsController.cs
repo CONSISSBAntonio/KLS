@@ -22,8 +22,10 @@ namespace KLS_WEB.Controllers.Carriers.CarriersOperators
         {
             this.AppContext = _AppContext;
         }
-        public IActionResult Index()
+        [Route("{id=0}")]
+        public IActionResult Index(int id)
         {
+            ViewBag.id = id;
             return View(this._UrlView + "index.cshtml");
         }
     }

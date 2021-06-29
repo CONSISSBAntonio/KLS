@@ -26,7 +26,7 @@
         <table id="table" class="table table-striped table-bordered display table-hover table-viajes" width="100%">
             <thead>
                 <tr>
-                    <th>Pais</th>
+                    <th>País</th>
                     <th>ID SEPOMEX</th>
                     <th>Estado</th>
                     <th>Estatus</th>
@@ -116,7 +116,7 @@
                 } else {
                     $.post("State/setState", jsonData, function (res) {
                         loadTable();
-                        dToast("success", "Se guardo el registro", "Registrado");
+                        dToast("success", "Se guardó el registro", "Registrado");
                         $(".guardar").attr("disabled", false);
                         $('#frmRegister').trigger("reset");
                     }).fail(function (error) {
@@ -132,11 +132,10 @@
             $(".guardar").html(accion);
             $("#titulo-modal").empty("");
             $("#titulo-modal").html(titulo);
-
+            $("#idEditar").val(idEditar);
             if (accion == "Editar") {
                 try {
                     let indice = dataState.findIndex(service => service.id === idEditar);
-                    $("#idEditar").val(idEditar);
                     $("#nombre").val(dataState[indice].nombre);
                     $("#id_sepomex").val(dataState[indice].id_sepomex);
                     $('#estatus option[value="' + dataState[indice].estatus + '"]').attr("selected", true);
@@ -158,7 +157,10 @@
                 catPais = res;
                 $("#id_pais").empty();
                 $.each(res, function (item, key) {
-                    $("#id_pais").append(`<option value="${key.id}">${key.pais}</option>`);
+                    if (key.estatus != 2) {
+                        $("#id_pais").append(`<option value="${key.id}">${key.pais}</option>`);
+                    }
+                    
                 });
                 $("#id_pais").select2();
             }).fail(function (error) {

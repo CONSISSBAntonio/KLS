@@ -127,7 +127,7 @@
                 } else {
                     $.post("Colonies/setColonies", jsonData, function (res) {
                         loadTable();
-                        dToast("success", "Se guardo el registro", "Registrado");
+                        dToast("success", "Se guardó el registro", "Registrado");
                         $(".guardar").attr("disabled", false);
                         $('#frmRegister').trigger("reset");
                     }).fail(function (error) {
@@ -144,7 +144,6 @@
             $("#titulo-modal").empty("");
             $("#titulo-modal").html(titulo);
             $("#idEditar").val(idEditar);
-
             if (accion == "Editar") {
                 try {
                     let indice = dataColonias.findIndex(service => service.id === idEditar);
@@ -169,7 +168,9 @@
                 console.log(res);
                 $("#id_estado").empty();
                 $.each(res, function (item, key) {
-                    $("#id_estado").append(`<option value="${key.id}">${key.nombre}</option>`);
+                    if (key.estatus != 2) {
+                        $("#id_estado").append(`<option value="${key.id}">${key.nombre}</option>`);
+                    }
                 });
                 $("#id_estado").select2();
                 loadCity();
@@ -184,7 +185,9 @@
                 catCiudad = res;
                 $("#id_ciudad").empty();
                 $.each(res, function (item, key) {
-                    $("#id_ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
+                    if (key.estatus != 2) {
+                        $("#id_ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
+                    }
                 });
                 $("#id_ciudad").select2();
                 loadTable();

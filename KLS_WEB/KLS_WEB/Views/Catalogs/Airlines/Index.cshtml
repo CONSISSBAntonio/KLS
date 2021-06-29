@@ -137,7 +137,7 @@
                 } else {
                     $.post("Airlines/setAirlines", jsonData, function (res) {
                         loadTable();
-                        dToast("success", "Se guardo el registro", "Registrado");
+                        dToast("success", "Se guardó el registro", "Registrado");
                         $(".guardar").attr("disabled", false);
                         $('#frmRegister').trigger("reset");
                     }).fail(function (error) {
@@ -154,7 +154,6 @@
             $("#titulo-modal").empty("");
             $("#titulo-modal").html(titulo);
             $("#idEditar").val(idEditar);
-
             if (accion == "Editar") {
                 try {
                     let indice = DataAirlines.findIndex(service => service.id === idEditar);

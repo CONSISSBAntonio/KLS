@@ -110,7 +110,7 @@
                 } else {
                     $.post("Subservices/setSubservices", jsonData, function (res) {
                         loadTable();
-                        dToast("success", "Se guardo el registro", "Registrado");
+                        dToast("success", "Se guardó el registro", "Registrado");
                         $(".guardar").attr("disabled", false);
                         $('#frmRegister').trigger("reset");
                     }).fail(function (error) {
@@ -128,10 +128,9 @@
             $(".guardar").html(accion);
             $("#titulo-modal").empty("");
             $("#titulo-modal").html(titulo);
-
+            $("#idEditar").val(idEditar);
             if (accion == "Editar") {
                 try {
-                    $("#idEditar").val(idEditar);
                     let indice = dataSubservice.findIndex(service => service.id === idEditar);
                     $("#nombre").val(dataSubservice[indice].nombre);
                     $("#servicio").val(dataSubservice[indice].servicio);
