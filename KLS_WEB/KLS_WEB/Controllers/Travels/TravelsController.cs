@@ -4,6 +4,7 @@ using KLS_WEB.Models.Travels;
 using KLS_WEB.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -67,7 +68,6 @@ namespace KLS_WEB.Controllers.Travels
             Transportista dataReport;
             dataReport = await this.AppContext.Execute<Transportista>(MethodType.GET, _UrlApi + "/getCarrier", dataModel);
             return Json(dataReport);
-        }
-
+        }        
     }
 }

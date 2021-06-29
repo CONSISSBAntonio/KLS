@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "8+jzYCbslEo+01jdVaWSqtDU0XG7QVESbyXFN5PYc4w00gvYokKOqkpuHB7gGvoZXDwGw/RY90U3xnSjcawJMw==",
+  "dgSpecHash": "cJJ5fmfx2g6HrZ8SYX0dSBNDwGpOj+jeKP7mmwjIPzLUeF4auw0we+A5Z5QTSOc7aevC7kpVgVon5cUhcI4o5g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Consiss\\Documents\\DOCS\\KLS\\DESARROLLO\\KLS_API\\KLS_API\\KLS_API.csproj",
+  "projectFilePath": "C:\\Users\\Consiss\\Documents\\Visual Studio 2019\\GitHubProjects\\KLS\\KLS_API\\KLS_API\\KLS_API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Consiss\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\3.1.10\\microsoft.aspnetcore.authentication.jwtbearer.3.1.10.nupkg.sha512",
     "C:\\Users\\Consiss\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\3.1.10\\microsoft.aspnetcore.cryptography.internal.3.1.10.nupkg.sha512",
