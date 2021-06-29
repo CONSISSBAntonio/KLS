@@ -390,3 +390,12 @@ FodyWeavers.xsd
 # JetBrains Rider
 .idea/
 *.sln.iml
+KLS_API/.vs/KLS_API/v16/.suo
+KLS_API/KLS_API/obj/Debug/netcoreapp3.1/KLS_API.assets.cache
+KLS_API/KLS_API/obj/Debug/netcoreapp3.1/KLS_API.csproj.AssemblyReference.cache
+KLS_API/KLS_API/obj/KLS_API.csproj.nuget.dgspec.json
+KLS_API/KLS_API/obj/KLS_API.csproj.nuget.g.props
+KLS_API/KLS_API/obj/project.assets.json
+KLS_API/KLS_API/obj/project.nuget.cache
+KLS_WEB/.vs/KLS_WEB/DesignTimeBuild/.dtbcache.v2
+KLS_WEB/.vs/KLS_WEB/v16/.suo
