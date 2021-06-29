@@ -1,6 +1,8 @@
 .vscode/launch.json
 .vscode/tasks.json
-KLS_API/.vs/
-KLS_API/KLS_API/appsettings.json
-KLS_API/KLS_API/bin/
-KLS_API/KLS_API/obj/
+KLS/KLS_API/.vs/
+KLS/KLS_API/KLS_API/appsettings.json
+KLS/KLS_API/KLS_API/bin/
+KLS/KLS_API/KLS_API/obj/
+KLS/KLS_WEB/KLS_WEB/bin/
+KLS/KLS_WEB/KLS_WEB/obj/
