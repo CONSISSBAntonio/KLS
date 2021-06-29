@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "boelBw9jhUlgp14NJYdfrccXhDw7WgOHG97xm0rsryJEdXMEMTEMHTRXsxbwuQ2xxH4QGVDh8uvcMKJOANWUyA==",
+  "dgSpecHash": "sQK65IZWopJis9R6ceHVePBzUnwUdUd324V+rc3dZVPNT7vQCT91Hnj8CoC3CvQf8/UfJ9dYhDHCEMl67AqT6g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Consiss\\Documents\\DOCS\\KLS\\DESARROLLO\\KLS_WEB\\KLS_WEB\\KLS_WEB.csproj",
+  "projectFilePath": "C:\\Users\\Consiss\\Documents\\Visual Studio 2019\\GitHubProjects\\KLS\\KLS_WEB\\KLS_WEB\\KLS_WEB.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Consiss\\.nuget\\packages\\azure.core\\1.15.0\\azure.core.1.15.0.nupkg.sha512",
     "C:\\Users\\Consiss\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\3.1.10\\microsoft.aspnetcore.cryptography.internal.3.1.10.nupkg.sha512",
