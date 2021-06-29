@@ -1,6 +1,6 @@
 .vscode/launch.json
 .vscode/tasks.json
-KLS/.vs/
+.vs/
 KLS_API/.vs/
 KLS_API/KLS_API/appsettings.json
 KLS_API/KLS_API/bin/
