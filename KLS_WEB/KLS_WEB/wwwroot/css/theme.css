@@ -343,3 +343,21 @@ form .form-group {
 input[type=text]{
     text-transform: uppercase;
 }
+
+/*Diseño de tablas en mayuscula*/
+
+#table-info {
+    text-transform: uppercase !important;
+}
+
+.btn-secondary {
+    background:white;
+    color:black;
+    border:0px;
+}
+
+    .btn-secondary:hover {
+        color: white;
+        background-color: #dee2e6;
+        border-color: #dee2e6;
+    }
