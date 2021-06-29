@@ -23,7 +23,7 @@
             <div class="text-uppercase poppins medium size-24 pl-2">Nuevo viaje</div>
         </div>
 
-        <form id="frmRegister" class="viaje" action="#" method="post">
+        <form id="frmRegister" class="viaje">
 
             <div class="p-4 shadow bg-white">
                 <div class="row">
@@ -31,6 +31,7 @@
                         <label class="col-form-label col-form-label-sm">Cliente</label>
                         <div>
                             <select class="form-control form-control-sm" id="cliente" name="cliente">
+                                <option value="1">mi cliente</option>
                             </select>
                         </div>
                     </div>
@@ -95,6 +96,7 @@
                         <label class="col-form-label col-form-label-sm">Ruta</label>
                         <div>
                             <select class="form-control form-control-sm" id="ruta" name="ruta">
+                                <option value="10">mi ruta</option>
                             </select>
                         </div>
                     </div>
@@ -109,6 +111,7 @@
                         <label class="col-form-label col-form-label-sm">Tipo de Viaje</label>
                         <div>
                             <select class="form-control form-control-sm" id="tipoviaje" name="tipoviaje">
+                                <option value="190">mi tipo de viaje</option>
                             </select>
                         </div>
                     </div>
@@ -195,7 +198,7 @@
             </div>
             <div class="modal-body text-left">
                 <form id="frmServicios" class="viaje"
-                      onsubmit="event.preventDefault(); closeModal('agregarServicios');">
+                      onsubmit="event.preventDefault();">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="0" name="terestrenacional">
                         <label class="form-check-label" for="0">
@@ -233,11 +236,11 @@
                             Coloaders
                         </label>
                     </div>
-                    <br />
-                    <button type="submit" class="btn btn-dark guardar" style="width:100%;" id="btnAccion">
-                        Agregar
-                    </button>
                 </form>
+                <br />
+                <button onclick="closeModal('agregarServicios');" class="btn btn-dark guardar" style="width:100%;">
+                    Agregar
+                </button>
 
             </div>
         </div>
@@ -318,15 +321,14 @@
         loadState();
         loadCountry();
         loadCity();
-        $("#frmRegister").submit(function (event) {
+        loadUnits();
+
+        $(".viaje").submit(function (event) {
             event.preventDefault();
-            var jsonData = convertJson($("#frmRegister"));
-            var normalFill = $("#rateYo").rateYo("option", "rating");
-            jsonData["NivelServicio"] = normalFill;
-            jsonData["id"] = @id;
+            var jsonData = convertJson($(".viaje"));
             console.log(jsonData);
 
-            if (parseInt(@id) == 0) {
+            @*if (parseInt(@id) == 0) {
                 $.post("/Carriers/setCarriers", jsonData, function (res) {
                     console.log(res);
                     $(location).attr('href', '/Carriers/formCarriers/' + res.id);
@@ -343,7 +345,7 @@
                     dToast("error", "Error al tratar de actualizar el registro", "Error");
                     $(".guardar").attr("disabled", false);
                 });
-            }
+            }*@
         });
     });
 
@@ -383,7 +385,20 @@
             }
             $('.addServicios').html(addservicios);
         }
-    }
+        }
+
+        //Cargar ciudades
+        function loadUnits() {
+            $.get("/Catalogs/TypesOfUnits/getUnidades", function (res) {
+                $("#tipounidad").empty();
+                $.each(res, function (item, key) {
+                    $("#tipounidad").append(`<option value="${key.id}">${key.nombre}</option>`);
+                });
+                $("#tipounidad").select2();
+            }).fail(function (error) {
+                dToast("error", "Error al obtener ciudades", "Atencion!");
+            });
+        }
 
     //Cargar ciudades
     function loadCity() {
@@ -395,7 +410,7 @@
             });
             $("#origen, #destino").select2();
         }).fail(function (error) {
-            dToast("error", "Error al obtener paises", "Atencion!");
+            dToast("error", "Error al obtener tipos de unidad", "Atencion!");
         });
     }
 
@@ -423,7 +438,7 @@
             });
             $("#id_estado").select2();
         }).fail(function (error) {
-            dToast("error", "Error al obtener paises", "Atencion!");
+            dToast("error", "Error al obtener estados", "Atencion!");
         });
     }
 
