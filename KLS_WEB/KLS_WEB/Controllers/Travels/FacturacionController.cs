@@ -1,6 +1,7 @@
 ﻿using KLS_WEB.Models;
 using KLS_WEB.Models.Travels;
 using KLS_WEB.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,8 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace KLS_WEB.Controllers.Travels
 {
+    [Route("Travels")]
+    [Authorize]
     public class FacturacionController : Controller
     {
         #region properties
@@ -32,9 +35,13 @@ namespace KLS_WEB.Controllers.Travels
         #endregion
 
         #region Methods
-        public IActionResult Index()
+        [HttpGet]
+        [Route("getFacturas")]
+        public async Task<JsonResult> Get()
         {
-            return View();
+            Facturacion facturas = new Facturacion();
+            var result = await _appContext.Execute<Facturacion>(MethodType.GET,_UrlApi,facturas);
+            return Json(result);
         }
 
         [HttpPost]
@@ -53,16 +60,17 @@ namespace KLS_WEB.Controllers.Travels
 
                 Facturacion facturacion = new Facturacion()
                 {
-                    Nombre = file.FileName,
+                    nombre = file.FileName,
                     fullpath = fullpath,
-                    FechaCarga = DateTime.Today,
-                    IdUsuario = 1
+                    fechacarga = DateTime.Today,
+                    usuarioId = 1,
+                    usuario = "Daniel"
                 };
 
                 if (isSaved)
                 {
                     var result = await _appContext.Execute<Facturacion>(MethodType.POST, _UrlApi, facturacion);
-                    return Ok();
+                    return Ok(result);
                 }
                 return Ok();
             }

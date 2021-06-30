@@ -28,12 +28,27 @@ namespace KLS_API.Controllers.Travels
         #endregion
 
         #region Methods
+        [HttpGet]
+        public IActionResult GetAllAsync()
+        {
+            try
+            {                
+                var result =  _context.Facturacion.ToList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpPost]
         public async Task<IActionResult> UploadFile([FromBody] Facturacion factura)
         {
             try
-            {                
-                return Ok();
+            {
+                _context.Facturacion.Add(factura);
+                _context.SaveChanges();
+                return Ok(factura);                
             }
             catch (Exception ex)
             {

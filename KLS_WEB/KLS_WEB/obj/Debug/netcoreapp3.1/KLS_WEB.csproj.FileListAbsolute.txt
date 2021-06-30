@@ -1334,4 +1334,3 @@ C:\Users\Consiss\Documents\Visual Studio 2019\GitHubProjects\KLS\KLS_WEB\KLS_WEB
 C:\Users\Consiss\Documents\Visual Studio 2019\GitHubProjects\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\KLS_WEB.dll
 C:\Users\Consiss\Documents\Visual Studio 2019\GitHubProjects\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\KLS_WEB.pdb
 C:\Users\Consiss\Documents\Visual Studio 2019\GitHubProjects\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\KLS_WEB.genruntimeconfig.cache
-C:\Users\Consiss\Documents\Visual Studio 2019\GitHubProjects\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\KLS_WEB.csprojAssemblyReference.cache
