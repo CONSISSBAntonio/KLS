@@ -3,13 +3,18 @@
 }
 
 <div class="p-4">
-    <div class="text-left d-flex mb-3">
-        <a href="/Catalogs">
-            <div class="material-icons icon-red">arrow_back</div>
-        </a>
-        <div class="text-uppercase poppins medium size-24 pl-2">NAVIERAS</div>
-        <div style="padding-left:10%;">
-            <button class="btn btn-sm btn-dark" onclick="showModal('AGREGAR','Agregar');">
+    <div class="d-flex flex-nowrap">
+        <div class="p-2">
+            <div class="text-left d-flex p-2">
+                <a href="/Catalogs">
+                    <div class="material-icons icon-red">arrow_back</div>
+                </a>
+                <div class="text-uppercase poppins medium size-24 pl-2">NAVIERAS</div>
+            </div>
+        </div>
+
+        <div class="ml-auto p-2">
+            <button class="btn btn-sm btn-secondary" onclick="showModal('AGREGAR','Agregar');">
                 <span class="material-icons">
                     add
                 </span>
@@ -20,6 +25,7 @@
         <table id="table" class="table table-striped table-bordered display table-hover table-viajes" width="100%">
             <thead>
                 <tr>
+                    <th>#</th>
                     <th>Nombre</th>
                     <th>Dirección</th>
                     <th>Teléfonos</th>
@@ -132,7 +138,7 @@
                 } else {
                     $.post("ShippingCompanies/setShipping", jsonData, function (res) {
                         loadTable();
-                        dToast("success", "Se guardo el registro", "Registrado");
+                        dToast("success", "Se guardó el registro", "Registrado");
                         $(".guardar").attr("disabled", false);
                         $('#frmRegister').trigger("reset");
                     }).fail(function (error) {
@@ -148,11 +154,10 @@
             $(".guardar").html(accion);
             $("#titulo-modal").empty("");
             $("#titulo-modal").html(titulo);
-
+            $("#idEditar").val(idEditar);
             if (accion == "Editar") {
                 try {
                     let indice = dataShipping.findIndex(service => service.id === idEditar);
-                    $("#idEditar").val(idEditar);
                     $("#nombre").val(dataShipping[indice].nombre);
                     $("#direccion").val(dataShipping[indice].direccion);
                     $("#telefono").val(dataShipping[indice].telefono);
@@ -182,7 +187,8 @@
                 $.each(res, function (item, key) {
                     $("#table-info").append(`
                          <tr>
-                            <td>${nCon(key.nombre)}</td>
+                            <td>${nCon(key.id)}</td>
+                            <td>${key.nombre}</td>
                             <td>${nCon(key.direccion)}</td>
                             <td>${nCon(key.telefono)}</td>
                             <td>${nCon(key.departamento)}</td>

@@ -8,6 +8,18 @@
   <ItemGroup>
     <Compile Remove="Migrations\20210630190755_Facturacion.cs" />
     <Compile Remove="Migrations\20210630190755_Facturacion.Designer.cs" />
+    <Compile Remove="Migrations\20210628174144_initial.cs" />
+    <Compile Remove="Migrations\20210628174144_initial.Designer.cs" />
+    <Compile Remove="Migrations\20210628174305_initial1.cs" />
+    <Compile Remove="Migrations\20210628174305_initial1.Designer.cs" />
+    <Compile Remove="Migrations\20210629204425_trhasruta.cs" />
+    <Compile Remove="Migrations\20210629204425_trhasruta.Designer.cs" />
+    <Compile Remove="Migrations\20210629214955_rutaCarier.cs" />
+    <Compile Remove="Migrations\20210629214955_rutaCarier.Designer.cs" />
+    <Compile Remove="Migrations\20210629215240_rutasupdate.cs" />
+    <Compile Remove="Migrations\20210629215240_rutasupdate.Designer.cs" />
+    <Compile Remove="Migrations\20210630162840_trinventario.cs" />
+    <Compile Remove="Migrations\20210630162840_trinventario.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,10 +31,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\Clients\" />
   </ItemGroup>
 
 

@@ -129,19 +129,24 @@
                     <br />
                     <h5>Archivos</h5>
                     <div class="row">
-    
                         <div class="col-md-6">
                             <label class="">Foto de la unidad</label>
                             <div class="custom-file">
-                                <input type="file" class="form-control form-control-sm" name="FotoUnidad" id="FotoUnidad">
+                                <input type="file" class="form-control form-control-sm" name="FotoUnidad" id="FotoUnidad" accept=".jpg,.jpeg,.png" onchange="updateImageDisplay('FotoUnidad','canUnidad');">
                                 <label class="custom-file-label" for="FotoUnidad">Seleccionar archivo</label>
                             </div>
+                            <br />
+                            <br />
+                            <canvas id="canUnidad" style="border:0px solid;width:100%;"></canvas>
                         </div>
                         <div class="col-md-6">
                             <label class="">Póliza de seguro</label>
                             <div class="custom-file">
-                                <input type="file" class="form-control" name="FotoPoliza" id="FotoPoliza">
+                                <input type="file" class="form-control" name="FotoPoliza" id="FotoPoliza" onchange="updateImageDisplay('FotoPoliza','canPoliza');">
                                 <label class="custom-file-label" for="FotoPoliza">Seleccionar archivo</label>
+                                <br />
+                                <br />
+                                <canvas id="canPoliza" style="border:1px solid;width:100%;"></canvas>
                             </div>
                         </div>
                     </div>
@@ -165,33 +170,33 @@
         var dataInventory = [];
 
         $(window).ready(function () {
-            //loadTable();
+            loadTable();
             $("#frmRegister").submit(function (event) {
                 event.preventDefault();
                 var jsonData = convertJson($("#frmRegister"));
-                jsonData["Id_Transportista"] = @id;
+                jsonData["IdTransportista"] = @id;
                 console.log(jsonData);
-                //if (parseInt($("#idEditar").val()) != 0) {
-                //    $.post("/Carriers/Library/putLibrary", jsonData, function (res) {
-                //        console.log(res);
-                //        loadTable();
-                //        dToast("success", "Registro actualizado exitosamente.", "Registrado");
-                //        $(".guardar").attr("disabled", false);
-                //    }).fail(function (error) {
-                //        dToast("error", "Error al tratar de guardar el registro", "Error");
-                //        $(".guardar").attr("disabled", false);
-                //    });
-                //} else {
-                //    $.post("/Carriers/Library/setLibrary", jsonData, function (res) {
-                //        loadTable();
-                //        dToast("success", "Se guardo el registro", "Registrado");
-                //        $(".guardar").attr("disabled", false);
-                //        $('#frmRegister').trigger("reset");
-                //    }).fail(function (error) {
-                //        dToast("error", "Error al tratar de guardar el registro", "Error");
-                //        $(".guardar").attr("disabled", false);
-                //    });
-                //}
+                if (parseInt($("#idEditar").val()) != 0) {
+                    $.post("/Carriers/Inventory/putInventory", jsonData, function (res) {
+                        console.log(res);
+                        loadTable();
+                        dToast("success", "Registro actualizado exitosamente.", "Registrado");
+                        $(".guardar").attr("disabled", false);
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de guardar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                } else {
+                    $.post("/Carriers/Inventory/setInventory", jsonData, function (res) {
+                        loadTable();
+                        dToast("success", "Se guardo el registro", "Registrado");
+                        $(".guardar").attr("disabled", false);
+                        $('#frmRegister').trigger("reset");
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de guardar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                }
             });
 
         });
@@ -204,9 +209,16 @@
             $("#idEditar").val(idEditar);
             if (accion == "Editar") {
                 try {
-                    let indice = dataLibrary.findIndex(service => service.id === idEditar);
-                    $("#Nombre").val(dataLibrary[indice].nombre);
-                    $('#Estatus option[value="' + dataLibrary[indice].estatus + '"]').attr("selected", true);
+                    let indice = dataInventory.findIndex(service => service.id === idEditar);
+                    $("#Marca").val(dataInventory[indice].marca);
+                    $("#Anio").val(dataInventory[indice].anio);
+                    $("#NoSerie").val(dataInventory[indice].noSerie);
+                    $("#NoEconomico").val(dataInventory[indice].noEconomico);
+                    $("#Placa").val(dataInventory[indice].placa);
+                    $("#Capacidad").val(dataInventory[indice].capacidad);
+                    $("#Volumen").val(dataInventory[indice].volumen);
+                    $("#Color").val(dataInventory[indice].color);
+                    $('#Estatus option[value="' + dataInventory[indice].estatus + '"]').attr("selected", true);
                     $("#modalDiv").modal("show");
                 } catch (error) {
                     dToast("error", "Error al tratar de editar, intenta recargar la página.", "Error");
@@ -221,25 +233,72 @@
             var stable = $('.table-viajes').DataTable();
             stable.destroy();
             $("#table-info").empty();
-            $.get("/Carriers/Inventory/getInventory/", { "Id_Transportista":@id}, function (res) {
+            $.get("/Carriers/Inventory/getInventory/", { "IdTransportista":@id}, function (res) {
                 dataInventory = res;
                 console.log(res);
-                //$.each(dataInventory, function (item, key) {
-                //    $("#table-info").append(`
-                //             <tr>
-                //                <td>${nCon(key.nombre)}</td>
-                //                <td>`+ statusTable(key.estatus) + `</td>
-                //                <td>
-                //                    <a href="#">
-                //                        <span class="material-icons" onclick="showModal('EDITAR','Editar',${nCon(key.id)});">
-                //                            mode_edit
-                //                        </span>
-                //                    </a>
-                //                </td>
-                //            </tr>`);
-                //});
-                //dTable("table-viajes");
+                $.each(dataInventory, function (item, key) {
+                    $("#table-info").append(`
+                             <tr>
+                                <td>${nCon(key.id)}</td>
+                                <td>${nCon(key.marca)}</td>
+                                <td>${nCon(key.modelo)}</td>
+                                <td>${nCon(key.anio)}</td>
+                                <td>${nCon(key.noSerie)}</td>
+                                <td>${nCon(key.noEconomico)}</td>
+                                <td>${nCon(key.placa)}</td>
+                                <td>${nCon(key.color)}</td>
+                                <td>${nCon(key.tipoUnidad)}</td>
+                                <td>${nCon(key.capacidad)}</td>
+                                <td>${nCon(key.volumen)}</td>
+                                <td>`+ statusTable(key.estatus) + `</td>
+                                <td>
+                                    <a href="#">
+                                        <span class="material-icons" onclick="showModal('EDITAR','Editar',${nCon(key.id)});">
+                                            mode_edit
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>`);
+                });
+                dTable("table-viajes");
             });
         }
+
+
+        //Subir archivos canvas
+        function updateImageDisplay(id, divCanvas) {
+            var image = new Image();
+            //var canvas = document.getElementById('canUnidad');
+            var canvas = document.getElementById(divCanvas);
+            var ctx = canvas.getContext('2d');;
+            var input = document.querySelector('#'+id);
+            var curFile = input.files;
+            var source = "";
+            var curFile = input.files;
+            for (var i = 0; i < curFile.length; i++) {
+                if (validFileType(curFile[i])) {
+                    source = curFile[i].name;
+                    image.src = window.URL.createObjectURL(curFile[i]);
+                    image.onload = function () {
+                        canvas.width = image.width;
+                        canvas.height = image.height;
+                        ctx.drawImage(image, 0, 0);
+                        image.style.display = 'none';
+                    }
+                    listItem.appendChild(image);
+                }
+                list.appendChild(listItem);
+            }
+        }
+
+        var fileTypes = ['image/jpeg','image/pjpeg','image/png']
+        function validFileType(file) {
+            for (var i = 0; i < fileTypes.length; i++) {
+                if (file.type === fileTypes[i])
+                    return true;
+            }
+            return false;
+        }
+
     </script>
 }

@@ -9,11 +9,8 @@
     .form-check-label {
         font-size: 12px !important;
     }
-
-    li, .selection {
-        text-transform: uppercase !important;
-    }
 </style>
+
 <div class="data-content p-4 text-left">
     <div class="p-4">
         <div class="text-left d-flex mb-3">
@@ -148,16 +145,16 @@
                             <i class="material-icons">add</i>
                         </a>
                     </div>
-                    <div class="form-group col-12">
-                        <div class="addServicios border rounded d-flex justify-content-center align-items-center font-weight-bolder"
+                    <div class="form-group col-12 addServicios">
+                        <div class="border rounded d-flex justify-content-center align-items-center font-weight-bolder"
                              onclick="selectServicios(this);"
                              style="border: 5px dashed #585858 !important; height: 7rem; opacity: 0.2; cursor: pointer;">
                             <h3>AGREGA SERVICIOS</h3>
                         </div>
+
                     </div>
+                    <div class="col-12 serviciosseleccionados" style="display: none;"></div>
                 </div>
-
-
 
             </div>
 
@@ -166,14 +163,10 @@
                     <p class="font-weight-bolder">Cálculos</p>
                     <div class="d-flex justify-content-around">
                         <div class="d-flex align-items-end flex-column">
-                            <span>Sub total</span>
-                            <span>IVA</span>
                             <span>Costo</span>
                             <span>Precio Cliente</span>
                         </div>
                         <div class="d-flex flex-column">
-                            <b id="subtotal">0.00</b>
-                            <b id="iva">0.00</b>
                             <b id="costo">0.00</b>
                             <b id="preciocliente">0.00</b>
                         </div>
@@ -200,42 +193,42 @@
                 <form id="frmServicios" class="viaje"
                       onsubmit="event.preventDefault();">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="0" name="terestrenacional">
+                        <input class="form-check-input" type="checkbox" id="0" name="terrestrenacional">
                         <label class="form-check-label" for="0">
                             Terrestre nacional
                         </label>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="1" name="naviera">
-                        <label class="form-check-label" for="1">
-                            Naviera
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="2" name="agenteaduanal">
-                        <label class="form-check-label" for="2">
-                            Agente aduanal
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="3"
-                               name="terrestreinternacional">
-                        <label class="form-check-label" for="3">
-                            Terrestre Internacional
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="4" name="aerolinea">
-                        <label class="form-check-label" for="4">
-                            Aerolinea
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="5" name="coloaders">
-                        <label class="form-check-label" for="5">
-                            Coloaders
-                        </label>
-                    </div>
+                    @*<div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="1" name="naviera">
+                            <label class="form-check-label" for="1">
+                                Naviera
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="2" name="agenteaduanal">
+                            <label class="form-check-label" for="2">
+                                Agente aduanal
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="3"
+                                   name="terrestreinternacional">
+                            <label class="form-check-label" for="3">
+                                Terrestre Internacional
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="4" name="aerolinea">
+                            <label class="form-check-label" for="4">
+                                Aerolinea
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="5" name="coloaders">
+                            <label class="form-check-label" for="5">
+                                Coloaders
+                            </label>
+                        </div>*@
                 </form>
                 <br />
                 <button onclick="closeModal('agregarServicios');" class="btn btn-dark guardar" style="width:100%;">
@@ -303,7 +296,6 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
-                @*<button type="button" class="btn btn-primary">Save changes</button>*@
             </div>
         </div>
     </div>
@@ -325,8 +317,15 @@
 
         $(".viaje").submit(function (event) {
             event.preventDefault();
+
+            const equipo = {
+                equipo: getEquipos()
+            };
+
             var jsonData = convertJson($(".viaje"));
-            console.log(jsonData);
+            console.log('pre', jsonData);
+            jsonData = { ...jsonData, ...equipo };
+            console.log('post:', jsonData);
 
             @*if (parseInt(@id) == 0) {
                 $.post("/Carriers/setCarriers", jsonData, function (res) {
@@ -349,6 +348,52 @@
         });
     });
 
+        function setPrecios() {
+            const precios = $('.precios');
+            let total = 0;
+            precios.map(index => {
+                const cantidad = Number.isNaN(Number.parseFloat(precios.eq(index).val())) ? 0 : precios.eq(index).val();
+                total += parseFloat(cantidad);
+            });
+            total = parseFloat(total).toFixed(2);
+            $('#preciocliente').text(total);
+        }
+
+        function getEquipos() {
+            const length = --$('.selectequipo').length;
+            let data = ``;
+            i = 0;
+            while (i <= length) {
+                const select = document.getElementsByClassName('selectequipo')[i],
+                    options = select.options;
+                data += `${i !== 0 ? '&' : ''}${select.name}=${options[options.selectedIndex].value}`;
+                ++i;
+            }
+            return data;
+        }
+
+        function addEquipo(element, id) {
+            const boton = jQuery(element);
+            boton.remove();
+            const nextId = ++$('.equipocontainer').children().length;
+
+            const equipo = `<div class="d-flex justify-content-between equipo">
+                <select class="form-control form-control-sm col-4 selectequipo" name="equipo${nextId}" required>
+                    <option value="mi">Mi equipo</option>
+                    <option value="mx">Mx</option>
+                    <option value="w">w</option>
+                    <option value="e">e</option>
+                </select>
+                <div class="col-8 d-flex flex-row justify-content-between">
+                    <p id="equipodetail">new empty</p>
+                    <i class="material-icons text-danger" style="cursor: pointer;" onClick="{$(this).parent().parent().remove();}">delete</i>
+                </div>
+            </div>
+            <i class="material-icons" style="cursor:pointer;" onclick="addEquipo(this);">add_box</i>`;
+
+            $('.equipocontainer').append(equipo);
+        }
+
     function agregarCiudad(element) {
         $('#modalAgregarCiudad').modal('show');
     }
@@ -368,22 +413,15 @@
             });
         } else {
             const servicios = $('#frmServicios').serialize();
-            const split = servicios.split('&');
-            let addservicios = ``;
-            if (split[0] != "") {
-                split.map(servicio => {
-                    const servicioselected = servicio.split('=');
-                    const id = $(`[name=${servicioselected[0]}`).attr('id');
-                    const text = $(`[for=${id}]`).text();
-
-                    addservicios += `<p class="mr-1">●${text}</p>`;
-                    $('.addServicios').css('opacity', 1);
+            if (servicios) {
+                $.post("@Url.Action("ReturnServicios", "Travels")", { servicios: servicios }, function (res) {
+                    $('.addServicios').hide();
+                    $('.serviciosseleccionados').html(res).show('slow', () => { $('.serviciosseleccionados').show(); });
                 });
             } else {
-                addservicios = `<h3>AGREGA SERVICIOS</h3>`;
-                $('.addServicios').css('opacity', 0.2);
+                $(`.addServicios`).show('slow', () => { $('.addServicios').show(); });
+                $('.serviciosseleccionados').empty().hide();
             }
-            $('.addServicios').html(addservicios);
         }
         }
 
@@ -400,6 +438,19 @@
             });
         }
 
+        //Cargar unidades
+        function loadUnits() {
+            $.get("/Catalogs/TypesOfUnits/getUnidades", function (res) {
+                $("#tipounidad").empty();
+                $.each(res, function (item, key) {
+                    $("#tipounidad").append(`<option value="${key.id}">${key.nombre}</option>`);
+                });
+                dSelect('tipounidad');
+            }).fail(function (error) {
+                dToast("error", "Error al obtener ciudades", "Atencion!");
+            });
+        }
+
     //Cargar ciudades
     function loadCity() {
         $.get("/Catalogs/Geography/City/getCity", function (res) {
@@ -408,7 +459,8 @@
             $.each(res, function (item, key) {
                 $("#origen, #destino").append(`<option value="${key.id}">${key.nombre}</option>`);
             });
-            $("#origen, #destino").select2();
+            dSelect('origen');
+            dSelect('destino');
         }).fail(function (error) {
             dToast("error", "Error al obtener tipos de unidad", "Atencion!");
         });
@@ -422,7 +474,7 @@
             $.each(res, function (item, key) {
                 $("#id_pais").append(`<option value="${key.id}">${key.pais}</option>`);
             });
-            $("#id_pais").select2();
+            dSelect('id_pais');
         }).fail(function (error) {
             dToast("error", "Error al obtener paises", "Atencion!");
         });
@@ -436,9 +488,9 @@
             $.each(res, function (item, key) {
                 $("#id_estado").append(`<option value="${key.id}">${key.nombre}</option>`);
             });
-            $("#id_estado").select2();
+            dSelect('id_estado');
         }).fail(function (error) {
-            dToast("error", "Error al obtener estados", "Atencion!");
+            dToast("error", "Error al tener esUrlados", "Atencion!");
         });
     }
 

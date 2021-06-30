@@ -3,13 +3,18 @@
 }
 
 <div class="p-4">
-    <div class="text-left d-flex mb-3">
-        <a href="/Catalogs">
-            <div class="material-icons icon-red">arrow_back</div>
-        </a>
-        <div class="text-uppercase poppins medium size-24 pl-2">AGENTES ADUANALES</div>
-        <div style="padding-left:10%;">
-            <button class="btn btn-sm btn-dark" onclick="showModal('AGREGAR','Agregar');">
+    <div class="d-flex flex-nowrap">
+        <div class="p-2">
+            <div class="text-left d-flex p-2">
+                <a href="/Catalogs">
+                    <div class="material-icons icon-red">arrow_back</div>
+                </a>
+                <div class="text-uppercase poppins medium size-24 pl-2">AGENTES ADUANALES</div>
+            </div>
+        </div>
+
+        <div class="ml-auto p-2">
+            <button class="btn btn-sm btn-secondary" onclick="showModal('AGREGAR','Agregar');">
                 <span class="material-icons">
                     add
                 </span>
@@ -132,7 +137,7 @@
                 } else {
                     $.post("CustomsBrokers/setCustoms", jsonData, function (res) {
                         loadTable();
-                        dToast("success", "Se guardo el registro", "Registrado");
+                        dToast("success", "Se guardó el registro", "Registrado");
                         $(".guardar").attr("disabled", false);
                         $('#frmRegister').trigger("reset");
                     }).fail(function (error) {
@@ -148,11 +153,10 @@
             $(".guardar").html(accion);
             $("#titulo-modal").empty("");
             $("#titulo-modal").html(titulo);
-
+            $("#idEditar").val(idEditar);
             if (accion == "Editar") {
                 try {
                     let indice = dataCustoms.findIndex(service => service.id === idEditar);
-                    $("#idEditar").val(idEditar);
                     $("#nombre").val(dataCustoms[indice].nombre);
                     $("#direccion").val(dataCustoms[indice].direccion);
                     $("#telefono").val(dataCustoms[indice].telefono);

@@ -26,7 +26,7 @@ using KLS_WEB.Models;
 #line default
 #line hidden
 #nullable disable
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"e093a2d724933470ce25fcfe61d6269eabaf001d", @"/Views/Carriers/Box/Index.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"a3707e62dd6e32d6d288a7da4b3bef627b057a08", @"/Views/Carriers/Box/Index.cshtml")]
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"d093829c613a0b3ec7efe9551a2b52f04eb20fc7", @"/Views/_ViewImports.cshtml")]
     public class Views_Carriers_Box_Index : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<dynamic>
     {
@@ -87,14 +87,12 @@ WriteAttributeValue("", 255, id, 255, 3, false);
 #nullable disable
             EndWriteAttribute();
             WriteLiteral(">\r\n                <div class=\"material-icons icon-red\">arrow_back</div>\r\n            </a>\r\n            <div class=\"text-uppercase poppins medium size-24 pl-2\">TIPOS DE MERCANCIA</div>\r\n        </div>\r\n        ");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e093a2d724933470ce25fcfe61d6269eabaf001d5685", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "a3707e62dd6e32d6d288a7da4b3bef627b057a085577", async() => {
                 WriteLiteral(@"
             <input type=""hidden"" value=""0"" id=""idBox"" name=""Id"" />
             <div class=""text-right"">
                 <button class=""btn btn-sm"" type=""submit"" style=""background-color:transparent;"">
-                    <span class=""material-icons"" style=""color:cornflowerblue;"">
-                        save
-                    </span>
+                    <span class=""material-icons"" style=""color:cornflowerblue;"" id=""span-icon""></span>
                 </button>
             </div>
             <div class=""row"">
@@ -111,8 +109,8 @@ WriteAttributeValue("", 255, id, 255, 3, false);
 
                         <div class=""form-group row"">
                             <div class=""col-4"">
-                                <input type=""checkbo");
-                WriteLiteral(@"x"" value=""true"" id=""Densidad"" name=""Densidad"">
+                                <input type=""checkbox"" value=""true"" id=""Densidad"" name=""D");
+                WriteLiteral(@"ensidad"">
                                 <label for=""Ctpat"">
                                     Densidad
                                 </label>
@@ -130,8 +128,8 @@ WriteAttributeValue("", 255, id, 255, 3, false);
                                 </label>
                             </div>
                             <div class=""col-sm-8"">
-                                <input type=""text"" class=""form-control ");
-                WriteLiteral(@"form-control-sm"" id=""Tp_Opcional"" name=""Tp_Opcional"" placeholder=""Opcionales"">
+                                <input type=""text"" class=""form-control form-control-sm"" id=""Tp_Opcional"" nam");
+                WriteLiteral(@"e=""Tp_Opcional"" placeholder=""Opcionales"">
                             </div>
                         </div>
 
@@ -151,8 +149,8 @@ WriteAttributeValue("", 255, id, 255, 3, false);
                                 </label>
                             </div>
                             <div class=""col-sm-8"">
-                           ");
-                WriteLiteral(@"     <input type=""text"" class=""form-control form-control-sm"" id=""M_Opcional"" name=""M_Opcional"" placeholder=""Opcionales"">
+                                <input type=""text"" class=""form-c");
+                WriteLiteral(@"ontrol form-control-sm"" id=""M_Opcional"" name=""M_Opcional"" placeholder=""Opcionales"">
                             </div>
                         </div>
                         <div class=""form-group row"">
@@ -170,9 +168,9 @@ WriteAttributeValue("", 255, id, 255, 3, false);
                                     Valor
                                 </label>
                             </div>
-                            <div class=""col-s");
-                WriteLiteral(@"m-8"">
-                                <input type=""text"" class=""form-control form-control-sm"" id=""V_Opcional"" name=""V_Opcional"" placeholder=""Opcionales"">
+                            <div class=""col-sm-8"">
+                              ");
+                WriteLiteral(@"  <input type=""text"" class=""form-control form-control-sm"" id=""V_Opcional"" name=""V_Opcional"" placeholder=""Opcionales"">
                             </div>
                         </div>
                         <div class=""form-group row"">
@@ -189,9 +187,9 @@ WriteAttributeValue("", 255, id, 255, 3, false);
                                 <label for=""Ctpat"">
                                     Olor penetrante
                                 </label>
-                         ");
-                WriteLiteral(@"   </div>
-                        </div>
+                            </div>
+                        </");
+                WriteLiteral(@"div>
                     </div>
                 </div>
                 <div class=""col-md-6"">
@@ -261,7 +259,7 @@ WriteAttributeValue("", 255, id, 255, 3, false);
                         dToast(""success"", ""Registro actualizado exitosamente."", ""Registrado"");
                     }).fail(function (error) {
                         dToast(""error"", ""Error al tratar de actualizar el registro"", ""Erro");
-                WriteLiteral("r\");\r\n                        $(\".guardar\").attr(\"disabled\", false);\r\n                    });\r\n                }\r\n            });\r\n        });\r\n\r\n\r\n        function valId(){\r\n            if (parseInt(");
+                WriteLiteral("r\");\r\n                        $(\".guardar\").attr(\"disabled\", false);\r\n                    });\r\n                }\r\n            });\r\n        });\r\n\r\n        function valId(){\r\n            if (parseInt(");
 #nullable restore
 #line 168 "C:\Users\Consiss\Documents\Visual Studio 2019\GitHubProjects\KLS\KLS_WEB\KLS_WEB\Views\Carriers\Box\Index.cshtml"
                     Write(id);
@@ -279,6 +277,7 @@ WriteAttributeValue("", 255, id, 255, 3, false);
 #nullable disable
                 WriteLiteral(@"}, function (res) {
                     if (res != null) {
+                        $(""#span-icon"").append(""edit"");
                         console.log(res);
                         $(""#idBox"").val(res.id);
                         $('#Densidad').prop('checked', res.densidad);
@@ -293,12 +292,12 @@ WriteAttributeValue("", 255, id, 255, 3, false);
                         $(""#D_Opcional"").val(res.d_Opcional);
                         $(""#Id_Transportista"").val(res.id_Transportista);
                         $(""#M_Opcional"").val(res.m_Opcional);
-                        $(""#Notas"").val(res.motas);
-                  ");
-                WriteLiteral(@"      $(""#Tp_Opcional"").val(res.tp_Opcional);
+              ");
+                WriteLiteral(@"          $(""#Notas"").val(res.motas);
+                        $(""#Tp_Opcional"").val(res.tp_Opcional);
                         $(""#V_Opcional"").val(res.v_Opcional);
                     } else {
-                        console.log(res);
+                        $(""#span-icon"").append(""save"");
                     }
                 }).fail(function (error, xhr, status) {
                     console.log(xhr);
