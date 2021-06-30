@@ -23,7 +23,7 @@ namespace KLS_API.Controllers.Carriers.Routes
         }
 
         [HttpGet]
-        public ActionResult Get([FromBody] Tr_Has_Rutas tr_rutas)
+        public ActionResult Get([FromBody] Tr_Has_Ruta tr_rutas)
         {
             try
             {
@@ -36,22 +36,22 @@ namespace KLS_API.Controllers.Carriers.Routes
             }
         }
         
-        [Route("getRoutes")]
-        public ActionResult getRoutes([FromBody] Tr_Has_Rutas tr_rutas)
-        {
-            try
-            {
-                var asd = context.Tr_Has_Rutas.Where(f => f.Id_Transportista == tr_rutas.Id_Transportista).ToList();
-                return Ok(asd);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        //[Route("getRoutes")]
+        //public ActionResult getRoutes([FromBody] Tr_Has_Rutas tr_rutas)
+        //{
+        //    try
+        //    {
+        //        var asd = context.Tr_Has_Rutas.Where(f => f.Id_Transportista == tr_rutas.Id_Transportista).ToList();
+        //        return Ok(asd);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
 
         [HttpPost]
-        public ActionResult Post([FromBody] Tr_Has_Rutas tr_rutas)
+        public ActionResult Post([FromBody] Tr_Has_Ruta tr_rutas)
         {
             try
             {
@@ -66,7 +66,7 @@ namespace KLS_API.Controllers.Carriers.Routes
         }
 
         [HttpPut]
-        public ActionResult Put([FromBody] Tr_Has_Rutas tr_rutas)
+        public ActionResult Put([FromBody] Tr_Has_Ruta tr_rutas)
         {
             try
             {

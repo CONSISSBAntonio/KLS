@@ -386,22 +386,9 @@ namespace KLS_API.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Id_Transportista = table.Column<int>(nullable: false),
-                    Id_Estado_Origen = table.Column<int>(nullable: false),
-                    Id_Ciudad_Origen = table.Column<int>(nullable: false),
-                    Id_Estado_Destino = table.Column<int>(nullable: false),
-                    Id_Ciudad_Destino = table.Column<int>(nullable: false),
-                    Total_Kilometros = table.Column<decimal>(type: "decimal(2,2)", nullable: false),
-                    Eficiencia = table.Column<int>(nullable: false),
-                    TotalHoras = table.Column<int>(nullable: false),
-                    Seguridad = table.Column<int>(nullable: false),
-                    Demanda = table.Column<int>(nullable: false),
-                    Restriccion = table.Column<string>(type: "varchar(25)", nullable: true),
-                    TipoDeViaje = table.Column<int>(nullable: false),
-                    Estatus = table.Column<int>(nullable: false),
-                    FrecValidacion = table.Column<string>(type: "varchar(25)", nullable: true),
-                    RestriccionCircuito = table.Column<string>(type: "varchar(25)", nullable: true),
-                    Observacion = table.Column<string>(type: "varchar(85)", nullable: true)
+                    Id_Ruta = table.Column<int>(nullable: false),
+                    Costo = table.Column<decimal>(type: "decimal(2,2)", nullable: false),
+                    Estatus = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

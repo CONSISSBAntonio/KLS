@@ -33,7 +33,7 @@ namespace KLS_API.Context
         public DbSet<Tr_Has_Box> Tr_Has_Box { get; set; }
         public DbSet<Tr_Has_Biblioteca> Tr_Has_Biblioteca { get; set; }
         public DbSet<Tr_Has_Contactos> Tr_Has_Contactos { get; set; }
-        public DbSet<Tr_Has_Rutas> Tr_Has_Rutas { get; set; }
+        public DbSet<Tr_Has_Ruta> Tr_Has_Rutas { get; set; }
 
     }
 }

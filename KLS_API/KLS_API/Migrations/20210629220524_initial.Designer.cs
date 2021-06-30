@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210628174305_initial1")]
-    partial class initial1
+    [Migration("20210629220524_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -148,59 +148,20 @@ namespace KLS_API.Migrations
                     b.ToTable("Tr_Has_Contactos");
                 });
 
-            modelBuilder.Entity("KLS_API.Models.Carriers.Tr_Has_Rutas", b =>
+            modelBuilder.Entity("KLS_API.Models.Carriers.Tr_Has_Ruta", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("Demanda")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Eficiencia")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Costo")
+                        .HasColumnType("decimal(2,2)");
 
                     b.Property<int>("Estatus")
                         .HasColumnType("int");
 
-                    b.Property<string>("FrecValidacion")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<int>("Id_Ciudad_Destino")
+                    b.Property<int>("Id_Ruta")
                         .HasColumnType("int");
-
-                    b.Property<int>("Id_Ciudad_Origen")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id_Estado_Destino")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id_Estado_Origen")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id_Transportista")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Observacion")
-                        .HasColumnType("varchar(85)");
-
-                    b.Property<string>("Restriccion")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<string>("RestriccionCircuito")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<int>("Seguridad")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TipoDeViaje")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalHoras")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Total_Kilometros")
-                        .HasColumnType("decimal(2,2)");
 
                     b.HasKey("Id");
 

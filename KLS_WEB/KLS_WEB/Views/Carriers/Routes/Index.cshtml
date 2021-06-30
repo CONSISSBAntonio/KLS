@@ -5,27 +5,30 @@
 @{ int id = ViewBag.id; }
 <div class="data-content p-4 text-left">
     <div class="p-4">
-        <div class="text-left d-flex mb-3">
-            <a href="/Carriers/formCarriers/@id">
-                <div class="material-icons icon-red">arrow_back</div>
-            </a>
-            <div class="text-uppercase poppins medium size-24 pl-2">RUTAS TRANSPORTISTAS</div>
-            <div style="padding-left:10%;">
-                <a class="btn btn-sm btn-dark" href="/Carriers/Routes/formRoutes/@id">
+        <div class="d-flex flex-nowrap">
+            <div class="p-2">
+                <div class="text-left d-flex p-2">
+                    <a href="/Catalogs">
+                        <div class="material-icons icon-red">arrow_back</div>
+                    </a>
+                    <div class="text-uppercase poppins medium size-24 pl-2">RUTA TRANSPORTISTA</div>
+                </div>
+            </div>
+
+            <div class="ml-auto p-2">
+                <button class="btn btn-sm btn-secondary" onclick="showModal('AGREGAR','Agregar');">
                     <span class="material-icons">
                         add
                     </span>
-                </a>
+                </button>
             </div>
         </div>
-
         <div class="p-4 shadow bg-white">
             <table id="table" class="table table-striped table-bordered display table-hover table-viajes" width="100%">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Origen</th>
-                        <th>Destino</th>
+                        <th>Ruta</th>
                         <th>Costo</th>
                         <th>Estatus</th>
                         <th>Acciones</th>
@@ -34,63 +37,91 @@
                 <tbody id="table-info"></tbody>
             </table>
         </div>
-
     </div>
 </div>
-@section Scripts{ 
-    <script>
-        var dataCiudad = [];
-        var dataEstado = [];
 
+
+<!--Modal global-->
+<div class="modal fade" id="modalDiv" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo-modal"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                <form id="frmRegister" action="#" method="post">
+                    <input type="hidden" name="id" id="idEditar" value="0" />
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="">Ruta</label>
+                            <select class="form-control form-control-sm">
+                                <option value="value">text</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="">Costo</label>
+                            <input type="text" class="form-control" name="Costo" id="Costo" value="" required/>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="">Estatus</label>
+                            <select class="form-control form-control-sm" name="estatus" id="estatus">
+                                <option value="1">Activo</option>
+                                <option value="2">Inactivo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br />
+                    <button type="submit" class="btn btn-dark guardar" style="width:31%;" id="btnAccion">
+                        Guardar
+                    </button>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
+                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal global-->
+
+@section Scripts{
+    <script>
         $(window).ready(function () {
-            getCiudad();
+            getRutas();
         });
 
-        function getCiudad() {
-            $.get("../../Catalogs/Geography/City/getCity", function (res) {
-                dataCiudad = res;
-                console.log(res);
-                getEstado();
+        function getRutas() {
+            $.get("/Carriers/Routes/getRoutes", function (res) {
+                console.log( res );
             });
         }
 
-        function getEstado() {
-            $.get("../../Catalogs/Geography/State/getState", function (res) {
-                dataEstado = res;
-                loadTable();
-            });
+        function showModal(titulo = "Title", accion, idEditar = 0) {
+            $('#frmRegister').trigger("reset");
+            $(".guardar").html(accion);
+            $("#titulo-modal").empty("");
+            $("#titulo-modal").html(titulo);
+            $("#idEditar").val(idEditar);
+            if (accion == "Editar") {
+                try {
+                    let indice = DataAirlines.findIndex(service => service.id === idEditar);
+                    $("#nombre").val(DataAirlines[indice].nombre);
+                    $('#estatus option[value="' + DataAirlines[indice].estatus + '"]').attr("selected", true);
+                    $("#modalDiv").modal("show");
+                } catch (error) {
+                    dToast("error", "Error al tratar de editar, intenta recargar la página.", "Error");
+                    $("#modalDiv").modal("hide");
+                }
+            } else {
+                $("#modalDiv").modal("show");
+            }
         }
 
-        function loadTable() {
-            var stable = $('.table-viajes').DataTable();
-            stable.destroy();
-            $("#table-info").empty();
-            $.get("/Carriers/Routes/getRoutesAll/", { "Id_Transportista":@id}, function (res) {
-                console.log(res);
-                $.each(res, function (item, key) {
-                     let cOrigen = dataCiudad.findIndex(ciudad => ciudad.id === key.id_Ciudad_Origen);
-                     let cDestino = dataCiudad.findIndex(ciudad => ciudad.id === key.id_Ciudad_Destino);
-                     let eOrigen = dataEstado.findIndex(estado => estado.id === key.id_Estado_Origen);
-                     let eDestino = dataEstado.findIndex(estado => estado.id === key.id_Estado_Destino); 
-
-                    $("#table-info").append(`
-                        <tr>
-                        <td>${nCon(key.id)}</td>
-                        <td>${dataEstado[eOrigen].nombre} - ${dataCiudad[cOrigen].nombre}</td>
-                        <td>${dataEstado[eDestino].nombre} - ${dataCiudad[cDestino].nombre}</td>
-                        <td>$$</td>
-                        <td>${statusTable(key.estatus)}</td>
-                        <td>
-                            <a href="/Carriers/Routes/formRoutes/`+@id+`/${nCon(key.id)}">
-                                <span class="material-icons">
-                                    mode_edit
-                                </span>
-                            </a>
-                        </td>
-                    </tr>`);
-                });
-                dTable("table-viajes");
-            });
-        }
     </script>
 }

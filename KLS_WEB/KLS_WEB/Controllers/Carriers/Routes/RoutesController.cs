@@ -15,7 +15,7 @@ namespace KLS_WEB.Controllers.Carriers.CarriersRoutes
     public class RoutesController : Controller
     {
         private string _UrlView = "~/Views/Carriers/Routes/";
-        private string _UrlApi = "Carriers/Routes";
+        private string _UrlApi = "Route";
 
         private readonly IAppContextService AppContext;
 
@@ -40,10 +40,10 @@ namespace KLS_WEB.Controllers.Carriers.CarriersRoutes
         }
         
         [Route("getRoutes")]
-        public async Task<JsonResult> Get(Tr_Has_Rutas dataModel)
+        public async Task<JsonResult> Get(Route dataModel)
         {
-            Tr_Has_Rutas dataReport;
-            dataReport = await this.AppContext.Execute<Tr_Has_Rutas>(MethodType.GET, _UrlApi, dataModel);
+            List<Route>dataReport;
+            dataReport = await this.AppContext.Execute<List<Route>>(MethodType.GET, _UrlApi, dataModel);
             return Json(dataReport);
         }
         

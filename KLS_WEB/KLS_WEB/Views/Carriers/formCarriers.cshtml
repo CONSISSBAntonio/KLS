@@ -28,8 +28,8 @@
                 <form id="frmRegister" action="#" method="post">
                     
                     <button class="btn btn-sm" type="submit" style="background-color:transparent;">
-                        <span class="material-icons" style="color:cornflowerblue;">
-                            save
+                        <span class="material-icons" style="color:cornflowerblue;" id="span-icon">
+                            
                         </span>
                     </button>
 
@@ -259,8 +259,8 @@
 
                 if (parseInt(@id) == 0) {
                     $.post("/Carriers/setCarriers", jsonData, function (res) {
-                        $(location).attr('href', '/Carriers/formCarriers/' + res.id);
                         dToast("success", "Registro guardado exitosamente.", "Registrado");
+                        $(location).attr('href', '/Carriers/formCarriers/' + res.id);
                     }).fail(function (error) {
                         dToast("error", "Error al tratar de guardar el registro", "Error");
                         $(".guardar").attr("disabled", false);
@@ -279,6 +279,7 @@
         function valId(){
             if (parseInt(@id) != 0) {
                 $("#idTransportista").val(@id);
+                $("#span-icon").append("edit");
                 $.get("/Carriers/getCarrier/", { "id":@id}, function (res) {
 
                     $("#rateYo").rateYo({
@@ -321,7 +322,7 @@
                 });
                 $("#idTransportista").val("0000");
                 $("#catalogList").addClass("disabledbutton");
-
+                $("#span-icon").append("save");
 
             }
         }

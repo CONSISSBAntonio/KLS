@@ -123,7 +123,7 @@
                 } else {
                     $.post("Regions/setRegion", jsonData, function (res) {
                         loadTable();
-                        dToast("success", "Se guardo el registro", "Registrado");
+                        dToast("success", "Se guardó el registro", "Registrado");
                         $(".guardar").attr("disabled", false);
                         btnGroup.length = 0;
                         $("#estadosBtn").empty();
@@ -151,12 +151,13 @@
                 $.each(btnGroup, function (item, key) {
                     var indice_e = catEstado.findIndex(service => parseInt(service.id) === parseInt(key.id_estado));
                     $("#estadosBtn").append(
-                        `<button type="button" class="btn btn-dark"  id="${key.id_estado}">
-                        ${catEstado[indice_e].nombre}        
-                        <i class="material-icons" onclick="delBtn(${key.id_estado})">
-                            delete_outline
-                        </i>
-                    </button>`
+                        `
+                            <button type="button" class="btn btn-dark btn-sm"  id="${key.id_estado}">
+                                ${catEstado[indice_e].nombre}        
+                                <i class="material-icons" onclick="delBtn(${key.id_estado})">
+                                    delete_outline
+                                </i>
+                            </button>`
                     );
                 });
             } catch (error) {
@@ -212,7 +213,8 @@
             $.get("State/getState", function (res) {
                 catEstado = res;
                 selEstado();
-                $("#id_estado").select2();
+                //$("#id_estado").select2();
+                dSelect('id_estado');
                 loadTable();
             }).fail(function (error) {
                 dToast("error", "Error al obtener paises", "Atencion!");
@@ -223,10 +225,13 @@
             $("#id_estado").append(`<option value="0">selecciona</option>`);
             try {
                 $.each(catEstado, function (item, key) {
-                    let indice = btnGroup.findIndex(estado => parseInt(estado.id_estado) === parseInt(key.id));
-                    if (indice < 0) {
-                        $("#id_estado").append(`<option value="${key.id}">${key.nombre}</option>`);
+                    if (key.estatus != 2) {
+                        let indice = btnGroup.findIndex(estado => parseInt(estado.id_estado) === parseInt(key.id));
+                        if (indice < 0) {
+                            $("#id_estado").append(`<option value="${key.id}">${key.nombre}</option>`);
+                        }
                     }
+
                 });
             } catch (error) {
                 dToast("error", "Error al listar estados: " + error, "Error");

@@ -104,7 +104,7 @@
                 } else {
                     $.post("Country/setCountry", jsonData, function (res) {
                         loadTable();
-                        dToast("success", "Se guardo el registro", "Registrado");
+                        dToast("success", "Se guardó el registro", "Registrado");
                         $(".guardar").attr("disabled", false);
                         $('#frmRegister').trigger("reset");
                     }).fail(function (error) {
@@ -131,10 +131,10 @@
             $(".guardar").html(accion);
             $("#titulo-modal").empty("");
             $("#titulo-modal").html(titulo);
+            $("#idEditar").val(idEditar);
             if (accion == "Editar") {
                 try {
                     let indice = dataCountry.findIndex(service => service.id === idEditar);
-                    $("#idEditar").val(idEditar);
                     $("#pais").val(dataCountry[indice].pais);
                     $('#estatus option[value="' + dataCountry[indice].estatus + '"]').attr("selected", true);
                     $("#modalDiv").modal("show");
