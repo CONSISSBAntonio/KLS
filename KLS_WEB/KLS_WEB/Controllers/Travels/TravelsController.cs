@@ -25,7 +25,7 @@ namespace KLS_WEB.Controllers.Travels
 
         public IActionResult Index()
         {
-            return View(this._UrlView + "index.cshtml");
+            return View(this._UrlView + "Index.cshtml");
         }
 
         [Route("formTravels/{id=0}")]
@@ -67,6 +67,12 @@ namespace KLS_WEB.Controllers.Travels
             Transportista dataReport;
             dataReport = await this.AppContext.Execute<Transportista>(MethodType.GET, _UrlApi + "/getCarrier", dataModel);
             return Json(dataReport);
+        }
+
+        [HttpPost]
+        public PartialViewResult ReturnServicios(Travel travel)
+        {
+            return PartialView(string.Concat(_UrlView, "_Servicios.cshtml"), travel);
         }
 
     }

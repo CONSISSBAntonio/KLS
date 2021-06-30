@@ -7,8 +7,17 @@
         text-align: left;
     }
 
-    form .row {
-        margin-bottom: .5rem;
+    form, select, div {
+        text-transform: uppercase;
+    }
+
+        form .row {
+            margin-bottom: .5rem;
+        }
+
+    .select2-selection__rendered {
+        float: left;
+        font-size: 12px;
     }
 </style>
 
@@ -165,7 +174,7 @@
         <div class="col-12 card mt-3">
             <div class="row d-flex justify-content-between">
                 <div class="poppins medium size-14 text-left mt-3 mb-3 ml-3">Checkpoints</div>
-                <div class="my-auto mr-3">
+                <div class="my-auto mr-3" id="addcheckpoint">
                     <button class="btn btn-outline-secondary btn-sm" onclick="showModal('AGREGAR','Agregar',0);"><i class="material-icons">add</i></button>
                 </div>
             </div>
@@ -237,12 +246,17 @@
         $.each(catCiudad, function (item, key) {
             $("#id_ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
         });
-        $(".myselect").select2();
+        dSelect("festadoorigen");
+        dSelect("festadodestino");
+        dSelect("fciudadorigen");
+        dSelect("fciudaddestino");
         if (rutaid === 0) {
             $('#frmRegister').attr('rel', 'save');
             $('.fid').remove();
             $('[type="text"]').val('');
             $('.savedit').removeClass('btn-outline-secondary').addClass('btn-outline-info').html(`<i class="material-icons">save</i>`);
+            $('#addcheckpoint').html(`<span>Primero guarda la ruta para poder añadir checkpoints`);
+            //$('#addcheckpoint').attr({ 'disabled': true, 'title': 'Primero debes guardar la nueva ruta para añadir checkpoints.' });
         } else {
             const actualizadopor = '@(Model.actualizadopor is null ? "-" : Model.actualizadopor)';
             const ultimocambio = '@(Model.ultimocambio)';
