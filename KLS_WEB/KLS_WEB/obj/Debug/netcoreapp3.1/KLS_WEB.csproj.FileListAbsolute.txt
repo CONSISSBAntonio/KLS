@@ -1336,3 +1336,7 @@ C:\Users\Consiss\Documents\Visual Studio 2019\GitHubProjects\KLS\KLS_WEB\KLS_WEB
 C:\Users\Consiss\Documents\Visual Studio 2019\GitHubProjects\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\KLS_WEB.genruntimeconfig.cache
 C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Clients\formClients.cshtml.g.cs
 C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Clients\Index.cshtml.g.cs
+C:\Users\Consiss\Documents\Visual Studio 2019\GitHubProjects\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\KLS_WEB.csprojAssemblyReference.cache
+C:\Users\Consiss\Documents\Visual Studio 2019\GitHubProjects\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Clients\formClients.cshtml.g.cs
+C:\Users\Consiss\Documents\Visual Studio 2019\GitHubProjects\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Clients\Index.cshtml.g.cs
+C:\Users\Consiss\Documents\Visual Studio 2019\GitHubProjects\KLS\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Travels\_Servicios.cshtml.g.cs
