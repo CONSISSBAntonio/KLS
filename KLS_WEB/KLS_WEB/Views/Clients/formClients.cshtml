@@ -1,0 +1,284 @@
+﻿@{
+    ViewData["Title"] = "Configuracion transportista";
+}
+
+@{ int id = ViewBag.id; }
+
+@section Styles{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+    <style>
+        .disabledbutton {
+            pointer-events: none;
+            opacity: 0.4;
+        }
+    </style>
+}
+
+<div class="data-content p-4 text-left">
+    <div class="p-4">
+        <div class="text-left d-flex mb-3">
+            <a href="/Clients">
+                <div class="material-icons icon-red">arrow_back</div>
+            </a>
+            <div class="text-uppercase poppins medium size-24 pl-2">Clientes</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 text-right">
+
+                <form id="frmRegister" action="#" method="post">
+
+                    <button class="btn btn-sm" type="submit" style="background-color:transparent;">
+                        <span class="material-icons" style="color:cornflowerblue;" id="span-icon">
+
+                        </span>
+                    </button>
+
+                    <div class="p-4 shadow bg-white">
+                        
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Id</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="Id" name="Id" disabled="disabled" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Nombre Comercial</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="NombreComercial" name="NombreComercial">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Nombre corto</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="NombreCorto" name="NombreCorto">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Razón Social</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="RazonSocial" name="RazonSocial">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">RFC</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="Rfc" name="Rfc">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Dirección fiscal</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="DireccionFiscal" name="DireccionFiscal">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Sector</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="Sector" name="Sector">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">INEGI DENUE</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="InegiDenue" name="InegiDenue">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Industria</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="Industria" name="Industria">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Tamaño</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="Tamanio" name="Tamanio">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-5 col-form-label col-form-label-sm">Estatus</label>
+                            <div class="col-sm-7">
+                                <select class="form-control form-control-sm" id="Estatus" name="Estatus">
+                                    <option value="1">Activo</option>
+                                    <option value="0">Inactivo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Página web</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="PaginaWeb" name="PaginaWeb">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Facebook</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="Facebook" name="Facebook">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Otra red social</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="OtraRed" name="OtraRed">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Banco</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="Banco" name="Banco">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Cuenta</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="Cuenta" name="Cuenta">
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="col-md-8">
+                <div class="catalog-list" id="catalogList">
+
+                    <a href="/Clients/formClients/@id" class="catalog">
+                        <div class="content">
+                            <span class="material-icons">
+                                local_shipping
+                            </span>
+                            <div class="name font-barlow">Rutas activas</div>
+                        </div>
+                    </a>
+                    <a href="/Clients/formClients/@id" class="catalog">
+                        <div class="content">
+                            <span class="material-icons">
+                                workspace_premium
+                            </span>
+                            <div class="name font-barlow">Certificaciones</div>
+                        </div>
+                    </a>
+                    <a href="/Clients/formClients/@id" class="catalog">
+                        <div class="content">
+                            <span class="material-icons">
+                                store
+                            </span>
+                            <div class="name font-barlow">Biblioteca Digital</div>
+                        </div>
+                    </a>
+                    <a href="/Clients/formClients/@id" class="catalog">
+                        <div class="content">
+                            <span class="material-icons">
+                                call
+                            </span>
+                            <div class="name font-barlow">Contactos</div>
+                        </div>
+                    </a>
+                    <a href="/Clients/formClients/@id" class="catalog">
+                        <div class="content">
+                            <span class="material-icons">
+                                heart
+                            </span>
+                            <div class="name font-barlow">Requisitos</div>
+                        </div>
+                    </a>
+                    <a href="/Clients/formClients/@id" class="catalog">
+                        <div class="content">
+                            <span class="material-icons">
+                                all_inbox
+                            </span>
+                            <div class="name font-barlow">Tipos de Mercancia</div>
+                        </div>
+                    </a>
+                    <a href="/Clients/formClients/@id" class="catalog">
+                        <div class="content">
+                            <span class="material-icons">
+                                map
+                            </span>
+                            <div class="name font-barlow">Origenes</div>
+                        </div>
+                    </a>
+                    <a href="/Clients/formClients/@id" class="catalog">
+                        <div class="content">
+                            <span class="material-icons">
+                                
+                            </span>
+                            <div class="name font-barlow">Destinos</div>
+                        </div>
+                    </a>
+                    <a href="/Clients/formClients/@id" class="catalog">
+                        <div class="content">
+                            <span class="material-icons">
+                                settings
+                            </span>
+                            <div class="name font-barlow">Otros</div>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script>
+        $(window).ready(function () {
+            valId();
+            $("#frmRegister").submit(function (event) {
+                event.preventDefault();
+                var jsonData = convertJson($("#frmRegister"));
+                jsonData["id"] = @id;
+                if (parseInt(@id) == 0) {
+                    $.post("/Clients/setClients", jsonData, function (res) {
+                        dToast("success", "Registro guardado exitosamente.", "Registrado");
+                        $(location).attr('href', '/Clients/formClients/' + res.id);
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de guardar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                } else {
+                    $.post("/Clients/putClients",jsonData, function (res) {
+                        dToast("success", "Registro actualizado exitosamente.", "Registrado");
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de actualizar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                }
+            });
+        });
+
+        function valId(){
+            if (parseInt(@id) != 0) {
+                $("#Id").val(@id);
+                $("#span-icon").append("edit");
+                $.get("/Clients/getClient/", { "Id":@id}, function (res) {
+                    console.log(res);
+                    $("#NombreComercial").val(res.nombreComercial);
+                    $("#NombreCorto").val(res.nombreCorto);
+                    $("#RazonSocial").val(res.razonSocial);
+                    $("#Rfc").val(res.rfc);
+                    $("#DireccionFiscal").val(res.direccionFiscal);
+                    $("#Sector").val(res.sector);
+                    $("#InegiDenue").val(res.inegiDenue);
+                    $("#Industria").val(res.industria);
+                    $("#Tamanio").val(res.tamanio);
+                    $("#PaginaWeb").val(res.paginaWeb);
+                    $("#Facebook").val(res.facebook);
+                    $("#OtraRed").val(res.otraRed);
+                    $("#Banco").val(res.banco);
+                    $("#Cuenta").val(res.cuenta);
+                }).fail(function (error, xhr, status) {
+                    console.log(error);
+                });
+            } else {
+                $("#Id").val("0000");
+                $("#catalogList").addClass("disabledbutton");
+                $("#span-icon").append("save");
+            }
+        }
+
+    </script>
+}

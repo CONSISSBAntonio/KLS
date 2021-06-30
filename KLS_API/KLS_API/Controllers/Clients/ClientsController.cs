@@ -1,5 +1,5 @@
 ﻿using KLS_API.Context;
-using KLS_API.Models.Carriers;
+using KLS_API.Models.Clients;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,26 +9,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace KLS_API.Controllers.Carriers.Inventory
+namespace KLS_API.Controllers.Clients
 {
-    [Route("Carriers/Inventory")]
+    [Route("Clients")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class InventoryController : Controller
+    public class ClientsController : Controller
     {
         private readonly AppDbContext context;
-        public InventoryController(AppDbContext context)
+        public ClientsController(AppDbContext context)
         {
             this.context = context;
         }
 
         [HttpGet]
-        public ActionResult Get([FromBody] Tr_Has_Inventario tr_inventario)
+        public ActionResult Get()
         {
             try
             {
-                var rutas = context.Tr_Has_Inventario.Where(f => f.IdTransportista == tr_inventario.IdTransportista).ToList();
-                return Ok(rutas);
+                return Ok(context.Clientes.ToList());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("getClient")]
+        public ActionResult getCarrier([FromBody] Clientes clientes)
+        {
+            try
+            {
+                var clietes = context.Clientes.FirstOrDefault(f => f.id == clientes.id);
+                return Ok(clietes);
             }
             catch (Exception ex)
             {
@@ -37,13 +51,13 @@ namespace KLS_API.Controllers.Carriers.Inventory
         }
 
         [HttpPost]
-        public ActionResult Post([FromBody] Tr_Has_Inventario tr_inventario)
+        public ActionResult Post([FromBody] Clientes clietes)
         {
             try
             {
-                context.Tr_Has_Inventario.Add(tr_inventario);
+                context.Clientes.Add(clietes);
                 context.SaveChanges();
-                return Ok(tr_inventario);
+                return Ok(clietes);
             }
             catch (Exception ex)
             {
@@ -52,13 +66,13 @@ namespace KLS_API.Controllers.Carriers.Inventory
         }
 
         [HttpPut]
-        public ActionResult Put([FromBody] Tr_Has_Inventario tr_inventario)
+        public ActionResult Put([FromBody] Clientes clietes)
         {
             try
             {
-                context.Entry(tr_inventario).State = EntityState.Modified;
+                context.Entry(clietes).State = EntityState.Modified;
                 context.SaveChanges();
-                return Ok(tr_inventario);
+                return Ok(clietes);
             }
             catch (Exception ex)
             {
