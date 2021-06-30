@@ -1,0 +1,35 @@
+﻿@model KLS_WEB.Models.Travels.Travel
+
+
+@if (Model.servicios != null)
+{
+    string html = string.Empty;
+    var servicios = Model.servicios.Replace("=on", "").Split("&");
+
+    foreach (var item in servicios)
+    {
+        switch (item)
+        {
+            case "terrestrenacional":
+                <p class="text-info">@item</p>
+                break;
+            case "naviera":
+                <p class="text-info">@item</p>
+                break;
+            case "agenteaduanal":
+                <p class="text-info">@item</p>
+                break;
+            case "terrestreinternacional":
+                <p class="text-info">@item</p>
+                break;
+            case "aerolinea":
+                <p class="text-info">@item</p>
+                break;
+            case "coloaders":
+                <p class="text-info">@item</p>
+                break;
+            default:
+                break;
+        }
+    }
+}

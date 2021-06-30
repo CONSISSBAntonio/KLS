@@ -361,3 +361,8 @@ input[type=text]{
         background-color: #dee2e6;
         border-color: #dee2e6;
     }
+
+/*Selects en mayuscula*/
+li, .selection {
+    text-transform: uppercase !important;
+}
