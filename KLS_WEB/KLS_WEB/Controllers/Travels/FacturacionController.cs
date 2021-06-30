@@ -14,7 +14,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace KLS_WEB.Controllers.Travels
 {
-    [Route("Travels")]
+    [Route("Facturacion")]
     [Authorize]
     public class FacturacionController : Controller
     {
