@@ -259,14 +259,12 @@
                             <div class="form-group">
                                 <label class="">País</label><br />
                                 <select class="form-control" name="id_pais" id="id_pais" style="width:100%">
-                                    <option value="0">México</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <label class="">Estado</label><br />
                             <select class="form-control" name="id_estado" id="id_estado" style="width:100%">
-                                <option value="0">Monterrey</option>
                             </select>
                         </div>
                         <div class="col-md-4">
@@ -307,6 +305,7 @@
     var dataCity = [];
     var catPais = [];
     var catEstado = [];
+    var catCiudad = [];
 
     $(window).ready(function () {
         valId();
@@ -441,10 +440,13 @@
     //Cargar ciudades
     function loadCity() {
         $.get("/Catalogs/Geography/City/getCity", function (res) {
-            catCiudad = res;
-            $("#origen, #destino").empty();
-            $.each(res, function (item, key) {
-                $("#origen, #destino").append(`<option value="${key.id}">${key.nombre}</option>`);
+            res.map(data => {
+                const { id, nombre, estatus } = data;
+
+                if (estatus === 1) {
+                    catCiudad = [...catCiudad, data];
+                    $("#origen, #destino").append(`<option value="${id}">${nombre}</option>`);
+                }
             });
             dSelect('origen');
             dSelect('destino');
@@ -456,10 +458,12 @@
     //Cargar paises
     function loadCountry() {
         $.get("/Catalogs/Geography/Country/getCountry", function (res) {
-            catPais = res;
-            $("#id_pais").empty();
-            $.each(res, function (item, key) {
-                $("#id_pais").append(`<option value="${key.id}">${key.pais}</option>`);
+            res.map(data => {
+                const { id, pais, estatus } = data;
+                if (estatus === 1) {
+                    catPais = [...catPais, data];
+                    $("#id_pais").append(`<option value="${id}">${pais}</option>`);
+                }
             });
             dSelect('id_pais');
         }).fail(function (error) {
@@ -470,10 +474,12 @@
     //Cargar estados
     function loadState() {
         $.get("/Catalogs/Geography/State/getState", function (res) {
-            catEstado = res;
             $("#id_estado").empty();
-            $.each(res, function (item, key) {
-                $("#id_estado").append(`<option value="${key.id}">${key.nombre}</option>`);
+            res.map(data => {
+                const { id, nombre, estatus } = data;
+                if (estatus === 1) {
+                    $("#id_estado").append(`<option value="${id}">${nombre}</option>`);
+                }
             });
             dSelect('id_estado');
         }).fail(function (error) {
