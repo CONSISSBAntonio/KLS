@@ -885,3 +885,5 @@ C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\bin\Debug\netcore
 C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
 C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Travels\Details.cshtml.g.cs
 C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Travels\New.cshtml.g.cs
+C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Clients\formClients.cshtml.g.cs
+C:\Users\Consiss\Documents\DOCS\KLS\DESARROLLO\KLS_WEB\KLS_WEB\obj\Debug\netcoreapp3.1\Razor\Views\Clients\Index.cshtml.g.cs

@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210630182322_trOperadoresaddine")]
+    partial class trOperadoresaddine
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -663,62 +665,6 @@ namespace KLS_API.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Cat_Tipos_Unidades");
-                });
-
-            modelBuilder.Entity("KLS_API.Models.Clients.Clientes", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Banco")
-                        .HasColumnType("varchar(55)");
-
-                    b.Property<string>("Cuenta")
-                        .HasColumnType("varchar(55)");
-
-                    b.Property<string>("DireccionFiscal")
-                        .HasColumnType("varchar(55)");
-
-                    b.Property<int>("Estatus")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Facebook")
-                        .HasColumnType("varchar(55)");
-
-                    b.Property<string>("Industria")
-                        .HasColumnType("varchar(55)");
-
-                    b.Property<string>("InegiDenue")
-                        .HasColumnType("varchar(55)");
-
-                    b.Property<string>("NombreComercial")
-                        .HasColumnType("varchar(55)");
-
-                    b.Property<string>("NombreCorto")
-                        .HasColumnType("varchar(55)");
-
-                    b.Property<string>("OtraRed")
-                        .HasColumnType("varchar(55)");
-
-                    b.Property<string>("PaginaWeb")
-                        .HasColumnType("varchar(55)");
-
-                    b.Property<string>("RazonSocial")
-                        .HasColumnType("varchar(55)");
-
-                    b.Property<string>("Rfc")
-                        .HasColumnType("varchar(55)");
-
-                    b.Property<string>("Sector")
-                        .HasColumnType("varchar(55)");
-
-                    b.Property<string>("Tamanio")
-                        .HasColumnType("varchar(55)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("Clientes");
                 });
 
             modelBuilder.Entity("KLS_API.Models.Region_Has_Estado", b =>

@@ -1,5 +1,6 @@
 ﻿using KLS_API.Models;
 using KLS_API.Models.Carriers;
+using KLS_API.Models.Clients;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,6 +35,11 @@ namespace KLS_API.Context
         public DbSet<Tr_Has_Biblioteca> Tr_Has_Biblioteca { get; set; }
         public DbSet<Tr_Has_Contactos> Tr_Has_Contactos { get; set; }
         public DbSet<Tr_Has_Ruta> Tr_Has_Rutas { get; set; }
+        public DbSet<Tr_Has_Inventario> Tr_Has_Inventario { get; set; }
+        public DbSet<Tr_Has_Operadores> Tr_Has_Operadores { get; set; }
+        
+        //Clientes
+        public DbSet<Clientes> Clientes { get; set; }
 
     }
 }
