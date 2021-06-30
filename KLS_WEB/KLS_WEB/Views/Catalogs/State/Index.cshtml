@@ -162,7 +162,8 @@
                     }
                     
                 });
-                $("#id_pais").select2();
+                //$("#id_pais").select2();
+                dSelect('id_pais');
             }).fail(function (error) {
                 dToast("error","Error al obtener paises","Atencion!");
             });

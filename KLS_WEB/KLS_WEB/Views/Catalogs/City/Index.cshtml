@@ -150,7 +150,8 @@
                     }
                     
                 });
-                $("#id_pais").select2();
+                //$("#id_pais").select2();
+                dSelect('id_pais');
                 loadTable();
             }).fail(function (error) {
                 dToast("error", "Error al obtener paises", "Atencion!");
@@ -167,7 +168,8 @@
                         $("#id_estado").append(`<option value="${key.id}">${key.nombre}</option>`);
                     }
                 });
-                $("#id_estado").select2();
+                //$("#id_estado").select2();
+                dSelect('id_estado');
             }).fail(function (error) {
                 dToast("error", "Error al obtener paises", "Atencion!");
             });

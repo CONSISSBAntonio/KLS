@@ -57,7 +57,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="">Estado</label><br />
-                                <select class="form-control" name="id_estado" id="id_estado" style="width:100%;">
+                                <select class="form-control" name="id_estado" id="id_estado" style="width:100%;" onchange=" filCiudad();">
                                     <option value="value">Nuevo León</option>
                                 </select>
                             </div>
@@ -172,7 +172,8 @@
                         $("#id_estado").append(`<option value="${key.id}">${key.nombre}</option>`);
                     }
                 });
-                $("#id_estado").select2();
+                //$("#id_estado").select2();
+                dSelect('id_estado');
                 loadCity();
             }).fail(function (error) {
                 dToast("error", "Error al obtener paises", "Atencion!");
@@ -183,17 +184,25 @@
         function loadCity() {
             $.get("City/getCity", function (res) {
                 catCiudad = res;
-                $("#id_ciudad").empty();
-                $.each(res, function (item, key) {
-                    if (key.estatus != 2) {
-                        $("#id_ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
-                    }
-                });
-                $("#id_ciudad").select2();
                 loadTable();
             }).fail(function (error) {
                 dToast("error", "Error al obtener paises", "Atencion!");
             });
+        }
+
+
+        function filCiudad() {
+            $("#id_ciudad").empty();
+            var idest = $("#id_estado").val();
+            $.each(catCiudad, function (item, key) {
+                if (key.estatus != 2) {
+                    if (key.id_estado == idest) {
+                        $("#id_ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
+                    }
+                }
+            });
+            //$("#id_ciudad").select2();
+            dSelect('id_ciudad');
         }
 
         function loadTable() {
