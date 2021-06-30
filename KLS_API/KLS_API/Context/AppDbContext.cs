@@ -1,5 +1,6 @@
 ﻿using KLS_API.Models;
 using KLS_API.Models.Carriers;
+using KLS_API.Models.Travels;
 using KLS_API.Models.Clients;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +41,9 @@ namespace KLS_API.Context
         
         //Clientes
         public DbSet<Clientes> Clientes { get; set; }
+
+        //Viajes
+        public DbSet<Facturacion> Facturacion { get; set; }
 
     }
 }

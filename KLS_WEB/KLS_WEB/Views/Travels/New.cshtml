@@ -422,7 +422,20 @@
                 $('.serviciosseleccionados').empty().hide();
             }
         }
-    }
+        }
+
+        //Cargar ciudades
+        function loadUnits() {
+            $.get("/Catalogs/TypesOfUnits/getUnidades", function (res) {
+                $("#tipounidad").empty();
+                $.each(res, function (item, key) {
+                    $("#tipounidad").append(`<option value="${key.id}">${key.nombre}</option>`);
+                });
+                $("#tipounidad").select2();
+            }).fail(function (error) {
+                dToast("error", "Error al obtener ciudades", "Atencion!");
+            });
+        }
 
         //Cargar unidades
         function loadUnits() {

@@ -819,6 +819,32 @@ namespace KLS_API.Migrations
                     b.ToTable("Ruta_Has_Checkpoint");
                 });
 
+            modelBuilder.Entity("KLS_API.Models.Travels.Facturacion", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("fechacarga")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("fullpath")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("nombre")
+                        .HasColumnType("VARCHAR(300)");
+
+                    b.Property<string>("usuario")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int>("usuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Facturacion");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
