@@ -83,7 +83,7 @@ namespace KLS_API.Controllers.System
                     Roles = roles
                 };
             }
-            ModelState.AddModelError("Response", "Nombre de usuario/contraseña no valido");
+            ModelState.AddModelError("Response", "Nombre de usuario/contraseña no válido");
             return StatusCode(400, ModelState);
         }
 

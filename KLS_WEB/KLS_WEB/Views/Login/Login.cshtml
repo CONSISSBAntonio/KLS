@@ -19,13 +19,13 @@
                 <div class="modal-body">
                     <form method="post" asp-action="Login">
                         <div class="form-group">
-                            <label class="size-14 mt-2 d-block text-left" asp-for="Email">Email</label>
+                            <label class="size-14 mt-2 d-block text-left" asp-for="Email">Usuario (Correo electrónico)</label>
                             <input type="email" class="form-control" asp-for="Email" class="border-0 form-control mb-1 lock pr-4 bottom-border"
                                    autofocus>
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label class="size-14 mb-0 d-block text-left mt-4" asp-for="Password"></label>
+                            <label class="size-14 mb-0 d-block text-left mt-4" asp-for="Password">Contraseña</label>
                             <input type="password" class="form-control" asp-for="Password" class="border-0 form-control mb-1 pr-4 bottom-border" />
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>

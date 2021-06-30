@@ -355,7 +355,8 @@ using KLS_WEB.Models;
                         </div>
                         <label class=""col-sm-10 col-form-label col-form-label-sm pl-0""><strong>Instrucciónes</strong></label>
                     </div>
-                    <div class=""form-group row"">");
+                    <div class=""form-group row"">
+");
             WriteLiteral(@"
                         <div class=""col-sm-2"">
                             <input type=""checkbox"" class=""custome-check form-control form-control-sm"" id=""cliente"" disabled>

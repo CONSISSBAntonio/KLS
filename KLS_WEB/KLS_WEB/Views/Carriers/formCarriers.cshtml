@@ -6,6 +6,12 @@
 
 @section Styles{
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+    <style>
+        .disabledbutton {
+            pointer-events: none;
+            opacity: 0.4;
+        }
+    </style>
 }
 
 <div class="data-content p-4 text-left">
@@ -22,8 +28,8 @@
                 <form id="frmRegister" action="#" method="post">
                     
                     <button class="btn btn-sm" type="submit" style="background-color:transparent;">
-                        <span class="material-icons" style="color:cornflowerblue;">
-                            save
+                        <span class="material-icons" style="color:cornflowerblue;" id="span-icon">
+                            
                         </span>
                     </button>
 
@@ -169,7 +175,7 @@
             </div>
 
             <div class="col-md-8">
-                <div class="catalog-list">
+                <div class="catalog-list" id="catalogList">
                     <a href="/Carriers/Operators/@id" class="catalog">
                         <div class="content">
                             <span class="material-icons">
@@ -250,20 +256,17 @@
                 var normalFill = $("#rateYo").rateYo("option", "rating");
                 jsonData["NivelServicio"] = normalFill;
                 jsonData["id"] = @id;
-                console.log(jsonData);
 
                 if (parseInt(@id) == 0) {
                     $.post("/Carriers/setCarriers", jsonData, function (res) {
-                        console.log(res);
-                        $(location).attr('href', '/Carriers/formCarriers/' + res.id);
                         dToast("success", "Registro guardado exitosamente.", "Registrado");
+                        $(location).attr('href', '/Carriers/formCarriers/' + res.id);
                     }).fail(function (error) {
                         dToast("error", "Error al tratar de guardar el registro", "Error");
                         $(".guardar").attr("disabled", false);
                     });
                 } else {
                     $.post("/Carriers/putCarriers",jsonData, function (res) {
-                        console.log(res);
                         dToast("success", "Registro actualizado exitosamente.", "Registrado");
                     }).fail(function (error) {
                         dToast("error", "Error al tratar de actualizar el registro", "Error");
@@ -276,6 +279,7 @@
         function valId(){
             if (parseInt(@id) != 0) {
                 $("#idTransportista").val(@id);
+                $("#span-icon").append("edit");
                 $.get("/Carriers/getCarrier/", { "id":@id}, function (res) {
 
                     $("#rateYo").rateYo({
@@ -317,6 +321,9 @@
                     fullStar: true
                 });
                 $("#idTransportista").val("0000");
+                $("#catalogList").addClass("disabledbutton");
+                $("#span-icon").append("save");
+
             }
         }
 

@@ -17,9 +17,7 @@
             <input type="hidden" value="0" id="idBox" name="Id" />
             <div class="text-right">
                 <button class="btn btn-sm" type="submit" style="background-color:transparent;">
-                    <span class="material-icons" style="color:cornflowerblue;">
-                        save
-                    </span>
+                    <span class="material-icons" style="color:cornflowerblue;" id="span-icon"></span>
                 </button>
             </div>
             <div class="row">
@@ -163,11 +161,11 @@
             });
         });
 
-
         function valId(){
             if (parseInt(@id) != 0) {
                 $.get("/Carriers/Box/getBox/", { "Id_Transportista":@id}, function (res) {
                     if (res != null) {
+                        $("#span-icon").append("edit");
                         console.log(res);
                         $("#idBox").val(res.id);
                         $('#Densidad').prop('checked', res.densidad);
@@ -186,7 +184,7 @@
                         $("#Tp_Opcional").val(res.tp_Opcional);
                         $("#V_Opcional").val(res.v_Opcional);
                     } else {
-                        console.log(res);
+                        $("#span-icon").append("save");
                     }
                 }).fail(function (error, xhr, status) {
                     console.log(xhr);

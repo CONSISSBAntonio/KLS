@@ -10,14 +10,14 @@
             <a href="/Carriers/Routes/@id">
                 <div class="material-icons icon-red">arrow_back</div>
             </a>
-            <div class="text-uppercase poppins medium size-24 pl-2">Transportista</div>
+            <div class="text-uppercase poppins medium size-24 pl-2">Ruta Transportista</div>
         </div>
         <form id="frmRegister" action="#" method="post">
+            
             <button class="btn btn-sm" type="submit" style="background-color:transparent;">
-                <span class="material-icons" style="color:cornflowerblue;">
-                    save
-                </span>
+                <span class="material-icons" style="color:cornflowerblue;" id="span-icon"></span>
             </button>
+
             <div class="row">
                 <div class="col-md-4 text-right">
                     <div class="p-4 shadow bg-white">
@@ -105,7 +105,8 @@
                             <label class="col-4 col-form-label col-form-label-sm">Estatus</label>
                             <div class="col-sm-8">
                                 <select id="Estatus" name="Estatus" class="form-control form-control-sm">
-                                    <option value="0">Selecciona</option>
+                                    <option value="1">Activo</option>
+                                    <option value="2">Inactivo</option>
                                 </select>
                             </div>
                         </div>
@@ -134,6 +135,7 @@
                     </div>
                 </div>
             </div>
+
         </form>
     </div>
 </div>
@@ -146,7 +148,7 @@
         $(window).ready(function () {
             getCiudad();
             getEstado();
-            loadTable();
+            //loadTable();
 
             $("#frmRegister").submit(function (event) {
                 event.preventDefault();
@@ -179,6 +181,9 @@
                 $.get("/Carriers/Routes/getRoutes/", { "Id":@idRuta}, function (res) {
                     dataRoutes = res;
                     if (res != null) {
+
+                        $("#span-icon").append("edit");
+
                         $("#idEditar").val(res.id);
                         $("#Demanda").val(res.demanda);
                         $("#Eficiencia").val(res.eficiencia);
@@ -196,10 +201,11 @@
                         $("#TipoDeViaje").val(res.tipoDeViaje);
                         $("#TotalHoras").val(res.totalHoras);
                         $("#Total_Kilometros").val(res.total_Kilometros);
+                    } else {
+                        $("#span-icon").append("save");
                     }
-                    console.log(dataRoutes);
                 });
-            } 
+            }
         }
 
         function getEstado() {
