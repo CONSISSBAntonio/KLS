@@ -523,3 +523,11 @@ KLS_WEB/KLS_WEB/obj/KLS_WEB.csproj.nuget.g.props
 KLS_WEB/KLS_WEB/obj/project.assets.json
 KLS_WEB/KLS_WEB/obj/project.nuget.cache
 >>>>>>> feature/Requisitos-viajes
+KLS_API/KLS_API/bin/Debug/netcoreapp3.1/KLS_API.dll
+KLS_API/KLS_API/bin/Debug/netcoreapp3.1/KLS_API.dll
+KLS_API/KLS_API/bin/Debug/netcoreapp3.1/KLS_API.pdb
+KLS_WEB/KLS_WEB/bin/Debug/netcoreapp3.1/KLS_WEB.dll
+*.pdb
+*.dll
+*.pdb
+*.pdb
