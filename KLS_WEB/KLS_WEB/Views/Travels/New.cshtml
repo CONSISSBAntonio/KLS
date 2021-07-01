@@ -145,103 +145,17 @@
                             <i class="material-icons">add</i>
                         </a>
                     </div>
-                    <div class="form-group col-12">
-                        <div class="addServicios border rounded d-flex justify-content-center align-items-center font-weight-bolder"
+                    <div class="form-group col-12 addServicios">
+                        <div class="border rounded d-flex justify-content-center align-items-center font-weight-bolder"
                              onclick="selectServicios(this);"
                              style="border: 5px dashed #585858 !important; height: 7rem; opacity: 0.2; cursor: pointer;">
                             <h3>AGREGA SERVICIOS</h3>
                         </div>
+
                     </div>
+                    <div class="col-12 serviciosseleccionados" style="display: none;"></div>
                 </div>
 
-                <div>
-
-                    <div class="row mt-3">
-                        <div class="col-4 d-flex flex-row">
-                            <i class="material-icons text-danger" style="cursor:pointer;" onclick="deleteService();">delete</i><h5>Terrestre Nacional</h5>
-                        </div>
-                        <div class="col-8 d-flex justify-content-end">
-                            <div class="d-flex justify-content-between">
-
-                                <div class="form-group row mr-3">
-                                    <label class="col-sm-3 col-form-label col-form-label-sm">COSTO</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" class="form-control form-control-sm" id="costo" disabled>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-6 col-form-label col-form-label-sm mr-0">PRECIO A CLIENTE</label>
-                                    <div class="col-sm-6">
-                                        <input type="number" class="form-control form-control-sm" name="terrestrenacionalprecio" required>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="row">
-                    <div class="col-6 card">
-                        <div class="form-group mt-3">
-                            <label class="col-form-label col-form-label-sm font-weight-bold">TRANSPORTISTA</label>
-                            <div>
-                                <select class="form-control form-control-sm" id="transportista" name="transportista">
-                                    <option value="4224">mi transportista</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group mt-3">
-                            <label class="col-form-label col-form-label-sm font-weight-bold">CHOFER</label>
-                            <select class="form-control form-control-sm" id="chofer" name="chofer">
-                                <option value="3219">mi chofer</option>
-                            </select>
-                            <div class="row">
-                                <div class="col-2">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-                                        <label class="form-check-label" for="flexCheckChecked">
-                                            Licencia
-                                        </label>
-                                    </div>
-
-                                </div>
-
-                                <div class="col-8">
-                                    <span>hdsaidhiosah</span>
-                                </div>
-
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-                                <label class="form-check-label" for="flexCheckChecked">
-                                    No. Teléfono
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-                                <label class="form-check-label" for="flexCheckChecked">
-                                    IMSS
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 bg-light-grey">
-                        <div class="col-12">
-                            <div class="poppins medium size-14 text-left mt-4 mb-3">EQUIPO</div>
-                            <div class="d-flex justify-content-between">
-                                <select class="form-control form-control-sm col-4" name="equipo" required>
-                                    <option value="8231">Mi equipo</option>
-                                </select>
-                                <div class="col-8 d-flex flex-row justify-content-between">
-                                    <p>Estatus</p>
-                                    <i class="material-icons text-danger">delete</i>
-                                </div>
-                            </div>
-                            <i class="material-icons" style="cursor:pointer;" onclick="addEquipo(this);">add_box</i>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <div class="row p-3">
@@ -249,14 +163,10 @@
                     <p class="font-weight-bolder">Cálculos</p>
                     <div class="d-flex justify-content-around">
                         <div class="d-flex align-items-end flex-column">
-                            <span>Sub total</span>
-                            <span>IVA</span>
                             <span>Costo</span>
                             <span>Precio Cliente</span>
                         </div>
                         <div class="d-flex flex-column">
-                            <b id="subtotal">0.00</b>
-                            <b id="iva">0.00</b>
                             <b id="costo">0.00</b>
                             <b id="preciocliente">0.00</b>
                         </div>
@@ -288,37 +198,37 @@
                             Terrestre nacional
                         </label>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="1" name="naviera">
-                        <label class="form-check-label" for="1">
-                            Naviera
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="2" name="agenteaduanal">
-                        <label class="form-check-label" for="2">
-                            Agente aduanal
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="3"
-                               name="terrestreinternacional">
-                        <label class="form-check-label" for="3">
-                            Terrestre Internacional
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="4" name="aerolinea">
-                        <label class="form-check-label" for="4">
-                            Aerolinea
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="5" name="coloaders">
-                        <label class="form-check-label" for="5">
-                            Coloaders
-                        </label>
-                    </div>
+                    @*<div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="1" name="naviera">
+                            <label class="form-check-label" for="1">
+                                Naviera
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="2" name="agenteaduanal">
+                            <label class="form-check-label" for="2">
+                                Agente aduanal
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="3"
+                                   name="terrestreinternacional">
+                            <label class="form-check-label" for="3">
+                                Terrestre Internacional
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="4" name="aerolinea">
+                            <label class="form-check-label" for="4">
+                                Aerolinea
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="5" name="coloaders">
+                            <label class="form-check-label" for="5">
+                                Coloaders
+                            </label>
+                        </div>*@
                 </form>
                 <br />
                 <button onclick="closeModal('agregarServicios');" class="btn btn-dark guardar" style="width:100%;">
@@ -349,14 +259,12 @@
                             <div class="form-group">
                                 <label class="">País</label><br />
                                 <select class="form-control" name="id_pais" id="id_pais" style="width:100%">
-                                    <option value="0">México</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <label class="">Estado</label><br />
                             <select class="form-control" name="id_estado" id="id_estado" style="width:100%">
-                                <option value="0">Monterrey</option>
                             </select>
                         </div>
                         <div class="col-md-4">
@@ -386,7 +294,6 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
-                @*<button type="button" class="btn btn-primary">Save changes</button>*@
             </div>
         </div>
     </div>
@@ -398,6 +305,7 @@
     var dataCity = [];
     var catPais = [];
     var catEstado = [];
+    var catCiudad = [];
 
     $(window).ready(function () {
         valId();
@@ -408,8 +316,15 @@
 
         $(".viaje").submit(function (event) {
             event.preventDefault();
+
+            const equipo = {
+                equipo: getEquipos()
+            };
+
             var jsonData = convertJson($(".viaje"));
-            console.log(jsonData);
+            console.log('pre', jsonData);
+            jsonData = { ...jsonData, ...equipo };
+            console.log('post:', jsonData);
 
             @*if (parseInt(@id) == 0) {
                 $.post("/Carriers/setCarriers", jsonData, function (res) {
@@ -432,6 +347,52 @@
         });
     });
 
+        function setPrecios() {
+            const precios = $('.precios');
+            let total = 0;
+            precios.map(index => {
+                const cantidad = Number.isNaN(Number.parseFloat(precios.eq(index).val())) ? 0 : precios.eq(index).val();
+                total += parseFloat(cantidad);
+            });
+            total = parseFloat(total).toFixed(2);
+            $('#preciocliente').text(total);
+        }
+
+        function getEquipos() {
+            const length = --$('.selectequipo').length;
+            let data = ``;
+            i = 0;
+            while (i <= length) {
+                const select = document.getElementsByClassName('selectequipo')[i],
+                    options = select.options;
+                data += `${i !== 0 ? '&' : ''}${select.name}=${options[options.selectedIndex].value}`;
+                ++i;
+            }
+            return data;
+        }
+
+        function addEquipo(element, id) {
+            const boton = jQuery(element);
+            boton.remove();
+            const nextId = ++$('.equipocontainer').children().length;
+
+            const equipo = `<div class="d-flex justify-content-between equipo">
+                <select class="form-control form-control-sm col-4 selectequipo" name="equipo${nextId}" required>
+                    <option value="mi">Mi equipo</option>
+                    <option value="mx">Mx</option>
+                    <option value="w">w</option>
+                    <option value="e">e</option>
+                </select>
+                <div class="col-8 d-flex flex-row justify-content-between">
+                    <p id="equipodetail">new empty</p>
+                    <i class="material-icons text-danger" style="cursor: pointer;" onClick="{$(this).parent().parent().remove();}">delete</i>
+                </div>
+            </div>
+            <i class="material-icons" style="cursor:pointer;" onclick="addEquipo(this);">add_box</i>`;
+
+            $('.equipocontainer').append(equipo);
+        }
+
     function agregarCiudad(element) {
         $('#modalAgregarCiudad').modal('show');
     }
@@ -453,11 +414,12 @@
             const servicios = $('#frmServicios').serialize();
             if (servicios) {
                 $.post("@Url.Action("ReturnServicios", "Travels")", { servicios: servicios }, function (res) {
-                    console.log('response:', res);
+                    $('.addServicios').hide();
+                    $('.serviciosseleccionados').html(res).show('slow', () => { $('.serviciosseleccionados').show(); });
                 });
-          } else {
-                addservicios = `<h3>AGREGA SERVICIOS</h3>`;
-                $('.addServicios').css('opacity', 0.2);
+            } else {
+                $(`.addServicios`).show('slow', () => { $('.addServicios').show(); });
+                $('.serviciosseleccionados').empty().hide();
             }
         }
         }
@@ -475,14 +437,14 @@
             });
         }
 
-        //Cargar ciudades
+        //Cargar unidades
         function loadUnits() {
             $.get("/Catalogs/TypesOfUnits/getUnidades", function (res) {
                 $("#tipounidad").empty();
                 $.each(res, function (item, key) {
                     $("#tipounidad").append(`<option value="${key.id}">${key.nombre}</option>`);
                 });
-                $("#tipounidad").select2();
+                dSelect('tipounidad');
             }).fail(function (error) {
                 dToast("error", "Error al obtener ciudades", "Atencion!");
             });
@@ -491,12 +453,16 @@
     //Cargar ciudades
     function loadCity() {
         $.get("/Catalogs/Geography/City/getCity", function (res) {
-            catCiudad = res;
-            $("#origen, #destino").empty();
-            $.each(res, function (item, key) {
-                $("#origen, #destino").append(`<option value="${key.id}">${key.nombre}</option>`);
+            res.map(data => {
+                const { id, nombre, estatus } = data;
+
+                if (estatus === 1) {
+                    catCiudad = [...catCiudad, data];
+                    $("#origen, #destino").append(`<option value="${id}">${nombre}</option>`);
+                }
             });
-            $("#origen, #destino").select2();
+            dSelect('origen');
+            dSelect('destino');
         }).fail(function (error) {
             dToast("error", "Error al obtener tipos de unidad", "Atencion!");
         });
@@ -505,12 +471,14 @@
     //Cargar paises
     function loadCountry() {
         $.get("/Catalogs/Geography/Country/getCountry", function (res) {
-            catPais = res;
-            $("#id_pais").empty();
-            $.each(res, function (item, key) {
-                $("#id_pais").append(`<option value="${key.id}">${key.pais}</option>`);
+            res.map(data => {
+                const { id, pais, estatus } = data;
+                if (estatus === 1) {
+                    catPais = [...catPais, data];
+                    $("#id_pais").append(`<option value="${id}">${pais}</option>`);
+                }
             });
-            $("#id_pais").select2();
+            dSelect('id_pais');
         }).fail(function (error) {
             dToast("error", "Error al obtener paises", "Atencion!");
         });
@@ -519,14 +487,20 @@
     //Cargar estados
     function loadState() {
         $.get("/Catalogs/Geography/State/getState", function (res) {
-            catEstado = res;
             $("#id_estado").empty();
-            $.each(res, function (item, key) {
-                $("#id_estado").append(`<option value="${key.id}">${key.nombre}</option>`);
+            res.map(data => {
+                const { id, nombre, estatus } = data;
+                if (estatus === 1) {
+                    $("#id_estado").append(`<option value="${id}">${nombre}</option>`);
+                }
             });
-            $("#id_estado").select2();
+            dSelect('id_estado');
         }).fail(function (error) {
+<<<<<<< HEAD:KLS_WEB/KLS_WEB/Views/Travel/New.cshtml
             dToast("error", "Error al obtener estados", "Atencion!");
+=======
+            dToast("error", "Error al tener esUrlados", "Atencion!");
+>>>>>>> feature/Requisitos-viajes:KLS_WEB/KLS_WEB/Views/Travels/New.cshtml
         });
     }
 

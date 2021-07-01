@@ -67,9 +67,11 @@ namespace KLS_WEB.Views.Catalogs.City
         {
             Cat_Ciudad ciudadModel = new Cat_Ciudad();
             List<Cat_Ciudad> ciudades = await this.AppContext.Execute<List<Cat_Ciudad>>(MethodType.GET, "Catalogs/Geography/City", ciudadModel);
+            ciudades.RemoveAll(x => x.estatus == 2);
             ViewBag.CiudadList = new SelectList(ciudades, "id", "nombre");
             Cat_Estado estadoModel = new Cat_Estado();
             List<Cat_Estado> estados = await this.AppContext.Execute<List<Cat_Estado>>(MethodType.GET, "Catalogs/Geography/State", estadoModel);
+            estados.RemoveAll(x => x.estatus == 2);
             ViewBag.EstadoList = new SelectList(estados, "id", "nombre");
 
             if (id > 0)

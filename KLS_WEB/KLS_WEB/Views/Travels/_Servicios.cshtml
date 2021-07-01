@@ -1,0 +1,146 @@
+﻿@model KLS_WEB.Models.Travels.Travel
+
+
+@if (Model.servicios != null)
+{
+    string html = string.Empty;
+    var servicios = Model.servicios.Replace("=on", "").Split("&");
+
+    foreach (var item in servicios)
+    {
+        switch (item)
+        {
+            case "terrestrenacional":
+
+                <div id="terrestrenacional">
+                    <div class="row mt-3">
+                        <div class="col-4 d-flex flex-row">
+                            <i class="material-icons text-danger my-auto" style="cursor:pointer;" onclick="{ removeService('terrestrenacional'); }">delete</i>
+                            <h5 class="my-auto">Terrestre Nacional</h5>
+                        </div>
+                        <div class="col-8 d-flex justify-content-end">
+                            <div class="d-flex justify-content-between">
+
+                                <div class="form-group row mr-3 my-auto">
+                                    <label class="col-sm-3 col-form-label col-form-label-sm">COSTO</label>
+                                    <div class="col-sm-9 my-auto">
+                                        <input type="text" class="form-control form-control-sm" id="costo" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group row my-auto">
+                                    <label class="col-sm-6 col-form-label col-form-label-sm mr-0">PRECIO A CLIENTE</label>
+                                    <div class="col-sm-6 my-auto">
+                                        <input type="number" class="form-control form-control-sm precios" name="terrestrenacionalprecio" onkeyup="setPrecios();" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-6 card">
+                            <div class="form-group mt-3">
+                                <label class="col-form-label col-form-label-sm font-weight-bold">TRANSPORTISTA</label>
+                                <div>
+                                    <select class="form-control form-control-sm" id="transportista" name="transportista">
+                                        <option value="4224">mi transportista</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group mt-3">
+                                <label class="col-form-label col-form-label-sm font-weight-bold">CHOFER</label>
+                                <select class="form-control form-control-sm" id="chofer" name="chofer">
+                                    <option value="3219">mi chofer</option>
+                                </select>
+                                <div class="row mt-3">
+                                    <div class="col-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="licencia" checked disabled>
+                                            <label class="form-check-label" for="licencia">
+                                                LICENCIA
+                                            </label>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-8">
+                                        <span id="licencia" class="size-12">16/04/2021</span>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="telefono" checked disabled>
+                                            <label class="form-check-label" for="telefono">
+                                                No. Telefono
+                                            </label>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-8">
+                                        <span id="notelefono" class="size-12">8113432142</span>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="imms" checked disabled>
+                                            <label class="form-check-label" for="imms">
+                                                IMMS
+                                            </label>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-10 d-flex justify-content-between flex-row">
+                                        <span id="imss" class="size-12 my-2">321423432</span>
+                                        <i class="material-icons text-danger" style="cursor:pointer; font-size:2.5rem;" onclick="downloadChofer(this);">cloud_download</i>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 bg-light-grey">
+                            <div class="col-12">
+                                <div class="poppins medium size-14 text-left mt-4 mb-3">EQUIPO</div>
+                                <div class="equipocontainer">
+                                </div>
+                                <i class="material-icons" style="cursor:pointer;" onclick="addEquipo(this);">add_box</i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                break;
+            case "naviera":
+                <p class="text-info">@item</p>
+                break;
+            case "agenteaduanal":
+                <p class="text-info">@item</p>
+                break;
+            case "terrestreinternacional":
+                <p class="text-info">@item</p>
+                break;
+            case "aerolinea":
+                <p class="text-info">@item</p>
+                break;
+            case "coloaders":
+                <p class="text-info">@item</p>
+                break;
+            default:
+                break;
+        }
+    }
+}
+<script>
+    function removeService(service) {
+        $(`#${service}`).hide('slow', () => {
+            $(`#${service}`).remove();
+            $('.serviciosseleccionados').children().length === 1 ? $(`.addServicios`).show('slow', () => { $('.addServicios').show(); }) : null;
+        });
+    }
+
+</script>

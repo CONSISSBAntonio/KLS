@@ -89,7 +89,7 @@
                             </li>
 
                             <li class="pt-2 pl-4">
-                                <a href="">
+                                <a href="/Clients">
                                     <div class="material-icons size-18 pr-1">person</div>
                                     <label>Clientes</label>
                                 </a>
@@ -150,8 +150,8 @@
     <script src="https://cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"></script>
     <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    @RenderSection("Scripts", required: false)
     <script>
-
         $("#left_bar").click(function () {
             if ($("#left_bar").hasClass("expand")) {
                 $("#left_bar").removeClass("expand");
@@ -176,9 +176,6 @@
                 $("#left_bar").addClass("expand");
             }
         }
-
-      
-
 
         function dTable(table) {
             $('.' + table).DataTable({
@@ -255,15 +252,12 @@
         }
 
         function dSelect(select) {
-            $('#'+select).select2({
+            $('#' + select).select2({
                 language: {
-
                     noResults: function () {
-
                         return "No hay resultado";
                     },
                     searching: function () {
-
                         return "Buscando..";
                     }
                 }
@@ -271,6 +265,5 @@
         }
 
     </script>
-    @RenderSection("Scripts", required: false)
 </body>
 </html>

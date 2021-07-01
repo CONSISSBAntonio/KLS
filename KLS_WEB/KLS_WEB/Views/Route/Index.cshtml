@@ -24,7 +24,7 @@
                     <th>Estado De</th>
                     <th>Ciudad De</th>
                     <th>Tiempo de ruta</th>
-                    <th>Kilometros</th>
+                    <th>Kilómetros</th>
                     <th>Seguridad</th>
                     <th></th>
                     <th>Estatus</th>
@@ -49,10 +49,9 @@
         $(document).ready(function () {
             loadCity();
             loadState();
-            loadTable();
         });
 
-        function AddEdit (id, button) {
+        function AddEdit(id, button) {
             const boton = jQuery(button);
             boton.attr('disabled', true);
             $.get(`Route/AddEdit/${id}`, function (res) {
@@ -66,7 +65,14 @@
         //Cargar ciudades
         function loadCity() {
             $.get("/Catalogs/Geography/City/getCity", function (res) {
-                catCiudad = res;
+                res.map(data => {
+                    const { estatus } = data;
+
+                    if (estatus === 1) {
+                        catCiudad = [...catCiudad, data];
+                    }
+                });
+
             }).fail(function (error) {
                 dToast("error", "Error al obtener paises", "Atencion!");
             });
@@ -76,6 +82,7 @@
         function loadState() {
             $.get("/Catalogs/Geography/State/getState", function (res) {
                 catEstado = res;
+                loadTable();
             }).fail(function (error) {
                 dToast("error", "Error al obtener paises", "Atencion!");
             });
@@ -96,33 +103,33 @@
                     const color = nCon(key.seguridad) == 'Alto' ? 'success' : nCon(key.seguridad) == 'Medio' ? 'warning' : 'danger';
                     const status = nCon(key.estatus) == 1 ? 'Activo' : 'Inactivo';
                     $("#table-info").append(`
-                            <tr class="text-uppercase">
-                            <td>${nCon(key.id)}</td>
-                            <td>${catEstado[indice_eo].nombre}</td>
-                            <td>${catCiudad[indice_co].nombre}</td>
-                            <td>${catEstado[indice_ed].nombre}</td>
-                            <td>${catCiudad[indice_cd].nombre}</td>
-                            <td>${nCon(key.totalhoras)}</td>
-                            <td>${nCon(key.totalkilometros)} km</td>
-                            <td class="font-weight-bold text-${color}">${nCon(key.seguridad)}</td>
-                            <td class="text-center">${tipoviajeabreviado}</td>
-                            <td class="text-center">${status}</td>
-                            <td class="text-center">
-                                <button type="button" class="btn btn-sm" onclick="AddEdit(${nCon(key.id)}, this);" style="background-color: #ffffff00;">
-                                    <span class="material-icons details">
-                                        search
-                                    </span>
-                                </button>
-                            </td>
-                            </tr>`);
+                                <tr class="text-uppercase">
+                                <td>${nCon(key.id)}</td>
+                                <td>${catEstado[indice_eo].nombre}</td>
+                                <td>${catCiudad[indice_co].nombre}</td>
+                                <td>${catEstado[indice_ed].nombre}</td>
+                                <td>${catCiudad[indice_cd].nombre}</td>
+                                <td>${nCon(key.totalhoras)}</td>
+                                <td>${nCon(key.totalkilometros)} km</td>
+                                <td class="font-weight-bold text-${color}">${nCon(key.seguridad)}</td>
+                                <td class="text-center">${tipoviajeabreviado}</td>
+                                <td class="text-center">${status}</td>
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-sm" onclick="AddEdit(${nCon(key.id)}, this);" style="background-color: #ffffff00;">
+                                        <span class="material-icons details">
+                                            search
+                                        </span>
+                                    </button>
+                                </td>
+                                </tr>`);
                 });
                 dTable("table-rutas");
                 $('#table_length').html(`
-                <button onclick="AddEdit();" class="btn btn-sm btn-outline-secondary float-right">
-                    <span class="material-icons">
-                        add
-                    </span>
-                </button>`).show();
+                    <button onclick="AddEdit();" class="btn btn-sm btn-outline-secondary float-right">
+                        <span class="material-icons">
+                            add
+                        </span>
+                    </button>`).show();
             }).fail(function (error) {
                 dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
             });

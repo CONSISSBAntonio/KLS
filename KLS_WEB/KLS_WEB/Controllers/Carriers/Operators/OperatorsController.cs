@@ -1,4 +1,6 @@
-﻿using KLS_WEB.Services;
+﻿using KLS_WEB.Models;
+using KLS_WEB.Models.Carriers;
+using KLS_WEB.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -27,6 +29,30 @@ namespace KLS_WEB.Controllers.Carriers.CarriersOperators
         {
             ViewBag.id = id;
             return View(this._UrlView + "index.cshtml");
+        }
+
+        [Route("getOperators")]
+        public async Task<JsonResult> Get(Tr_Has_Operadores dataModel)
+        {
+            List<Tr_Has_Operadores> dataReport;
+            dataReport = await this.AppContext.Execute<List<Tr_Has_Operadores>>(MethodType.GET, _UrlApi, dataModel);
+            return Json(dataReport);
+        }
+
+        [Route("setOperators")]
+        public async Task<JsonResult> Post(Tr_Has_Operadores dataModel)
+        {
+            Tr_Has_Operadores dataReport;
+            dataReport = await this.AppContext.Execute<Tr_Has_Operadores>(MethodType.POST, _UrlApi, dataModel);
+            return Json(dataReport);
+        }
+
+        [Route("putOperators")]
+        public async Task<JsonResult> Put(Tr_Has_Operadores dataModel)
+        {
+            Tr_Has_Operadores dataReport;
+            dataReport = await this.AppContext.Execute<Tr_Has_Operadores>(MethodType.PUT, _UrlApi, dataModel);
+            return Json(dataReport);
         }
     }
 }

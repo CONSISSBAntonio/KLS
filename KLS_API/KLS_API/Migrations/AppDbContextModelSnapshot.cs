@@ -146,6 +146,89 @@ namespace KLS_API.Migrations
                     b.ToTable("Tr_Has_Contactos");
                 });
 
+            modelBuilder.Entity("KLS_API.Models.Carriers.Tr_Has_Inventario", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Anio")
+                        .HasColumnType("varchar(15)");
+
+                    b.Property<string>("Capacidad")
+                        .HasColumnType("varchar(35)");
+
+                    b.Property<string>("Color")
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<int>("Estatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdTransportista")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Marca")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("Modelo")
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<string>("NoEconomico")
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<string>("NoSerie")
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<string>("Placa")
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<string>("TipoUnidad")
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<string>("Volumen")
+                        .HasColumnType("varchar(45)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tr_Has_Inventario");
+                });
+
+            modelBuilder.Entity("KLS_API.Models.Carriers.Tr_Has_Operadores", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id_Transportista")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Imss")
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<string>("NoIne")
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<string>("NoLicencia")
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<string>("NoTelefono")
+                        .IsRequired()
+                        .HasColumnType("varchar(15)");
+
+                    b.Property<string>("SeguroSocial")
+                        .HasColumnType("varchar(25)");
+
+                    b.Property<int>("estatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("nombre")
+                        .HasColumnType("varchar(55)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tr_Has_Operadores");
+                });
+
             modelBuilder.Entity("KLS_API.Models.Carriers.Tr_Has_Ruta", b =>
                 {
                     b.Property<int>("Id")
@@ -580,6 +663,62 @@ namespace KLS_API.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Cat_Tipos_Unidades");
+                });
+
+            modelBuilder.Entity("KLS_API.Models.Clients.Clientes", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Banco")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("Cuenta")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("DireccionFiscal")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<int>("Estatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Facebook")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("Industria")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("InegiDenue")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("NombreComercial")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("NombreCorto")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("OtraRed")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("PaginaWeb")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("RazonSocial")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("Rfc")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("Sector")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("Tamanio")
+                        .HasColumnType("varchar(55)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Clientes");
                 });
 
             modelBuilder.Entity("KLS_API.Models.Region_Has_Estado", b =>
