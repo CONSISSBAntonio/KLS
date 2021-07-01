@@ -198,7 +198,7 @@
                             Terrestre nacional
                         </label>
                     </div>
-                    @*<div class="form-check">
+                    <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="1" name="naviera">
                             <label class="form-check-label" for="1">
                                 Naviera
@@ -228,7 +228,7 @@
                             <label class="form-check-label" for="5">
                                 Coloaders
                             </label>
-                        </div>*@
+                        </div>
                 </form>
                 <br />
                 <button onclick="closeModal('agregarServicios');" class="btn btn-dark guardar" style="width:100%;">
@@ -496,11 +496,7 @@
             });
             dSelect('id_estado');
         }).fail(function (error) {
-<<<<<<< HEAD:KLS_WEB/KLS_WEB/Views/Travel/New.cshtml
-            dToast("error", "Error al obtener estados", "Atencion!");
-=======
-            dToast("error", "Error al tener esUrlados", "Atencion!");
->>>>>>> feature/Requisitos-viajes:KLS_WEB/KLS_WEB/Views/Travels/New.cshtml
+           dToast("error", "Error al obtener estados", "Atencion!");
         });
     }
 

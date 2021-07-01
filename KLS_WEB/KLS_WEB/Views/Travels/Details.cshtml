@@ -636,87 +636,7 @@
 <!--Modal global-->
 
 @section Scripts{
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
     <script>
-        $(window).ready(function () {
-            valId();
-            $("#frmRegister").submit(function (event) {
-                event.preventDefault();
-                var jsonData = convertJson($("#frmRegister"));
-                var normalFill = $("#rateYo").rateYo("option", "rating");
-                jsonData["NivelServicio"] = normalFill;
-                jsonData["id"] = @id;
-                console.log(jsonData);
-
-                if (parseInt(@id) == 0) {
-                    $.post("/Carriers/setCarriers", jsonData, function (res) {
-                        console.log(res);
-                        $(location).attr('href', '/Carriers/formCarriers/' + res.id);
-                        dToast("success", "Registro guardado exitosamente.", "Registrado");
-                    }).fail(function (error) {
-                        dToast("error", "Error al tratar de guardar el registro", "Error");
-                        $(".guardar").attr("disabled", false);
-                    });
-                } else {
-                    $.post("/Carriers/putCarriers",jsonData, function (res) {
-                        console.log(res);
-                        dToast("success", "Registro actualizado exitosamente.", "Registrado");
-                    }).fail(function (error) {
-                        dToast("error", "Error al tratar de actualizar el registro", "Error");
-                        $(".guardar").attr("disabled", false);
-                    });
-                }
-            });
-        });
-
-        function valId(){
-            if (parseInt(@id) != 0) {
-                $("#idTransportista").val(@id);
-                $.get("/Carriers/getCarrier/", { "id":@id}, function (res) {
-
-                    $("#rateYo").rateYo({
-                        normalFill: "#A0A0A0",
-                        rating: res.nivelServicio,
-                        fullStar: true
-                    });
-
-                    console.log(res);
-                    $("#Banco").val(res.banco);
-                    $("#Comentario").val(res.comentario);
-                    $("#Contrasena").val(res.contrasena);
-                    $("#Cuenta").val(res.cuenta);
-                    $("#DireccionFiscal").val(res.direccionFiscal);
-                    $("#DireccionOficinas").val(res.direccionOficinas);
-                    $("#DireccionPatio").val(res.direccionPatio);
-                    $("#Estatus").val(res.estatus);
-                    $("#Facebook").val(res.facebook);
-                    $("#FechaUltimoViaje").val(res.fechaUltimoViaje);
-                    $("#GoogleMaps").val(res.googleMaps);
-                    $("#GradoConfiabilidad").val(res.gradoConfiabilidad);
-                    $("#NivelServicio").val(res.nivelServicio);
-                    $("#NombreComercial").val(res.nombreComercial);
-                    $("#OtraRed").val(res.otraRed);
-                    $("#PaginaWeb").val(res.paginaWeb);
-                    $("#RazonSocial").val(res.razonSocial);
-                    $("#Rfc").val(res.rfc);
-                    $("#Servicio").val(res.servicio);
-                    $("#Tamanio").val(res.tamanio);
-                    $("#UsuarioMaster").val(res.usuarioMaster);
-                }).fail(function (error, xhr, status) {
-                    console.log(error);
-                });
-
-            } else {
-                $("#rateYo").rateYo({
-                    normalFill: "#A0A0A0",
-                    rating: 0,
-                    fullStar: true
-                });
-                $("#idTransportista").val("0000");
-            }
-        }
-
         $(document).ready(function () {
 
             $('#servicios').on('click', function () {
@@ -785,35 +705,31 @@
                     stable.destroy();
                     $("#table-info").empty();
 
-                    $.get("/Facturacion", function (res) {
-                        alert("mensaje");
-                        DataFacturas = resonse;
-                        console.log(response);
-                        //$.each(res, function (item, key) {
-                        //    $("#table-info").append(`
-                        //         <tr>
-                        //            <td>${nCon(key.nombre)}</td>
-                        //            <td>${nCon(key.telefono)}</td>
-                        //            <td>${nCon(key.departamento)}</td>
-                        //            <td>${nCon(key.contactos)}</td>
-                        //            <td>${nCon(key.correo)}</td>
-                        //            <td>`+ statusTable(key.estatus) + `</td>
-                        //            <td>${nCon(key.almacen)}</td>
-                        //            <td>
-                        //                <a href="#" onclick="showNota('${nCon(key.notas)}','NOTA');">
-                        //                    <h1>...</h1>
-                        //                </a>
-                        //            </td>
-                        //            <td>
-                        //                <a href="#">
-                        //                    <span class="material-icons" onclick="showModal('EDITAR','Editar',${nCon(key.id)});">
-                        //                        mode_edit
-                        //                    </span>
-                        //                </a>
-                        //            </td>
-                        //        </tr>`);
-                        //});
-                        //dTable("table-facturas");
+                    $.get("/Facturacion/getFacturas", function (res) {
+                        DataFacturas = res;
+                        console.log(res);
+
+                        res.map(({ nombre, fechacarga, usuario, fullpath }) => {
+                            $("#table-info").append(`
+                                <tr>
+                                <td>${nombre}</td>
+                                <td>${fechacarga}</td>
+                                <td>${usuario}</td>                                                                                      
+                                <td>
+                                    <a href="#">
+                                        <span class="material-icons" onclick="showModal('EDITAR','Editar',${fullpath});">
+                                            mode_edit
+                                        </span>
+                                    </a>
+                                    <a href="#">
+                                        <span class="material-icons" onclick="showModal('EDITAR','Editar',${fullpath});">
+                                            mode_edit
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>`);
+                        });            
+                        dTable("table-facturas");
                     }).fail(function (error) {
                         dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
                     });
