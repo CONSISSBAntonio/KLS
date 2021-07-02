@@ -636,87 +636,8 @@
 <!--Modal global-->
 
 @section Scripts{
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
-    <script>
-        $(window).ready(function () {
-            valId();
-            $("#frmRegister").submit(function (event) {
-                event.preventDefault();
-                var jsonData = convertJson($("#frmRegister"));
-                var normalFill = $("#rateYo").rateYo("option", "rating");
-                jsonData["NivelServicio"] = normalFill;
-                jsonData["id"] = @id;
-                console.log(jsonData);
-
-                if (parseInt(@id) == 0) {
-                    $.post("/Carriers/setCarriers", jsonData, function (res) {
-                        console.log(res);
-                        $(location).attr('href', '/Carriers/formCarriers/' + res.id);
-                        dToast("success", "Registro guardado exitosamente.", "Registrado");
-                    }).fail(function (error) {
-                        dToast("error", "Error al tratar de guardar el registro", "Error");
-                        $(".guardar").attr("disabled", false);
-                    });
-                } else {
-                    $.post("/Carriers/putCarriers",jsonData, function (res) {
-                        console.log(res);
-                        dToast("success", "Registro actualizado exitosamente.", "Registrado");
-                    }).fail(function (error) {
-                        dToast("error", "Error al tratar de actualizar el registro", "Error");
-                        $(".guardar").attr("disabled", false);
-                    });
-                }
-            });
-        });
-
-        function valId(){
-            if (parseInt(@id) != 0) {
-                $("#idTransportista").val(@id);
-                $.get("/Carriers/getCarrier/", { "id":@id}, function (res) {
-
-                    $("#rateYo").rateYo({
-                        normalFill: "#A0A0A0",
-                        rating: res.nivelServicio,
-                        fullStar: true
-                    });
-
-                    console.log(res);
-                    $("#Banco").val(res.banco);
-                    $("#Comentario").val(res.comentario);
-                    $("#Contrasena").val(res.contrasena);
-                    $("#Cuenta").val(res.cuenta);
-                    $("#DireccionFiscal").val(res.direccionFiscal);
-                    $("#DireccionOficinas").val(res.direccionOficinas);
-                    $("#DireccionPatio").val(res.direccionPatio);
-                    $("#Estatus").val(res.estatus);
-                    $("#Facebook").val(res.facebook);
-                    $("#FechaUltimoViaje").val(res.fechaUltimoViaje);
-                    $("#GoogleMaps").val(res.googleMaps);
-                    $("#GradoConfiabilidad").val(res.gradoConfiabilidad);
-                    $("#NivelServicio").val(res.nivelServicio);
-                    $("#NombreComercial").val(res.nombreComercial);
-                    $("#OtraRed").val(res.otraRed);
-                    $("#PaginaWeb").val(res.paginaWeb);
-                    $("#RazonSocial").val(res.razonSocial);
-                    $("#Rfc").val(res.rfc);
-                    $("#Servicio").val(res.servicio);
-                    $("#Tamanio").val(res.tamanio);
-                    $("#UsuarioMaster").val(res.usuarioMaster);
-                }).fail(function (error, xhr, status) {
-                    console.log(error);
-                });
-
-            } else {
-                $("#rateYo").rateYo({
-                    normalFill: "#A0A0A0",
-                    rating: 0,
-                    fullStar: true
-                });
-                $("#idTransportista").val("0000");
-            }
-        }
-
+        
+    <script>       
         $(document).ready(function () {
 
             $('#servicios').on('click', function () {
@@ -858,24 +779,32 @@
 
         function downloadFile(nombre) {
             console.log({ nombre });
-            $.ajax({
-                type: 'GET',
-                url: '/Facturacion/downloadFile',
-                data: { fileName: nombre },
-                contentType: 'application/json; charset=utf-8',
-                success: function (data) {
-                    console.log(data);
-                    var blob = new Blob([data]);
-                    //var blob = new Blob([data], { type: 'image/png' });
-                    var link = document.createElement('a');
-                    link.href = window.URL.createObjectURL(blob);
-                    link.download = nombre;
-                    link.click();
-                },
-                error: function (err) {
-                    console.log("error", err);
-                }
-            });
+            var a = $("<a>")
+                .attr("href", "/Resources/Facturas/" + nombre)
+                .attr("download", nombre)
+                .appendTo("body");
+
+            a[0].click();
+
+            a.remove();
+            //$.ajax({
+            //    type: 'GET',
+            //    url: '/Facturacion/downloadFile',
+            //    data: { fileName: nombre },
+            //    contentType: 'application/json; charset=utf-8',
+            //    success: function (data) {
+            //        console.log(data);
+            //        var blob = new Blob([data]);
+            //        //var blob = new Blob([data], { type: 'image/png' });
+            //        var link = document.createElement('a');
+            //        link.href = window.URL.createObjectURL(blob);
+            //        link.download = nombre;
+            //        link.click();
+            //    },
+            //    error: function (err) {
+            //        console.log("error", err);
+            //    }
+            //});
         }
     </script>    
 }

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entry m:etag="W/&quot;datetimeoffset'2020-05-03T00%3A08%3A55.1239110Z'&quot;" xml:base="https://my346651.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/" xmlns="http://www.w3.org/2005/Atom" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices">
+    <id>https://my346651.crm.ondemand.com/sap/c4c/odata/v1/c4codataapi/IndividualCustomerCollection('00163E8F65E71EDAA0DF7EAA8DBB079D')</id>
+    <title type="text">IndividualCustomerCollection('00163E8F65E71EDAA0DF7EAA8DBB079D')</title>
+    <updated>2021-04-23T16:55:01Z</updated>
+    <category term="c4codata.IndividualCustomer" scheme="http://schemas.microsoft.com/ado/2007/08/dataservices/scheme"/>
+    <link href="IndividualCustomerCollection('00163E8F65E71EDAA0DF7EAA8DBB079D')" rel="edit" title="IndividualCustomer"/>
+    <link href="IndividualCustomerCollection('00163E8F65E71EDAA0DF7EAA8DBB079D')/IndividualCustomerAddress" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/IndividualCustomerAddress" type="application/atom+xml;type=feed" title="IndividualCustomerAddress"/>
+    <link href="IndividualCustomerCollection('00163E8F65E71EDAA0DF7EAA8DBB079D')/IndividualCustomerAttachmentFolder" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/IndividualCustomerAttachmentFolder" type="application/atom+xml;type=feed" title="IndividualCustomerAttachmentFolder"/>
+    <link href="IndividualCustomerCollection('00163E8F65E71EDAA0DF7EAA8DBB079D')/IndividualCustomerIdentification" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/IndividualCustomerIdentification" type="application/atom+xml;type=feed" title="IndividualCustomerIdentification"/>
+    <link href="IndividualCustomerCollection('00163E8F65E71EDAA0DF7EAA8DBB079D')/IndividualCustomerSalesData" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/IndividualCustomerSalesData" type="application/atom+xml;type=feed" title="IndividualCustomerSalesData"/>
+    <link href="IndividualCustomerCollection('00163E8F65E71EDAA0DF7EAA8DBB079D')/IndividualCustomerSkills" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/IndividualCustomerSkills" type="application/atom+xml;type=feed" title="IndividualCustomerSkills"/>
+    <link href="IndividualCustomerCollection('00163E8F65E71EDAA0DF7EAA8DBB079D')/IndividualCustomerTaxNumber" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/IndividualCustomerTaxNumber" type="application/atom+xml;type=feed" title="IndividualCustomerTaxNumber"/>
+    <link href="IndividualCustomerCollection('00163E8F65E71EDAA0DF7EAA8DBB079D')/IndividualCustomerTeam" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/IndividualCustomerTeam" type="application/atom+xml;type=feed" title="IndividualCustomerTeam"/>
+    <link href="IndividualCustomerCollection('00163E8F65E71EDAA0DF7EAA8DBB079D')/IndividualCustomerTextCollection" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/IndividualCustomerTextCollection" type="application/atom+xml;type=feed" title="IndividualCustomerTextCollection"/>
+    <link href="IndividualCustomerCollection('00163E8F65E71EDAA0DF7EAA8DBB079D')/IndividualCustomerVisitingInformationDetails" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/IndividualCustomerVisitingInformationDetails" type="application/atom+xml;type=feed" title="IndividualCustomerVisitingInformationDetails"/>
+    <link href="IndividualCustomerCollection('00163E8F65E71EDAA0DF7EAA8DBB079D')/OwnerEmployeeBasicData" rel="http://schemas.microsoft.com/ado/2007/08/dataservices/related/OwnerEmployeeBasicData" type="application/atom+xml;type=entry" title="OwnerEmployeeBasicData"/>
+    <content type="application/xml">
+        <m:properties>
+            <d:ObjectID>00163E8F65E71EDAA0DF7EAA8DBB079D</d:ObjectID>
+            <d:CustomerID>3049762</d:CustomerID>
+            <d:UUID>00163E8F-65E7-1EDA-A0DF-7EAA8DBB079D</d:UUID>
+            <d:ExternalID/>
+            <d:ExternalSystem/>
+            <d:RoleCode>CRM000</d:RoleCode>
+            <d:RoleCodeText>Customer</d:RoleCodeText>
+            <d:LifeCycleStatusCode>2</d:LifeCycleStatusCode>
+            <d:LifeCycleStatusCodeText>Active</d:LifeCycleStatusCodeText>
+            <d:CustomerABCClassificationCode>2</d:CustomerABCClassificationCode>
+            <d:CustomerABCClassificationCodeText>Normal</d:CustomerABCClassificationCodeText>
+            <d:ContactPermissionCode/>
+            <d:ContactPermissionCodeText/>
+            <d:TitleCode/>
+            <d:TitleCodeText/>
+            <d:AcademicTitleCode/>
+            <d:AcademicTitleCodeText/>
+            <d:FirstName>MA VICTORIA</d:FirstName>
+            <d:MiddleName/>
+            <d:LastName>GARCIA LOPEZ</d:LastName>
+            <d:AdditionalLastName/>
+            <d:Initials/>
+            <d:NickName/>
+            <d:GenderCode>0</d:GenderCode>
+            <d:GenderCodeText>Gender not known</d:GenderCodeText>
+            <d:NamePrefixCode/>
+            <d:NamePrefixCodeText/>
+            <d:MaritalStatusCode/>
+            <d:MaritalStatusCodeText/>
+            <d:LanguageCode/>
+            <d:LanguageCodeText/>
+            <d:BirthName/>
+            <d:BirthDate m:null="true"/>
+            <d:NationalityCountryCode/>
+            <d:NationalityCountryCodeText/>
+            <d:ProfessionCode/>
+            <d:ProfessionCodeText/>
+            <d:FormattedName>MA VICTORIA GARCIA LOPEZ</d:FormattedName>
+            <d:FormattedPostalAddressDescription>CERRADA CEDRO 701 / 89603 Altamira, TAMPS / MX</d:FormattedPostalAddressDescription>
+            <d:CountryCode>MX</d:CountryCode>
+            <d:CountryCodeText>Mexico</d:CountryCodeText>
+            <d:StateCode>TMS</d:StateCode>
+            <d:StateCodeText>Tamaulipas</d:StateCodeText>
+            <d:CareOfName/>
+            <d:AddressLine1>VILLAS DE ALTAMIRA</d:AddressLine1>
+            <d:AddressLine2/>
+            <d:HouseNumber>701</d:HouseNumber>
+            <d:AdditionalHouseNumber/>
+            <d:Street>CERRADA CEDRO</d:Street>
+            <d:AddressLine4>ESQ ARBOLEDAS</d:AddressLine4>
+            <d:AddressLine5/>
+            <d:District/>
+            <d:City>Altamira</d:City>
+            <d:DifferentCity/>
+            <d:StreetPostalCode>89603</d:StreetPostalCode>
+            <d:County/>
+            <d:POBoxIndicator>false</d:POBoxIndicator>
+            <d:POBox/>
+            <d:POBoxPostalCode/>
+            <d:POBoxDeviatingCountryCode/>
+            <d:POBoxDeviatingCountryCodeText/>
+            <d:POBoxDeviatingStateCode/>
+            <d:POBoxDeviatingStateCodeText/>
+            <d:POBoxDeviatingCity/>
+            <d:TimeZoneCode>CST_NA</d:TimeZoneCode>
+            <d:TimeZoneCodeText>(UTC-06:00) Central Time North America (Mexico City; except US/Canada)</d:TimeZoneCodeText>
+            <d:TaxJurisdictionCode/>
+            <d:TaxJurisdictionCodeText/>
+            <d:Building/>
+            <d:Floor/>
+            <d:Room/>
+            <d:Phone>+52 (833) 325-9446</d:Phone>
+            <d:NormalisedPhone>+528333259446</d:NormalisedPhone>
+            <d:Mobile/>
+            <d:NormalisedMobile/>
+            <d:Fax/>
+            <d:Email/>
+            <d:EmailInvalidIndicator>false</d:EmailInvalidIndicator>
+            <d:WebSite/>
+            <d:BestReachedByCode/>
+            <d:BestReachedByCodeText/>
+            <d:OrderBlockingReasonCode/>
+            <d:OrderBlockingReasonCodeText/>
+            <d:DeliveryBlockingReasonCode/>
+            <d:DeliveryBlockingReasonCodeText/>
+            <d:BillingBlockingReasonCode/>
+            <d:BillingBlockingReasonCodeText/>
+            <d:SalesSupportBlockingIndicator>false</d:SalesSupportBlockingIndicator>
+            <d:RecommendedVisitingFrequency/>
+            <d:VisitDuration/>
+            <d:LastVisitingDate m:null="true"/>
+            <d:NextVisitingDate m:null="true"/>
+            <d:LatestRecommendedVisitingDate m:null="true"/>
+            <d:OwnerID/>
+            <d:OwnerUUID m:null="true"/>
+            <d:CreationOn>2020-04-20T11:43:49.0885200Z</d:CreationOn>
+            <d:CreatedBy>Jose Rafael Serrano Gonzalez</d:CreatedBy>
+            <d:ChangedOn>2020-04-20T11:43:49.0885200Z</d:ChangedOn>
+            <d:ChangedBy>Jose Rafael Serrano Gonzalez</d:ChangedBy>
+            <d:EntityLastChangedOn>2020-04-20T11:43:49.0885200Z</d:EntityLastChangedOn>
+            <d:ETag>2020-05-03T00:08:55.1239110Z</d:ETag>
+            <d:Categoria_KUT/>
+            <d:Categoria_KUTText/>
+            <d:Exclusivo_KUT>false</d:Exclusivo_KUT>
+            <d:FinVigenciaIII_KUT m:null="true"/>
+            <d:FinVigenciaII_KUT m:null="true"/>
+            <d:FinVigenciaIV_KUT m:null="true"/>
+            <d:FinVigenciaI_KUT m:null="true"/>
+            <d:FinVigenciaV_KUT m:null="true"/>
+            <d:GP2_KUT>1.00</d:GP2_KUT>
+            <d:GP3_KUT>0.00</d:GP3_KUT>
+            <d:GP4_KUT>0.00</d:GP4_KUT>
+            <d:GP5_KUT>0.00</d:GP5_KUT>
+            <d:GratificacinPenalizacinI1Content_KUT>0.000000</d:GratificacinPenalizacinI1Content_KUT>
+            <d:GratificacinPenalizacinI1currencyCode_KUT>MXN</d:GratificacinPenalizacinI1currencyCode_KUT>
+            <d:GratificacinPenalizacinI1currencyCode_KUTText>Mexican Peso</d:GratificacinPenalizacinI1currencyCode_KUTText>
+            <d:IDTruckNumberV2_KUT/>
+            <d:IVA_KUT/>
+            <d:IVA_KUTText/>
+            <d:IncioVigenciaI_KUT m:null="true"/>
+            <d:InicioVigenciaIII_KUT m:null="true"/>
+            <d:InicioVigenciaII_KUT m:null="true"/>
+            <d:InicioVigenciaIV_KUT m:null="true"/>
+            <d:InicioVigenciaV_KUT m:null="true"/>
+            <d:NmerodecuentadepagoSAP_KUT/>
+            <d:OOWCommisionsContent_KUT>0.000000</d:OOWCommisionsContent_KUT>
+            <d:OOWCommisionscurrencyCode_KUT/>
+            <d:OOWCommisionscurrencyCode_KUTText/>
+            <d:SecundariaFinII_KUT m:null="true"/>
+            <d:SecundariaFin_KUT m:null="true"/>
+            <d:SecundariaIIContent_KUT>0.000000</d:SecundariaIIContent_KUT>
+            <d:SecundariaIIcurrencyCode_KUT/>
+            <d:SecundariaIIcurrencyCode_KUTText/>
+            <d:SecundariaInicioII_KUT m:null="true"/>
+            <d:SecundariaInicio_KUT m:null="true"/>
+            <d:Tipodeproveedordeservicios_KUT/>
+            <d:Tipodeproveedordeservicios_KUTText/>
+            <d:TruckNumber_KUT/>
+            <d:VolumendeServicios_KUT>0</d:VolumendeServicios_KUT>
+            <d:ZCOST_CENTER_KUT/>
+            <d:ZCOST_CENTER_KUTText/>
+            <d:ZGratificacionTaller_KUT>0.00</d:ZGratificacionTaller_KUT>
+            <d:Zona_KUT/>
+            <d:Zona_KUTText/>
+        </m:properties>
+    </content>
+</entry>
