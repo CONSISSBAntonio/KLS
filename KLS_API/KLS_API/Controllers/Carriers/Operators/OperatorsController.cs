@@ -64,5 +64,18 @@ namespace KLS_API.Controllers.Carriers.CarriersOperators
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("[action]/{id}")]
+        public IActionResult GetOperator(int id)
+        {
+            try
+            {
+                return Ok(context.Tr_Has_Operadores.Find(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
     }
 }
