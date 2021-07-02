@@ -49,25 +49,37 @@
             <div class="row">
                 <label for="festadoorigen" class="col-sm-4 col-form-label col-form-label-sm">Estado Origen</label>
                 <div class="col-sm-8">
-                    @Html.DropDownListFor(x => x.id_estadoorigen, ViewBag.EstadoList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "festadoorigen", @required = "" })
+                    <select class="form-control form-control-sm col-12 myselect" id="festadoorigen" name="id_estadoorigen" required onchange="{ getCities('origen', this.value); }">
+                        <option value="0">SELECCIONA</option>
+                    </select>
+                    @*@Html.DropDownListFor(x => x.id_estadoorigen, ViewBag.EstadoList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "festadoorigen", @required = "" })*@
                 </div>
             </div>
             <div class="row">
                 <label for="fciudadorigen" class="col-sm-4 col-form-label col-form-label-sm">Ciudad Origen</label>
                 <div class="col-sm-8">
-                    @Html.DropDownListFor(x => x.id_ciudadorigen, ViewBag.CiudadList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "fciudadorigen", @required = "" })
+                    <select class="form-control form-control-sm col-12 myselect" id="fciudadorigen" name="fciudadorigen" required>
+                        <option value="0">SELECCIONA</option>
+                    </select>
+                    @*@Html.DropDownListFor(x => x.id_ciudadorigen, ViewBag.CiudadList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "fciudadorigen", @required = "" })*@
                 </div>
             </div>
             <div class="row">
                 <label for="festadodestino" class="col-sm-4 col-form-label col-form-label-sm">Estado Destino</label>
                 <div class="col-sm-8">
-                    @Html.DropDownListFor(x => x.id_estadodestino, ViewBag.EstadoList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "festadodestino", @required = "" })
+                    <select class="form-control form-control-sm col-12 myselect" id="festadodestino" name="festadodestino" required onchange="{ getCities('destino', this.value); }">
+                        <option value="0">SELECCIONA</option>
+                    </select>
+                    @*@Html.DropDownListFor(x => x.id_estadodestino, ViewBag.EstadoList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "festadodestino", @required = "" })*@
                 </div>
             </div>
             <div class="row">
                 <label for="fciudaddestino" class="col-sm-4 col-form-label col-form-label-sm">Ciudad Destino</label>
                 <div class="col-sm-8">
-                    @Html.DropDownListFor(x => x.id_ciudaddestino, ViewBag.CiudadList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "fciudaddestino", @required = "" })
+                    <select class="form-control form-control-sm col-12 myselect" id="fciudaddestino" name="fciudaddestino" required>
+                        <option value="0">SELECCIONA</option>
+                    </select>
+                    @*@Html.DropDownListFor(x => x.id_ciudaddestino, ViewBag.CiudadList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "fciudaddestino", @required = "" })*@
                 </div>
             </div>
             <div class="row">
@@ -212,7 +224,6 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
-                @*<button type="button" class="btn btn-primary">Save changes</button>*@
             </div>
         </div>
     </div>
@@ -220,13 +231,32 @@
 <!--Modal global-->
 
 
+<div class="modal fade" id="popup" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo-modal"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                <p>¿Desea eliminar este elemento?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
+                <button id="confirm" type="button" class="btn btn-primary">Si</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     rutaid = @Model.id;
     $(document).ready(function () {
         loadCheckpoint();
-        $("#id_ciudad").empty();
-        $.each(catCiudad, function (item, key) {
-            $("#id_ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
+        catEstado.map(({ id, nombre, estatus }) => {
+            estatus === 1 && $("#festadoorigen, #festadodestino").append(`<option value="${id}">${nombre}</option>`);
         });
         dSelect("festadoorigen");
         dSelect("festadodestino");
@@ -237,7 +267,7 @@
             $('.fid').remove();
             $('[type="text"]').val('');
             $('.savedit').removeClass('btn-outline-secondary').addClass('btn-outline-info').html(`<i class="material-icons">save</i>`);
-            $('#addcheckpoint').html(`<span>Primero guarda la ruta para poder añadir checkpoints`);
+            $('#addcheckpoint').html(`<span style="font-size: 12px;" class="text-info">Primero guarda la ruta para poder añadir checkpoints`);
         } else {
             const actualizadopor = '@(Model.actualizadopor is null ? "-" : Model.actualizadopor)';
             const ultimocambio = '@(Model.ultimocambio)';
@@ -312,6 +342,16 @@
         });
     });
 
+    getCities = (filter, idestado) => {
+        $(`#fciudad${filter}`).empty();
+        catCiudad.map(({ id_estado, estatus, nombre }) => {
+            if (id_estado == idestado && estatus === 1) {
+                $(`#fciudad${filter}`).append(`<option value="${id_estado}">${nombre}</option>`);
+            }
+        });
+        dSelect(`fciudad${filter}`);
+    }
+
     function showModal(titulo = "Title", accion, idEditar = 0) {
         $('#frmCheckpoint').trigger("reset");
         $(".guardar").html(accion);
@@ -335,16 +375,21 @@
         }
     }
 
-    function remove(checkpointid) {
+    function remove(action, checkpointid) {
         let indice = dataCheckpoint.findIndex(service => service.id === checkpointid);
         var jsonData = dataCheckpoint[indice];
-
-        $.post("RouteHasCheckpoint/deleteRouteHasCheckpoint", jsonData, function (res) {
-            loadCheckpoint();
-            dToast("success", "Se eliminó el registro", "Registrado");
-        }).fail(function (error) {
-            dToast("error", "Error al tratar de eliminar el registro", "Error");
-        });
+        if (action == 'confirm') {
+            $('#confirm').attr('onClick', `remove('delete', ${checkpointid});`);
+            $('#popup').modal('show');
+        } else {
+            $.post("RouteHasCheckpoint/deleteRouteHasCheckpoint", jsonData, function (res) {
+                $('#popup').modal('hide');
+                loadCheckpoint();
+                dToast("success", "Se eliminó el registro", "Registrado");
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de eliminar el registro", "Error");
+            });
+        }
     }
 
     function loadCheckpoint() {
@@ -365,7 +410,7 @@
                                 </span>
                             </a>
                             <a href="#">
-                                <span class="material-icons text-danger" onclick="remove(${nCon(key.id)});">
+                                <span class="material-icons text-danger" onclick="remove('confirm', ${nCon(key.id)});">
                                     delete
                                 </span>
                             </a>
@@ -373,7 +418,8 @@
                     </tr>`);
             });
             dTable("table-checkpoint");
-            $('#tableCheckpoint_length').hide();
+            $('#tableCheckpoint_length, #tableCheckpoint_info').hide();
+            rutaid === 0 && $('#tableCheckpoint_filter').hide();
         }).fail(function (error) {
             dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
         });
