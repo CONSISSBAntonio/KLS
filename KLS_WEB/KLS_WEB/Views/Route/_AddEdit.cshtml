@@ -256,7 +256,6 @@
             $('[type="text"]').val('');
             $('.savedit').removeClass('btn-outline-secondary').addClass('btn-outline-info').html(`<i class="material-icons">save</i>`);
             $('#addcheckpoint').html(`<span>Primero guarda la ruta para poder añadir checkpoints`);
-            //$('#addcheckpoint').attr({ 'disabled': true, 'title': 'Primero debes guardar la nueva ruta para añadir checkpoints.' });
         } else {
             const actualizadopor = '@(Model.actualizadopor is null ? "-" : Model.actualizadopor)';
             const ultimocambio = '@(Model.ultimocambio)';

@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20210630190755_Facturacion.cs" />
+    <Compile Remove="Migrations\20210630190755_Facturacion.Designer.cs" />
     <Compile Remove="Migrations\20210628174144_initial.cs" />
     <Compile Remove="Migrations\20210628174144_initial.Designer.cs" />
     <Compile Remove="Migrations\20210628174305_initial1.cs" />

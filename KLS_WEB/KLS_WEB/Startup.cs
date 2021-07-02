@@ -36,7 +36,7 @@ namespace KLS_WEB
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
             {
                 option.Cookie.HttpOnly = true;
-                option.ExpireTimeSpan = TimeSpan.FromDays(1);
+                option.ExpireTimeSpan = TimeSpan.FromMinutes(double.Parse(this.Configuration["Session:Timeout"]));
                 option.LoginPath = "/Login/Login";
                 option.AccessDeniedPath = "/Login/AccessDenied";
                 option.SlidingExpiration = true;
