@@ -778,24 +778,32 @@
 
         function downloadFile(nombre) {
             console.log({ nombre });
-            $.ajax({
-                type: 'GET',
-                url: '/Facturacion/downloadFile',
-                data: { fileName: nombre },
-                contentType: 'application/json; charset=utf-8',
-                success: function (data) {
-                    console.log(data);
-                    var blob = new Blob([data]);
-                    //var blob = new Blob([data], { type: 'image/png' });
-                    var link = document.createElement('a');
-                    link.href = window.URL.createObjectURL(blob);
-                    link.download = nombre;
-                    link.click();
-                },
-                error: function (err) {
-                    console.log("error", err);
-                }
-            });
+            var a = $("<a>")
+                .attr("href", "/Resources/Facturas/" + nombre)
+                .attr("download", nombre)
+                .appendTo("body");
+
+            a[0].click();
+
+            a.remove();
+            //$.ajax({
+            //    type: 'GET',
+            //    url: '/Facturacion/downloadFile',
+            //    data: { fileName: nombre },
+            //    contentType: 'application/json; charset=utf-8',
+            //    success: function (data) {
+            //        console.log(data);
+            //        var blob = new Blob([data]);
+            //        //var blob = new Blob([data], { type: 'image/png' });
+            //        var link = document.createElement('a');
+            //        link.href = window.URL.createObjectURL(blob);
+            //        link.download = nombre;
+            //        link.click();
+            //    },
+            //    error: function (err) {
+            //        console.log("error", err);
+            //    }
+            //});
         }
     </script>    
 }
