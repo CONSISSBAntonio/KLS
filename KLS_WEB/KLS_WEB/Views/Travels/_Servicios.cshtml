@@ -42,18 +42,17 @@
                             <div class="form-group mt-3">
                                 <label class="col-form-label col-form-label-sm font-weight-bold">TRANSPORTISTA</label>
                                 <div>
-                                    <select class="form-control form-control-sm" id="transportista" name="transportista">
-                                        <option value="4224">mi transportista</option>
+                                    <select class="form-control form-control-sm" id="transportista" name="transportista" style="width: 100%;" onchange="{ getOperadores(this.value); }">
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group mt-3">
                                 <label class="col-form-label col-form-label-sm font-weight-bold">CHOFER</label>
-                                <select class="form-control form-control-sm" id="chofer" name="chofer">
-                                    <option value="3219">mi chofer</option>
+                                <select class="form-control form-control-sm" id="chofer" name="chofer" style="width: 100%;" onchange="{ getOperador(this.value) }">
+                                    <option value="0">DEBES SELECCIONAR UN TRANSPORTISTA</option>
                                 </select>
                                 <div class="row mt-3">
-                                    <div class="col-2">
+                                    <div class="col-3">
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" value="" id="licencia" checked disabled>
                                             <label class="form-check-label" for="licencia">
@@ -64,12 +63,12 @@
                                     </div>
 
                                     <div class="col-8">
-                                        <span id="licencia" class="size-12">16/04/2021</span>
+                                        <span id="nolicencia" class="size-12"></span>
                                     </div>
 
                                 </div>
                                 <div class="row">
-                                    <div class="col-2">
+                                    <div class="col-3">
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" value="" id="telefono" checked disabled>
                                             <label class="form-check-label" for="telefono">
@@ -80,23 +79,23 @@
                                     </div>
 
                                     <div class="col-8">
-                                        <span id="notelefono" class="size-12">8113432142</span>
+                                        <span id="notelefono" class="size-12"></span>
                                     </div>
 
                                 </div>
                                 <div class="row">
-                                    <div class="col-2">
+                                    <div class="col-3">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="imms" checked disabled>
-                                            <label class="form-check-label" for="imms">
-                                                IMMS
+                                            <input class="form-check-input" type="checkbox" value="" id="imss" checked disabled>
+                                            <label class="form-check-label" for="imss">
+                                                IMSS
                                             </label>
                                         </div>
 
                                     </div>
 
-                                    <div class="col-10 d-flex justify-content-between flex-row">
-                                        <span id="imss" class="size-12 my-2">321423432</span>
+                                    <div class="col-9 d-flex justify-content-between flex-row">
+                                        <span id="noimss" class="size-12 my-2"></span>
                                         <i class="material-icons text-danger" style="cursor:pointer; font-size:2.5rem;" onclick="downloadChofer(this);">cloud_download</i>
                                     </div>
 
@@ -136,7 +135,36 @@
     }
 }
 <script>
-    function removeService(service) {
+    downloadChofer = button => {
+        const boton = jQuery(button);
+        const idchofer = $('#chofer').val();
+        console.log(idchofer);
+    }
+
+    getOperador = idoperador => {
+        $.get(`/Carriers/Operators/GetOperator/${idoperador}`, ({ id, noLicencia, noTelefono, imss }) => {
+            $('#nolicencia').text(noLicencia);
+            $('#notelefono').text(noTelefono);
+            $('#noimss').text(imss);
+        });
+    }
+
+    getOperadores = idtransportista => {
+        $.get("/Carriers/Operators/getOperators", { Id_Transportista: idtransportista }, res => {
+            res.find(x => x.estatus === 1) && getOperador(res.find(x => x.estatus === 1).id);
+            $('#chofer').empty();
+            res.length > 0 ? res.map(({ id, nombre, estatus }) => estatus === 1 ? $('#chofer').append(`<option value="${id}">${nombre}</option>`) : null) : $('#chofer').append(`<option value="0">SIN OPERADORES ACTIVOS</option>`);
+            dSelect('chofer');
+        });
+    }
+
+    $.get("/Carriers/getCarriers", res => {
+        res.find(x => x.estatus === 1) && getOperadores(res.find(x => x.estatus === 1).id);
+        res.map(({ id, nombreComercial, estatus }) => estatus === 1 ? $('#transportista').append(`<option value="${id}">${nombreComercial}</option>`) : null);
+        dSelect('transportista');
+    });
+
+    removeService = service => {
         $(`#${service}`).hide('slow', () => {
             $(`#${service}`).remove();
             $('.serviciosseleccionados').children().length === 1 ? $(`.addServicios`).show('slow', () => { $('.addServicios').show(); }) : null;

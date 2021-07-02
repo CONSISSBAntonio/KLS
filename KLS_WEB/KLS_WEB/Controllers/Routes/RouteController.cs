@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -30,6 +31,15 @@ namespace KLS_WEB.Views.Catalogs.City
         {
             List<Route> dataReport;
             dataReport = await this.AppContext.Execute<List<Route>>(MethodType.GET, _UrlApi, dataModel);
+            return Json(dataReport);
+        }
+
+        [Route("[action]")]
+        public async Task<JsonResult> GetRoutes()
+        {
+            RouteDTO dataModel = new RouteDTO();
+            List<RouteDTO> dataReport;
+            dataReport = await this.AppContext.Execute<List<RouteDTO>>(MethodType.GET, Path.Combine(_UrlApi, "SelectRoute"), dataModel);
             return Json(dataReport);
         }
 

@@ -9,15 +9,27 @@
     .form-check-label {
         font-size: 12px !important;
     }
+
+    .select2-selection__rendered {
+        float: left;
+        font-size: 12px;
+    }
 </style>
 
 <div class="data-content p-4 text-left">
     <div class="p-4">
-        <div class="text-left d-flex mb-3">
-            <a href="/Travels">
-                <div class="material-icons icon-red">arrow_back</div>
-            </a>
-            <div class="text-uppercase poppins medium size-24 pl-2">Nuevo viaje</div>
+        <div class="d-flex justify-content-between mb-3">
+            <div class="d-flex">
+                <a href="/Travels">
+                    <div class="material-icons icon-red">arrow_back</div>
+                </a>
+                <div class="text-uppercase poppins medium size-24 pl-2">Nuevo viaje</div>
+
+            </div>
+            <div>
+                @*Folio es el tipo de viaje + día del mes + numero de mes + consecutivo de 4 números*@
+                <h4 class="text-secondary" id="folio">_@(string.Concat(DateTime.Now.ToString("ddMM"), id.ToString("D4")))</h4>
+            </div>
         </div>
 
         <form id="frmRegister" class="viaje">
@@ -27,8 +39,7 @@
                     <div class="form-group col-6">
                         <label class="col-form-label col-form-label-sm">Cliente</label>
                         <div>
-                            <select class="form-control form-control-sm" id="cliente" name="cliente">
-                                <option value="1">mi cliente</option>
+                            <select class="form-control form-control-sm" id="cliente" name="cliente" style="width: 100%;">
                             </select>
                         </div>
                     </div>
@@ -92,8 +103,7 @@
                     <div class="form-group col-6">
                         <label class="col-form-label col-form-label-sm">Ruta</label>
                         <div>
-                            <select class="form-control form-control-sm" id="ruta" name="ruta">
-                                <option value="10">mi ruta</option>
+                            <select class="form-control form-control-sm" id="ruta" name="ruta" style="width: 100%;">
                             </select>
                         </div>
                     </div>
@@ -107,8 +117,14 @@
                     <div class="form-group col-3">
                         <label class="col-form-label col-form-label-sm">Tipo de Viaje</label>
                         <div>
-                            <select class="form-control form-control-sm" id="tipoviaje" name="tipoviaje">
-                                <option value="190">mi tipo de viaje</option>
+                            <select class="form-control form-control-sm" id="tipoviaje" name="tipoviaje" onchange="{$('#folio').text($('#folio').text().replace(/[a-zA-Z_]+/g, this.value)); }">
+                                <option value="VTNOW">TERRESTRE NACIONAL ONE WAY</option>
+                                <option value="VTNTW">TERRESTRE NACIONAL TWO WAY</option>
+                                <option value="VTNC">TERRESTRE NACIONAL CIRCUITEABLE</option>
+                                <option value="VTI">TERRESTRE INTERNACIONAL</option>
+                                <option value="VM">MARÍTIMO</option>
+                                <option value="VA">AÉREO</option>
+                                <option value="VMM">MULTIMODAL</option>
                             </select>
                         </div>
                     </div>
@@ -308,11 +324,11 @@
     var catCiudad = [];
 
     $(window).ready(function () {
-        valId();
         loadState();
         loadCountry();
         loadCity();
         loadUnits();
+        initSelects();
 
         $(".viaje").submit(function (event) {
             event.preventDefault();
@@ -320,32 +336,35 @@
             const equipo = {
                 equipo: getEquipos()
             };
+            const servicios = {
+                servicios: $('#frmServicios').serialize()
+            }
 
-            var jsonData = convertJson($(".viaje"));
+            let jsonData = convertJson($(".viaje"));
             console.log('pre', jsonData);
             jsonData = { ...jsonData, ...equipo };
+            jsonData = {...jsonData, ...servicios}
             console.log('post:', jsonData);
 
-            @*if (parseInt(@id) == 0) {
-                $.post("/Carriers/setCarriers", jsonData, function (res) {
-                    console.log(res);
-                    $(location).attr('href', '/Carriers/formCarriers/' + res.id);
-                    dToast("success", "Registro guardado exitosamente.", "Registrado");
-                }).fail(function (error) {
-                    dToast("error", "Error al tratar de guardar el registro", "Error");
-                    $(".guardar").attr("disabled", false);
-                });
-            } else {
-                $.post("/Carriers/putCarriers", jsonData, function (res) {
-                    console.log(res);
-                    dToast("success", "Registro actualizado exitosamente.", "Registrado");
-                }).fail(function (error) {
-                    dToast("error", "Error al tratar de actualizar el registro", "Error");
-                    $(".guardar").attr("disabled", false);
-                });
-            }*@
+            $.post("/Travels/setTravels", jsonData, function (res) {
+                //$(location).attr('href', '/Carriers/formCarriers/' + res.id);
+                dToast("success", "Registro guardado exitosamente.", "Registrado");
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de guardar el registro", "Error");
+                $(".guardar").attr("disabled", false);
+            });
         });
     });
+        function initSelects() {
+            $.get("/Clients/getClients", res => {
+                res.map(({ id, nombreCorto, estatus }) => estatus === 1 ? $('#cliente').append(`<option value="${id}">${nombreCorto}</option>`) : null);
+                dSelect('cliente');
+            });
+            $.get("/Route/GetRoutes", res => {
+                res.map(({ id, fromTo }) => $('#ruta').append(`<option value="${id}">${fromTo}</option>`));
+                dSelect('ruta');
+            });
+        };
 
         function setPrecios() {
             const precios = $('.precios');
@@ -378,10 +397,10 @@
 
             const equipo = `<div class="d-flex justify-content-between equipo">
                 <select class="form-control form-control-sm col-4 selectequipo" name="equipo${nextId}" required>
-                    <option value="mi">Mi equipo</option>
-                    <option value="mx">Mx</option>
-                    <option value="w">w</option>
-                    <option value="e">e</option>
+                    <option value="1">Equipo 1</option>
+                    <option value="2">equipo 2</option>
+                    <option value="3">equipo 3</option>
+                    <option value="4">equipo 4</option>
                 </select>
                 <div class="col-8 d-flex flex-row justify-content-between">
                     <p id="equipodetail">new empty</p>
@@ -392,7 +411,6 @@
 
             $('.equipocontainer').append(equipo);
         }
-
     function agregarCiudad(element) {
         $('#modalAgregarCiudad').modal('show');
     }
@@ -431,7 +449,7 @@
                 $.each(res, function (item, key) {
                     $("#tipounidad").append(`<option value="${key.id}">${key.nombre}</option>`);
                 });
-                $("#tipounidad").select2();
+                dSelect('tipounidad');
             }).fail(function (error) {
                 dToast("error", "Error al obtener ciudades", "Atencion!");
             });
@@ -504,39 +522,6 @@
         const elemento = jQuery(element);
         elemento.attr('disabled', true);
         $("#modalDiv").modal("show");
-    }
-
-    function valId() {
-        if (parseInt(@id) != 0) {
-            $("#idTransportista").val(@id);
-            $.get("/Carriers/getCarrier/", { "id": @id}, function (res) {
-                console.log(res);
-                $("#Banco").val(res.banco);
-                Url("#Comentario").val(res.comentario);
-                $("#Contrasena").val(res.contrasena);
-                $("#Cuenta").val(res.cuenta);
-                $("#DireccionFiscal").val(res.direccionFiscal);
-                $("#DireccionOficinas").val(res.direccionOficinas);
-                $("#DireccionPatio").val(res.direccionPatio);
-                $("#Estatus").val(res.estatus);
-                $("#Facebook").val(res.facebook);
-                $("#FechaUltimoViaje").val(res.fechaUltimoViaje);
-                $("#GoogleMaps").val(res.googleMaps);
-                $("#GradoConfiabilidad").val(res.gradoConfiabilidad);
-                $("#NivelServicio").val(res.nivelServicio);
-                $("#NombreComercial").val(res.nombreComercial);
-                $("#OtraRed").val(res.otraRed);
-                $("#PaginaWeb").val(res.paginaWeb);
-                $("#RazonSocial").val(res.razonSocial);
-                $("#Rfc").val(res.rfc);
-                $("#Servicio").val(res.servicio);
-                $("#Tamanio").val(res.tamanio);
-                $("#UsuarioMaster").val(res.usuarioMaster);
-            }).fail(function (error, xhr, status) {
-                console.log(error);
-            });
-
-        }
     }
 
     </script>

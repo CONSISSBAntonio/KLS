@@ -18,21 +18,15 @@ namespace KLS_WEB.Models
         public int id_estadodestino { get; set; }
         public int id_ciudaddestino { get; set; }
         public int totalkilometros { get; set; }
-        [Column(TypeName = "varchar(20)")]
-        public string eficiencia { get; set; }
-        [Column(TypeName = "varchar(20)")]
-        public string totalhoras { get; set; }
+        public int eficiencia { get; set; }
         [Column(TypeName = "varchar(20)")]
         public string seguridad { get; set; }
         [Column(TypeName = "varchar(20)")]
         public string demanda { get; set; }
-        [Column(TypeName = "varchar(20)")]
-        public string tipodeviaje { get; set; }
         public int estatus { get; set; }
 
         //Monitoreo
-        [Column(TypeName = "varchar(100)")]
-        public string frecvalidacion { get; set; }
+        public int frecvalidacion { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string restriccioncirc { get; set; }
         [Column(TypeName = "text")]

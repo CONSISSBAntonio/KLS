@@ -73,19 +73,13 @@
             <div class="row">
                 <label for="ftotalkilometros" class="col-sm-4 col-form-label col-form-label-sm">Total de kilometros</label>
                 <div class="col-sm-8">
-                    @Html.TextBoxFor(x => x.totalkilometros, new { @type = "text", @class = "form-control form-control-sm", @id = "ftotalkilometros", @required = "" })
+                    @Html.TextBoxFor(x => x.totalkilometros, new { @type = "number", @class = "form-control form-control-sm", @id = "ftotalkilometros", @required = "" })
                 </div>
             </div>
             <div class="row">
                 <label for="feficiencia" class="col-sm-4 col-form-label col-form-label-sm">% Eficiencia</label>
                 <div class="col-sm-8">
-                    @Html.TextBoxFor(x => x.eficiencia, new { @type = "text", @class = "form-control form-control-sm", @id = "feficiencia", @required = "" })
-                </div>
-            </div>
-            <div class="row">
-                <label for="ftotalhoras" class="col-sm-4 col-form-label col-form-label-sm">Total de horas</label>
-                <div class="col-sm-8">
-                    @Html.TextBoxFor(x => x.totalhoras, new { @type = "text", @class = "form-control form-control-sm", @id = "ftotalhoras", @required = "" })
+                    @Html.TextBoxFor(x => x.eficiencia, new { @type = "number", @class = "form-control form-control-sm", @id = "feficiencia", @required = "" })
                 </div>
             </div>
             <div class="row">
@@ -108,17 +102,6 @@
                         new SelectListItem() {Text = "Media", Value="Media"},
                         new SelectListItem() {Text = "Alta", Value="Alta"}
                     }, new { @class = "form-control form-control-sm", @id = "fdemanda", @required = "" })
-                </div>
-            </div>
-            <div class="row">
-                <label for="ftipoviaje" class="col-sm-4 col-form-label col-form-label-sm">Tipo de viaje</label>
-                <div class="col-sm-8">
-                    @Html.DropDownListFor(x => x.tipodeviaje, new List<SelectListItem>
-                    {
-                        new SelectListItem() {Text = "One Way", Value="One Way"},
-                        new SelectListItem() {Text = "Two Way", Value="Two Way"},
-                        new SelectListItem() {Text = "Circuiteable", Value="Circuiteable"}
-                    }, new { @class = "form-control form-control-sm", @id = "ftipoviaje", @required = "" })
                 </div>
             </div>
             <div class="row">
@@ -152,9 +135,9 @@
             <div class="poppins medium size-14 text-left mt-4 mb-3">Monitoreo</div>
             <form class="frmRegister">
                 <div class="row">
-                    <label for="ffrecvalidacion" class="col-sm-4 col-form-label col-form-label-sm">Frec. de validación</label>
+                    <label for="ffrecvalidacion" class="col-sm-4 col-form-label col-form-label-sm">Frec. de validación (hrs)</label>
                     <div class="col-sm-8">
-                        @Html.TextBoxFor(x => x.frecvalidacion, new { @type = "text", @class = "form-control form-control-sm", @id = "ffrecvalidacion" })
+                        @Html.TextBoxFor(x => x.frecvalidacion, new { @type = "number", @class = "form-control form-control-sm", @id = "ffrecvalidacion" })
                     </div>
                 </div>
                 <div class="row">
@@ -210,15 +193,14 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="">Checkpoint</label><br />
-                                <select class="form-control myselect" name="Cat_CiudadId" id="id_ciudad" style="width: 100%;">
-                                </select>
+                                <input type="text" class="form-control" name="nombre" id="nombre" required />
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            <label class="">Tiempo</label>
-                            <input type="text" class="form-control" name="tiempo" id="tiempo" value="" required />
+                            <label class="">Tiempo (horas)</label>
+                            <input type="number" class="form-control" name="tiempo" id="tiempo" value="" required />
                         </div>
                     </div>
                     <br />
@@ -340,10 +322,8 @@
         if (accion == "Editar") {
             try {
                 let indice = dataCheckpoint.findIndex(service => service.id === idEditar);
-                $('#id_ciudad').val(dataCheckpoint[indice].cat_CiudadId);
-                $('#id_ciudad').trigger('change');
-
                 $("#tiempo").val(dataCheckpoint[indice].tiempo);
+                $("#nombre").val(dataCheckpoint[indice].nombre);
 
                 $("#modalDiv").modal("show");
             } catch (error) {
@@ -374,10 +354,9 @@
         $.get(`RouteHasCheckpoint/getRouteCheckpoint/${rutaid}`, function (res) {
             dataCheckpoint = res;
             $.each(res, function (item, key) {
-                let indice_c = catCiudad.findIndex(service => service.id === key.cat_CiudadId);
                 $("#table-checkpoint").append(`
                         <tr>
-                        <td>${catCiudad[indice_c].nombre}</td>
+                        <td>${nCon(key.nombre)}</td>
                         <td>${nCon(key.tiempo)}</td>
                         <td class="text-center">
                             <a href="#">

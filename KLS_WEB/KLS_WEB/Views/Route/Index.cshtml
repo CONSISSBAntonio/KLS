@@ -23,10 +23,8 @@
                     <th>Ciudad Or</th>
                     <th>Estado De</th>
                     <th>Ciudad De</th>
-                    <th>Tiempo de ruta</th>
                     <th>Kilómetros</th>
                     <th>Seguridad</th>
-                    <th></th>
                     <th>Estatus</th>
                     <th>Acciones</th>
                 </tr>
@@ -99,7 +97,6 @@
                     let indice_cd = catCiudad.findIndex(service => service.id === key.id_ciudaddestino);
                     let indice_eo = catEstado.findIndex(service => service.id === key.id_estadoorigen);
                     let indice_ed = catEstado.findIndex(service => service.id === key.id_estadodestino);
-                    const tipoviajeabreviado = nCon(key.tipodeviaje) == 'One Way' ? '1W' : nCon(key.tipodeviaje) == 'Two Way' ? '2W' : 'C';
                     const color = nCon(key.seguridad) == 'Alto' ? 'success' : nCon(key.seguridad) == 'Medio' ? 'warning' : 'danger';
                     const status = nCon(key.estatus) == 1 ? 'Activo' : 'Inactivo';
                     $("#table-info").append(`
@@ -109,10 +106,8 @@
                                 <td>${catCiudad[indice_co].nombre}</td>
                                 <td>${catEstado[indice_ed].nombre}</td>
                                 <td>${catCiudad[indice_cd].nombre}</td>
-                                <td>${nCon(key.totalhoras)}</td>
                                 <td>${nCon(key.totalkilometros)} km</td>
                                 <td class="font-weight-bold text-${color}">${nCon(key.seguridad)}</td>
-                                <td class="text-center">${tipoviajeabreviado}</td>
                                 <td class="text-center">${status}</td>
                                 <td class="text-center">
                                     <button type="button" class="btn btn-sm" onclick="AddEdit(${nCon(key.id)}, this);" style="background-color: #ffffff00;">

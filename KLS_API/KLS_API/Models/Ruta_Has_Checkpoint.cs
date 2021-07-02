@@ -12,8 +12,8 @@ namespace KLS_API.Models
         [Key]
         public int id { get; set; }
         public int RutaId { get; set; }
-        public int Cat_CiudadId { get; set; }
         [Column(TypeName = "varchar(50)")]
-        public string tiempo { get; set; }
+        public string nombre { get; set; }
+        public int tiempo { get; set; }
     }
 }

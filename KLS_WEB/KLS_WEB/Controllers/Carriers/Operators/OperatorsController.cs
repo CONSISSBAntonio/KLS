@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -37,6 +38,14 @@ namespace KLS_WEB.Controllers.Carriers.CarriersOperators
             List<Tr_Has_Operadores> dataReport;
             dataReport = await this.AppContext.Execute<List<Tr_Has_Operadores>>(MethodType.GET, _UrlApi, dataModel);
             return Json(dataReport);
+        }
+        
+        [Route("[action]/{id}")]
+        public async Task<JsonResult> GetOperator(string id)
+        {
+            Tr_Has_Operadores operador = new Tr_Has_Operadores();
+            Tr_Has_Operadores data = await AppContext.Execute<Tr_Has_Operadores>(MethodType.GET, Path.Combine(_UrlApi, "GetOperator", id), operador);
+            return Json(data);
         }
 
         [Route("setOperators")]

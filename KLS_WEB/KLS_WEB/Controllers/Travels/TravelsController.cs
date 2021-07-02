@@ -37,7 +37,6 @@ namespace KLS_WEB.Controllers.Travels
             return View(this._UrlView + (id == 0 ? "New.cshtml" : "Details.cshtml"));
         }
 
-        //Servicios
         [Route("getTravels")]
         public async Task<JsonResult> Get(Transportista dataModel)
         {
@@ -47,18 +46,18 @@ namespace KLS_WEB.Controllers.Travels
         }
 
         [Route("setTravels")]
-        public async Task<JsonResult> Post(Transportista dataModel)
+        public async Task<JsonResult> Post(Travel dataModel)
         {
-            Transportista dataReport;
-            dataReport = await this.AppContext.Execute<Transportista>(MethodType.POST, _UrlApi, dataModel);
+            Travel dataReport;
+            dataReport = await this.AppContext.Execute<Travel>(MethodType.POST, _UrlApi, dataModel);
             return Json(dataReport);
         }
 
         [Route("putTravels")]
-        public async Task<JsonResult> Put(Transportista dataModel)
+        public async Task<JsonResult> Put(Travel dataModel)
         {
-            Transportista dataReport;
-            dataReport = await this.AppContext.Execute<Transportista>(MethodType.PUT, _UrlApi, dataModel);
+            Travel dataReport;
+            dataReport = await this.AppContext.Execute<Travel>(MethodType.PUT, _UrlApi, dataModel);
             return Json(dataReport);
         }
 
