@@ -785,35 +785,24 @@
                     stable.destroy();
                     $("#table-info").empty();
 
-                    $.get("/Facturacion", function (res) {
-                        alert("mensaje");
-                        DataFacturas = resonse;
-                        console.log(response);
-                        //$.each(res, function (item, key) {
-                        //    $("#table-info").append(`
-                        //         <tr>
-                        //            <td>${nCon(key.nombre)}</td>
-                        //            <td>${nCon(key.telefono)}</td>
-                        //            <td>${nCon(key.departamento)}</td>
-                        //            <td>${nCon(key.contactos)}</td>
-                        //            <td>${nCon(key.correo)}</td>
-                        //            <td>`+ statusTable(key.estatus) + `</td>
-                        //            <td>${nCon(key.almacen)}</td>
-                        //            <td>
-                        //                <a href="#" onclick="showNota('${nCon(key.notas)}','NOTA');">
-                        //                    <h1>...</h1>
-                        //                </a>
-                        //            </td>
-                        //            <td>
-                        //                <a href="#">
-                        //                    <span class="material-icons" onclick="showModal('EDITAR','Editar',${nCon(key.id)});">
-                        //                        mode_edit
-                        //                    </span>
-                        //                </a>
-                        //            </td>
-                        //        </tr>`);
-                        //});
-                        //dTable("table-facturas");
+                    $.get("/Facturacion/getFacturas", function (res) {
+                        DataFacturas = res;
+                        res.map(({ nombre, fechacarga, usuario, fullpath }) => {
+                            $("#table-info").append(`
+                                <tr>
+                                <td>${nombre}</td>
+                                <td>${fechacarga}</td>
+                                <td>${usuario}</td>                               
+                                <td class="text-center">
+                                    <a onclick="downloadFile('${nombre}')">
+                                        <span class="material-icons">
+                                            file_download
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>`);
+                        });
+                        dTable("table-facturas");
                     }).fail(function (error) {
                         dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
                     });
@@ -867,5 +856,26 @@
             $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
         });         
 
+        function downloadFile(nombre) {
+            console.log({ nombre });
+            $.ajax({
+                type: 'GET',
+                url: '/Facturacion/downloadFile',
+                data: { fileName: nombre },
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    console.log(data);
+                    var blob = new Blob([data]);
+                    //var blob = new Blob([data], { type: 'image/png' });
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = nombre;
+                    link.click();
+                },
+                error: function (err) {
+                    console.log("error", err);
+                }
+            });
+        }
     </script>    
 }
