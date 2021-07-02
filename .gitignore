@@ -3,6 +3,25 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+KLS_WEB/KLS_WEB/.config/*
+KLS_WEB/KLS_WEB/bin/*
+KLS_WEB/KLS_WEB/obj/*
+KLS_WEB/KLS_WEB/KLS_WEB/*
+KLS_WEB/KLS_WEB/Utility/*
+KLS_WEB/KLS_WEB/appsettings.Development.json
+KLS_WEB/KLS_WEB/appsettings.json
+KLS_WEB/KLS_WEB/KLS_WEB.csproj.user
+
+
+KLS_API/KLS_API/.config/*
+KLS_API/KLS_API/bin/*
+KLS_API/KLS_API/obj/*
+KLS_API/KLS_API/Propiertes/*
+KLS_API/KLS_API/appsettings.Development.json
+KLS_API/KLS_API/appsettings.json
+
+.vscode/*
+
 # User-specific files
 *.rsuser
 *.suo
