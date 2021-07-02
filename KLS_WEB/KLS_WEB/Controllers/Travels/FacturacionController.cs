@@ -98,7 +98,7 @@ namespace KLS_WEB.Controllers.Travels
         {
             //string ruta = Path.Combine(_hostingEnvironment.WebRootPath + @"\Resources\Facturas\");
             //string fullpath = Path.Combine(ruta, fileName);
-            string fullpath = string.Format("\\Resources\\Facturas\\{0}", fileName);
+            string fullpath = string.Format(@"~\Resources\Facturas\{0}", fileName);
             var result = File(fullpath, GetContentType(fileName), fileName);
             return result;
         }

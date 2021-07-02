@@ -865,12 +865,23 @@
                 contentType: 'application/json; charset=utf-8',
                 success: function (data) {
                     console.log(data);
-                    var blob = new Blob([data]);
-                    //var blob = new Blob([data], { type: 'image/png' });
-                    var link = document.createElement('a');
-                    link.href = window.URL.createObjectURL(blob);
-                    link.download = nombre;
-                    link.click();
+                    //var a = $("<a>")
+                    //    .attr("href", "")
+                    //    .attr("download", "img.png")
+                    //    .appendTo("body");
+
+                    //a[0].click();
+
+                    //a.remove();
+
+
+                    //console.log(data);
+                    ////var blob = new Blob([data]);
+                    ////var blob = new Blob([data], { type: 'image/png' });
+                    //var link = document.createElement('a');
+                    //link.href = window.URL.createObjectURL(data);
+                    //link.download = nombre;
+                    //link.click();
                 },
                 error: function (err) {
                     console.log("error", err);
