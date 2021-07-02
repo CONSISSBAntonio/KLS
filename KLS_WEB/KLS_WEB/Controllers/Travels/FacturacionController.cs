@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
+using IoFile = System.IO.File;
 
 namespace KLS_WEB.Controllers.Travels
 {
@@ -19,7 +19,7 @@ namespace KLS_WEB.Controllers.Travels
     public class FacturacionController : Controller
     {
         #region properties
-        private string _UrlView = "~/Views/Travels/";
+        private string _UrlView = "~/Views/Travels";
         private string _UrlApi = "Travels/Facturacion";
         private readonly IAppContextService _appContext;
         private readonly IWebHostEnvironment _hostingEnvironment;
@@ -37,11 +37,11 @@ namespace KLS_WEB.Controllers.Travels
         #region Methods
         [HttpGet]
         [Route("getFacturas")]
-        public async Task<JsonResult> Get()
+        public async Task<JsonResult> Get(Facturacion facturacion)
         {
-            Facturacion facturas = new Facturacion();
-            var result = await _appContext.Execute<Facturacion>(MethodType.GET,_UrlApi,facturas);
-            return Json(result);
+            List<Facturacion> facturas;
+            facturas = await _appContext.Execute<List<Facturacion>>(MethodType.GET,_UrlApi, facturacion);
+            return Json(facturas);
         }
 
         [HttpPost]
@@ -50,7 +50,7 @@ namespace KLS_WEB.Controllers.Travels
         {
             try
             {
-                //string projectRootPath = _hostingEnvironment.ContentRootPath; ruta del poryecto
+                //string ruta = _hostingEnvironment.ContentRootPath + @"\Uploads\";
                 string ruta = Path.Combine(_hostingEnvironment.WebRootPath + @"\Resources\Facturas\");
                 string fullpath = Path.Combine(ruta, file.FileName);
                 if (!Directory.Exists(ruta))
@@ -66,13 +66,15 @@ namespace KLS_WEB.Controllers.Travels
                     usuarioId = 1,
                     usuario = "Daniel"
                 };
-
+                Facturacion result =  new Facturacion();
                 if (isSaved)
                 {
-                    var result = await _appContext.Execute<Facturacion>(MethodType.POST, _UrlApi, facturacion);
-                    return Ok(result);
+                    result = await _appContext.Execute<Facturacion>(MethodType.POST, _UrlApi, facturacion);
                 }
-                return Ok();
+                //return Json(result);
+                return RedirectToAction("Get", new { facturacion = result});
+                //return View();
+
             }
             catch (Exception ex)
             {
@@ -91,6 +93,44 @@ namespace KLS_WEB.Controllers.Travels
             }
             return true;            
         }
-        #endregion       
+
+        [HttpGet]
+        [Route("downloadFile")]
+        public ActionResult DownloadFile(string fileName, string fullpath)
+        {
+            //var ruta = Server.MapPath();
+            //var fileExists = IoFile.Exists(fullpath);
+            //var fs = IoFile.OpenRead(fullpath);            
+            //return  PhysicalFile(fullpath, GetContentType(fileName),true);
+
+            return File(fullpath, "text/plain", fileName);
+            //return result;
+            //return File(new FileStream(fullpath, FileMode.Open), GetContentType(fileName), fileName);
+
+        }
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
+        }
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                {".txt", "text/plain"},
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.ms-word"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".gif", "image/gif"},
+                {".csv", "text/csv"}
+            };
+        }
+        #endregion
     }
 }

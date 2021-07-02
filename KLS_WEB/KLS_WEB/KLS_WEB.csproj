@@ -25,4 +25,13 @@
     <Folder Include="wwwroot\Resources\Facturas\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\Resources\Facturas\visual Serial.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\Resources\Facturas\visual_Serial.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
