@@ -37,11 +37,11 @@ namespace KLS_WEB.Controllers.Travels
         #region Methods
         [HttpGet]
         [Route("getFacturas")]
-        public async Task<JsonResult> Get()
+        public async Task<JsonResult> Get(Facturacion facturacion)
         {
-            Facturacion facturas = new Facturacion();
-            var result = await _appContext.Execute<Facturacion>(MethodType.GET,_UrlApi,facturas);
-            return Json(result);
+            List<Facturacion> facturas;
+            facturas = await _appContext.Execute<List<Facturacion>>(MethodType.GET, _UrlApi, facturacion);
+            return Json(facturas);
         }
 
         [HttpPost]
@@ -90,6 +90,40 @@ namespace KLS_WEB.Controllers.Travels
                 file.CopyToAsync(fileStream);
             }
             return true;            
+        }
+
+        [HttpGet]
+        [Route("downloadFile")]
+        public FileResult DownloadFile(string fileName)
+        {
+            //string ruta = Path.Combine(_hostingEnvironment.WebRootPath + @"\Resources\Facturas\");
+            //string fullpath = Path.Combine(ruta, fileName);
+            string fullpath = string.Format("\\Resources\\Facturas\\{0}", fileName);
+            var result = File(fullpath, GetContentType(fileName), fileName);
+            return result;
+        }
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
+        }
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                {".txt", "text/plain"},
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.ms-word"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".gif", "image/gif"},
+                {".csv", "text/csv"}
+            };
         }
         #endregion       
     }
