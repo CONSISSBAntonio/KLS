@@ -452,3 +452,6 @@ $RECYCLE.BIN/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+*.v2
+KLS_WEB/.vs/KLS_WEB/v16/.suo
+KLS_WEB/.vs/KLS_WEB/DesignTimeBuild/.dtbcache.v2
