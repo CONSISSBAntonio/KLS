@@ -12,10 +12,10 @@ namespace KLS_API.Controllers.Route
     [Route("Route")]
     public class RouteController : Controller
     {
-        private readonly AppDbContext context;
+        private readonly AppDbContext _context;
         public RouteController(AppDbContext context)
         {
-            this.context = context;
+            _context = context;
         }
 
         [HttpGet]
@@ -24,7 +24,7 @@ namespace KLS_API.Controllers.Route
         {
             try
             {
-                var ruta = context.Ruta.FirstOrDefault(f => f.id == id);
+                var ruta = _context.Ruta.FirstOrDefault(f => f.id == id);
                 return Ok(ruta);
             }
             catch (Exception ex)
@@ -38,7 +38,7 @@ namespace KLS_API.Controllers.Route
         {
             try
             {
-                var ruta = context.Ruta.FirstOrDefault(f => f.id == id);
+                var ruta = _context.Ruta.FirstOrDefault(f => f.id == id);
                 return Ok(ruta);
             }
             catch (Exception ex)
@@ -52,7 +52,7 @@ namespace KLS_API.Controllers.Route
         {
             try
             {
-                return Ok(context.Ruta.ToList());
+                return Ok(_context.Ruta.ToList());
             }
             catch (Exception ex)
             {
@@ -60,13 +60,30 @@ namespace KLS_API.Controllers.Route
             }
         }
 
+        [HttpGet("[action]")]
+        public IActionResult SelectRoute()
+        {
+            var catalogo = from routes in _context.Ruta
+                           join fromstate in _context.Cat_Estado on routes.id_estadoorigen equals fromstate.id
+                           join tostate in _context.Cat_Estado on routes.id_estadodestino equals tostate.id
+                           where routes.estatus == 1
+                           select new
+                           {
+                               routes.id,
+                               fromto = string.Concat(fromstate.nombre, "-", tostate.nombre)
+                           };
+
+            return Ok(catalogo);
+        }
+
+
         [HttpPost]
         public ActionResult Post([FromBody] Ruta ruta)
         {
             try
             {
-                context.Ruta.Add(ruta);
-                context.SaveChanges();
+                _context.Ruta.Add(ruta);
+                _context.SaveChanges();
                 return Ok(ruta);
             }
             catch (Exception ex)
@@ -79,8 +96,8 @@ namespace KLS_API.Controllers.Route
         {
             try
             {
-                context.Entry(ruta).State = EntityState.Modified;
-                context.SaveChanges();
+                _context.Entry(ruta).State = EntityState.Modified;
+                _context.SaveChanges();
                 return CreatedAtRoute("getRoute", new { id = ruta.id }, ruta);
             }
             catch (Exception ex)
