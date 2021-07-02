@@ -56,7 +56,7 @@ namespace KLS_WEB.Controllers.Travels
                 if (!Directory.Exists(ruta))
                     Directory.CreateDirectory(ruta);
 
-                var isSaved = SaveFile(file, fullpath);               
+                var isSaved = await SaveFile(file, fullpath);               
 
                 Facturacion facturacion = new Facturacion()
                 {
@@ -80,14 +80,14 @@ namespace KLS_WEB.Controllers.Travels
             }
         }
 
-        private bool SaveFile(IFormFile file, string fullpath)
+        private async Task<bool> SaveFile(IFormFile file, string fullpath)
         {
             if (file is null)
                 return false;          
                         
             using (var fileStream = new FileStream(fullpath, FileMode.Create))
             {
-                file.CopyToAsync(fileStream);
+               await file.CopyToAsync(fileStream);
             }
             return true;            
         }
