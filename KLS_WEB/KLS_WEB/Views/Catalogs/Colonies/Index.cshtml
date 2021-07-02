@@ -21,7 +21,6 @@
             </button>
         </div>
     </div>
-
     <div class="p-4 shadow bg-white">
         <table id="table" class="table table-striped table-bordered display table-hover table-viajes" width="100%">
             <thead>
@@ -194,6 +193,7 @@
         function filCiudad() {
             $("#id_ciudad").empty();
             var idest = $("#id_estado").val();
+            //$("#id_ciudad").append(`<option value="0">Seleccionar estado</option>`);
             $.each(catCiudad, function (item, key) {
                 if (key.estatus != 2) {
                     if (key.id_estado == idest) {
@@ -234,6 +234,7 @@
             }).fail(function (error) {
                 dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
             });
+            filCiudad();
         }
     </script>
 } 

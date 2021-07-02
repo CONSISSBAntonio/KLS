@@ -89,7 +89,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn" data-dismiss="modal" >Cerrar</button>
                 @*<button type="button" class="btn btn-primary">Save changes</button>*@
             </div>
         </div>
@@ -152,12 +152,16 @@
                     var indice_e = catEstado.findIndex(service => parseInt(service.id) === parseInt(key.id_estado));
                     $("#estadosBtn").append(
                         `
-                            <button type="button" class="btn btn-dark btn-sm"  id="${key.id_estado}">
-                                ${catEstado[indice_e].nombre}        
-                                <i class="material-icons" onclick="delBtn(${key.id_estado})">
-                                    delete_outline
-                                </i>
-                            </button>`
+                            <div style="padding-bottom: 1vh;display: inline-block;">
+                                <button type="button" class="btn btn-dark btn-sm" id="${key.id_estado}">
+                                    ${catEstado[indice_e].nombre}        
+                                    <i class="material-icons" onclick="delBtn(${key.id_estado})">
+                                        delete_outline
+                                    </i>
+                                </button>
+                            </div>
+                            
+                        `
                     );
                 });
             } catch (error) {

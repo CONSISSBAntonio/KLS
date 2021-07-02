@@ -11,7 +11,7 @@
                     <a href="/Carriers/formCarriers/@id">
                         <div class="material-icons icon-red">arrow_back</div>
                     </a>
-                    <div class="text-uppercase poppins medium size-24 pl-2">BIBLIOTECA DIGITAL</div>
+                    <div class="text-uppercase poppins medium size-24 pl-2">OPERADORES</div>
                 </div>
             </div>
             <div class="ml-auto p-2">
@@ -150,6 +150,7 @@
                 if (parseInt($("#idEditar").val()) == 0) {
                     $.post("/Carriers/Operators/setOperators/", jsonData, function (res) {
                         $("#idEditar").val(res.id);
+                        loadTable();
                         dToast("success", "Registro guardado exitosamente.", "Registrado");
                     }).fail(function (error) {
                         dToast("error", "Error al tratar de guardar el registro", "Error");
