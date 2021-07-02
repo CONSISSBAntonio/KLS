@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210701175850_ruta-checkpoint")]
-    partial class rutacheckpoint
+    [Migration("20210702192926_initialqa")]
+    partial class initialqa
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
