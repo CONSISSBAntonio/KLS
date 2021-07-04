@@ -45,11 +45,11 @@ namespace KLS_WEB.Controllers.Travels
         }
 
         [HttpPost]
-        //[Route("UploadFile")]
+        [Route("UploadFile")]
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
             try
-            {
+            {              
                 //string projectRootPath = _hostingEnvironment.ContentRootPath; ruta del poryecto
                 string ruta = Path.Combine(_hostingEnvironment.WebRootPath + @"\Resources\Facturas\" + DateTime.Now.ToString("yyyy/MM/dd"));
                 string res = Path.Combine(@"\Resources\Facturas\" + DateTime.Now.ToString("yyyy") +"\\" + DateTime.Now.ToString("MM") + "\\" + DateTime.Now.ToString("dd") + "\\"+ file.FileName);
