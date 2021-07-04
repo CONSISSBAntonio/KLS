@@ -51,18 +51,22 @@ namespace KLS_WEB.Controllers.Travels
             try
             {
                 //string projectRootPath = _hostingEnvironment.ContentRootPath; ruta del poryecto
-                string ruta = Path.Combine(_hostingEnvironment.WebRootPath + @"\Resources\Facturas\");
+                string ruta = Path.Combine(_hostingEnvironment.WebRootPath + @"\Resources\Facturas\" + DateTime.Now.ToString("yyyy/MM/dd"));
+                string res = Path.Combine(@"\Resources\Facturas\" + DateTime.Now.ToString("yyyy") +"\\" + DateTime.Now.ToString("MM") + "\\" + DateTime.Now.ToString("dd") + "\\"+ file.FileName);
+
+                string rutaFile = res.Replace("\\","\\\\");
+
                 string fullpath = Path.Combine(ruta, file.FileName);
                 if (!Directory.Exists(ruta))
                     Directory.CreateDirectory(ruta);
 
-                var isSaved = SaveFile(file, fullpath);               
+                var isSaved = await SaveFile(file, fullpath);               
 
                 Facturacion facturacion = new Facturacion()
                 {
                     nombre = file.FileName,
-                    fullpath = fullpath,
-                    fechacarga = DateTime.Today,
+                    fullpath = rutaFile,
+                    fechacarga = DateTime.Now,
                     usuarioId = 1,
                     usuario = "Daniel"
                 };
@@ -80,25 +84,25 @@ namespace KLS_WEB.Controllers.Travels
             }
         }
 
-        private bool SaveFile(IFormFile file, string fullpath)
+        private async Task<bool> SaveFile(IFormFile file, string fullpath)
         {
             if (file is null)
                 return false;          
                         
             using (var fileStream = new FileStream(fullpath, FileMode.Create))
             {
-                file.CopyToAsync(fileStream);
+                await file.CopyToAsync(fileStream);
             }
             return true;            
         }
 
         [HttpGet]
         [Route("downloadFile")]
-        public FileResult DownloadFile(string fileName)
+        public FileResult DownloadFile(string fileName,string fullpath)
         {
             //string ruta = Path.Combine(_hostingEnvironment.WebRootPath + @"\Resources\Facturas\");
             //string fullpath = Path.Combine(ruta, fileName);
-            string fullpath = string.Format(@"~\Resources\Facturas\{0}", fileName);
+            //string fullpath = string.Format(@"~\Resources\Facturas\{0}", fileName);
             var result = File(fullpath, GetContentType(fileName), fileName);
             return result;
         }
