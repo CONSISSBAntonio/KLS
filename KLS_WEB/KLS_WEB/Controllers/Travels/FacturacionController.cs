@@ -91,7 +91,7 @@ namespace KLS_WEB.Controllers.Travels
                         
             using (var fileStream = new FileStream(fullpath, FileMode.Create))
             {
-                await file.CopyToAsync(fileStream);
+               await file.CopyToAsync(fileStream);
             }
             return true;            
         }
