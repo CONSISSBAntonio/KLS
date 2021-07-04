@@ -760,11 +760,10 @@
         });         
 
         function UploadFile() {            
-            var formData = new FormData();  
-            var myfile = $('#customFile')[0].files[0];
+            var formData = new FormData();              
             formData.append('file', $('#customFile')[0].files[0]);
             console.log(myfile);
-            if (myfile !== undefined) {
+            if ($('#customFile')[0].files[0] !== undefined) {
                 $.ajax({
                     url: "/Facturacion/UploadFile",
                     type: "POST",
