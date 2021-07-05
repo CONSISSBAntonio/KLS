@@ -11,7 +11,6 @@ namespace KLS_API.Models.Travels
         [Key]
         public int Id { get; set; }
         public int IdServicio { get; set; }
-        public int IdTipo { get; set; }
         public int IdEquipo { get; set; }
     }
 }
