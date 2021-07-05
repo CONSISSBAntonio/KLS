@@ -43,7 +43,10 @@ namespace KLS_API.Context
         public DbSet<Clientes> Clientes { get; set; }
 
         //Viajes
-        public DbSet<Facturacion> Facturacion { get; set; }
 
+        public DbSet<Facturacion> Facturacion { get; set; }
+        public DbSet<Travel> Viajes { get; set; }
+        public DbSet<Services> Servicios { get; set; }
+        public DbSet<Unidad> Unidades { get; set; }
     }
 }

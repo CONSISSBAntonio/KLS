@@ -40,46 +40,35 @@
                     <button class="btn btn-outline-secondary btn-sm savedit"><i class="material-icons">edit</i></button>
                 </div>
             </div>
+            @Html.HiddenFor(x => x.id, new { @id = "fid" })
             <div class="row fid">
                 <label for="fid" class="col-sm-4 col-form-label col-form-label-sm">ID</label>
                 <div class="col-sm-8">
-                    @Html.TextBoxFor(x => x.id, new { @type = "text", @class = "form-control form-control-sm", @id = "fid", @required = "" })
+                    @Html.TextBoxFor(x => x.IdGenerado, new { @type = "text", @class = "form-control form-control-sm", @id = "idgenerado" })
                 </div>
             </div>
             <div class="row">
                 <label for="festadoorigen" class="col-sm-4 col-form-label col-form-label-sm">Estado Origen</label>
                 <div class="col-sm-8">
-                    <select class="form-control form-control-sm col-12 myselect" id="festadoorigen" name="id_estadoorigen" required onchange="{ getCities('origen', this.value); }">
-                        <option value="0">SELECCIONA</option>
-                    </select>
-                    @*@Html.DropDownListFor(x => x.id_estadoorigen, ViewBag.EstadoList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "festadoorigen", @required = "" })*@
+                    @Html.DropDownListFor(x => x.id_estadoorigen, ViewBag.EstadoList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "festadoorigen", @required = "", @onchange = "{ getCities('origen', this.value); }" })
                 </div>
             </div>
             <div class="row">
                 <label for="fciudadorigen" class="col-sm-4 col-form-label col-form-label-sm">Ciudad Origen</label>
                 <div class="col-sm-8">
-                    <select class="form-control form-control-sm col-12 myselect" id="fciudadorigen" name="fciudadorigen" required>
-                        <option value="0">SELECCIONA</option>
-                    </select>
-                    @*@Html.DropDownListFor(x => x.id_ciudadorigen, ViewBag.CiudadList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "fciudadorigen", @required = "" })*@
+                    @Html.DropDownListFor(x => x.id_ciudadorigen, ViewBag.CiudadList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "fciudadorigen", @required = "", @onchange = "{ generateId('origen', this.value); }" })
                 </div>
             </div>
             <div class="row">
                 <label for="festadodestino" class="col-sm-4 col-form-label col-form-label-sm">Estado Destino</label>
                 <div class="col-sm-8">
-                    <select class="form-control form-control-sm col-12 myselect" id="festadodestino" name="festadodestino" required onchange="{ getCities('destino', this.value); }">
-                        <option value="0">SELECCIONA</option>
-                    </select>
-                    @*@Html.DropDownListFor(x => x.id_estadodestino, ViewBag.EstadoList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "festadodestino", @required = "" })*@
+                    @Html.DropDownListFor(x => x.id_estadodestino, ViewBag.EstadoList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "festadodestino", @required = "", @onchange = "{ getCities('destino', this.value); }" })
                 </div>
             </div>
             <div class="row">
                 <label for="fciudaddestino" class="col-sm-4 col-form-label col-form-label-sm">Ciudad Destino</label>
                 <div class="col-sm-8">
-                    <select class="form-control form-control-sm col-12 myselect" id="fciudaddestino" name="fciudaddestino" required>
-                        <option value="0">SELECCIONA</option>
-                    </select>
-                    @*@Html.DropDownListFor(x => x.id_ciudaddestino, ViewBag.CiudadList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "fciudaddestino", @required = "" })*@
+                    @Html.DropDownListFor(x => x.id_ciudaddestino, ViewBag.CiudadList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "fciudaddestino", @required = "", @onchange = "{ generateId('destino', this.value); }" })
                 </div>
             </div>
             <div class="row">
@@ -241,7 +230,7 @@
                 </button>
             </div>
             <div class="modal-body text-left">
-                <p>¿Desea eliminar este elemento?</p>
+                <p>¿Estas seguro de que deseas eliminar el CHECKPOINT seleccionado?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
@@ -255,9 +244,9 @@
     rutaid = @Model.id;
     $(document).ready(function () {
         loadCheckpoint();
-        catEstado.map(({ id, nombre, estatus }) => {
-            estatus === 1 && $("#festadoorigen, #festadodestino").append(`<option value="${id}">${nombre}</option>`);
-        });
+        //catEstado.map(({ id, nombre, estatus }) => {
+        //    estatus === 1 && $("#festadoorigen, #festadodestino").append(`<option value="${id}">${nombre}</option>`);
+        //});
         dSelect("festadoorigen");
         dSelect("festadodestino");
         dSelect("fciudadorigen");
@@ -284,35 +273,54 @@
             var jsonData = convertJson($(".frmRegister"));
             const action = $(this).attr('rel');
             const botonse = $('.savedit');
-            if (rutaid != 0) {
-                if (action === 'edit') {
-                    botonse.removeClass('btn-outline-secondary').addClass('btn-outline-info').html(`<i class="material-icons">save</i>`);
-                    $('.frmRegister :input').prop("disabled", false);
-                    $(this).attr('rel', 'post');
+            const selects = $('select');
+            let validselect = true;
+            selects.map((index, element) => {
+                if (element.value == 0) {
+                    validselect = false;
+                }
+            });
+
+            if (validselect) {
+                if (rutaid != 0) {
+                    if (action === 'edit') {
+                        botonse.removeClass('btn-outline-secondary').addClass('btn-outline-info').html(`<i class="material-icons">save</i>`);
+                        $('.frmRegister :input').prop("disabled", false);
+                        $(this).attr('rel', 'post');
+                    } else {
+                        $('.frmRegister :input').prop("disabled", true);
+                        botonse.removeClass('btn-outline-info').addClass('btn-outline-secondary').html(`<i class="material-icons">edit</i>`).attr('disabled', true);
+                        $(this).attr('rel', 'edit');
+                        $.post("Route/putRoute", jsonData, function (res) {
+                            const origen = $('#fciudadorigen').val();
+                            const destino = $('#fciudaddestino').val();
+
+                            console.log(origen, destino);
+                            console.log(String(origen).padStart(4, '0'), String(destino).padStart(4, '0'));
+                            $('#idgenerado').val(String(origen).padStart(4, '0') + String(destino).padStart(4, '0'));
+                            $('#factualizadopor').html(res.actualizadopor);
+                            $('#fultimocambio').html(new Date(res.ultimocambio).toLocaleString());
+                            dToast("success", "Registro actualizado exitosamente.", "Registrado");
+                            botonse.attr("disabled", false);
+                        }).fail(function (error) {
+                            dToast("error", "Error al tratar de guardar el registro", "Error");
+                            $(".guardar").attr("disabled", false);
+                        });
+                    }
                 } else {
-                    $('.frmRegister :input').prop("disabled", true);
-                    botonse.removeClass('btn-outline-info').addClass('btn-outline-secondary').html(`<i class="material-icons">edit</i>`).attr('disabled', true);
-                    $(this).attr('rel', 'edit');
-                    $.post("Route/putRoute", jsonData, function (res) {
-                        $('#factualizadopor').html(res.actualizadopor);
-                        $('#fultimocambio').html(new Date(res.ultimocambio).toLocaleString());
-                        dToast("success", "Registro actualizado exitosamente.", "Registrado");
-                        botonse.attr("disabled", false);
+                    botonse.attr('disabled', true);
+                    $.post("Route/setRoute", jsonData, function (res) {
+                        $('.body').html(res);
+                        loadTable();
                     }).fail(function (error) {
                         dToast("error", "Error al tratar de guardar el registro", "Error");
                         $(".guardar").attr("disabled", false);
                     });
                 }
             } else {
-                botonse.attr('disabled', true);
-                $.post("Route/setRoute", jsonData, function (res) {
-                    $('.body').html(res);
-                    loadTable();
-                }).fail(function (error) {
-                    dToast("error", "Error al tratar de guardar el registro", "Error");
-                    $(".guardar").attr("disabled", false);
-                });
+                dToast("error", "El origen y destino es obligatorio.", "Error");
             }
+
         });
 
         $("#frmCheckpoint").submit(function (event) {
@@ -342,11 +350,21 @@
         });
     });
 
+    generateId = (posicion, val) => {
+        const origen = $('#fciudadorigen').val();
+        const destino = $('#fciudaddestino').val();
+
+        console.log(origen, destino);
+        console.log(String(origen).padStart(4, '0'), String(destino).padStart(4, '0'));
+        //const IdGenerado = `${String(key.id_ciudadorigen).padStart(4, '0')}${String(key.id_ciudaddestino).padStart(4, '0')}`;
+        //console.log(IdGenerado);
+    }
+
     getCities = (filter, idestado) => {
         $(`#fciudad${filter}`).empty();
-        catCiudad.map(({ id_estado, estatus, nombre }) => {
+        catCiudad.map(({ id, id_estado, estatus, nombre }) => {
             if (id_estado == idestado && estatus === 1) {
-                $(`#fciudad${filter}`).append(`<option value="${id_estado}">${nombre}</option>`);
+                $(`#fciudad${filter}`).append(`<option value="${id}">${nombre}</option>`);
             }
         });
         dSelect(`fciudad${filter}`);

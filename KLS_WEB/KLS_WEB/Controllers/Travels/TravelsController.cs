@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace KLS_WEB.Controllers.Travels
@@ -48,9 +50,73 @@ namespace KLS_WEB.Controllers.Travels
         [Route("setTravels")]
         public async Task<JsonResult> Post(Travel dataModel)
         {
-            Travel dataReport;
-            dataReport = await this.AppContext.Execute<Travel>(MethodType.POST, _UrlApi, dataModel);
-            return Json(dataReport);
+            List<ServicesDTO> services = new List<ServicesDTO>();
+            List<UnidadDTO> units = new List<UnidadDTO>();
+
+            TravelDTO viaje = new TravelDTO
+            {
+                IdCliente = dataModel.Cliente,
+                FechaSalida = dataModel.FechaSalida,
+                FechaLlegada = dataModel.FechaLlegada,
+                IdOrigen = dataModel.Origen,
+                DireccionRemitente = dataModel.DireccionRemitente,
+                IdDestino = dataModel.Destino,
+                DireccionDestinatario = dataModel.DireccionDestinatario,
+                IdRuta = dataModel.Ruta,
+                IdUnidad = dataModel.TipoUnidad,
+                TipoViaje = dataModel.TipoViaje,
+                OrdenCompra = dataModel.OrdenCompra,
+                ReferenciaDos = dataModel.Referencia2,
+                ReferenciaTres = dataModel.Referencia3
+            };
+
+            TravelDTO newTravel = await this.AppContext.Execute<TravelDTO>(MethodType.POST, _UrlApi, viaje);
+
+            int ViajeId = newTravel.Id;
+
+            var servicios = dataModel.Servicios.Split("&");
+
+            foreach (var servicio in servicios)
+            {
+                string nombre = servicio.Replace("=on", "");
+
+                ServicesDTO service = new ServicesDTO
+                {
+                    IdTravel = ViajeId,
+                    Nombre = nombre,
+                    IdTransportista = dataModel.Transportista,
+                    IdChofer = dataModel.Chofer,
+                    Precio = dataModel.TerrestreNacionalPrecio,
+                    Costo = dataModel.TerrestreNacionalCosto,
+                    PrecioClienteTotal = dataModel.TerrestreNacionalPrecio,
+                    CostoTotal = dataModel.TerrestreNacionalCosto
+                };
+
+                ServicesDTO newService = await this.AppContext.Execute<ServicesDTO>(MethodType.POST, Path.Combine(_UrlApi, "PostService"), service);
+                services.Add(newService);
+
+                int IdServicio = newService.Id;
+
+                var unidades = dataModel.Equipo.Split("&");
+
+                foreach (var unidad in unidades)
+                {
+                    if (unidad.Contains(nombre))
+                    {
+                        string Id = new string(unidad.Where(char.IsDigit).ToArray());
+                        UnidadDTO unidaddb = new UnidadDTO
+                        {
+                            IdEquipo = Convert.ToInt32(Id),
+                            ServicesId = IdServicio
+                        };
+
+                        UnidadDTO newUnity = await AppContext.Execute<UnidadDTO>(MethodType.POST, Path.Combine(_UrlApi, "PostUnit"), unidaddb);
+                        units.Add(newUnity);
+                    }
+                }
+            }
+
+            return Json(new { newTravel, services, units });
         }
 
         [Route("putTravels")]

@@ -22,6 +22,26 @@
     <Compile Remove="Migrations\20210630162840_trinventario.Designer.cs" />
     <Compile Remove="Migrations\20210702192717_initialQA.cs" />
     <Compile Remove="Migrations\20210702192717_initialQA.Designer.cs" />
+    <Compile Remove="Migrations\20210705142156_viajes.cs" />
+    <Compile Remove="Migrations\20210705142156_viajes.Designer.cs" />
+    <Compile Remove="Migrations\20210705143633_viaje.cs" />
+    <Compile Remove="Migrations\20210705143633_viaje.Designer.cs" />
+    <Compile Remove="Migrations\20210705144352_viaje.cs" />
+    <Compile Remove="Migrations\20210705144352_viaje.Designer.cs" />
+    <Compile Remove="Migrations\20210705145044_Viajes.cs" />
+    <Compile Remove="Migrations\20210705145044_Viajes.Designer.cs" />
+    <Compile Remove="Migrations\20210705154742_viajes.cs" />
+    <Compile Remove="Migrations\20210705154742_viajes.Designer.cs" />
+    <Compile Remove="Migrations\20210705163721_viajes.cs" />
+    <Compile Remove="Migrations\20210705163721_viajes.Designer.cs" />
+    <Compile Remove="Migrations\20210705164135_viajes.cs" />
+    <Compile Remove="Migrations\20210705164135_viajes.Designer.cs" />
+    <Compile Remove="Migrations\20210705164902_viajes.cs" />
+    <Compile Remove="Migrations\20210705164902_viajes.Designer.cs" />
+    <Compile Remove="Migrations\20210705165551_viajes.cs" />
+    <Compile Remove="Migrations\20210705165551_viajes.Designer.cs" />
+    <Compile Remove="Migrations\20210705173038_viajes.cs" />
+    <Compile Remove="Migrations\20210705173038_viajes.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

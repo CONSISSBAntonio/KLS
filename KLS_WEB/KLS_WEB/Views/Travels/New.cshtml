@@ -28,7 +28,7 @@
             </div>
             <div>
                 @*Folio es el tipo de viaje + día del mes + numero de mes + consecutivo de 4 números*@
-                <h4 class="text-secondary" id="folio">_@(string.Concat(DateTime.Now.ToString("ddMM"), id.ToString("D4")))</h4>
+                <h4 class="text-secondary" id="folio">VTNOW@(string.Concat(DateTime.Now.ToString("ddMM"), id.ToString("D4")))</h4>
             </div>
         </div>
 
@@ -141,15 +141,15 @@
                     <div class="form-group col-4">
                         <label class="col-form-label col-form-label-sm">Referencia 2</label>
                         <div>
-                            <input type="text" class="form-control form-control-sm" id="referenciados"
-                                   name="referenciados" required>
+                            <input type="text" class="form-control form-control-sm" id="referencia2"
+                                   name="referencia2" required>
                         </div>
                     </div>
                     <div class="form-group col-4">
                         <label class="col-form-label col-form-label-sm">Referencia 3</label>
                         <div>
-                            <input type="text" class="form-control form-control-sm" id="referenciatres"
-                                   name="referenciatres" required>
+                            <input type="text" class="form-control form-control-sm" id="referencia3"
+                                   name="referencia3" required>
                         </div>
                     </div>
                 </div>
@@ -336,19 +336,24 @@
             const equipo = {
                 equipo: getEquipos()
             };
+            const unidad = {
+                unidad: getUnidades()
+            };
             const servicios = {
                 servicios: $('#frmServicios').serialize()
             }
 
             let jsonData = convertJson($(".viaje"));
-            console.log('pre', jsonData);
+            //console.log('pre', jsonData);
             jsonData = { ...jsonData, ...equipo };
+            jsonData = { ...jsonData, ...unidad };
             jsonData = {...jsonData, ...servicios}
-            console.log('post:', jsonData);
+            //console.log('post:', jsonData);
 
             $.post("/Travels/setTravels", jsonData, function (res) {
                 //$(location).attr('href', '/Carriers/formCarriers/' + res.id);
                 dToast("success", "Registro guardado exitosamente.", "Registrado");
+                console.log(res);
             }).fail(function (error) {
                 dToast("error", "Error al tratar de guardar el registro", "Error");
                 $(".guardar").attr("disabled", false);
@@ -390,27 +395,45 @@
             return data;
         }
 
-        function addEquipo(element, id) {
+        function getUnidades() {
+            const length = --$('.selectunidad').length;
+            let data = ``;
+            i = 0;
+            while (i <= length) {
+                const select = document.getElementsByClassName('selectunidad')[i],
+                    options = select.options;
+                data += `${i !== 0 ? '&' : ''}${select.name}=${options[options.selectedIndex].value}`;
+                ++i;
+            }
+            return data;
+        }
+
+        function addEquipo(servicio, element) {
             const boton = jQuery(element);
             boton.remove();
-            const nextId = ++$('.equipocontainer').children().length;
 
-            const equipo = `<div class="d-flex justify-content-between equipo">
-                <select class="form-control form-control-sm col-4 selectequipo" name="equipo${nextId}" required>
-                    <option value="1">Equipo 1</option>
-                    <option value="2">equipo 2</option>
-                    <option value="3">equipo 3</option>
-                    <option value="4">equipo 4</option>
+            const equipo = `<div class="d-flex justify-content-between equipo mt-2">
+                <select class="form-control form-control-sm col-4 selectunidad" name="unidad${servicio}" required>
+                    <option value="1">Unidad 1</option>
+                    <option value="2">Unidad 2</option>
+                    <option value="3">Unidad 3</option>
+                    <option value="4">Unidad 4</option>
                 </select>
                 <div class="col-8 d-flex flex-row justify-content-between">
-                    <p id="equipodetail">new empty</p>
+                    <select class="form-control form-control-sm col-10 selectequipo" name="equipo${servicio}" required>
+                        <option value="1">Equipo 1</option>
+                        <option value="2">equipo 2</option>
+                        <option value="3">equipo 3</option>
+                        <option value="4">equipo 4</option>
+                    </select>
                     <i class="material-icons text-danger" style="cursor: pointer;" onClick="{$(this).parent().parent().remove();}">delete</i>
                 </div>
             </div>
-            <i class="material-icons" style="cursor:pointer;" onclick="addEquipo(this);">add_box</i>`;
+            <i class="material-icons" style="cursor:pointer;" onclick="addEquipo('${servicio}', this);">add_box</i>`;
 
             $('.equipocontainer').append(equipo);
         }
+
     function agregarCiudad(element) {
         $('#modalAgregarCiudad').modal('show');
     }

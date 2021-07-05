@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace KLS_API.Models.Travels
 {
@@ -10,11 +8,12 @@ namespace KLS_API.Models.Travels
     {
         [Key]
         public int Id { get; set; }
+        public int IdCliente { get; set; }
         public int IdOrigen { get; set; }
         public int IdDestino { get; set; }
         public int IdRuta { get; set; }
         public int IdUnidad { get; set; }
-        public int IdTipoViaje { get; set; }
+        public string TipoViaje { get; set; }
         public DateTime FechaSalida { get; set; }
         public DateTime FechaLlegada { get; set; }
         public string DireccionRemitente { get; set; }

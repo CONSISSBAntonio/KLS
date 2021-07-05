@@ -13,6 +13,7 @@ namespace KLS_WEB.Models
     {
         [Key]
         public int id { get; set; }
+        public string IdGenerado { get; set; }
         public int id_estadoorigen { get; set; }
         public int id_ciudadorigen { get; set; }
         public int id_estadodestino { get; set; }
