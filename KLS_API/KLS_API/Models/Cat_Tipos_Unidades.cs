@@ -15,14 +15,17 @@ namespace KLS_API.Models
 
         public int estatus { get; set; }
 
+        [Column(TypeName = "Decimal(11,4)")] 
         public decimal mantenimiento { get; set; }
 
+        [Column(TypeName = "Decimal(11,4)")]
         public decimal llantas { get; set; }
 
+        [Column(TypeName = "Decimal(11,4)")]
         public decimal litros { get; set; }
-
+        [Column(TypeName = "Decimal(11,4)")]
         public decimal rendimiento { get; set; }
-
+        [Column(TypeName = "Decimal(11,4)")]
         public decimal limite_peso { get; set; }
 
         [Column(TypeName = "Varchar(35)")]

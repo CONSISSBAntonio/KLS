@@ -106,19 +106,29 @@
                 if (parseInt($("#idEditar").val()) != 0) {
                     $.post("State/putState", jsonData, function (res) {
                         console.log(res);
-                        loadTable();
-                        dToast("success", "Registro actualizado exitosamente.", "Registrado");
-                        $(".guardar").attr("disabled", false);
+                        if (res != null) {
+                            loadTable();
+                            dToast("success", "Registro actualizado exitosamente.", "Registrado");
+                            $(".guardar").attr("disabled", false);
+                        } else {
+                            dToast("info", "EL ID SEPOMEX no puede repetirse", "Duplicado");
+                        }
                     }).fail(function (error) {
                         dToast("error", "Error al tratar de guardar el registro", "Error");
                         $(".guardar").attr("disabled", false);
                     });
                 } else {
                     $.post("State/setState", jsonData, function (res) {
-                        loadTable();
-                        dToast("success", "Se guardó el registro", "Registrado");
-                        $(".guardar").attr("disabled", false);
-                        $('#frmRegister').trigger("reset");
+                        console.log(res);
+                        if (res != null) {
+                            loadTable();
+                            dToast("success", "Se guardó el registro", "Registrado");
+                            $(".guardar").attr("disabled", false);
+                            $('#frmRegister').trigger("reset");
+                        } else {
+                            dToast("info", "EL ID SEPOMEX no puede repetirse", "Duplicado");
+                        }
+                        
                     }).fail(function (error) {
                         dToast("error", "Error al tratar de guardar el registro", "Error");
                         $(".guardar").attr("disabled", false);

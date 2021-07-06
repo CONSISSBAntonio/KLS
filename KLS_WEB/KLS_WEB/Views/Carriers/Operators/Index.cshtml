@@ -146,25 +146,69 @@
             $("#frmRegister").submit(function (event) {
                 event.preventDefault();
                 var jsonData = convertJson($("#frmRegister"));
-                jsonData["Id_Transportista"] = @id;
-                if (parseInt($("#idEditar").val()) == 0) {
-                    $.post("/Carriers/Operators/setOperators/", jsonData, function (res) {
-                        $("#idEditar").val(res.id);
-                        loadTable();
-                        dToast("success", "Registro guardado exitosamente.", "Registrado");
-                    }).fail(function (error) {
-                        dToast("error", "Error al tratar de guardar el registro", "Error");
-                        $(".guardar").attr("disabled", false);
+                jsonData["IdTransportista"] = @id;
+                var formData = new FormData(document.getElementById("frmRegister"));
+                formData.append('file', $('#Licencia')[0].files[0]);
+                formData.append('file1', $('#Ine')[0].files[0]);
+                formData.append('IdTransportista', @id);
+
+                if (parseInt($("#idEditar").val()) != 0) {
+                    $.ajax({
+                        url: "/Carriers/Inventory/putOperators",
+                        type: "POST",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            loadTable();
+                            dToast("success", "registro actualizado exitosamente.", "registrado");
+                            $(".guardar").attr("disabled", false);
+                        },
+                        error: function (data) {
+                            dToast("error", "Ocurrio un error al intentar guardar el archivo.", "Error");
+                        }
                     });
                 } else {
-                    $.post("/Carriers/Operators/putOperators/", jsonData, function (res) {
-                        loadTable();
-                        dToast("success", "Registro actualizado exitosamente.", "Registrado");
-                    }).fail(function (error) {
-                        dToast("error", "Error al tratar de actualizar el registro", "Error");
-                        $(".guardar").attr("disabled", false);
+                    $.ajax({
+                        url: "/Carriers/Inventory/setOperators",
+                        type: "POST",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            loadTable();
+                            $('#frmRegister').trigger("reset");
+                            dToast("success", "registro actualizado exitosamente.", "registrado");
+                            $(".guardar").attr("disabled", false);
+                        },
+                        error: function (data) {
+                            dToast("error", "Ocurrio un error al intentar guardar el archivo.", "Error");
+                        }
                     });
                 }
+
+
+                //------------------------------------------------------------------------
+                //if (parseInt($("#idEditar").val()) == 0) {
+                //    $.post("/Carriers/Operators/setOperators/", jsonData, function (res) {
+                //        $("#idEditar").val(res.id);
+                //        loadTable();
+                //        dToast("success", "Registro guardado exitosamente.", "Registrado");
+                //    }).fail(function (error) {
+                //        dToast("error", "Error al tratar de guardar el registro", "Error");
+                //        $(".guardar").attr("disabled", false);
+                //    });
+                //} else {
+                //    $.post("/Carriers/Operators/putOperators/", jsonData, function (res) {
+                //        loadTable();
+                //        dToast("success", "Registro actualizado exitosamente.", "Registrado");
+                //    }).fail(function (error) {
+                //        dToast("error", "Error al tratar de actualizar el registro", "Error");
+                //        $(".guardar").attr("disabled", false);
+                //    });
+                //}
+
+
             });
         });
 

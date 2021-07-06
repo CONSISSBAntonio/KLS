@@ -36,9 +36,19 @@ namespace KLS_API.Controllers.Catalogs
         {
             try
             {
-                context.Cat_Estado.Add(cat_estado);
-                context.SaveChanges();
-                return Ok(cat_estado);
+                //--------------------
+                var catEstado = context.Cat_Estado.FirstOrDefault(f => f.id_sepomex == cat_estado.id_sepomex);
+                if (catEstado != null)
+                {
+                    return Ok();
+                }
+                else 
+                {
+                    context.Cat_Estado.Add(cat_estado);
+                    context.SaveChanges();
+                    return Ok(cat_estado);
+                }
+
             }
             catch (Exception ex)
             {
@@ -51,9 +61,17 @@ namespace KLS_API.Controllers.Catalogs
         {
             try
             {
-                context.Entry(cat_estado).State = EntityState.Modified;
-                context.SaveChanges();
-                return Ok(cat_estado);
+                var catEstado = context.Cat_Estado.FirstOrDefault(f => f.id_sepomex == cat_estado.id_sepomex && f.id != cat_estado.id);
+                if (catEstado != null)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    context.Entry(cat_estado).State = EntityState.Modified;
+                    context.SaveChanges();
+                    return Ok(cat_estado);
+                }
             }
             catch (Exception ex)
             {

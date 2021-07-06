@@ -2,6 +2,8 @@
 using KLS_WEB.Models.Carriers;
 using KLS_WEB.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -20,11 +22,14 @@ namespace KLS_WEB.Controllers.Carriers.CarriersOperators
         private string _UrlApi = "Carriers/Operators";
 
         private readonly IAppContextService AppContext;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public OperatorsController(IAppContextService _AppContext)
+        public OperatorsController(IAppContextService _AppContext, IWebHostEnvironment hostingEnvironment)
         {
             this.AppContext = _AppContext;
+            _hostingEnvironment = hostingEnvironment;
         }
+
         [Route("{id=0}")]
         public IActionResult Index(int id)
         {
@@ -48,13 +53,27 @@ namespace KLS_WEB.Controllers.Carriers.CarriersOperators
             return Json(data);
         }
 
-        [Route("setOperators")]
-        public async Task<JsonResult> Post(Tr_Has_Operadores dataModel)
-        {
-            Tr_Has_Operadores dataReport;
-            dataReport = await this.AppContext.Execute<Tr_Has_Operadores>(MethodType.POST, _UrlApi, dataModel);
-            return Json(dataReport);
-        }
+        //[Route("setOperators")]
+        //public async Task<JsonResult> Post(Tr_Has_Operadores dataModel)
+        //{
+        //    Tr_Has_Operadores dataReport;
+        //    dataReport = await this.AppContext.Execute<Tr_Has_Operadores>(MethodType.POST, _UrlApi, dataModel);
+        //    return Json(dataReport);
+        //}
+        
+        //[Route("setOperators")]
+        //public async Task<JsonResult> Post(Tr_Has_Operadores jsonData, IFormFile file, IFormFile file1, int IdTransportista)
+        //{
+        //    Random rdn = new Random();
+        //    int rutaRandom = rdn.Next(10000, 100000) + rdn.Next(10000, 100000);
+        //    string rutaHoy = @DateTime.Now.ToString("yyyy/MM/dd") + "/" + IdTransportista + "/" + rutaRandom;
+        //    string ruta = Path.Combine(_hostingEnvironment.WebRootPath + @"/Resources/Inventario/" + rutaHoy);
+
+        //    return Ok();
+
+        //}
+
+
 
         [Route("putOperators")]
         public async Task<JsonResult> Put(Tr_Has_Operadores dataModel)
