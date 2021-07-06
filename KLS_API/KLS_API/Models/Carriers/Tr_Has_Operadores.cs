@@ -12,13 +12,22 @@ namespace KLS_API.Models.Carriers
         [Key]
         public int Id { get; set; }
         public int Id_Transportista { get; set; }
+
         [Column(TypeName = "varchar(25)")]
         public string Imss { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string NoLicencia { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string NoIne { get; set; }
+
+        [Column(TypeName = "varchar(250)")]
+        public string FotoLicencia { get; set; }
+        [Column(TypeName = "varchar(250)")]
+        public string FotoIne { get; set; }
+
         [Column(TypeName = "varchar(15)")]
+        public string Ruta { get; set; }
+
         public int NoTelefono { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string SeguroSocial { get; set; }

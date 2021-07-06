@@ -30,8 +30,7 @@ namespace KLS_WEB.Models.Carriers
         public string NoSerie { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string Placa { get; set; }
-        [Column(TypeName = "varchar(25)")]
-        public string TipoUnidad { get; set; }
+        public int TipoUnidad { get; set; }
         [Column(TypeName = "varchar(45)")]
         public string Volumen { get; set; }
 

@@ -60,19 +60,63 @@ namespace KLS_WEB.Controllers.Carriers.CarriersOperators
         //    dataReport = await this.AppContext.Execute<Tr_Has_Operadores>(MethodType.POST, _UrlApi, dataModel);
         //    return Json(dataReport);
         //}
-        
-        //[Route("setOperators")]
-        //public async Task<JsonResult> Post(Tr_Has_Operadores jsonData, IFormFile file, IFormFile file1, int IdTransportista)
-        //{
-        //    Random rdn = new Random();
-        //    int rutaRandom = rdn.Next(10000, 100000) + rdn.Next(10000, 100000);
-        //    string rutaHoy = @DateTime.Now.ToString("yyyy/MM/dd") + "/" + IdTransportista + "/" + rutaRandom;
-        //    string ruta = Path.Combine(_hostingEnvironment.WebRootPath + @"/Resources/Inventario/" + rutaHoy);
 
-        //    return Ok();
+        [HttpPost]
+        [Route("setOperators")]
+        public async Task<JsonResult> Post(Tr_Has_Operadores jsonData, IFormFile file, IFormFile file1, int IdTransportista)
+        {
+            Random rdn = new Random();
+            int rutaRandom = rdn.Next(10000, 100000) + rdn.Next(10000, 100000);
+            string rutaHoy = @DateTime.Now.ToString("yyyy/MM/dd") + "/" + IdTransportista + "/" + rutaRandom;
+            string ruta = Path.Combine(_hostingEnvironment.WebRootPath + @"/Resources/Operadores/" + rutaHoy);
 
-        //}
+            if (!Directory.Exists(ruta))
+            {
+                Directory.CreateDirectory(ruta);
+            }
 
+            string nombreIne = "";
+            string nombreLicencia = "";
+
+            string InePath = "";
+            string LicenciaPath = "";
+
+            if (file != null)
+            {
+                nombreIne = string.Format("{0}{1:yyyyMMdd_HHmm_ss}.{2}", Path.GetFileNameWithoutExtension(file.FileName), DateTime.Now, Path.GetExtension(file.FileName));
+                InePath = Path.Combine(ruta, nombreIne);
+                await SaveFile(file, InePath);
+                jsonData.FotoIne = nombreIne;
+            }
+
+            if (file1 != null)
+            {
+                nombreLicencia = string.Format("{0}{1:yyyyMMdd_HHmm_ss}.{2}", Path.GetFileNameWithoutExtension(file1.FileName), DateTime.Now, Path.GetExtension(file1.FileName));
+                LicenciaPath = Path.Combine(ruta, nombreLicencia);
+                await SaveFile(file1, LicenciaPath);
+                jsonData.FotoLicencia = nombreLicencia;
+            }
+
+            jsonData.Ruta = rutaHoy;
+            jsonData.Id_Transportista = IdTransportista;
+
+            Tr_Has_Operadores dataReport;
+            dataReport = await this.AppContext.Execute<Tr_Has_Operadores>(MethodType.POST, _UrlApi, jsonData);
+            return Json(dataReport);
+
+        }
+
+        private async Task<bool> SaveFile(IFormFile file, string fullpath)
+        {
+            if (file is null)
+                return false;
+
+            using (var fileStream = new FileStream(fullpath, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+            return true;
+        }
 
 
         [Route("putOperators")]

@@ -115,25 +115,32 @@
             $("#frmRegister").submit(function (event) {
                 event.preventDefault();
                 var jsonData = convertJson($("#frmRegister"));
-                if (parseInt($("#idEditar").val()) != 0) {
-                    $.post("City/putCity", jsonData, function (res) {
-                        loadTable();
-                        dToast("success", "Registro actualizado exitosamente.", "Registrado");
-                        $(".guardar").attr("disabled", false);
-                    }).fail(function (error) {
-                        dToast("error", "Error al tratar de guardar el registro", "Error");
-                        $(".guardar").attr("disabled", false);
-                    });
+
+                
+                if (parseInt($("#id_estado").val()) != 0) {
+                    if (parseInt($("#idEditar").val()) != 0) {
+                        $.post("City/putCity", jsonData, function (res) {
+                            loadTable();
+                            dToast("success", "Registro actualizado exitosamente.", "Registrado");
+                            $(".guardar").attr("disabled", false);
+                        }).fail(function (error) {
+                            dToast("error", "Error al tratar de guardar el registro", "Error");
+                            $(".guardar").attr("disabled", false);
+                        });
+                    } else {
+                        $.post("City/setCity", jsonData, function (res) {
+                            loadTable();
+                            dToast("success", "Se guardó el registro", "Registrado");
+                            $(".guardar").attr("disabled", false);
+                            $('#frmRegister').trigger("reset");
+                            $("#id_estado").change();
+                        }).fail(function (error) {
+                            dToast("error", "Error al tratar de guardar el registro", "Error");
+                            $(".guardar").attr("disabled", false);
+                        });
+                    }
                 } else {
-                    $.post("City/setCity", jsonData, function (res) {
-                        loadTable();
-                        dToast("success", "Se guardó el registro", "Registrado");
-                        $(".guardar").attr("disabled", false);
-                        $('#frmRegister').trigger("reset");
-                    }).fail(function (error) {
-                        dToast("error", "Error al tratar de guardar el registro", "Error");
-                        $(".guardar").attr("disabled", false);
-                    });
+                    dToast("error", "Selecciona un estado", "Atención");
                 }
 
             });
@@ -163,6 +170,7 @@
             $.get("State/getState", function (res) {
                 catEstado = res;
                 $("#id_estado").empty();
+                $("#id_estado").append(`<option value="0">Seleccionar</option>`);
                 $.each(res, function (item, key) {
                     if (key.estatus != 2) {
                         $("#id_estado").append(`<option value="${key.id}">${key.nombre}</option>`);

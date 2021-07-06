@@ -55,7 +55,12 @@
                         <div class="form-group row">
                             <label class="col-5 col-form-label col-form-label-sm">Servicio</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="Servicio" name="Servicio" required>
+                                @*<input type="text" class="form-control form-control-sm" id="Servicio" name="Servicio" required>*@
+                                <select  class="form-control form-control-sm" id="Servicio" name="Servicio" >
+                                    <option value="Oro">Oro</option>
+                                    <option value="Plata">Plata</option>
+                                    <option value="Cobre">Cobre</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -307,7 +312,7 @@
                     $("#PaginaWeb").val(res.paginaWeb);
                     $("#RazonSocial").val(res.razonSocial);
                     $("#Rfc").val(res.rfc);
-                    $("#Servicio").val(res.servicio);
+                    $('#Servicio option[value="' + res.servicio + '"]').attr("selected", true);
                     $("#Tamanio").val(res.tamanio);
                     $("#UsuarioMaster").val(res.usuarioMaster);
                 }).fail(function (error, xhr, status) {

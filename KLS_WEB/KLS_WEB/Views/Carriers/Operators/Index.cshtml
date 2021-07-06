@@ -60,6 +60,10 @@
             <div class="modal-body text-left">
                 <form id="frmRegister" action="#" method="post">
                     <input type="hidden" name="id" id="idEditar" value="0" />
+                    <input type="text" name="Ruta" id="Ruta" value="" />
+                    <input type="text" name="FotoLicencia" id="FotoLicencia" value="" />
+                    <input type="text" name="FotoIne" id="FotoIne" value="" />
+
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
@@ -70,7 +74,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="">Numero de teléfono</label>
-                                <input type="number" class="form-control" name="NoTelefono" id="NoTelefono"  />
+                                <input type="number" class="form-control" name="NoTelefono" id="NoTelefono" />
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -93,7 +97,7 @@
                                 <input type="file" name="Ine" id="Ine" />
                             </div>
                         </div>
-                        
+
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class=""># INE</label>
@@ -154,7 +158,7 @@
 
                 if (parseInt($("#idEditar").val()) != 0) {
                     $.ajax({
-                        url: "/Carriers/Inventory/putOperators",
+                        url: "/Carriers/Operators/putOperators",
                         type: "POST",
                         data: formData,
                         contentType: false,
@@ -170,16 +174,17 @@
                     });
                 } else {
                     $.ajax({
-                        url: "/Carriers/Inventory/setOperators",
+                        url: "/Carriers/Operators/setOperators",
                         type: "POST",
                         data: formData,
                         contentType: false,
                         processData: false,
                         success: function (data) {
-                            loadTable();
-                            $('#frmRegister').trigger("reset");
-                            dToast("success", "registro actualizado exitosamente.", "registrado");
-                            $(".guardar").attr("disabled", false);
+                            console.log( data );
+                            //loadTable();
+                            //$('#frmRegister').trigger("reset");
+                            //dToast("success", "registro actualizado exitosamente.", "registrado");
+                            //$(".guardar").attr("disabled", false);
                         },
                         error: function (data) {
                             dToast("error", "Ocurrio un error al intentar guardar el archivo.", "Error");
@@ -221,12 +226,18 @@
             if (accion == "Editar") {
                 try {
                     let indice = dataOperators.findIndex(service => service.id === idEditar);
+                    console.log(dataOperators[indice]);
                     $("#nombre").val(dataOperators[indice].nombre);
                     $("#NoTelefono").val(dataOperators[indice].noTelefono);
                     $("#NoLicencia").val(dataOperators[indice].noLicencia);
                     $("#NoIne").val(dataOperators[indice].noIne);
                     $("#SeguroSocial").val(dataOperators[indice].seguroSocial);
                     $("#Imss").val(dataOperators[indice].imss);
+
+                    $("#FotoLicencia").val(dataOperators[indice].fotoLicencia);
+                    $("#FotoIne").val(dataOperators[indice].fotoIne);
+                    $("#Ruta").val(dataOperators[indice].ruta);
+
                     $('#estatus option[value="' + dataOperators[indice].estatus + '"]').attr("selected", true);
                     $("#modalDiv").modal("show");
                 } catch (error) {
