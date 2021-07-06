@@ -57,14 +57,14 @@
                             <div class="form-group">
                                 <label class="">Estado</label><br />
                                 <select class="form-control" name="id_estado" id="id_estado" style="width:100%;" onchange=" filCiudad();">
-                                    <option value="value">Nuevo León</option>
+                                    <option value="0">Seleccionar</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <label class="">Ciudad Municipio</label>
                             <select class="form-control" name="id_ciudad" id="id_ciudad" style="width:100%;">
-                                <option value="0">Monterrey</option>
+                                <option value="0">Seleccionar</option>
                             </select>
                         </div>
                         <div class="col-md-4">
@@ -112,28 +112,33 @@
             $("#frmRegister").submit(function (event) {
                 event.preventDefault();
                 var jsonData = convertJson($("#frmRegister"));
-                
-                if (parseInt($("#idEditar").val()) != 0) {
-                    $.post("Colonies/putColonies", jsonData, function (res) {
-                        console.log(res);
-                        loadTable();
-                        dToast("success", "Registro actualizado exitosamente.", "Registrado");
-                        $(".guardar").attr("disabled", false);
-                    }).fail(function (error) {
-                        dToast("error", "Error al tratar de guardar el registro", "Error");
-                        $(".guardar").attr("disabled", false);
-                    });
+
+                if (parseInt($("#id_estado").val()) != 0) {
+                    if (parseInt($("#idEditar").val()) != 0) {
+                        $.post("Colonies/putColonies", jsonData, function (res) {
+                            //console.log(res);
+                            loadTable();
+                            dToast("success", "Registro actualizado exitosamente.", "Registrado");
+                            $(".guardar").attr("disabled", false);
+                        }).fail(function (error) {
+                            dToast("error", "Error al tratar de guardar el registro", "Error");
+                            $(".guardar").attr("disabled", false);
+                        });
+                    } else {
+                        $.post("Colonies/setColonies", jsonData, function (res) {
+                            loadTable();
+                            dToast("success", "Se guardó el registro", "Registrado");
+                            $(".guardar").attr("disabled", false);
+                            $('#frmRegister').trigger("reset");
+                        }).fail(function (error) {
+                            dToast("error", "Error al tratar de guardar el registro", "Error");
+                            $(".guardar").attr("disabled", false);
+                        });
+                    }
                 } else {
-                    $.post("Colonies/setColonies", jsonData, function (res) {
-                        loadTable();
-                        dToast("success", "Se guardó el registro", "Registrado");
-                        $(".guardar").attr("disabled", false);
-                        $('#frmRegister').trigger("reset");
-                    }).fail(function (error) {
-                        dToast("error", "Error al tratar de guardar el registro", "Error");
-                        $(".guardar").attr("disabled", false);
-                    });
+                    dToast("error", "Campos vacios", "Error");
                 }
+
             });
         });
 
@@ -150,7 +155,6 @@
                     $("#nombre").val(dataColonias[indice].nombre);                    
                     $('#estatus option[value="' + dataColonias[indice].estatus + '"]').attr("selected", true);
                     $("#modalDiv").modal("show");
-
                 } catch (error) {
                     dToast("error", "Error al tratar de editar, intenta recargar la página.", "Error");
                     $("#modalDiv").modal("hide");
@@ -164,8 +168,9 @@
         function loadState() {
             $.get("State/getState", function (res) {
                 catEstado = res;
-                console.log(res);
+                //console.log(res);
                 $("#id_estado").empty();
+                $("#id_estado").append(`<option value="0">Seleccionar</option>`);
                 $.each(res, function (item, key) {
                     if (key.estatus != 2) {
                         $("#id_estado").append(`<option value="${key.id}">${key.nombre}</option>`);
@@ -193,7 +198,7 @@
         function filCiudad() {
             $("#id_ciudad").empty();
             var idest = $("#id_estado").val();
-            //$("#id_ciudad").append(`<option value="0">Seleccionar estado</option>`);
+            $("#id_ciudad").append(`<option value="0">Seleccionar</option>`);
             $.each(catCiudad, function (item, key) {
                 if (key.estatus != 2) {
                     if (key.id_estado == idest) {

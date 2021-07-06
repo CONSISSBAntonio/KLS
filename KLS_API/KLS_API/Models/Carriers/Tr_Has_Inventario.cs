@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,13 +13,12 @@ namespace KLS_API.Models.Carriers
         [Key]
         public int Id { get; set; }
         public int IdTransportista { get; set; }
-
         [Column(TypeName = "varchar(15)")]
-        public string Anio {get;set;}
+        public string Anio { get; set; }
         [Column(TypeName = "varchar(35)")]
-        public string Capacidad { get;set;}
+        public string Capacidad { get; set; }
         [Column(TypeName = "varchar(25)")]
-        public string Color { get;set;}
+        public string Color { get; set; }
         public int Estatus { get; set; }
         [Column(TypeName = "varchar(55)")]
         public string Marca { get; set; }
@@ -34,5 +34,12 @@ namespace KLS_API.Models.Carriers
         public string TipoUnidad { get; set; }
         [Column(TypeName = "varchar(45)")]
         public string Volumen { get; set; }
+
+        [Column(TypeName = "varchar(250)")]
+        public string Ruta { get; set; }
+        [Column(TypeName = "varchar(150)")]
+        public string FotoUnidad { get; set; }
+        [Column(TypeName = "varchar(150)")]
+        public string FotoPoliza { get; set; }
     }
 }

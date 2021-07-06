@@ -156,6 +156,7 @@
             $.get("Country/getCountry", function (res) {
                 catPais = res;
                 $("#id_pais").empty();
+                //$("#id_pais").append(`<option value="0">Seleccionar</option>`);
                 $.each(res, function (item, key) {
                     if (key.estatus != 2) {
                         $("#id_pais").append(`<option value="${key.id}">${key.pais}</option>`);
@@ -175,6 +176,7 @@
             $("#table-info").empty();
             $.get("State/getState", function (res) {
                 dataState = res;
+                console.log(res);
                 $.each(res, function (item, key) {
                     let indice = catPais.findIndex(service => service.id === key.id_pais);
                     $("#table-info").append(`

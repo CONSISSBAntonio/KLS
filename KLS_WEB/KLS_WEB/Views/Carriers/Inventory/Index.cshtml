@@ -36,7 +36,7 @@
                         <th>Cap</th>
                         <th>Vol</th>
                         <th>Estatus</th>
-                        <th>Acciones</th>
+                        <th class="text-center">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="table-info"></tbody>
@@ -57,32 +57,34 @@
                 </button>
             </div>
             <div class="modal-body text-left">
-                <form id="frmRegister" action="#" method="post">
+                <form id="frmRegister" action="#" method="post"  enctype="multipart/form-data">
                     <input type="hidden" name="id" id="idEditar" value="0" />
+                    <input type="text" name="Ruta" id="Ruta" value="" />
+                    <input type="text" name="FotoUnidad" id="FotoUnidad" value="" />
+                    <input type="text" name="FotoPoliza" id="FotoPoliza" value="" />
+
                     <div class="row">
 
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="">Marca</label>
-                                <input type="text" class="form-control" name="Marca" id="Marca"/>
+                                <input type="text" class="form-control" name="Marca" id="Marca" value="654"/>
                             </div>
                         </div>
 
                         <div class="col-md-3">
                             <label class="">Modelo</label>
-                            <select class="form-control form-control-sm" name="Modelo" id="Modelo">
-                                <option value="0">Selecciona</option>
-                            </select>
+                            <input type="text" class="form-control" name="Modelo" id="Modelo"/>
                         </div>
 
                         <div class="col-md-3">
                             <label class="">Año</label>
-                            <input type="text" name="Anio" id="Anio" class="form-control"/>
+                            <input type="text" name="Anio" id="Anio" class="form-control" value="2020" />
                         </div>
 
                         <div class="col-md-3">
                             <label class=""># serie</label>
-                            <input type="text" name="NoSerie" id="NoSerie" class="form-control"/>
+                            <input type="text" name="NoSerie" id="NoSerie" class="form-control" value="654"/>
                         </div>
                     </div>
 
@@ -94,11 +96,11 @@
                         </div>
                         <div class="col-md-3">
                             <label class="">Placa</label>
-                            <input type="text" class="form-control" name="Placa" id="Placa">
+                            <input type="text" class="form-control" name="Placa" id="Placa" value="654">
                         </div>
                         <div class="col-md-3">
                             <label class="">Color</label>
-                            <input type="text" class="form-control" name="Color" id="Color">
+                            <input type="text" class="form-control" name="Color" id="Color" value="azul">
                         </div>
                         <div class="col-md-3">
                             <label class="">Tipo de Unidad</label>
@@ -111,12 +113,12 @@
                     <div class="row">
                         <div class="col-md-3">
                             <label class="">Capacidad</label>
-                            <input type="text" class="form-control" name="Capacidad" id="Capacidad">
+                            <input type="text" class="form-control" name="Capacidad" id="Capacidad" value="Capacidad">
                         </div>
 
                         <div class="col-md-3">
                             <label class="">Volumen</label>
-                            <input type="text" class="form-control" name="Volumen" id="Volumen">
+                            <input type="text" class="form-control" name="Volumen" id="Volumen" value="Volumen">
                         </div>
                         <div class="col-md-3">
                             <label class="">Estatus</label>
@@ -131,23 +133,13 @@
                     <div class="row">
                         <div class="col-md-6">
                             <label class="">Foto de la unidad</label>
-                            <div class="custom-file">
-                                <input type="file" class="form-control form-control-sm" name="FotoUnidad" id="FotoUnidad" accept=".jpg,.jpeg,.png" onchange="updateImageDisplay('FotoUnidad','canUnidad');">
-                                <label class="custom-file-label" for="FotoUnidad">Seleccionar archivo</label>
-                            </div>
-                            <br />
-                            <br />
-                            <canvas id="canUnidad" style="border:0px solid;width:100%;"></canvas>
+
+                            <input type="file" class="" name="file" id="FotoU" accept=".jpg,.jpeg,.png">
+
                         </div>
                         <div class="col-md-6">
                             <label class="">Póliza de seguro</label>
-                            <div class="custom-file">
-                                <input type="file" class="form-control" name="FotoPoliza" id="FotoPoliza" onchange="updateImageDisplay('FotoPoliza','canPoliza');">
-                                <label class="custom-file-label" for="FotoPoliza">Seleccionar archivo</label>
-                                <br />
-                                <br />
-                                <canvas id="canPoliza" style="border:1px solid;width:100%;"></canvas>
-                            </div>
+                            <input type="file" class="l" name="FotoP" id="FotoP" accept=".jpg,.jpeg,.png">
                         </div>
                     </div>
                     <br />
@@ -168,37 +160,53 @@
 @section Scripts{
     <script>
         var dataInventory = [];
-
         $(window).ready(function () {
             loadTable();
+            loadTipo();
             $("#frmRegister").submit(function (event) {
                 event.preventDefault();
                 var jsonData = convertJson($("#frmRegister"));
                 jsonData["IdTransportista"] = @id;
-                console.log(jsonData);
+                var formData = new FormData(document.getElementById("frmRegister"));
+                formData.append('file', $('#FotoU')[0].files[0]);
+                formData.append('file1', $('#FotoP')[0].files[0]);
+                formData.append('IdTransportista', @id);
+
                 if (parseInt($("#idEditar").val()) != 0) {
-                    $.post("/Carriers/Inventory/putInventory", jsonData, function (res) {
-                        console.log(res);
-                        loadTable();
-                        dToast("success", "Registro actualizado exitosamente.", "Registrado");
-                        $(".guardar").attr("disabled", false);
-                    }).fail(function (error) {
-                        dToast("error", "Error al tratar de guardar el registro", "Error");
-                        $(".guardar").attr("disabled", false);
+                    $.ajax({
+                        url: "/Carriers/Inventory/putInventory",
+                        type: "POST",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            loadTable();
+                            dToast("success", "registro actualizado exitosamente.", "registrado");
+                            $(".guardar").attr("disabled", false);
+                        },
+                        error: function (data) {
+                            dToast("error", "Ocurrio un error al intentar guardar el archivo.", "Error");
+                        }
                     });
                 } else {
-                    $.post("/Carriers/Inventory/setInventory", jsonData, function (res) {
-                        loadTable();
-                        dToast("success", "Se guardo el registro", "Registrado");
-                        $(".guardar").attr("disabled", false);
-                        $('#frmRegister').trigger("reset");
-                    }).fail(function (error) {
-                        dToast("error", "Error al tratar de guardar el registro", "Error");
-                        $(".guardar").attr("disabled", false);
+                    $.ajax({
+                        url: "/Carriers/Inventory/setInventory",
+                        type: "POST",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            loadTable();
+                            $('#frmRegister').trigger("reset");
+                            dToast("success", "registro actualizado exitosamente.", "registrado");
+                            $(".guardar").attr("disabled", false);
+                        },
+                        error: function (data) {
+                            dToast("error", "Ocurrio un error al intentar guardar el archivo.", "Error");
+                        }
                     });
                 }
             });
-
         });
 
         function showModal(titulo = "Title", accion, idEditar = 0) {
@@ -210,6 +218,7 @@
             if (accion == "Editar") {
                 try {
                     let indice = dataInventory.findIndex(service => service.id === idEditar);
+                    console.log(dataInventory[indice]);
                     $("#Marca").val(dataInventory[indice].marca);
                     $("#Anio").val(dataInventory[indice].anio);
                     $("#NoSerie").val(dataInventory[indice].noSerie);
@@ -218,6 +227,11 @@
                     $("#Capacidad").val(dataInventory[indice].capacidad);
                     $("#Volumen").val(dataInventory[indice].volumen);
                     $("#Color").val(dataInventory[indice].color);
+
+                    $("#Ruta").val(dataInventory[indice].ruta);
+                    $("#FotoUnidad").val(dataInventory[indice].fotoUnidad);
+                    $("#FotoPoliza").val(dataInventory[indice].fotoPoliza);
+
                     $('#Estatus option[value="' + dataInventory[indice].estatus + '"]').attr("selected", true);
                     $("#modalDiv").modal("show");
                 } catch (error) {
@@ -251,7 +265,12 @@
                                 <td>${nCon(key.capacidad)}</td>
                                 <td>${nCon(key.volumen)}</td>
                                 <td>`+ statusTable(key.estatus) + `</td>
-                                <td>
+                                <td class="text-center">
+                                    <a href="#">
+                                        <span class="material-icons" style="color:#EC694D;">
+                                            cloud_download
+                                        </span>
+                                    </a>
                                     <a href="#">
                                         <span class="material-icons" onclick="showModal('EDITAR','Editar',${nCon(key.id)});">
                                             mode_edit
@@ -266,38 +285,50 @@
 
 
         //Subir archivos canvas
-        function updateImageDisplay(id, divCanvas) {
-            var image = new Image();
-            //var canvas = document.getElementById('canUnidad');
-            var canvas = document.getElementById(divCanvas);
-            var ctx = canvas.getContext('2d');;
-            var input = document.querySelector('#'+id);
-            var curFile = input.files;
-            var source = "";
-            var curFile = input.files;
-            for (var i = 0; i < curFile.length; i++) {
-                if (validFileType(curFile[i])) {
-                    source = curFile[i].name;
-                    image.src = window.URL.createObjectURL(curFile[i]);
-                    image.onload = function () {
-                        canvas.width = image.width;
-                        canvas.height = image.height;
-                        ctx.drawImage(image, 0, 0);
-                        image.style.display = 'none';
-                    }
-                    listItem.appendChild(image);
-                }
-                list.appendChild(listItem);
-            }
-        }
+        //function updateImageDisplay(id, divCanvas) {
+        //    var image = new Image();
+        //    //var canvas = document.getElementById('canUnidad');
+        //    var canvas = document.getElementById(divCanvas);
+        //    var ctx = canvas.getContext('2d');;
+        //    var input = document.querySelector('#'+id);
+        //    var curFile = input.files;
+        //    var source = "";
+        //    var curFile = input.files;
+        //    for (var i = 0; i < curFile.length; i++) {
+        //        if (validFileType(curFile[i])) {
+        //            source = curFile[i].name;
+        //            image.src = window.URL.createObjectURL(curFile[i]);
+        //            image.onload = function () {
+        //                canvas.width = image.width;
+        //                canvas.height = image.height;
+        //                ctx.drawImage(image, 0, 0);
+        //                image.style.display = 'none';
+        //            }
+        //            //listItem.appendChild(image);
+        //        }
+        //        //list.appendChild(listItem);
+        //    }
+        //}
 
-        var fileTypes = ['image/jpeg','image/pjpeg','image/png']
-        function validFileType(file) {
-            for (var i = 0; i < fileTypes.length; i++) {
-                if (file.type === fileTypes[i])
-                    return true;
-            }
-            return false;
+        //var fileTypes = ['image/jpeg','image/pjpeg','image/png']
+        //function validFileType(file) {
+        //    for (var i = 0; i < fileTypes.length; i++) {
+        //        if (file.type === fileTypes[i])
+        //            return true;
+        //    }
+        //    return false;
+        //}
+
+        function loadTipo() {
+            $.get("../../Catalogs/TypesOfUnits/getUnidades", function (res) {
+                console.log(res);
+                
+                $.each(res, function (item, key) {
+                    $("#TipoUnidad").append(`<option value="${ key.id }">${key.nombre}</option>`)
+                });
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+            });
         }
 
     </script>

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace KLS_WEB.Models.Carriers
 {
-    public class Tr_Has_Inventario
+    public class UploadFile
     {
         [Key]
         public int Id { get; set; }
@@ -34,12 +34,10 @@ namespace KLS_WEB.Models.Carriers
         public string TipoUnidad { get; set; }
         [Column(TypeName = "varchar(45)")]
         public string Volumen { get; set; }
-
         [Column(TypeName = "varchar(250)")]
-        public string Ruta { get; set; }
-        [Column(TypeName = "varchar(150)")]
         public string FotoUnidad { get; set; }
-        [Column(TypeName = "varchar(150)")]
+        [Column(TypeName = "varchar(250)")]
         public string FotoPoliza { get; set; }
+        public List<IFormFile> Lista { get; set; }
     }
 }

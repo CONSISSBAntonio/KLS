@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210705210106_TrHasInAddFotos")]
+    partial class TrHasInAddFotos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,10 +167,10 @@ namespace KLS_API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("FotoPoliza")
-                        .HasColumnType("varchar(150)");
+                        .HasColumnType("varchar(250)");
 
                     b.Property<string>("FotoUnidad")
-                        .HasColumnType("varchar(150)");
+                        .HasColumnType("varchar(250)");
 
                     b.Property<int>("IdTransportista")
                         .HasColumnType("int");
@@ -187,9 +189,6 @@ namespace KLS_API.Migrations
 
                     b.Property<string>("Placa")
                         .HasColumnType("varchar(25)");
-
-                    b.Property<string>("Ruta")
-                        .HasColumnType("varchar(250)");
 
                     b.Property<string>("TipoUnidad")
                         .HasColumnType("varchar(25)");
