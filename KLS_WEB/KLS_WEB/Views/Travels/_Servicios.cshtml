@@ -138,6 +138,7 @@
     }
 }
 <script>
+
     downloadChofer = button => {
         const boton = jQuery(button);
         const idchofer = $('#chofer').val();
@@ -150,9 +151,11 @@
             $('#notelefono').text(noTelefono);
             $('#noimss').text(imss);
         });
-    }
+    };
 
     getOperadores = idtransportista => {
+        const idselected = $('.equipocontainer').attr('rel');
+        idselected != idtransportista && $('.equipocontainer select').parent().remove();
         $.get("/Carriers/Operators/getOperators", { Id_Transportista: idtransportista }, res => {
             res.find(x => x.estatus === 1) && getOperador(res.find(x => x.estatus === 1).id);
             $('#chofer').empty();

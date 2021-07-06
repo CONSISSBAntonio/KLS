@@ -44,13 +44,15 @@ namespace KLS_WEB.Controllers.Carriers.CarriersInventory
             return Json(dataReport);
         }
 
-        //[Route("setInventory")]
-        //public async Task<JsonResult> Post(Tr_Has_Inventario dataModel)
-        //{
-        //    Tr_Has_Inventario dataReport;
-        //    dataReport = await this.AppContext.Execute<Tr_Has_Inventario>(MethodType.POST, _UrlApi, dataModel);
-        //    return Json(dataReport);
-        //}
+        [Route("getEquipos")]
+        public async Task<JsonResult> GetEquipos(Tr_Has_Inventario dataModel)
+        {
+            List<Tr_Has_Inventario> dataReport;
+            dataReport = await this.AppContext.Execute<List<Tr_Has_Inventario>>(MethodType.GET, Path.Combine(_UrlApi, "GetEquipos"), dataModel);
+            return Json(dataReport);
+        }
+
+
 
         [HttpPost]
         [Route("setInventory")]

@@ -36,6 +36,26 @@ namespace KLS_API.Controllers.Carriers.Inventory
             }
         }
 
+        [HttpGet("[action]")]
+        public IActionResult GetEquipost([FromBody] Tr_Has_Inventario tr_Has_Inventario)
+        {
+            try
+            {
+                //var equipos = from inventario in context.Tr_Has_Inventario
+                //              join tipounidad in context.Cat_Tipos_Unidades on inventario.TipoUnidad equals tipounidad.id
+                //              select new
+                //              {
+
+                //              };
+
+                return Ok(tr_Has_Inventario);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         [HttpPost]
         public ActionResult Post([FromBody] Tr_Has_Inventario tr_inventario)
         {

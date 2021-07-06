@@ -353,7 +353,6 @@
             $.post("/Travels/setTravels", jsonData, function (res) {
                 //$(location).attr('href', '/Carriers/formCarriers/' + res.id);
                 dToast("success", "Registro guardado exitosamente.", "Registrado");
-                console.log(res);
             }).fail(function (error) {
                 dToast("error", "Error al tratar de guardar el registro", "Error");
                 $(".guardar").attr("disabled", false);
@@ -408,8 +407,22 @@
             return data;
         }
 
+        getInventario = IdTransportista => {
+            console.log(IdTransportista);
+
+            $.get("/Carriers/Inventory/getInventory/", { IdTransportista: IdTransportista }, res => {
+                console.log(res);
+                res.length > 0 ? res.map(({ id, noEconomico, modelo, placa, estatus, tipoUnidad }) => {
+                    //estatus === 1 ? $('.selectequipo').append(`<option value="${id}">${nombre}</option>`) : null : $('#chofer').append(`<option value="0">SIN OPERADORES ACTIVOS</option>`);
+                }
+                //dSelect('chofer');
+            });
+        };
+
         function addEquipo(servicio, element) {
             const boton = jQuery(element);
+            const idtransportista = $('#transportista').val();
+            $('.equipocontainer').attr('rel', idtransportista);
             boton.remove();
 
             const equipo = `<div class="d-flex justify-content-between equipo mt-2">
@@ -432,6 +445,7 @@
             <i class="material-icons" style="cursor:pointer;" onclick="addEquipo('${servicio}', this);">add_box</i>`;
 
             $('.equipocontainer').append(equipo);
+            getInventario(idtransportista);
         }
 
     function agregarCiudad(element) {
