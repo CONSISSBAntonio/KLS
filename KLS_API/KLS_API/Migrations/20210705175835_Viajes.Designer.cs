@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210705175835_Viajes")]
+    partial class Viajes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -164,12 +166,6 @@ namespace KLS_API.Migrations
                     b.Property<int>("Estatus")
                         .HasColumnType("int");
 
-                    b.Property<string>("FotoPoliza")
-                        .HasColumnType("varchar(150)");
-
-                    b.Property<string>("FotoUnidad")
-                        .HasColumnType("varchar(150)");
-
                     b.Property<int>("IdTransportista")
                         .HasColumnType("int");
 
@@ -188,11 +184,8 @@ namespace KLS_API.Migrations
                     b.Property<string>("Placa")
                         .HasColumnType("varchar(25)");
 
-                    b.Property<string>("Ruta")
-                        .HasColumnType("varchar(250)");
-
-                    b.Property<int>("TipoUnidad")
-                        .HasColumnType("int");
+                    b.Property<string>("TipoUnidad")
+                        .HasColumnType("varchar(25)");
 
                     b.Property<string>("Volumen")
                         .HasColumnType("varchar(45)");
@@ -208,12 +201,6 @@ namespace KLS_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("FotoIne")
-                        .HasColumnType("varchar(250)");
-
-                    b.Property<string>("FotoLicencia")
-                        .HasColumnType("varchar(250)");
-
                     b.Property<int>("Id_Transportista")
                         .HasColumnType("int");
 
@@ -226,10 +213,8 @@ namespace KLS_API.Migrations
                     b.Property<string>("NoLicencia")
                         .HasColumnType("varchar(25)");
 
-                    b.Property<int>("NoTelefono")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Ruta")
+                    b.Property<string>("NoTelefono")
+                        .IsRequired()
                         .HasColumnType("varchar(15)");
 
                     b.Property<string>("SeguroSocial")
@@ -657,25 +642,25 @@ namespace KLS_API.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("limite_peso")
-                        .HasColumnType("Decimal(11,4)");
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("limite_volumen")
                         .HasColumnType("Varchar(35)");
 
                     b.Property<decimal>("litros")
-                        .HasColumnType("Decimal(11,4)");
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<decimal>("llantas")
-                        .HasColumnType("Decimal(11,4)");
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<decimal>("mantenimiento")
-                        .HasColumnType("Decimal(11,4)");
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("nombre")
                         .HasColumnType("varchar(50)");
 
                     b.Property<decimal>("rendimiento")
-                        .HasColumnType("Decimal(11,4)");
+                        .HasColumnType("decimal(65,30)");
 
                     b.HasKey("id");
 
@@ -970,9 +955,6 @@ namespace KLS_API.Migrations
 
                     b.Property<DateTime>("FechaSalida")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Folio")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("HBL")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");

@@ -42,10 +42,14 @@
     <Compile Remove="Migrations\20210705165551_viajes.Designer.cs" />
     <Compile Remove="Migrations\20210705173038_viajes.cs" />
     <Compile Remove="Migrations\20210705173038_viajes.Designer.cs" />
-    <Compile Remove="Migrations\20210706164426_tr_has_operadores_rutas.cs" />
-    <Compile Remove="Migrations\20210706164426_tr_has_operadores_rutas.Designer.cs" />
     <Compile Remove="Migrations\20210706213434_Viajes-Folio.cs" />
     <Compile Remove="Migrations\20210706213434_Viajes-Folio.Designer.cs" />
+    <Compile Remove="Migrations\20210706215246_init.cs" />
+    <Compile Remove="Migrations\20210706215246_init.Designer.cs" />
+    <Compile Remove="Migrations\20210706220225_viajes.cs" />
+    <Compile Remove="Migrations\20210706220225_viajes.Designer.cs" />
+    <Compile Remove="Migrations\20210706220337_viaje.cs" />
+    <Compile Remove="Migrations\20210706220337_viaje.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
