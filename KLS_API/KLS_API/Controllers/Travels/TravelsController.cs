@@ -16,6 +16,23 @@ namespace KLS_API.Controllers.Travels
             _dbContext = dbContext;
         }
 
+        [HttpGet]
+        public IActionResult GetTravels()
+        {
+            try
+            {
+                //var dt = from viajes in _dbContext.Viajes
+                //         join cliente in _dbContext.Clientes on viajes.IdCliente equals cliente.id
+                //         join ciudad in _dbContext.Cat_Ciudad on viajes.IdOrigen equals ciudad.id
+                //         join 
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         [HttpPost]
         public IActionResult Post([FromBody] Travel travel)
         {

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210706220732_viaje")]
+    [Migration("20210706224231_viaje")]
     partial class viaje
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -965,6 +965,9 @@ namespace KLS_API.Migrations
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("DireccionRemitente")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Estatus")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime>("FechaLlegada")

@@ -22,5 +22,6 @@ namespace KLS_WEB.Models.Travels
         public string OrdenCompra { get; set; }
         public string ReferenciaDos { get; set; }
         public string ReferenciaTres { get; set; }
+        public string Estatus { get; set; }
     }
 }

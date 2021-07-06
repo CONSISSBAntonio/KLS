@@ -50,6 +50,8 @@
     <Compile Remove="Migrations\20210706220225_viajes.Designer.cs" />
     <Compile Remove="Migrations\20210706220337_viaje.cs" />
     <Compile Remove="Migrations\20210706220337_viaje.Designer.cs" />
+    <Compile Remove="Migrations\20210706220732_viaje.cs" />
+    <Compile Remove="Migrations\20210706220732_viaje.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

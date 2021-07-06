@@ -7,6 +7,11 @@ namespace KLS_API.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
+                name: "Estatus",
+                table: "Viajes",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
                 name: "Folio",
                 table: "Viajes",
                 nullable: true);
@@ -14,6 +19,10 @@ namespace KLS_API.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "Estatus",
+                table: "Viajes");
+
             migrationBuilder.DropColumn(
                 name: "Folio",
                 table: "Viajes");

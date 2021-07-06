@@ -351,14 +351,14 @@
 
             let jsonData = convertJson($(".viaje"));
             const folio = $('#folio').text();
+            const estatus = 'REGISTRADO';
             jsonData = { ...jsonData, ...equipo };
             jsonData = { ...jsonData, ...unidad };
             jsonData = { ...jsonData, ...servicios };
             jsonData = { ...jsonData, folio };
+            jsonData = { ...jsonData, estatus }
 
             const serviceExists = jsonData.servicios && jsonData.unidad != '' ? true : false;
-
-            console.log('post', jsonData);
             if (serviceExists) {
                 $.post("/Travels/setTravels", jsonData, function (res) {
                     dToast("success", "Registro guardado exitosamente.", "Registrado");

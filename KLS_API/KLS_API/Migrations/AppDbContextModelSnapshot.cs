@@ -965,6 +965,9 @@ namespace KLS_API.Migrations
                     b.Property<string>("DireccionRemitente")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<string>("Estatus")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
                     b.Property<DateTime>("FechaLlegada")
                         .HasColumnType("datetime(6)");
 

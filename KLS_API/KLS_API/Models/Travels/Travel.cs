@@ -19,6 +19,7 @@ namespace KLS_API.Models.Travels
         public DateTime FechaLlegada { get; set; }
         public string DireccionRemitente { get; set; }
         public string DireccionDestinatario { get; set; }
+        public string Estatus { get; set; }
 
         //Extras
         public string OrdenCompra { get; set; }
