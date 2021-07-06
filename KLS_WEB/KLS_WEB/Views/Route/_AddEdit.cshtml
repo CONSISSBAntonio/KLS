@@ -50,25 +50,25 @@
             <div class="row">
                 <label for="festadoorigen" class="col-sm-4 col-form-label col-form-label-sm">Estado Origen</label>
                 <div class="col-sm-8">
-                    @Html.DropDownListFor(x => x.id_estadoorigen, ViewBag.EstadoList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "festadoorigen", @required = "", @onchange = "{ getCities('origen', this.value); }" })
+                    @Html.DropDownListFor(x => x.id_estadoorigen, ViewBag.EstadoList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "festadoorigen", @required = "", @onchange = "{ getCities('origen', this.value); }", @style = "width: 100%;" })
                 </div>
             </div>
             <div class="row">
                 <label for="fciudadorigen" class="col-sm-4 col-form-label col-form-label-sm">Ciudad Origen</label>
                 <div class="col-sm-8">
-                    @Html.DropDownListFor(x => x.id_ciudadorigen, ViewBag.CiudadList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "fciudadorigen", @required = "", @onchange = "{ generateId('origen', this.value); }" })
+                    @Html.DropDownListFor(x => x.id_ciudadorigen, ViewBag.CiudadList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "fciudadorigen", @required = "", @onchange = "{ generateId('origen', this.value); }", @style = "width: 100%;" })
                 </div>
             </div>
             <div class="row">
                 <label for="festadodestino" class="col-sm-4 col-form-label col-form-label-sm">Estado Destino</label>
                 <div class="col-sm-8">
-                    @Html.DropDownListFor(x => x.id_estadodestino, ViewBag.EstadoList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "festadodestino", @required = "", @onchange = "{ getCities('destino', this.value); }" })
+                    @Html.DropDownListFor(x => x.id_estadodestino, ViewBag.EstadoList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "festadodestino", @required = "", @onchange = "{ getCities('destino', this.value); }", @style = "width: 100%;" })
                 </div>
             </div>
             <div class="row">
                 <label for="fciudaddestino" class="col-sm-4 col-form-label col-form-label-sm">Ciudad Destino</label>
                 <div class="col-sm-8">
-                    @Html.DropDownListFor(x => x.id_ciudaddestino, ViewBag.CiudadList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "fciudaddestino", @required = "", @onchange = "{ generateId('destino', this.value); }" })
+                    @Html.DropDownListFor(x => x.id_ciudaddestino, ViewBag.CiudadList as SelectList, new { @class = "form-control form-control-sm myselect", @id = "fciudaddestino", @required = "", @onchange = "{ generateId('destino', this.value); }", @style = "width: 100%;" })
                 </div>
             </div>
             <div class="row">
@@ -318,7 +318,7 @@
                     });
                 }
             } else {
-                dToast("error", "El origen y destino es obligatorio.", "Error");
+                dToast("error", "Todos los campos son obligatorios.", "Error");
             }
 
         });

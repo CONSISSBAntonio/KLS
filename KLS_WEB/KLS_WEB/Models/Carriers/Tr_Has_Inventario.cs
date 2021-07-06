@@ -40,5 +40,7 @@ namespace KLS_WEB.Models.Carriers
         public string FotoUnidad { get; set; }
         [Column(TypeName = "varchar(150)")]
         public string FotoPoliza { get; set; }
+
+        public string TipoUnidadNombre { get; set; }
     }
 }

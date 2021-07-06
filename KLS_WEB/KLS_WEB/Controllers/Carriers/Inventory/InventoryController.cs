@@ -44,12 +44,17 @@ namespace KLS_WEB.Controllers.Carriers.CarriersInventory
             return Json(dataReport);
         }
 
-        [Route("getEquipos")]
-        public async Task<JsonResult> GetEquipos(Tr_Has_Inventario dataModel)
+        [Route("[action]/{id}")]
+        public async Task<JsonResult> GetEquipos(string id)
         {
+            Tr_Has_Inventario dataModel = new Tr_Has_Inventario();
             List<Tr_Has_Inventario> dataReport;
-            dataReport = await this.AppContext.Execute<List<Tr_Has_Inventario>>(MethodType.GET, Path.Combine(_UrlApi, "GetEquipos"), dataModel);
-            return Json(dataReport);
+            dataReport = await this.AppContext.Execute<List<Tr_Has_Inventario>>(MethodType.GET, Path.Combine(_UrlApi, "GetEquipos", id), dataModel);
+            var unidades = dataReport.GroupBy(
+            p => p.TipoUnidad,
+            p => p.TipoUnidadNombre,
+            (key, g) => new { TipoUnidad = key, Nombre = g });
+            return Json(new { unidades, dataReport });
         }
 
 
@@ -60,7 +65,7 @@ namespace KLS_WEB.Controllers.Carriers.CarriersInventory
         {
             Random rdn = new Random();
             int rutaRandom = rdn.Next(10000, 100000) + rdn.Next(10000, 100000);
-            string rutaHoy = @DateTime.Now.ToString("yyyy/MM/dd")+"/"+ IdTransportista+"/"+ rutaRandom;
+            string rutaHoy = @DateTime.Now.ToString("yyyy/MM/dd") + "/" + IdTransportista + "/" + rutaRandom;
             string ruta = Path.Combine(_hostingEnvironment.WebRootPath + @"/Resources/Inventario/" + rutaHoy);
 
             if (!Directory.Exists(ruta))
@@ -142,6 +147,6 @@ namespace KLS_WEB.Controllers.Carriers.CarriersInventory
         }
 
 
-        
+
     }
 }

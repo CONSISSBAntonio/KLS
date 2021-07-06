@@ -8,6 +8,7 @@ namespace KLS_API.Models.Travels
     {
         [Key]
         public int Id { get; set; }
+        public string Folio { get; set; }
         public int IdCliente { get; set; }
         public int IdOrigen { get; set; }
         public int IdDestino { get; set; }

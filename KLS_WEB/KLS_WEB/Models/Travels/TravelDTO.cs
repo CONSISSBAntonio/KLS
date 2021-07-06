@@ -8,6 +8,7 @@ namespace KLS_WEB.Models.Travels
     public class TravelDTO
     {
         public int Id { get; set; }
+        public string Folio { get; set; }
         public int IdCliente { get; set; }
         public DateTime FechaSalida { get; set; }
         public DateTime FechaLlegada { get; set; }
