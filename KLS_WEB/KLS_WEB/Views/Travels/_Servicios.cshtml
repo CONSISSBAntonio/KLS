@@ -1,10 +1,10 @@
 ﻿@model KLS_WEB.Models.Travels.Travel
 
 
-@if (Model.servicios != null)
+@if (Model.Servicios != null)
 {
     string html = string.Empty;
-    var servicios = Model.servicios.Replace("=on", "").Split("&");
+    var servicios = Model.Servicios.Replace("=on", "").Split("&");
 
     foreach (var item in servicios)
     {
@@ -104,10 +104,13 @@
                         </div>
                         <div class="col-6 bg-light-grey">
                             <div class="col-12">
-                                <div class="poppins medium size-14 text-left mt-4 mb-3">EQUIPO</div>
+                                <div class="row mb-0">
+                                    <div class="poppins medium size-14 text-left mt-4 mb-3 col-4">TIPO DE UNIDAD</div>
+                                    <div class="poppins medium size-14 text-left mt-4 mb-3 col-7 ml-2">ELEGIR EQUIPO</div>
+                                </div>
                                 <div class="equipocontainer">
                                 </div>
-                                <i class="material-icons" style="cursor:pointer;" onclick="addEquipo(this);">add_box</i>
+                                <i class="material-icons" style="cursor:pointer;" onclick="addEquipo('terrestrenacional', this);">add_box</i>
                             </div>
                         </div>
                     </div>
