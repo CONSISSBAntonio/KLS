@@ -12,7 +12,8 @@ namespace KLS_API.Models.Carriers
         [Key]
         public int Id { get; set; }
         public int Id_Ruta { get; set; }
-        [Column(TypeName = "decimal(2,2)")]
+        public int Id_Transportista { get; set; }
+        [Column(TypeName = "decimal(14,2)")]
         public decimal Costo { get; set; }
         public int Estatus { get; set; }
     }

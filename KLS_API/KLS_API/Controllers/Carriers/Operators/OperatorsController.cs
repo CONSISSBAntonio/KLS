@@ -70,7 +70,9 @@ namespace KLS_API.Controllers.Carriers.CarriersOperators
         {
             try
             {
-                return Ok(context.Tr_Has_Operadores.Find(id));
+                var aerolinea = context.Tr_Has_Operadores.FirstOrDefault(f => f.Id == id);
+                return Ok(aerolinea);
+                //return Ok(context.Tr_Has_Operadores.Find(id));
             }
             catch (Exception ex)
             {

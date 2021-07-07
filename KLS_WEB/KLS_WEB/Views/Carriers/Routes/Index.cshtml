@@ -27,8 +27,11 @@
             <table id="table" class="table table-striped table-bordered display table-hover table-viajes" width="100%">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Ruta</th>
+                        <th>Nombre</th>
+                        <th>Estado Or</th>
+                        <th>Ciudad Or</th>
+                        <th>Estado De</th>
+                        <th>Estado Or</th>
                         <th>Costo</th>
                         <th>Estatus</th>
                         <th>Acciones</th>
@@ -39,7 +42,6 @@
         </div>
     </div>
 </div>
-
 
 <!--Modal global-->
 <div class="modal fade" id="modalDiv" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -53,23 +55,21 @@
             </div>
             <div class="modal-body text-left">
                 <form id="frmRegister" action="#" method="post">
-                    <input type="hidden" name="id" id="idEditar" value="0" />
-
+                    <input type="hidden" name="id" id="idEditar" />
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-12">
                             <label class="">Ruta</label>
-                            <select class="form-control form-control-sm">
-                                <option value="value">Ruta de prueba 1</option>
-                                <option value="value">Ruta de prueba 2</option>
-                            </select>
+                            <select class="form-control form-control-md" id="Id_Ruta" name="Id_Ruta" style="width:100%;font-size:8px;"></select>
                         </div>
-                        <div class="col-md-4">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
                             <label class="">Costo</label>
-                            <input type="text" class="form-control" name="Costo" id="Costo" value="" required/>
+                            <input type="number" class="form-control" name="Costo" id="Costo" />
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="">Estatus</label>
-                            <select class="form-control form-control-sm" name="estatus" id="estatus">
+                            <select class="form-control form-control-sm" name="Estatus" id="Estatus">
                                 <option value="1">Activo</option>
                                 <option value="2">Inactivo</option>
                             </select>
@@ -93,13 +93,117 @@
 
 @section Scripts{
     <script>
+        var catCiudad = [];
+        var catEstado = [];
+        var catRutas = [];
+
         $(window).ready(function () {
-            getRutas();
+            loadCity();
+            $("#frmRegister").submit(function (event) {
+                event.preventDefault();
+                var jsonData = convertJson($("#frmRegister"));
+                jsonData["Id_Transportista"] = @id;
+                console.log(jsonData);
+                if (parseInt($("#idEditar").val()) != 0) {
+                    $.post("/Carriers/Routes/putRoutes", jsonData, function (res) {
+                        console.log(res);
+                        getRuta();
+                        dToast("success", "Registro actualizado exitosamente.", "Registrado");
+                        $(".guardar").attr("disabled", false);
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de guardar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                } else {
+                    $.post("/Carriers/Routes/setRoutes", jsonData, function (res) {
+                        getRuta();
+                        dToast("success", "Se guardó el registro", "Registrado");
+                        $(".guardar").attr("disabled", false);
+                        $('#frmRegister').trigger("reset");
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de guardar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                }
+            });
+
         });
 
         function getRutas() {
             $.get("/Carriers/Routes/getRoutes", function (res) {
-                console.log( res );
+                catRutas = res;
+                $("#Id_Ruta").empty();
+                $.each(res, function (item, key) {
+                    //console.log(key);
+                    let indice_co = catCiudad.findIndex(service => service.id === key.id_ciudadorigen);
+                    let indice_cd = catCiudad.findIndex(service => service.id === key.id_ciudaddestino);
+                    let indice_eo = catEstado.findIndex(service => service.id === key.id_estadoorigen);
+                    let indice_ed = catEstado.findIndex(service => service.id === key.id_estadodestino);
+
+                    $("#Id_Ruta").append(`<option value="${key.id}">Estado origen: ${catEstado[indice_eo].nombre}--Ciudad Origen:${catCiudad[indice_co].nombre}-- Estado De:${catEstado[indice_ed].nombre}--Ciudad De:${catCiudad[indice_cd].nombre}</option>`);
+                });
+                $("#Id_Ruta").select2();
+                getRuta();
+            });
+        }
+
+        function loadCity() {
+            $.get("/Catalogs/Geography/City/getCity", function (res) {
+                //console.log(res);
+                catCiudad = res;
+                loadState();
+            }).fail(function (error) {
+                dToast("error", "Error al obtener paises", "Atencion!");
+            });
+        }
+
+        //Cargar estados
+        function loadState() {
+            $.get("/Catalogs/Geography/State/getState", function (res) {
+                catEstado = res;
+                getRutas();
+            }).fail(function (error) {
+                dToast("error", "Error al obtener paises", "Atencion!");
+            });
+        }
+
+        function getRuta() {
+            var stable = $('.table-viajes').DataTable();
+            stable.destroy();
+            $("#table-info").empty();
+            $.get("/Carriers/Routes/getRuta", { "Id_Transportista":@id}, function (res) {
+                DataAirlines = res;
+                //console.log(res);
+                console.log(catRutas);
+                $.each(res, function (item, key) {
+                    //console.log(key);
+                    let rutaI = catRutas.findIndex(service => parseInt(service.id) === parseInt(key.id_Ruta));
+                    const IdGenerado = `${String(catRutas[rutaI].id_ciudadorigen).padStart(4, '0')}${String(catRutas[rutaI].id_ciudaddestino).padStart(4, '0')}`;
+                    let indice_co = catCiudad.findIndex(service => service.id === catRutas[rutaI].id_ciudadorigen);
+                    let indice_cd = catCiudad.findIndex(service => service.id === catRutas[rutaI].id_ciudaddestino);
+                    let indice_eo = catEstado.findIndex(service => service.id === catRutas[rutaI].id_estadoorigen);
+                    let indice_ed = catEstado.findIndex(service => service.id === catRutas[rutaI].id_estadodestino);
+                    $("#table-info").append(`
+                             <tr>
+                                <td>${nCon(IdGenerado)}</td>
+                                <td>${catEstado[indice_eo].nombre}</td>
+                                <td>${catCiudad[indice_co].nombre}</td>
+                                <td>${catEstado[indice_ed].nombre}</td>
+                                <td>${catCiudad[indice_cd].nombre}</td>
+                                <td>${key.costo}</td>
+                                <td>`+ statusTable(key.estatus) + `</td>
+                                <td>
+                                    <a href="#">
+                                        <span class="material-icons" onclick="showModal('EDITAR','Editar',${nCon(key.id)});">
+                                            mode_edit
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>`);
+                });
+                dTable("table-viajes");
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
             });
         }
 
@@ -112,8 +216,9 @@
             if (accion == "Editar") {
                 try {
                     let indice = DataAirlines.findIndex(service => service.id === idEditar);
-                    $("#nombre").val(DataAirlines[indice].nombre);
-                    $('#estatus option[value="' + DataAirlines[indice].estatus + '"]').attr("selected", true);
+                    $("#Costo").val(DataAirlines[indice].costo);
+                    $('#Id_Ruta option[value="' + DataAirlines[indice].id_Ruta + '"]').attr("selected", true);
+                    $('#Estatus option[value="' + DataAirlines[indice].estatus + '"]').attr("selected", true);
                     $("#modalDiv").modal("show");
                 } catch (error) {
                     dToast("error", "Error al tratar de editar, intenta recargar la página.", "Error");

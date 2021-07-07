@@ -2,6 +2,27 @@
 @{
     ViewData["Title"] = "Transportista|Operadores";
 }
+
+@section Styles{
+    <style>
+        input[type="file"] {
+            display: none;
+            border: 1px solid #ccc;
+            display: inline-block;
+            cursor: pointer;
+            width: 100%;
+        }
+        #capa2 {
+            position: absolute;
+            z-index: 0;
+        }
+
+        #capa2>img {
+            width: 400px;
+        }
+    </style>
+}
+
 @{ int id = ViewBag.id; }
 <div class="data-content p-4 text-left">
     <div class="p-4">
@@ -37,7 +58,7 @@
                         <th>SS</th>
                         <th>IMSS</th>
                         <th>Estatus</th>
-                        <th>Acciones</th>
+                        <th style="width:5%;" class="text-center">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="table-info"></tbody>
@@ -60,9 +81,10 @@
             <div class="modal-body text-left">
                 <form id="frmRegister" action="#" method="post">
                     <input type="hidden" name="id" id="idEditar" value="0" />
-                    <input type="text" name="Ruta" id="Ruta" value="" />
-                    <input type="text" name="FotoLicencia" id="FotoLicencia" value="" />
-                    <input type="text" name="FotoIne" id="FotoIne" value="" />
+                    <input type="hidden" name="Ruta" id="Ruta" value="" />
+                    <input type="hidden" name="FotoLicencia" id="FotoLicencia" value="" />
+                    <input type="hidden" name="FotoIne" id="FotoIne" value="" />
+                    <input type="hidden" name="FotoSeguro" id="FotoSeguro" value="" />
 
                     <div class="row">
                         <div class="col-md-4">
@@ -80,7 +102,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="">Licencia</label>
-                                <input type="file" name="Licencia" id="Licencia" />
+                                <input type="file" class="form-control" name="Licencia" id="Licencia" />
                             </div>
                         </div>
                     </div>
@@ -94,7 +116,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="">INE</label>
-                                <input type="file" name="Ine" id="Ine" />
+                                <input type="file" class="form-control" name="Ine" id="Ine" />
                             </div>
                         </div>
 
@@ -109,7 +131,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="">Seguro Social</label>
-                                <input type="text" class="form-control" name="SeguroSocial" id="SeguroSocial" />
+                                <input type="file" class="form-control" name="SeguroSocial" id="SeguroSocial" />
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -127,7 +149,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-dark guardar" style="width:20%;" id="btnAccion">
+                    <button type="submit" class="btn btn-dark guardar" style="width:31%;" id="btnAccion">
                         Guardar
                     </button>
                 </form>
@@ -154,6 +176,7 @@
                 var formData = new FormData(document.getElementById("frmRegister"));
                 formData.append('file', $('#Licencia')[0].files[0]);
                 formData.append('file1', $('#Ine')[0].files[0]);
+                formData.append('file2', $('#SeguroSocial')[0].files[0]);
                 formData.append('IdTransportista', @id);
 
                 if (parseInt($("#idEditar").val()) != 0) {
@@ -165,7 +188,7 @@
                         processData: false,
                         success: function (data) {
                             loadTable();
-                            dToast("success", "registro actualizado exitosamente.", "registrado");
+                            dToast("success", "Registro actualizado exitosamente.", "Actualizado");
                             $(".guardar").attr("disabled", false);
                         },
                         error: function (data) {
@@ -181,42 +204,18 @@
                         processData: false,
                         success: function (data) {
                             console.log( data );
-                            //loadTable();
-                            //$('#frmRegister').trigger("reset");
-                            //dToast("success", "registro actualizado exitosamente.", "registrado");
-                            //$(".guardar").attr("disabled", false);
+                            loadTable();
+                            $('#frmRegister').trigger("reset");
+                            dToast("success", "Registro guardado exitosamente.", "Registrado");
+                            $(".guardar").attr("disabled", false);
                         },
                         error: function (data) {
                             dToast("error", "Ocurrio un error al intentar guardar el archivo.", "Error");
                         }
                     });
                 }
-
-
-                //------------------------------------------------------------------------
-                //if (parseInt($("#idEditar").val()) == 0) {
-                //    $.post("/Carriers/Operators/setOperators/", jsonData, function (res) {
-                //        $("#idEditar").val(res.id);
-                //        loadTable();
-                //        dToast("success", "Registro guardado exitosamente.", "Registrado");
-                //    }).fail(function (error) {
-                //        dToast("error", "Error al tratar de guardar el registro", "Error");
-                //        $(".guardar").attr("disabled", false);
-                //    });
-                //} else {
-                //    $.post("/Carriers/Operators/putOperators/", jsonData, function (res) {
-                //        loadTable();
-                //        dToast("success", "Registro actualizado exitosamente.", "Registrado");
-                //    }).fail(function (error) {
-                //        dToast("error", "Error al tratar de actualizar el registro", "Error");
-                //        $(".guardar").attr("disabled", false);
-                //    });
-                //}
-
-
             });
         });
-
         function showModal(titulo = "Title", accion, idEditar = 0) {
             $('#frmRegister').trigger("reset");
             $(".guardar").html(accion);
@@ -231,13 +230,11 @@
                     $("#NoTelefono").val(dataOperators[indice].noTelefono);
                     $("#NoLicencia").val(dataOperators[indice].noLicencia);
                     $("#NoIne").val(dataOperators[indice].noIne);
-                    $("#SeguroSocial").val(dataOperators[indice].seguroSocial);
+                    $("#FotoSeguro").val(dataOperators[indice].fotoSeguro);
                     $("#Imss").val(dataOperators[indice].imss);
-
                     $("#FotoLicencia").val(dataOperators[indice].fotoLicencia);
                     $("#FotoIne").val(dataOperators[indice].fotoIne);
                     $("#Ruta").val(dataOperators[indice].ruta);
-
                     $('#estatus option[value="' + dataOperators[indice].estatus + '"]').attr("selected", true);
                     $("#modalDiv").modal("show");
                 } catch (error) {
@@ -248,7 +245,6 @@
                 $("#modalDiv").modal("show");
             }
         }
-
         function loadTable() {
             var stable = $('.table-viajes').DataTable();
             stable.destroy();
@@ -256,29 +252,84 @@
             $.get("/Carriers/Operators/getOperators/", { "Id_Transportista":@id}, function (res) {
                 dataOperators = res;
                 $.each(dataOperators, function (item, key) {
+                    console.log(key);
+                    var checkedIne = "";
+                    var checkedLicencia = "";
+                    var checkedSeguro = "";
+
+                    if (key.fotoLicencia != "" && key.fotoLicencia != null)
+                    {
+                        checkedLicencia = "checked";
+                    }
+
+                    if (key.fotoIne != "" && key.fotoIne != null)
+                    {
+                        checkedIne = "checked";
+                    }
+
+                    if (key.fotoSeguro != "" && key.fotoSeguro != null)
+                    {
+                        checkedSeguro = "checked";
+                    }
+                    console.log("/Resource/Operadores/"+key.ruta+"/"+key.fotoLicencia );
                     $("#table-info").append(`
-                             <tr>
-                                <td>${nCon(key.id)}</td>
-                                <td>${nCon(key.nombre)}</td>
-                                <td>${nCon(key.noTelefono)}</td>
-                                <td>${nCon(key.noLicencia)}</td>
-                                <td>--</td>
-                                <td>${nCon(key.noIne)}</td>
-                                <td>--</td>
-                                <td>${nCon(key.seguroSocial)}</td>
-                                <td>${nCon(key.imss)}</td>
-                                <td>`+ statusTable(key.estatus) + `</td>
-                                <td>
-                                    <a href="#">
-                                        <span class="material-icons" onclick="showModal('EDITAR','Editar',${nCon(key.id)});">
-                                            mode_edit
-                                        </span>
-                                    </a>
-                                </td>
-                            </tr>`);
+                        <tr>
+                        <td>${nCon(key.id)}</td>
+                        <td>${nCon(key.nombre)}</td>
+                        <td>${nCon(key.noTelefono)}</td>
+                        <td>${nCon(key.noLicencia)}</td>
+                        <td style="cursor: pointer;cursos:hand;">
+                            <input type="checkbox" ${checkedLicencia}  onmouseover="verImagen('img-capa${key.id}')" onmouseout="Fin('img-capa${key.id}')">
+                            <div id="capa2" class="img-capa${key.id}" style="display:none;">
+                                <img src="../../Resources/Operadores/${key.ruta}/${key.fotoLicencia}" />
+                            </div>
+                        </td>
+                        <td>${nCon(key.noIne)}</td>
+                        <td style="cursor: pointer;cursos:hand;">
+                            <input type="checkbox" ${checkedIne} onmouseover="verImagen('img-Ine${key.id}')" onmouseout="Fin('img-Ine${key.id}')">
+                            <div id="capa2" class="img-Ine${key.id}" style="display:none;">
+                                <img src="../../Resources/Operadores/${key.ruta}/${key.fotoIne}" />
+                            </div>
+                        </td>
+                        <td style="cursor: pointer;cursos:hand;">
+                            <input type="checkbox" ${checkedSeguro} onmouseover="verImagen('img-Seguro${key.id}')" onmouseout="Fin('img-Seguro${key.id}')">
+                            <div id="capa2" class="img-Seguro${key.id}" style="display:none;">
+                                <img src="../../Resources/Operadores/${key.ruta}/${key.fotoSeguro}" />
+                            </div>
+                        </td>
+                        <td>${nCon(key.imss)}</td>
+                        <td>`+ statusTable(key.estatus) + `</td>
+                        <td class="text-center">
+                            <a href="#">
+                                <span class="material-icons" style="color:#EC694D;" onclick="downloadZip('${key.id}');">
+                                    cloud_download
+                                </span>
+                            </a>
+                            <a href="#">
+                                <span class="material-icons" onclick="showModal('EDITAR','Editar',${nCon(key.id)});">
+                                    mode_edit
+                                </span>
+                            </a>
+                        </td>
+                    </tr>`);
                 });
                 dTable("table-viajes");
             });
+        }
+
+        function verImagen(imagen) {
+            $("."+imagen).show();
+        }
+
+        function Fin(imagen) {
+            $("."+imagen).hide();
+        }
+        function downloadZip(id) {
+            var a = $("<a>")
+                .attr("href", "/Carriers/Operators/DescargarZip/" + id)
+                .appendTo("body");
+            a[0].click();
+            a.remove();
         }
 
     </script>

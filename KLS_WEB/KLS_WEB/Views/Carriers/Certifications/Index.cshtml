@@ -2,13 +2,17 @@
     ViewData["Title"] = "Transportista|Certificaciones";
 }
 @{ int id = ViewBag.id; }
-<div class="data-content p-4 text-left">
-    <div class="p-4">
-        <div class="text-left d-flex mb-3">
-            <a href="/Carriers/formCarriers/@id">
-                <div class="material-icons icon-red">arrow_back</div>
-            </a>
-            <div class="text-uppercase poppins medium size-24 pl-2"> CERTIFICACIONES</div>
+<div class="data-content p-2 text-left">
+    <div class="p-1">
+        <div class="d-flex flex-nowrap">
+            <div class="p-2">
+                <div class="text-left d-flex p-2">
+                    <a href="/Carriers/formCarriers/@id">
+                        <div class="material-icons icon-red">arrow_back</div>
+                    </a>
+                    <div class="text-uppercase poppins medium size-24 pl-2">CERTIFICACIONES</div>
+                </div>
+            </div>
         </div>
         <form id="frmRegister" action="#" method="post">
             <input type="hidden" value="0" id="idCertificacion" name="Id"/>
@@ -66,8 +70,6 @@
                 event.preventDefault();
                 var jsonData = convertJson($("#frmRegister"));
                 jsonData["Id_Transportista"] = @id;
-                console.log("----------");
-                console.log(jsonData);
 
                 if (parseInt($("#idCertificacion").val()) == 0) {
                     $.post("/Carriers/Certifications/setCertifiacions/", jsonData, function (res) {
@@ -80,21 +82,22 @@
                 } else {
                     $.post("/Carriers/Certifications/putCertifiacions/",jsonData, function (res) {
                         console.log(res);
-                        dToast("success", "Registro actualizado exitosamente.", "Registrado");
+                        dToast("success", "Registro actualizado exitosamente.", "Actualizado");
                     }).fail(function (error) {
                         dToast("error", "Error al tratar de actualizar el registro", "Error");
                         $(".guardar").attr("disabled", false);
                     });
                 }
+                valId();
             });
         });
 
         function valId(){
             if (parseInt(@id) != 0) {
-                $("#span-icon").append("edit");
+                $("#span-icon").empty();
                 $.get("/Carriers/Certifications/getCertifiacions/", { "Id_Transportista":@id}, function (res) {
                     if (res != null) {
-                        console.log(res);
+                        $("#span-icon").append("edit");
                         $("#C_Opcional").val(res.c_Opcional);
                         $("#idCertificacion").val(res.id);
                         $('#Ctpat').prop('checked', res.ctpat);

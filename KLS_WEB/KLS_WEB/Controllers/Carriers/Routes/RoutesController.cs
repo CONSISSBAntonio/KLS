@@ -15,7 +15,7 @@ namespace KLS_WEB.Controllers.Carriers.CarriersRoutes
     public class RoutesController : Controller
     {
         private string _UrlView = "~/Views/Carriers/Routes/";
-        private string _UrlApi = "Route";
+        private string _UrlApi = "Carriers/Routes";
 
         private readonly IAppContextService AppContext;
 
@@ -30,30 +30,23 @@ namespace KLS_WEB.Controllers.Carriers.CarriersRoutes
             ViewBag.id = id;
             return View(this._UrlView + "index.cshtml");
         }
-        
-        [Route("formRoutes/{id=0}/{idruta=0}")]
-        public IActionResult formRoutes(int id,int idRuta)
-        {
-            ViewBag.id = id;
-            ViewBag.idRuta = idRuta;
-            return View(this._UrlView + "formRoutes.cshtml");
-        }
-        
+
         [Route("getRoutes")]
         public async Task<JsonResult> Get(Route dataModel)
         {
-            List<Route>dataReport;
-            dataReport = await this.AppContext.Execute<List<Route>>(MethodType.GET, _UrlApi, dataModel);
+            List<Route> dataReport;
+            dataReport = await this.AppContext.Execute<List<Route>>(MethodType.GET,"Route", dataModel);
             return Json(dataReport);
         }
         
-        [Route("getRoutesAll")]
-        public async Task<JsonResult> getRoutesAll(Tr_Has_Rutas dataModel)
+        [Route("getRuta")]
+        public async Task<JsonResult> getRuta(Tr_Has_Rutas dataModel)
         {
             List<Tr_Has_Rutas> dataReport;
-            dataReport = await this.AppContext.Execute<List<Tr_Has_Rutas>>(MethodType.GET, _UrlApi+"/getRoutes", dataModel);
+            dataReport = await this.AppContext.Execute<List<Tr_Has_Rutas>>(MethodType.GET,_UrlApi, dataModel);
             return Json(dataReport);
         }
+
 
         [Route("setRoutes")]
         public async Task<JsonResult> Post(Tr_Has_Rutas dataModel)
