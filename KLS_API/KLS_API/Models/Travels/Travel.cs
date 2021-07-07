@@ -8,6 +8,7 @@ namespace KLS_API.Models.Travels
     {
         [Key]
         public int Id { get; set; }
+        public string Folio { get; set; }
         public int IdCliente { get; set; }
         public int IdOrigen { get; set; }
         public int IdDestino { get; set; }
@@ -18,6 +19,7 @@ namespace KLS_API.Models.Travels
         public DateTime FechaLlegada { get; set; }
         public string DireccionRemitente { get; set; }
         public string DireccionDestinatario { get; set; }
+        public string Estatus { get; set; }
 
         //Extras
         public string OrdenCompra { get; set; }

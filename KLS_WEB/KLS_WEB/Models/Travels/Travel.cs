@@ -27,5 +27,7 @@ namespace KLS_WEB.Models.Travels
         public string TipoViaje { get; set; }
         public int Transportista { get; set; }
         public string Unidad { get; set; }
+        public string Folio { get; set; }
+        public string Estatus { get; set; }
     }
 }

@@ -55,6 +55,8 @@ namespace KLS_WEB.Controllers.Travels
 
             TravelDTO viaje = new TravelDTO
             {
+                Estatus = dataModel.Estatus,
+                Folio = dataModel.Folio,
                 IdCliente = dataModel.Cliente,
                 FechaSalida = dataModel.FechaSalida,
                 FechaLlegada = dataModel.FechaLlegada,

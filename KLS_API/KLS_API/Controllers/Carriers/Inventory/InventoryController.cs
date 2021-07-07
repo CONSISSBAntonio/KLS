@@ -36,33 +36,36 @@ namespace KLS_API.Controllers.Carriers.Inventory
             }
         }
 
-        [HttpGet("getInventory/{id}")]
-        public IActionResult getInventory(int id)
+        [HttpGet("[action]/{id}")]
+        public IActionResult GetEquipos(int id)
         {
             try
             {
-                var inventario = context.Tr_Has_Inventario.FirstOrDefault(f => f.Id == id);
-                return Ok(inventario);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
+                var equipos = from inventario in context.Tr_Has_Inventario
+                              join tipounidad in context.Cat_Tipos_Unidades on inventario.TipoUnidad equals tipounidad.id
+                              where inventario.IdTransportista == id && inventario.Estatus == 1
+                              select new
+                              {
+                                  inventario.Id,
+                                  inventario.IdTransportista,
+                                  inventario.Anio,
+                                  inventario.Capacidad,
+                                  inventario.Color,
+                                  inventario.Estatus,
+                                  inventario.Marca,
+                                  inventario.Modelo,
+                                  inventario.NoEconomico,
+                                  inventario.NoSerie,
+                                  inventario.Placa,
+                                  tipounidad = tipounidad.id,
+                                  tipounidadnombre = tipounidad.nombre,
+                                  inventario.Volumen,
+                                  inventario.Ruta,
+                                  inventario.FotoUnidad,
+                                  inventario.FotoPoliza
+                              };
 
-        [HttpGet("[action]")]
-        public IActionResult GetEquipost([FromBody] Tr_Has_Inventario tr_Has_Inventario)
-        {
-            try
-            {
-                //var equipos = from inventario in context.Tr_Has_Inventario
-                //              join tipounidad in context.Cat_Tipos_Unidades on inventario.TipoUnidad equals tipounidad.id
-                //              select new
-                //              {
-
-                //              };
-
-                return Ok(tr_Has_Inventario);
+                return Ok(equipos);
             }
             catch (Exception ex)
             {

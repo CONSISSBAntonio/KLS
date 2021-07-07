@@ -8,6 +8,7 @@ namespace KLS_WEB.Models.Travels
     public class TravelDTO
     {
         public int Id { get; set; }
+        public string Folio { get; set; }
         public int IdCliente { get; set; }
         public DateTime FechaSalida { get; set; }
         public DateTime FechaLlegada { get; set; }
@@ -21,5 +22,6 @@ namespace KLS_WEB.Models.Travels
         public string OrdenCompra { get; set; }
         public string ReferenciaDos { get; set; }
         public string ReferenciaTres { get; set; }
+        public string Estatus { get; set; }
     }
 }
