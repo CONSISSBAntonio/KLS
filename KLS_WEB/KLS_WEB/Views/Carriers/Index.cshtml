@@ -1,9 +1,10 @@
 ﻿@{
     ViewData["Title"] = "Transportistas";
 }
+
 <div class="data-content p-4 text-left">
     <div class="p-4">
-        <div class="text-left d-flex mb-3">
+        @*<div class="text-left d-flex mb-3">
             <div class="text-uppercase poppins medium size-24 pl-2">Transportistas</div>
             <div style="padding-left:20%;">
                 <a class="btn btn-sm btn-dark" href="/Carriers/formCarriers/0">
@@ -12,20 +13,34 @@
                     </span>
                 </a>
             </div>
-        </div>
+        </div>*@
+        <div class="d-flex flex-nowrap">
+            <div class="p-2">
+                <div class="text-left d-flex">
+                    <div class="text-uppercase poppins medium size-24">TRANSPORTISTAS</div>
+                </div>
+            </div>
 
+            <div class="ml-auto p-2 pb-2">
+                <a class="btn btn-sm btn-secondary" href="/Carriers/formCarriers/0">
+                    <span class="material-icons">
+                        add
+                    </span>
+                </a>
+            </div>
+        </div>
         <div class="p-4 shadow bg-white">
             <table id="table" class="table table-striped table-bordered display table-hover table-viajes" width="100%">
                 <thead>
                     <tr>
-                        <th>NS</th>
+                        <th style="width:2%;">NS</th>
                         <th>ID</th>
                         <th>Nombre Comercial</th>
                         <th>Nombre corto</th>
                         <th>Tamaño</th>
                         <th>Comentarios</th>
                         <th>Estatus</th>
-                        <th>Acciones</th>
+                        <th style="width:5%;">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="table-info"></tbody>
@@ -37,13 +52,9 @@
 
 @section Scripts{ 
    <script>
-
-
-
        $(document).ready(function (event) {
            loadTable();
        });
-
        function loadTable() {
            var stable = $('.table-viajes').DataTable();
            stable.destroy();
@@ -54,17 +65,17 @@
                $.each(res, function (item, key) {
                    $("#table-info").append(`
                     <tr>
-                        <td>${nCon(key.id)}</td>
+                        <td style="background:${setColor(nCon(key.servicio))};"></td>
                         <td>${nCon(key.id)}</td>
                         <td>${nCon(key.nombreComercial)}</td>
                         <td>${nCon(key.nombreComercial)}</td>
                         <td>${nCon(key.tamanio)}</td>
                         <td>${nCon(key.comentario)}</td>
                         <td>${statusTable(key.estatus)}</td>
-                        <td>
+                        <td class="text-center">
                             <a href="/Carriers/formCarriers/${nCon(key.id)}">
                                 <span class="material-icons">
-                                    mode_edit
+                                    search
                                 </span>
                             </a>
                         </td>
@@ -75,5 +86,25 @@
                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
            });
        }
+
+       function setColor(color) {
+           switch (color) {
+               case 'Bronce':
+                   return "#98819B";
+                   break;
+               case 'Plata':
+                   return "#E9E9E9";
+                   break;
+               case 'Oro':
+                   return "#E5D03D";
+                   break;
+               case 'Platino':
+                   return "#E5DFCA";
+                   break;
+               default:
+                   return "white;"
+           }
+       }
+
    </script>
 } 

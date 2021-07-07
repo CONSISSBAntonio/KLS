@@ -28,7 +28,7 @@
                                 <b>Tipos</b>
                             </div>
                             <div class="col-md-8">
-                                <b>Comentarios</b>
+                                <b>Comentarios adicionales</b>
                             </div>
                         </div>
 
@@ -152,7 +152,7 @@
                 } else {
                     $.post("/Carriers/Box/putBox/",jsonData, function (res) {
                         console.log(res);
-                        dToast("success", "Registro actualizado exitosamente.", "Registrado");
+                        dToast("success", "Registro actualizado exitosamente.", "Actualizado");
                     }).fail(function (error) {
                         dToast("error", "Error al tratar de actualizar el registro", "Error");
                         $(".guardar").attr("disabled", false);

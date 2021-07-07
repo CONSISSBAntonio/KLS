@@ -24,7 +24,7 @@ namespace KLS_WEB.Models.Carriers
         public bool Material { get; set; }
 
         [Column(TypeName = "varchar(255)")]
-        public bool Notas { get; set; }
+        public string Notas { get; set; }
 
         public bool OlorPenetrante { get; set; }
         public bool Peligroso { get; set; }

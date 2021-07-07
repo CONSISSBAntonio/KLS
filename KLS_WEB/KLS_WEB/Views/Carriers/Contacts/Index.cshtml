@@ -5,13 +5,18 @@
 @{ int id = ViewBag.id; }
 <div class="data-content p-4 text-left">
     <div class="p-4">
-        <div class="text-left d-flex mb-3">
-            <a href="/Carriers/formCarriers/@id">
-                <div class="material-icons icon-red">arrow_back</div>
-            </a>
-            <div class="text-uppercase poppins medium size-24 pl-2">CONTACTOS</div>
-            <div style="padding-left:10%;">
-                <button class="btn btn-sm btn-dark" onclick="showModal('AGREGAR','Agregar');">
+        <div class="d-flex flex-nowrap">
+            <div class="p-2">
+                <div class="text-left d-flex p-2">
+                    <a href="/Carriers/formCarriers/@id">
+                        <div class="material-icons icon-red">arrow_back</div>
+                    </a>
+                    <div class="text-uppercase poppins medium size-24 pl-2">CONTACTOS</div>
+                </div>
+            </div>
+
+            <div class="ml-auto p-2">
+                <button class="btn btn-sm btn-secondary" onclick="showModal('AGREGAR','Agregar');">
                     <span class="material-icons">
                         add
                     </span>
@@ -55,7 +60,14 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="">Tipo de contacto</label>
-                                <input type="text" class="form-control" name="TipoContacto" id="TipoContacto" required />
+                                @*<input type="text" class="form-control" name="TipoContacto" id="TipoContacto" required />*@
+                                <select name="TipoContacto" id="TipoContacto" class="form-control form-control-sm">
+                                    <option value="Administración">Administración</option>
+                                    <option value="Ventas">Ventas</option>
+                                    <option value="Monitoreo">Monitoreo</option>
+                                    <option value="Operativo">Operativo</option>
+                                    <option value="Atención a cliente">Atención a cliente</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -119,7 +131,7 @@
                     $.post("/Carriers/Contacts/putContacts", jsonData, function (res) {
                         console.log(res);
                         loadTable();
-                        dToast("success", "Registro actualizado exitosamente.", "Registrado");
+                        dToast("success", "Registro actualizado exitosamente.", "Actualizado");
                         $(".guardar").attr("disabled", false);
                     }).fail(function (error) {
                         dToast("error", "Error al tratar de guardar el registro", "Error");
@@ -128,7 +140,7 @@
                 } else {
                     $.post("/Carriers/Contacts/setContacts", jsonData, function (res) {
                         loadTable();
-                        dToast("success", "Se guardo el registro", "Registrado");
+                        dToast("success", "Registro guardado exitosamente.", "Registrado");
                         $(".guardar").attr("disabled", false);
                         $('#frmRegister').trigger("reset");
                     }).fail(function (error) {
@@ -151,11 +163,12 @@
 
                     let indice = dataContacts.findIndex(service => service.id === idEditar);
                     $("#Nombre").val(dataContacts[indice].nombre);
-                    $("#TipoContacto").val(dataContacts[indice].tipoContacto);
+                    //$("#TipoContacto").val(dataContacts[indice].tipoContacto);
                     $("#Nombre").val(dataContacts[indice].nombre);
                     $("#Telefono").val(dataContacts[indice].telefono);
                     $("#Correo").val(dataContacts[indice].correo);
                     $('#estatus option[value="' + dataContacts[indice].estatus + '"]').attr("selected", true);
+                    $('#TipoContacto option[value="' + dataContacts[indice].tipoContacto + '"]').attr("selected", true);
                     $("#modalDiv").modal("show");
 
                 } catch (error) {

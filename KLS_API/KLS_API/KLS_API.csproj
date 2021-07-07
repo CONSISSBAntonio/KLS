@@ -42,6 +42,10 @@
     <Compile Remove="Migrations\20210705165551_viajes.Designer.cs" />
     <Compile Remove="Migrations\20210705173038_viajes.cs" />
     <Compile Remove="Migrations\20210705173038_viajes.Designer.cs" />
+    <Compile Remove="Migrations\20210706215724_tr_has_bibliotecaDef.cs" />
+    <Compile Remove="Migrations\20210706215724_tr_has_bibliotecaDef.Designer.cs" />
+    <Compile Remove="Migrations\20210706215751_tr_has_bibliotecaD.cs" />
+    <Compile Remove="Migrations\20210706215751_tr_has_bibliotecaD.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

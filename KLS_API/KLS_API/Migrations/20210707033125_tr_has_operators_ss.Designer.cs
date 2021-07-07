@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210707033125_tr_has_operators_ss")]
+    partial class tr_has_operators_ss
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,6 +76,7 @@ namespace KLS_API.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Notas")
+                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.Property<bool>("OlorPenetrante")
@@ -243,6 +246,9 @@ namespace KLS_API.Migrations
                     b.Property<string>("Ruta")
                         .HasColumnType("varchar(150)");
 
+                    b.Property<string>("SeguroSocial")
+                        .HasColumnType("varchar(25)");
+
                     b.Property<int>("estatus")
                         .HasColumnType("int");
 
@@ -261,15 +267,12 @@ namespace KLS_API.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Costo")
-                        .HasColumnType("decimal(14,2)");
+                        .HasColumnType("decimal(2,2)");
 
                     b.Property<int>("Estatus")
                         .HasColumnType("int");
 
                     b.Property<int>("Id_Ruta")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id_Transportista")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

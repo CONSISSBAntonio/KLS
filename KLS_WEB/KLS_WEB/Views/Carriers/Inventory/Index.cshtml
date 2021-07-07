@@ -4,15 +4,37 @@
 }
 @{ int id = ViewBag.id; }
 
+@section Styles{
+    <style>
+        .disabledbutton {
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        input[type="file"] {
+            display: none;
+            border: 1px solid #ccc;
+            display: inline-block;
+            cursor: pointer;
+            width:100%;
+        }
+    </style>
+}
+
 <div class="data-content p-4 text-left">
     <div class="p-4">
-        <div class="text-left d-flex mb-3">
-            <a href="/Carriers/formCarriers/@id">
-                <div class="material-icons icon-red">arrow_back</div>
-            </a>
-            <div class="text-uppercase poppins medium size-24 pl-2">INVENTARIO</div>
-            <div style="padding-left:10%;">
-                <button class="btn btn-sm btn-dark" onclick="showModal('AGREGAR','Agregar');">
+        <div class="d-flex flex-nowrap">
+            <div class="p-2">
+                <div class="text-left d-flex p-2">
+                    <a href="/Carriers/formCarriers/@id">
+                        <div class="material-icons icon-red">arrow_back</div>
+                    </a>
+                    <div class="text-uppercase poppins medium size-24 pl-2">INVENTARIO</div>
+                </div>
+            </div>
+
+            <div class="ml-auto p-2">
+                <button class="btn btn-sm btn-secondary" onclick="showModal('AGREGAR','Agregar');">
                     <span class="material-icons">
                         add
                     </span>
@@ -57,24 +79,24 @@
                 </button>
             </div>
             <div class="modal-body text-left">
-                <form id="frmRegister" action="#" method="post"  enctype="multipart/form-data">
+                <form id="frmRegister" action="#" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="id" id="idEditar" value="0" />
-                    <input type="text" name="Ruta" id="Ruta" value="" />
-                    <input type="text" name="FotoUnidad" id="FotoUnidad" value="" />
-                    <input type="text" name="FotoPoliza" id="FotoPoliza" value="" />
+                    <input type="hidden" name="Ruta" id="Ruta" value="" />
+                    <input type="hidden" name="FotoUnidad" id="FotoUnidad" value="" />
+                    <input type="hidden" name="FotoPoliza" id="FotoPoliza" value="" />
 
                     <div class="row">
 
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="">Marca</label>
-                                <input type="text" class="form-control" name="Marca" id="Marca" value="654"/>
+                                <input type="text" class="form-control" name="Marca" id="Marca" value="654" />
                             </div>
                         </div>
 
                         <div class="col-md-3">
                             <label class="">Modelo</label>
-                            <input type="text" class="form-control" name="Modelo" id="Modelo"/>
+                            <input type="text" class="form-control" name="Modelo" id="Modelo" />
                         </div>
 
                         <div class="col-md-3">
@@ -84,7 +106,7 @@
 
                         <div class="col-md-3">
                             <label class=""># serie</label>
-                            <input type="text" name="NoSerie" id="NoSerie" class="form-control" value="654"/>
+                            <input type="text" name="NoSerie" id="NoSerie" class="form-control" value="654" />
                         </div>
                     </div>
 
@@ -134,12 +156,12 @@
                         <div class="col-md-6">
                             <label class="">Foto de la unidad</label>
 
-                            <input type="file" class="" name="file" id="FotoU" accept=".jpg,.jpeg,.png">
+                            <input type="file" class="form-control" name="file" id="FotoU" accept=".jpg,.jpeg,.png">
 
                         </div>
                         <div class="col-md-6">
                             <label class="">Póliza de seguro</label>
-                            <input type="file" class="l" name="FotoP" id="FotoP" accept=".jpg,.jpeg,.png">
+                            <input type="file" class="form-control" name="FotoP" id="FotoP" accept=".jpg,.jpeg,.png">
                         </div>
                     </div>
                     <br />
@@ -181,7 +203,7 @@
                         processData: false,
                         success: function (data) {
                             loadTable();
-                            dToast("success", "registro actualizado exitosamente.", "registrado");
+                            dToast("success", "Registro actualizado exitosamente.", "Actualizado");
                             $(".guardar").attr("disabled", false);
                         },
                         error: function (data) {
@@ -198,11 +220,11 @@
                         success: function (data) {
                             loadTable();
                             $('#frmRegister').trigger("reset");
-                            dToast("success", "registro actualizado exitosamente.", "registrado");
+                            dToast("success", "Registro guardado exitosamente.", "registrado");
                             $(".guardar").attr("disabled", false);
                         },
                         error: function (data) {
-                            dToast("error", "Ocurrio un error al intentar guardar el archivo.", "Error");
+                            dToast("error", "Ocurrio un error al intentar actualizar el archivo.", "Error");
                         }
                     });
                 }
@@ -267,7 +289,7 @@
                                 <td>`+ statusTable(key.estatus) + `</td>
                                 <td class="text-center">
                                     <a href="#">
-                                        <span class="material-icons" style="color:#EC694D;">
+                                        <span class="material-icons" style="color:#EC694D;" onclick="downloadZip('${key.id}');">
                                             cloud_download
                                         </span>
                                     </a>
@@ -322,13 +344,21 @@
         function loadTipo() {
             $.get("../../Catalogs/TypesOfUnits/getUnidades", function (res) {
                 console.log(res);
-                
+
                 $.each(res, function (item, key) {
                     $("#TipoUnidad").append(`<option value="${ key.id }">${key.nombre}</option>`)
                 });
             }).fail(function (error) {
                 dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
             });
+        }
+
+        function downloadZip(id) {
+            var a = $("<a>")
+                .attr("href", "/Carriers/Inventory/DescargarZip/" + id)
+                .appendTo("body");
+            a[0].click();
+            a.remove();
         }
 
     </script>

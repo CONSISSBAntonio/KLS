@@ -15,5 +15,12 @@ namespace KLS_WEB.Models.Carriers
         [Column(TypeName = "varchar(55)")]
         public string Nombre { get; set; }
         public int Estatus { get; set; }
+        [Column(TypeName = "varchar(100)")]
+        public string Archivo { get; set; }
+        [Column(TypeName = "varchar(155)")]
+        public string Ruta { get; set; }
+        public DateTime FechaEvento { get; set; }
     }
+
 }
+

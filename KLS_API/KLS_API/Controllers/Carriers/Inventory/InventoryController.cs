@@ -36,6 +36,20 @@ namespace KLS_API.Controllers.Carriers.Inventory
             }
         }
 
+        [HttpGet("getInventory/{id}")]
+        public IActionResult getInventory(int id)
+        {
+            try
+            {
+                var inventario = context.Tr_Has_Inventario.FirstOrDefault(f => f.Id == id);
+                return Ok(inventario);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         [HttpGet("[action]")]
         public IActionResult GetEquipost([FromBody] Tr_Has_Inventario tr_Has_Inventario)
         {

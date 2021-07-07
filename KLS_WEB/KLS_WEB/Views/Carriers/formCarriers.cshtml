@@ -26,7 +26,6 @@
             <div class="col-md-4 text-right">
                 
                 <form id="frmRegister" action="#" method="post">
-                    
                     <button class="btn btn-sm" type="submit" style="background-color:transparent;">
                         <span class="material-icons" style="color:cornflowerblue;" id="span-icon">
                             
@@ -49,7 +48,14 @@
                         <div class="form-group row">
                             <label class="col-5 col-form-label col-form-label-sm">Tamaño</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="Tamanio" name="Tamanio" required>
+                                @*<input class="form-control form-control-sm" type="text" class="form-control form-control-sm" id="Tamanio" name="Tamanio" required>*@
+                                <select class="form-control form-control-sm" id="Tamanio" name="Tamanio">
+                                    <option value="1">Pequeño</option>
+                                    <option value="2">Mediano</option>
+                                    <option value="3">Grande</option>
+                                    <option value="4">Logística</option>
+                                    <option value="5">Hombre Camión</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -57,16 +63,21 @@
                             <div class="col-sm-7">
                                 @*<input type="text" class="form-control form-control-sm" id="Servicio" name="Servicio" required>*@
                                 <select  class="form-control form-control-sm" id="Servicio" name="Servicio" >
-                                    <option value="Oro">Oro</option>
+                                    <option value="Bronce">Bronce</option>
                                     <option value="Plata">Plata</option>
-                                    <option value="Cobre">Cobre</option>
+                                    <option value="Oro">Oro</option>
+                                    <option value="Platino">Platino</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-5 col-form-label col-form-label-sm">Grado Confiabilidad (P)</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="GradoConfiabilidad" name="GradoConfiabilidad" required>
+                                @*<input type="text" class="form-control form-control-sm" id="GradoConfiabilidad" name="GradoConfiabilidad" required>*@
+                                <select class="form-control form-control-sm" id="GradoConfiabilidad" name="GradoConfiabilidad">
+                                    <option value="Alto">Alto</option>
+                                    <option value="Bajo">Bajo</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -175,7 +186,6 @@
                             </div>
                         </div>
                     </div>
-
                 </form>
             </div>
 
@@ -286,13 +296,11 @@
                 $("#idTransportista").val(@id);
                 $("#span-icon").append("edit");
                 $.get("/Carriers/getCarrier/", { "id":@id}, function (res) {
-
                     $("#rateYo").rateYo({
                         normalFill: "#A0A0A0",
                         rating: res.nivelServicio,
                         fullStar: true
                     });
-
                     console.log(res);
                     $("#Banco").val(res.banco);
                     $("#Comentario").val(res.comentario);
@@ -305,7 +313,6 @@
                     $("#Facebook").val(res.facebook);
                     $("#FechaUltimoViaje").val(res.fechaUltimoViaje);
                     $("#GoogleMaps").val(res.googleMaps);
-                    $("#GradoConfiabilidad").val(res.gradoConfiabilidad);
                     $("#NivelServicio").val(res.nivelServicio);
                     $("#NombreComercial").val(res.nombreComercial);
                     $("#OtraRed").val(res.otraRed);
@@ -313,7 +320,8 @@
                     $("#RazonSocial").val(res.razonSocial);
                     $("#Rfc").val(res.rfc);
                     $('#Servicio option[value="' + res.servicio + '"]').attr("selected", true);
-                    $("#Tamanio").val(res.tamanio);
+                    $('#GradoConfiabilidad option[value="' + res.gradoConfiabilidad + '"]').attr("selected", true);
+                    $('#Tamanio option[value="' + res.tamanio + '"]').attr("selected", true);
                     $("#UsuarioMaster").val(res.usuarioMaster);
                 }).fail(function (error, xhr, status) {
                     console.log(error);
@@ -330,7 +338,22 @@
                 $("#span-icon").append("save");
 
             }
+            disableInput();
         }
+
+        var disableI = false;
+
+        function disableInput() {
+            disableI = !disableI;
+
+            //if (disableI) {
+            //    $("#frmRegister : input").attr("disabled", true);
+            //} else {
+
+            //}
+
+        }
+
 
     </script>
 }

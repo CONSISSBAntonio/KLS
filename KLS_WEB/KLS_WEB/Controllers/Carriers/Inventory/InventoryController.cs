@@ -1,4 +1,5 @@
-﻿using KLS_WEB.Models;
+﻿using Ionic.Zip;
+using KLS_WEB.Models;
 using KLS_WEB.Models.Carriers;
 using KLS_WEB.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -76,15 +77,15 @@ namespace KLS_WEB.Controllers.Carriers.CarriersInventory
 
             if (file != null)
             {
-                nombreUnidad = string.Format("{0}{1:yyyyMMdd_HHmm_ss}.{2}", Path.GetFileNameWithoutExtension(file.FileName), DateTime.Now, Path.GetExtension(file.FileName));
+                nombreUnidad = string.Format("{0}{1:yyyyMMdd_HHmm_ss}{2}", rdn.Next(10000, 100000), DateTime.Now, Path.GetExtension(file.FileName));
                 unidadPath = Path.Combine(ruta, nombreUnidad);
                 await SaveFile(file, unidadPath);
-                jsonData.FotoPoliza = nombreUnidad;
+                jsonData.FotoUnidad = nombreUnidad;
             }
 
             if (file1 != null)
             {
-                nombrePoliza = string.Format("{0}{1:yyyyMMdd_HHmm_ss}.{2}", Path.GetFileNameWithoutExtension(file1.FileName), DateTime.Now, Path.GetExtension(file1.FileName));
+                nombrePoliza = string.Format("{0}{1:yyyyMMdd_HHmm_ss}{2}", rdn.Next(10000, 100000), DateTime.Now, Path.GetExtension(file1.FileName));
                 polizaPath = Path.Combine(ruta, nombrePoliza);
                 await SaveFile(file1, polizaPath);
                 jsonData.FotoPoliza = nombrePoliza;
@@ -100,6 +101,9 @@ namespace KLS_WEB.Controllers.Carriers.CarriersInventory
         [Route("putInventory")]
         public async Task<JsonResult> Put(Tr_Has_Inventario jsonData, IFormFile file, IFormFile file1, int IdTransportista)
         {
+            Random rdn = new Random();
+            int rutaRandom = rdn.Next(10000, 100000) + rdn.Next(10000, 100000);
+
             string nombreUnidad = "";
             string nombrePoliza = "";
 
@@ -110,7 +114,7 @@ namespace KLS_WEB.Controllers.Carriers.CarriersInventory
 
             if (file != null)
             {
-                nombreUnidad = string.Format("{0}{1:yyyyMMdd_HHmm_ss}.{2}", "", DateTime.Now, Path.GetExtension(file.FileName));
+                nombreUnidad = string.Format("{0}{1:yyyyMMdd_HHmm_ss}{2}", rdn.Next(10000, 100000), DateTime.Now, Path.GetExtension(file.FileName));
                 unidadPath = Path.Combine(ruta, nombreUnidad);
                 await SaveFile(file, unidadPath);
                 jsonData.FotoUnidad = nombreUnidad;
@@ -118,11 +122,13 @@ namespace KLS_WEB.Controllers.Carriers.CarriersInventory
 
             if (file1 != null)
             {
-                nombrePoliza = string.Format("{0}{1:yyyyMMdd_HHmm_ss}.{2}", "", DateTime.Now, Path.GetExtension(file1.FileName));
+                nombrePoliza = string.Format("{0}{1:yyyyMMdd_HHmm_ss}{2}", rdn.Next(10000, 100000), DateTime.Now, Path.GetExtension(file1.FileName));
                 polizaPath = Path.Combine(ruta, nombrePoliza);
                 await SaveFile(file1, polizaPath);
                 jsonData.FotoUnidad = nombrePoliza;
             }
+            
+            jsonData.IdTransportista = IdTransportista;
 
             Tr_Has_Inventario dataReport;
             dataReport = await this.AppContext.Execute<Tr_Has_Inventario>(MethodType.PUT, _UrlApi, jsonData);
@@ -141,7 +147,38 @@ namespace KLS_WEB.Controllers.Carriers.CarriersInventory
             return true;
         }
 
+        [Route("DescargarZip/{id}")]
+        public async Task<FileResult> DescargarAsync(int id)
+        {
+            Random rdn = new Random();
+            int nombreRandom = rdn.Next(10000, 100000) + rdn.Next(10000, 100000);
 
-        
+            using (ZipFile zip = new ZipFile())
+            {
+                Tr_Has_Inventario operador = new Tr_Has_Inventario();
+                Tr_Has_Inventario data = await AppContext.Execute<Tr_Has_Inventario>(MethodType.GET, _UrlApi + "/getInventory/" + id, operador);
+
+                var rutas = @_hostingEnvironment.WebRootPath + "/Resources/Inventario/" + data.Ruta + "/";
+
+                if (data.FotoPoliza != null)
+                {
+                    zip.AddFile(Path.Combine(rutas+data.FotoPoliza), "");
+                }
+                if (data.FotoUnidad != null)
+                {
+                    zip.AddFile(Path.Combine(rutas+data.FotoUnidad), "");
+                }
+
+                //zip.AddDirectory(Path.Combine(@_hostingEnvironment.WebRootPath + @"/Resources/Inventario/");
+                using (MemoryStream output = new MemoryStream())
+                {
+                    zip.Save(output);
+                    return File(output.ToArray(), "application/zip", nombreRandom + ".zip");
+                }
+
+            }
+
+        }
+
     }
 }

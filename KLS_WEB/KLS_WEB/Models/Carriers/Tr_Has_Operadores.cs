@@ -24,13 +24,13 @@ namespace KLS_WEB.Models.Carriers
         public string FotoLicencia { get; set; }
         [Column(TypeName = "varchar(250)")]
         public string FotoIne { get; set; }
+        
+        [Column(TypeName = "varchar(250)")]
+        public string FotoSeguro { get; set; }
 
-        [Column(TypeName = "varchar(15)")]
+        [Column(TypeName = "varchar(150)")]
         public string Ruta { get; set; }
-
         public int NoTelefono { get; set; }
-        [Column(TypeName = "varchar(25)")]
-        public string SeguroSocial { get; set; }
         public int estatus { get; set; }
         [Column(TypeName = "varchar(55)")]
         public string nombre { get; set; }
