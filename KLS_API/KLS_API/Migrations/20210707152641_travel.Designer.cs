@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210705175835_Viajes")]
-    partial class Viajes
+    [Migration("20210707152641_travel")]
+    partial class travel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -166,6 +166,12 @@ namespace KLS_API.Migrations
                     b.Property<int>("Estatus")
                         .HasColumnType("int");
 
+                    b.Property<string>("FotoPoliza")
+                        .HasColumnType("varchar(150)");
+
+                    b.Property<string>("FotoUnidad")
+                        .HasColumnType("varchar(150)");
+
                     b.Property<int>("IdTransportista")
                         .HasColumnType("int");
 
@@ -184,8 +190,11 @@ namespace KLS_API.Migrations
                     b.Property<string>("Placa")
                         .HasColumnType("varchar(25)");
 
-                    b.Property<string>("TipoUnidad")
-                        .HasColumnType("varchar(25)");
+                    b.Property<string>("Ruta")
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<int>("TipoUnidad")
+                        .HasColumnType("int");
 
                     b.Property<string>("Volumen")
                         .HasColumnType("varchar(45)");
@@ -201,6 +210,12 @@ namespace KLS_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("FotoIne")
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<string>("FotoLicencia")
+                        .HasColumnType("varchar(250)");
+
                     b.Property<int>("Id_Transportista")
                         .HasColumnType("int");
 
@@ -213,8 +228,10 @@ namespace KLS_API.Migrations
                     b.Property<string>("NoLicencia")
                         .HasColumnType("varchar(25)");
 
-                    b.Property<string>("NoTelefono")
-                        .IsRequired()
+                    b.Property<int>("NoTelefono")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Ruta")
                         .HasColumnType("varchar(15)");
 
                     b.Property<string>("SeguroSocial")
@@ -642,25 +659,25 @@ namespace KLS_API.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("limite_peso")
-                        .HasColumnType("decimal(65,30)");
+                        .HasColumnType("Decimal(11,4)");
 
                     b.Property<string>("limite_volumen")
                         .HasColumnType("Varchar(35)");
 
                     b.Property<decimal>("litros")
-                        .HasColumnType("decimal(65,30)");
+                        .HasColumnType("Decimal(11,4)");
 
                     b.Property<decimal>("llantas")
-                        .HasColumnType("decimal(65,30)");
+                        .HasColumnType("Decimal(11,4)");
 
                     b.Property<decimal>("mantenimiento")
-                        .HasColumnType("decimal(65,30)");
+                        .HasColumnType("Decimal(11,4)");
 
                     b.Property<string>("nombre")
                         .HasColumnType("varchar(50)");
 
                     b.Property<decimal>("rendimiento")
-                        .HasColumnType("decimal(65,30)");
+                        .HasColumnType("Decimal(11,4)");
 
                     b.HasKey("id");
 
@@ -853,24 +870,6 @@ namespace KLS_API.Migrations
                     b.Property<decimal>("Costo")
                         .HasColumnType("decimal(18,4)");
 
-                    b.Property<decimal>("CostoA")
-                        .HasColumnType("decimal(18,4)");
-
-                    b.Property<decimal>("CostoAA")
-                        .HasColumnType("decimal(18,4)");
-
-                    b.Property<decimal>("CostoCL")
-                        .HasColumnType("decimal(18,4)");
-
-                    b.Property<decimal>("CostoN")
-                        .HasColumnType("decimal(18,4)");
-
-                    b.Property<decimal>("CostoTI")
-                        .HasColumnType("decimal(18,4)");
-
-                    b.Property<decimal>("CostoTotal")
-                        .HasColumnType("decimal(18,4)");
-
                     b.Property<int>("IdAerolinea")
                         .HasColumnType("int");
 
@@ -898,34 +897,13 @@ namespace KLS_API.Migrations
                     b.Property<int>("IdTransportista")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdTravel")
-                        .HasColumnType("int");
-
                     b.Property<string>("Nombre")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,4)");
 
-                    b.Property<decimal>("PrecioA")
-                        .HasColumnType("decimal(18,4)");
-
-                    b.Property<decimal>("PrecioAA")
-                        .HasColumnType("decimal(18,4)");
-
-                    b.Property<decimal>("PrecioCL")
-                        .HasColumnType("decimal(18,4)");
-
-                    b.Property<decimal>("PrecioClienteTotal")
-                        .HasColumnType("decimal(18,4)");
-
-                    b.Property<decimal>("PrecioN")
-                        .HasColumnType("decimal(18,4)");
-
-                    b.Property<decimal>("PrecioTI")
-                        .HasColumnType("decimal(18,4)");
-
-                    b.Property<int?>("TravelId")
+                    b.Property<int>("TravelId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -944,10 +922,16 @@ namespace KLS_API.Migrations
                     b.Property<string>("Consignee")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<decimal>("CostoTotal")
+                        .HasColumnType("decimal(18,4)");
+
                     b.Property<string>("DireccionDestinatario")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("DireccionRemitente")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Estatus")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime>("FechaLlegada")
@@ -955,6 +939,9 @@ namespace KLS_API.Migrations
 
                     b.Property<DateTime>("FechaSalida")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Folio")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("HBL")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -979,6 +966,9 @@ namespace KLS_API.Migrations
 
                     b.Property<string>("OrdenCompra")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<decimal>("PrecioClienteTotal")
+                        .HasColumnType("decimal(18,4)");
 
                     b.Property<string>("ReferenciaDos")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -1219,9 +1209,11 @@ namespace KLS_API.Migrations
 
             modelBuilder.Entity("KLS_API.Models.Travels.Services", b =>
                 {
-                    b.HasOne("KLS_API.Models.Travels.Travel", null)
+                    b.HasOne("KLS_API.Models.Travels.Travel", "Travel")
                         .WithMany("Servicios")
-                        .HasForeignKey("TravelId");
+                        .HasForeignKey("TravelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("KLS_API.Models.Travels.Unidad", b =>

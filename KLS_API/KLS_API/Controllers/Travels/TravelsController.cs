@@ -21,11 +21,82 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
-                //var dt = from viajes in _dbContext.Viajes
-                //         join cliente in _dbContext.Clientes on viajes.IdCliente equals cliente.id
-                //         join ciudad in _dbContext.Cat_Ciudad on viajes.IdOrigen equals ciudad.id
-                //         join 
-                return Ok();
+                var dt = from viajes in _dbContext.Viajes
+                         join cliente in _dbContext.Clientes on viajes.IdCliente equals cliente.id
+                         join ciudadorigen in _dbContext.Cat_Ciudad on viajes.IdOrigen equals ciudadorigen.id
+                         join estadoorigen in _dbContext.Cat_Estado on ciudadorigen.id_estado equals estadoorigen.id
+                         join ciudaddestino in _dbContext.Cat_Ciudad on viajes.IdDestino equals ciudaddestino.id
+                         join estadodestino in _dbContext.Cat_Estado on ciudaddestino.id_estado equals estadodestino.id
+                         select new
+                         {
+                             viajes.Id,
+                             viajes.Folio,
+                             cliente = cliente.NombreCorto,
+                             origen = string.Concat(estadoorigen.nombre, "-", ciudadorigen.nombre),
+                             destino = string.Concat(estadodestino.nombre, "-", ciudaddestino.nombre),
+                             viajes.FechaSalida,
+                             viajes.FechaLlegada,
+                             viajes.Estatus
+                         };
+                return Ok(dt);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet("[action]/{id}")]
+        public IActionResult GetTravel(int id)
+        {
+            try
+            {
+                var viaje = id > 0 ? (from viajes in _dbContext.Viajes
+                                      join cliente in _dbContext.Clientes on viajes.IdCliente equals cliente.id
+                                      join ciudadorigen in _dbContext.Cat_Ciudad on viajes.IdOrigen equals ciudadorigen.id
+                                      join estadoorigen in _dbContext.Cat_Estado on ciudadorigen.id_estado equals estadoorigen.id
+                                      join ciudaddestino in _dbContext.Cat_Ciudad on viajes.IdDestino equals ciudaddestino.id
+                                      join estadodestino in _dbContext.Cat_Estado on ciudaddestino.id_estado equals estadodestino.id
+                                      join unidad in _dbContext.Cat_Tipos_Unidades on viajes.IdUnidad equals unidad.id
+                                      where viajes.Id == id
+                                      select new
+                                      {
+                                          viajes.Id,
+                                          viajes.Folio,
+                                          nombrecliente = cliente.NombreCorto,
+                                          viajes.DireccionRemitente,
+                                          viajes.DireccionDestinatario,
+                                          nombreruta = string.Concat(estadoorigen.nombre, " - ", estadodestino.nombre),
+                                          viajes.FechaSalida,
+                                          viajes.FechaLlegada,
+                                          viajes.CostoTotal,
+                                          preciototal = viajes.PrecioClienteTotal,
+                                          tipounidadnombre = unidad.nombre
+                                      }).FirstOrDefault() :
+                                      (from viajes in _dbContext.Viajes
+                                       join cliente in _dbContext.Clientes on viajes.IdCliente equals cliente.id
+                                       join ciudadorigen in _dbContext.Cat_Ciudad on viajes.IdOrigen equals ciudadorigen.id
+                                       join estadoorigen in _dbContext.Cat_Estado on ciudadorigen.id_estado equals estadoorigen.id
+                                       join ciudaddestino in _dbContext.Cat_Ciudad on viajes.IdDestino equals ciudaddestino.id
+                                       join estadodestino in _dbContext.Cat_Estado on ciudaddestino.id_estado equals estadodestino.id
+                                       join unidad in _dbContext.Cat_Tipos_Unidades on viajes.IdUnidad equals unidad.id
+                                       select new
+                                       {
+                                           viajes.Id,
+                                           viajes.Folio,
+                                           nombrecliente = cliente.NombreCorto,
+                                           viajes.DireccionRemitente,
+                                           viajes.DireccionDestinatario,
+                                           nombreruta = string.Concat(estadoorigen.nombre, " - ", estadodestino.nombre),
+                                           viajes.FechaSalida,
+                                           viajes.FechaLlegada,
+                                           viajes.CostoTotal,
+                                           preciototal = viajes.PrecioClienteTotal,
+                                           tipounidadnombre = unidad.nombre
+                                       }).OrderByDescending(x => x.Id).FirstOrDefault();
+
+
+                return Ok(viaje);
             }
             catch (Exception ex)
             {

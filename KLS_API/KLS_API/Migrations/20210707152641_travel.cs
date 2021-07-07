@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace KLS_API.Migrations
 {
-    public partial class Viajes : Migration
+    public partial class travel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,6 +14,7 @@ namespace KLS_API.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Folio = table.Column<string>(nullable: true),
                     IdCliente = table.Column<int>(nullable: false),
                     IdOrigen = table.Column<int>(nullable: false),
                     IdDestino = table.Column<int>(nullable: false),
@@ -24,6 +25,9 @@ namespace KLS_API.Migrations
                     FechaLlegada = table.Column<DateTime>(nullable: false),
                     DireccionRemitente = table.Column<string>(nullable: true),
                     DireccionDestinatario = table.Column<string>(nullable: true),
+                    CostoTotal = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    PrecioClienteTotal = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
+                    Estatus = table.Column<string>(nullable: true),
                     OrdenCompra = table.Column<string>(nullable: true),
                     ReferenciaDos = table.Column<string>(nullable: true),
                     ReferenciaTres = table.Column<string>(nullable: true),
@@ -43,33 +47,20 @@ namespace KLS_API.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    IdTravel = table.Column<int>(nullable: false),
+                    TravelId = table.Column<int>(nullable: false),
                     Nombre = table.Column<string>(nullable: true),
                     IdTransportista = table.Column<int>(nullable: false),
                     IdChofer = table.Column<int>(nullable: false),
                     Costo = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     Precio = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
-                    CostoTotal = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
-                    PrecioClienteTotal = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
-                    CostoTI = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
-                    PrecioTI = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     IdNaviera = table.Column<int>(nullable: false),
                     Buque = table.Column<string>(nullable: true),
-                    CostoN = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
-                    PrecioN = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     IdAgenteAduanal = table.Column<int>(nullable: false),
                     IdContactoAA = table.Column<int>(nullable: false),
-                    CostoAA = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
-                    PrecioAA = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     IdAerolinea = table.Column<int>(nullable: false),
                     IdContactoA = table.Column<int>(nullable: false),
-                    CostoA = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
-                    PrecioA = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     IdCoLoader = table.Column<int>(nullable: false),
-                    IdContactoCL = table.Column<int>(nullable: false),
-                    CostoCL = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
-                    PrecioCL = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
-                    TravelId = table.Column<int>(nullable: true)
+                    IdContactoCL = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -79,7 +70,7 @@ namespace KLS_API.Migrations
                         column: x => x.TravelId,
                         principalTable: "Viajes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
