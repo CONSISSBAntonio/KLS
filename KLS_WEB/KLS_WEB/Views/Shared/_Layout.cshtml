@@ -41,9 +41,9 @@
             <!-- END TOP BAR -->
             <div class="wrapper">
                 <!-- LEFT BAR -->
-                <div id="left_bar" class="left-bar bg-dark text-white pt-2 expand" onclick="hideMenu();">
+                <div id="left_bar" class="left-bar bg-dark text-white pt-2 expand">
                     <div class="bar-container">
-                        <div class="expand-control unselectable">
+                        <div class="expand-control unselectable" onclick="hideMenu();">
                             <div class="material-icons arrow-bar size-32 c-pointer pl-3">chevron_right</div>
                         </div>
                         <ul class="list-unstyled text-left">
@@ -177,11 +177,10 @@
 
         function updateContainer() {
             var $containerHeight = $(window).height();
-            console.log($containerHeight);
-            if ($containerHeight <= 776) {
+            if ($containerHeight <= 600) {
                 $(".left-bar").removeClass("expand");
             }
-            if ($containerHeight > 777) {
+            if ($containerHeight > 601) {
                 $(".left-bar").addClass("expand");
                 eventHide();
             }

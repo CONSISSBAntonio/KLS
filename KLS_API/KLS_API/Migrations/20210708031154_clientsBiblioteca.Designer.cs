@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210708031154_clientsBiblioteca")]
+    partial class clientsBiblioteca
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -822,35 +824,6 @@ namespace KLS_API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cl_Has_Checkpoint");
-                });
-
-            modelBuilder.Entity("KLS_API.Models.Clients.Cl_Has_Contactos", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Correo")
-                        .HasColumnType("varchar(55)");
-
-                    b.Property<int>("Estatus")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id_Cliente")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("varchar(55)");
-
-                    b.Property<string>("Telefono")
-                        .HasColumnType("varchar(35)");
-
-                    b.Property<string>("TipoContacto")
-                        .HasColumnType("varchar(55)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Cl_Has_Contactos");
                 });
 
             modelBuilder.Entity("KLS_API.Models.Clients.Cl_Has_Routes", b =>

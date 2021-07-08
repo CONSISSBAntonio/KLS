@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210708033502_clientsConactos")]
+    partial class clientsConactos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -836,7 +838,7 @@ namespace KLS_API.Migrations
                     b.Property<int>("Estatus")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id_Cliente")
+                    b.Property<int>("Id_Transportista")
                         .HasColumnType("int");
 
                     b.Property<string>("Nombre")

@@ -1,0 +1,118 @@
+﻿@{
+    ViewData["Title"] = "Clientes|Certificaciones";
+}
+@{ int id = ViewBag.id; }
+<div class="data-content p-2 text-left">
+    <div class="p-1">
+        <div class="d-flex flex-nowrap">
+            <div class="p-2">
+                <div class="text-left d-flex p-2">
+                    <a href="/Clients/formClients/@id">
+                        <div class="material-icons icon-red">arrow_back</div>
+                    </a>
+                    <div class="text-uppercase poppins medium size-24 pl-2">CERTIFICACIONES</div>
+                </div>
+            </div>
+        </div>
+        <form id="frmRegister" action="#" method="post">
+            <input type="hidden" value="0" id="idCertificacion" name="Id" />
+            <div class="text-right" style="width:40%;">
+                <button class="btn btn-sm" type="submit" style="background-color:transparent;">
+                    <span class="material-icons" style="color:cornflowerblue;" id="span-icon">
+
+                    </span>
+                </button>
+            </div>
+            <div class="p-4 shadow bg-white" style="width:40%;">
+                <div class="form-group row">
+                    <div class="col-sm-5">
+                        <b>Certificaciones</b>
+                    </div>
+                    <div class="col-sm-7">
+                        <b>Comentarios adicionales</b>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-5">
+                        <input type="checkbox" value="true" id="Ctpat" name="Ctpat">
+                        <label for="Ctpat">
+                            CTPAT
+                        </label>
+                    </div>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control form-control-sm" id="C_Opcional" name="C_Opcional" placeholder="Opcional">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-5">
+                        <input type="checkbox" value="true" id="Otro" name="Otro">
+                        <label for="Otro">
+                            Otro
+                        </label>
+                    </div>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control form-control-sm" id="O_Opcional" name="O_Opcional" placeholder="Opcional">
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
+    </div>
+</div>
+@section Scripts{
+    <script>
+        $(window).ready(function () {
+            valId();
+            $("#frmRegister").submit(function (event) {
+                event.preventDefault();
+                var jsonData = convertJson($("#frmRegister"));
+                jsonData["Id_Cliente"] = @id;
+
+                if (parseInt($("#idCertificacion").val()) == 0) {
+                    $.post("/Clients/Certifications/setCertifiacions/", jsonData, function (res) {
+                        $("#idCertificacion").val(res.id);
+                        valId();
+                        dToast("success", "Registro guardado exitosamente.", "Registrado");
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de guardar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                } else {
+                    $.post("/Clients/Certifications/putCertifiacions/",jsonData, function (res) {
+                        valId()
+                        dToast("success", "Registro actualizado exitosamente.", "Actualizado");
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de actualizar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                }
+                valId();
+            });
+        });
+
+        function valId(){
+            if (parseInt(@id) != 0) {
+                $("#span-icon").empty();
+                $.get("/Clients/Certifications/getCertifiacions/", { "Id_Cliente":@id}, function (res) {
+                    if (res != null) {
+                        $("#span-icon").append("edit");
+                        $("#C_Opcional").val(res.c_Opcional);
+                        $("#idCertificacion").val(res.id);
+                        $('#Ctpat').prop('checked', res.ctpat);
+                        $('#Otro').prop('checked', res.otro);
+                        $("#O_Opcional").val(res.o_Opcional);
+                    } else {
+                        $("#span-icon").append("save");
+                    }
+                }).fail(function (error, xhr, status) {
+                    console.log(xhr);
+                });
+            } else {
+                dToast("error", "Error al solicitar certificaciones", "Error");
+            }
+        }
+    </script>
+}

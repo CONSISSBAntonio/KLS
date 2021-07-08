@@ -41,9 +41,14 @@ namespace KLS_API.Context
         
         //Clientes
         public DbSet<Clientes> Clientes { get; set; }
+        public DbSet<Cl_Has_Routes> Cl_Has_Routes { get; set; }
+        public DbSet<Cl_Has_Checkpoint> Cl_Has_Checkpoint { get; set; }
+        public DbSet<Cl_Has_Certificacion> Cl_Has_Certificacion { get; set; }
+        public DbSet<Cl_Has_Box> Cl_Has_Box { get; set; }
+        public DbSet<Cl_Has_Biblioteca> Cl_Has_Biblioteca { get; set; }
+        public DbSet<Cl_Has_Contactos> Cl_Has_Contactos { get; set; }
 
         //Viajes
-
         public DbSet<Facturacion> Facturacion { get; set; }
         public DbSet<Travel> Viajes { get; set; }
         public DbSet<Services> Servicios { get; set; }

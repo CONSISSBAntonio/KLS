@@ -54,6 +54,5 @@ namespace KLS_WEB.Controllers.Carriers.CarriersContacts
             dataReport = await this.AppContext.Execute<Tr_Has_Contactos>(MethodType.PUT, _UrlApi, dataModel);
             return Json(dataReport);
         }
-
     }
 }

@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210708020953_clientsBox")]
+    partial class clientsBox
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -693,35 +695,6 @@ namespace KLS_API.Migrations
                     b.ToTable("Cat_Tipos_Unidades");
                 });
 
-            modelBuilder.Entity("KLS_API.Models.Clients.Cl_Has_Biblioteca", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Archivo")
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<int>("Estatus")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("FechaEvento")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("Id_Cliente")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("varchar(55)");
-
-                    b.Property<string>("Ruta")
-                        .HasColumnType("varchar(155)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Cl_Has_Biblioteca");
-                });
-
             modelBuilder.Entity("KLS_API.Models.Clients.Cl_Has_Box", b =>
                 {
                     b.Property<int>("Id")
@@ -822,35 +795,6 @@ namespace KLS_API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cl_Has_Checkpoint");
-                });
-
-            modelBuilder.Entity("KLS_API.Models.Clients.Cl_Has_Contactos", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Correo")
-                        .HasColumnType("varchar(55)");
-
-                    b.Property<int>("Estatus")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id_Cliente")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Nombre")
-                        .HasColumnType("varchar(55)");
-
-                    b.Property<string>("Telefono")
-                        .HasColumnType("varchar(35)");
-
-                    b.Property<string>("TipoContacto")
-                        .HasColumnType("varchar(55)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Cl_Has_Contactos");
                 });
 
             modelBuilder.Entity("KLS_API.Models.Clients.Cl_Has_Routes", b =>
