@@ -44,7 +44,7 @@ namespace KLS_WEB.Controllers.Travels
 
         [HttpPost]
         [Route("UploadFile")]
-        public async Task<IActionResult> UploadFile(IFormFile file)
+        public async Task<IActionResult> UploadFile(IFormFile file, int TravelId)
         {
             try
             {
@@ -62,11 +62,11 @@ namespace KLS_WEB.Controllers.Travels
 
                 Facturacion facturacion = new Facturacion()
                 {
+                    TravelId = TravelId,
                     nombre = file.FileName,
                     fullpath = rutaFile,
                     fechacarga = DateTime.Now,
-                    usuarioId = 1,
-                    usuario = "Daniel"
+                    usuario = User.Identity.Name
                 };
 
                 if (isSaved)

@@ -35,8 +35,14 @@ namespace KLS_WEB.Controllers.Travels
         public async Task<IActionResult> AddEdit(int id)
         {
             Travel travel = await AppContext.Execute<Travel>(MethodType.GET, Path.Combine(_UrlApi, "GetTravel", id.ToString()), null);
-
+            TempData["TravelId"] = travel.Id;
             return View(this._UrlView + (id == 0 ? "New.cshtml" : "Details.cshtml"), travel);
+        }
+
+        [Route("[action]")]
+        public void Tester()
+        {
+
         }
 
         [Route("getTravels")]

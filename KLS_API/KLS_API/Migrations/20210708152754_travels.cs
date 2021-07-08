@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace KLS_API.Migrations
 {
-    public partial class travel : Migration
+    public partial class travels : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -39,6 +39,29 @@ namespace KLS_API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Viajes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Facturacion",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    TravelId = table.Column<int>(nullable: false),
+                    nombre = table.Column<string>(type: "VARCHAR(300)", nullable: true),
+                    fullpath = table.Column<string>(nullable: true),
+                    fechacarga = table.Column<DateTime>(nullable: false),
+                    usuario = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Facturacion", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Facturacion_Viajes_TravelId",
+                        column: x => x.TravelId,
+                        principalTable: "Viajes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -94,6 +117,11 @@ namespace KLS_API.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Facturacion_TravelId",
+                table: "Facturacion",
+                column: "TravelId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Servicios_TravelId",
                 table: "Servicios",
                 column: "TravelId");
@@ -106,6 +134,9 @@ namespace KLS_API.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Facturacion");
+
             migrationBuilder.DropTable(
                 name: "Unidades");
 

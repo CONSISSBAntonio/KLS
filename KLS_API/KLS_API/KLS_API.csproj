@@ -72,6 +72,16 @@
     <Compile Remove="Migrations\20210707152400_viajes.Designer.cs" />
     <Compile Remove="Migrations\20210707152416_travel.cs" />
     <Compile Remove="Migrations\20210707152416_travel.Designer.cs" />
+    <Compile Remove="Migrations\20210708150054_factura.cs" />
+    <Compile Remove="Migrations\20210708150054_factura.Designer.cs" />
+    <Compile Remove="Migrations\20210708150426_factura.cs" />
+    <Compile Remove="Migrations\20210708150426_factura.Designer.cs" />
+    <Compile Remove="Migrations\20210708151410_factura.cs" />
+    <Compile Remove="Migrations\20210708151410_factura.Designer.cs" />
+    <Compile Remove="Migrations\20210708151552_facturs.cs" />
+    <Compile Remove="Migrations\20210708151552_facturs.Designer.cs" />
+    <Compile Remove="Migrations\20210708152204_travel.cs" />
+    <Compile Remove="Migrations\20210708152204_travel.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

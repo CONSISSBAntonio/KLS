@@ -36,5 +36,6 @@ namespace KLS_API.Models.Travels
         public string HBL { get; set; }
         public string Intercom { get; set; }
         public List<Services> Servicios { get; set; }
+        public List<Facturacion> Facturas { get; set; }
     }
 }
