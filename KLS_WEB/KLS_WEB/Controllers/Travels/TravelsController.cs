@@ -3,7 +3,6 @@ using KLS_WEB.Models.Carriers;
 using KLS_WEB.Models.Travels;
 using KLS_WEB.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -32,18 +31,18 @@ namespace KLS_WEB.Controllers.Travels
             return View(this._UrlView + "Index.cshtml");
         }
 
-        [Route("formTravels/{id=0}")]
-        public IActionResult formTravels(int id = 0)
+        [Route("{id}")]
+        public async Task<IActionResult> AddEdit(int id)
         {
-            ViewBag.id = id;
-            return View(this._UrlView + (id == 0 ? "New.cshtml" : "Details.cshtml"));
+            Travel travel = await AppContext.Execute<Travel>(MethodType.GET, Path.Combine(_UrlApi, "GetTravel", id.ToString()), null);
+
+            return View(this._UrlView + (id == 0 ? "New.cshtml" : "Details.cshtml"), travel);
         }
 
         [Route("getTravels")]
-        public async Task<JsonResult> Get(Transportista dataModel)
+        public async Task<JsonResult> Get()
         {
-            List<Transportista> dataReport;
-            dataReport = await this.AppContext.Execute<List<Transportista>>(MethodType.GET, _UrlApi, dataModel);
+            List<TravelDT> dataReport = await this.AppContext.Execute<List<TravelDT>>(MethodType.GET, _UrlApi, null);
             return Json(dataReport);
         }
 
@@ -64,6 +63,8 @@ namespace KLS_WEB.Controllers.Travels
                 DireccionRemitente = dataModel.DireccionRemitente,
                 IdDestino = dataModel.Destino,
                 DireccionDestinatario = dataModel.DireccionDestinatario,
+                CostoTotal = dataModel.Costototal,
+                PrecioClienteTotal = dataModel.Preciototal,
                 IdRuta = dataModel.Ruta,
                 IdUnidad = dataModel.TipoUnidad,
                 TipoViaje = dataModel.TipoViaje,
@@ -84,14 +85,12 @@ namespace KLS_WEB.Controllers.Travels
 
                 ServicesDTO service = new ServicesDTO
                 {
-                    IdTravel = ViajeId,
+                    TravelId = ViajeId,
                     Nombre = nombre,
                     IdTransportista = dataModel.Transportista,
                     IdChofer = dataModel.Chofer,
                     Precio = dataModel.TerrestreNacionalPrecio,
-                    Costo = dataModel.TerrestreNacionalCosto,
-                    PrecioClienteTotal = dataModel.TerrestreNacionalPrecio,
-                    CostoTotal = dataModel.TerrestreNacionalCosto
+                    Costo = dataModel.TerrestreNacionalCosto
                 };
 
                 ServicesDTO newService = await this.AppContext.Execute<ServicesDTO>(MethodType.POST, Path.Combine(_UrlApi, "PostService"), service);

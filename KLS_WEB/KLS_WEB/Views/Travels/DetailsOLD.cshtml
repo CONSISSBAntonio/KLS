@@ -1,0 +1,849 @@
+﻿@model KLS_WEB.Models.Travels.Travel
+
+@{
+    ViewData["Title"] = "Detalles del viaje";
+}
+
+<div class="data-content p-4 text-left">
+    <div class="p-4">
+        <div class="row d-flex b-3 justify-content-between">
+            <div class="d-flex">
+                <a href="/Travels">
+                    <div class="material-icons icon-red">arrow_back</div>
+                </a>
+                <div class="text-uppercase poppins medium size-24 pl-2">Viaje @Model.Folio</div>
+            </div>
+            <div class="d-flex mx-auto">
+                <h4>EN TRÁNSITO</h4>
+                <h4 class="ml-5">A TIEMPO (0HR)</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+
+                <form id="frmRegister" action="#" method="post">
+
+                    <div class="p-4 shadow bg-white">
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Folio de viaje</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="folio" disabled="disabled" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Cliente</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="cliente" disabled="disabled" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Dirección Origen</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="direccionorigen" disabled="disabled" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Dirección Destino</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="direcciondestino" disabled="disabled" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Ruta</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="ruta" disabled="disabled" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Fecha Salida</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="fechasalida" disabled="disabled" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Fecha Entrega</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="fechaentrega" disabled="disabled" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Costo</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="costo" disabled="disabled" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Precio Cliente</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="preciocliente" disabled="disabled" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Tipo de Unidad</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="tipounidad" disabled="disabled" required>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="col-md-8">
+                <div class="catalog-list">
+
+                    <a href="#" class="catalog" id="servicios">
+                        <div class="content">
+                            <span class="material-icons">
+                                people
+                            </span>
+                            <div class="name font-barlow">Servicios</div>
+                        </div>
+                    </a>
+                    <a href="#" class="catalog">
+                        <div class="content" id="requisitos">
+                            <span class="material-icons">
+                                inventory_2
+                            </span>
+                            <div class="name font-barlow">Requisitos</div>
+                        </div>
+                    </a>
+                    <a href="#" class="catalog" id="mercancias">
+                        <div class="content">
+                            <span class="material-icons">
+                                store
+                            </span>
+                            <div class="name font-barlow">Mercancía</div>
+                        </div>
+                    </a>
+
+                    <a href="#" class="catalog" id="facturacion">
+                        <div class="content">
+                            <span class="material-icons">
+                                receipt_long
+                            </span>
+                            <div class="name font-barlow">Facturación</div>
+                        </div>
+                    </a>
+
+                    <a href="#" class="catalog" id="documentos">
+                        <div class="content">
+                            <span class="material-icons">
+                                folder
+                            </span>
+                            <div class="name font-barlow">Documentos</div>
+                        </div>
+                    </a>
+                    <a href="#" class="catalog" id="historial">
+                        <div class="content">
+                            <span class="material-icons">
+                                manage_search
+                            </span>
+                            <div class="name font-barlow">Historial</div>
+                        </div>
+                    </a>
+                    <a href="#" class="catalog">
+                        <div class="content">
+                            <span class="material-icons">
+                                pin_drop
+                            </span>
+                            <div class="name font-barlow">Monitoreo</div>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Servicios *@
+<div class="data-content px-4 text-left d-none" id="div-servicios">
+    <h4>Servicios</h4>
+</div>
+
+@* Requisitos *@
+<div class="data-content px-4 text-left d-none" id="div-requisitos">
+    <div class="p-4">
+        <div class="row">
+            <div class="col-md-6">
+                <h4>REQUISITOS CARGA</h4>
+
+                <div class="p-4 shadow bg-white">
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="folio" disabled>
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0"><strong>Instrucciónes</strong></label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="cliente" disabled>
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0">Equipo de seguridad; chaleco reflejante verde o naranja, casco y botas de casquillo, lentes de seguridad y guantes de seguridad.</label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="direccionorigen" disabled>
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0">Equipo COVID; guantes, cubrebocas, careta y lentes</label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="direcciondestino" disabled="disabled">
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0">Llevar SUA en fisico</label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="ruta" disabled="disabled" required>
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0">Llevar licencia vigente y en fisico</label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="fechasalida" disabled="disabled" required>
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0">Llevar tarjeta de circulación de tracto físico</label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="fechaentrega" disabled="disabled" required>
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0">Llevar certificado de fumigación impreso</label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="costo" disabled="disabled" required>
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0">Llevar dos gatas</label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="preciocliente" disabled="disabled" required>
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0">Llevar INE</label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="tipounidad" disabled="disabled" required>
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0">Llevar póliza de segur en físico</label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="tipounidad" disabled="disabled" required>
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0">contar con alarma de reversa que funcione</label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="tipounidad" disabled="disabled" required>
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0">Unidad en buenas condiciones</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <h4>REQUISITOS DESCARGA</h4>
+
+                <div class="p-4 shadow bg-white">
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="folio" disabled>
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0"><strong>Instrucciónes</strong></label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="cliente" disabled>
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0">Equipo de seguridad; chaleco reflejante verde o naranja, casco y botas de casquillo, lentes de seguridad y guantes de seguridad.</label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="direccionorigen" disabled>
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0">Equipo COVID; guantes, cubrebocas, careta y lentes</label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="direcciondestino" disabled="disabled">
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0">Llevar SUA en fisico</label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="ruta" disabled="disabled" required>
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0">Llevar licencia vigente y en fisico</label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="fechasalida" disabled="disabled" required>
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0">Llevar tarjeta de circulación de tracto físico</label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="fechaentrega" disabled="disabled" required>
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0">Llevar certificado de fumigación impreso</label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="costo" disabled="disabled" required>
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0">Llevar dos gatas</label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="preciocliente" disabled="disabled" required>
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0">Llevar INE</label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="tipounidad" disabled="disabled" required>
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0">Llevar póliza de segur en físico</label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="tipounidad" disabled="disabled" required>
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0">contar con alarma de reversa que funcione</label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="tipounidad" disabled="disabled" required>
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0">Presentarse 40 minutos antes de su descarga</label>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" id="tipounidad" disabled="disabled" required>
+                        </div>
+                        <label class="col-sm-10 col-form-label col-form-label-sm pl-0">Llevar todos los documentos que le dan al cargar: Hoja de remisión, certificado de calidad, certificado del producto</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Mercancia *@
+<div class="data-content px-4 text-left d-none" id="div-mercancias">
+    <div class="p-4">
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Mercancia</h4>
+                <div class="p-4 shadow bg-white mb-3">
+                    <h6>Descripción</h6>
+                    <div class="row">
+                        <div class="col-md-12 p-0 d-flex">
+                            <div class="form-group col-md-4">
+                                <label class="col-form-label col-form-label-sm">Alto</label>
+                                <div>
+                                    <input type="text" placeholder="Escribe aquí" class="form-control custome-input" required>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="col-form-label col-form-label-sm">Ancho</label>
+                                <div>
+                                    <input type="text" placeholder="Escribe aquí" class="form-control custome-input" required>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="col-form-label col-form-label-sm">Largo</label>
+                                <div>
+                                    <input type="text" placeholder="Escribe aquí" class="form-control custome-input" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 p-0 d-flex">
+                            <div class="form-group col-md-4">
+                                <label class="col-form-label col-form-label-sm">Peso</label>
+                                <div>
+                                    <input type="text" placeholder="Escribe aquí" class="form-control custome-input" required>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="col-form-label col-form-label-sm">Peso volumétrico</label>
+                                <div>
+                                    <input type="text" placeholder="Escribe aquí" class="form-control custome-input" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="py-4 shadow bg-white">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <input type="checkbox" class="custome-check" disabled>
+                                    <label class="col-form-label col-form-label-sm pl-0"><strong>Tipos</strong></label>
+                                </div>
+                                <label class="col-form-label col-form-label-sm pr-4"><strong>Comentarios adicionales</strong> </label>
+
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <input type="checkbox" class="custome-check" disabled>
+                                    <label class="col-form-label col-form-label-sm pl-0">Densidad</label>
+                                </div>
+                                <div class="form-group col-6">
+                                    <div>
+                                        <select class="form-control form-control-sm">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <input type="checkbox" class="custome-check" disabled>
+                                    <label class="col-form-label col-form-label-sm pl-0">Tipo presentación</label>
+                                </div>
+                                <div class="form-group col-6">
+                                    <div>
+                                        <select class="form-control form-control-sm">
+                                            @*<option value="1">mi cliente</option>*@
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="">
+                                <input type="checkbox" class="custome-check" disabled>
+                                <label class="col-form-label col-form-label-sm pl-0">Peligroso</label>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <input type="checkbox" class="custome-check" disabled>
+                                    <label class="col-form-label col-form-label-sm pl-0">Material</label>
+                                </div>
+                                <div class="form-group col-6">
+                                    <div>
+                                        <select class="form-control form-control-sm">
+                                            @*<option value="1">mi cliente</option>*@
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="">
+                                <input type="checkbox" class="custome-check" disabled>
+                                <label class="col-form-label col-form-label-sm pl-0">Derramable</label>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <input type="checkbox" class="custome-check" disabled>
+                                    <label class="col-form-label col-form-label-sm pl-0">Valor</label>
+                                </div>
+                                <div class="form-group col-6">
+                                    <div>
+                                        <select class="form-control form-control-sm">
+                                            @*<option value="1">mi cliente</option>*@
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="">
+                                <input type="checkbox" class="custome-check" disabled>
+                                <label class="col-form-label col-form-label-sm pl-0">Custodia</label>
+                            </div>
+                            <div class="">
+                                <input type="checkbox" class="custome-check" disabled>
+                                <label class="col-form-label col-form-label-sm pl-0">Olor penetrante</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h4 class="invisible">...</h4>
+                <div class="p-4 shadow bg-white">
+                    <h6>Requisitos especiales</h6>
+                    <div class="col-sm-12 p-0">
+                        <textarea placeholder="Opciones" class="form-control form-control-sm" rows="35"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* facturacion *@
+<div class="data-content px-4 text-left d-none" id="div-facturacion">
+    <div class="p-4">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="text-left d-flex justify-content-between mb-3">
+                    <h4>FACTURACIÓN</h4>
+                    <div style="padding-left:20%;" onclick="selectServicios(this);">
+                        <a class="btn btn-sm bg-white" style="font-size:1.8rem;width:3.5rem" href="#">
+                            <span class="material-icons">
+                                add
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="p-4 shadow bg-white">
+                    <table id="table" class="table table-striped table-bordered display table-hover table-facturas text-uppercase" width="100%">
+                        <thead>
+                            <tr>
+                                <th style="width: 300px !important;">Nombre</th>
+                                <th>Fecha de carga</th>
+                                <th>Usuario</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-info"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@* documentos *@
+<div class="data-content px-4 text-left d-none" id="div-documentos">
+    <div class="p-4">
+        <h4>DOCUMENTOS</h4>
+        <button class="btn btn-dark px-5" style="border-radius:0px">Generar carta porte</button>
+        <div class="row">
+            <div class="col-md-6 mt-5">
+                <div class="text-left d-flex justify-content-between">
+                    <h4>EVIDENCIA DIGITAL</h4>
+                </div>
+                <div class="p-4 shadow bg-white">
+                    <table id="table" class="table table-striped table-bordered display table-hover table-viajes text-uppercase" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Tiempo de entrega</th>
+                                <th>Estatus</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-info"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-4 mt-5">
+                <div class="text-left d-flex justify-content-between">
+                    <h4>EVIDENCIA FÍSICA</h4>
+                    <div style="padding-left:20%;">
+                        <a class="btn btn-sm bg-white mb-2" href="#">
+                            <span class="material-icons">
+                                save
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="p-4 shadow bg-white">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-center"><strong>Nombre</strong></h6>
+                            <div class="">
+                                <div>
+                                    <input type="checkbox" class="custome-check">
+                                    <label class="col-form-label col-form-label-sm pl-0">Carta de recepción</label>
+                                </div>
+                            </div>
+                            <div class="">
+                                <div>
+                                    <input type="checkbox" class="custome-check">
+                                    <label class="col-form-label col-form-label-sm pl-0">Sello de vigilancia</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-center"><strong>Tiempo de entrega</strong></h6>
+                            <div class="">
+                                <label class="col-form-label col-form-label-sm pl-4">Vencida</label>
+                            </div>
+                            <div class="">
+                                <label class="col-form-label col-form-label-sm pl-4">3d 2hrs</label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@* hostorial *@
+<div class="data-content px-4 text-left d-none" id="div-historial">
+    <div class="p-4">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="text-left d-flex justify-content-between mb-3">
+                    <h4>HISTORIAL</h4>
+                    <div style="padding-left:20%;">
+                        <a class="btn btn-sm bg-white" style="font-size:1.8rem;width:3.5rem" href="#">
+                            <span class="material-icons">
+                                add
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="p-4 shadow bg-white">
+                    <table id="table" class="table table-striped table-bordered display table-hover table-viajes text-uppercase" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Registro</th>
+                                <th>Usuario</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-info"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal global-->
+<div class="modal fade" id="modalDiv" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo-modal">AGREGAR</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                <form id="form" name="form" enctype="multipart/form-data" method="post">
+                    <div class="form-group col-12">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" name="file" id="customFile" required>
+                            <label class="custom-file-label" for="customFile">Seleccione un archivo</label>
+                        </div>
+                    </div>
+                    <br />
+                    <button type="button" class="btn btn-dark guardar" style="width:100%" onclick="UploadFile()">Agregar</button>
+                </form>
+                @*<form asp-controller="Facturacion" asp-action="UploadFile" method="post" enctype="multipart/form-data">
+                    <div class="form-group col-12">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" name="file" id="customFile">
+                            <label class="custom-file-label" for="customFile">Seleccione un archivo</label>
+                        </div>
+                    </div>
+                    <br />
+                    <button type="submit" class="btn btn-dark guardar" style="width:100%">Agregar</button>
+                </form>*@
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal global-->
+
+@section Scripts{      
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>  
+    <script>   
+        $(document).ready(function () {
+
+            $('#servicios').on('click', function () {
+
+                var container = $('#div-servicios');
+                $('#div-requisitos').addClass('d-none');
+                $('#div-mercancias').addClass('d-none');
+                $('#div-facturacion').addClass('d-none');
+                $('#div-documentos').addClass('d-none');
+                $('#div-historial').addClass('d-none');
+
+                if (container.css('display') == 'none')
+                    $('#div-servicios').removeClass('d-none');
+                else
+                    $('#div-servicios').addClass('d-none');
+
+            });
+
+            $('#requisitos').on('click', function () {
+
+                var container = $('#div-requisitos');
+                $('#div-servicios').addClass('d-none');
+                $('#div-mercancias').addClass('d-none');
+                $('#div-facturacion').addClass('d-none');
+                $('#div-documentos').addClass('d-none');
+                $('#div-historial').addClass('d-none');
+
+                if (container.css('display') == 'none') {
+                    $('#div-requisitos').removeClass('d-none');
+                }
+                else
+                    $('#div-requisitos').addClass('d-none');
+            });
+
+            $('#mercancias').on('click', function () {
+
+                var container = $('#div-mercancias');
+                $('#div-servicios').addClass('d-none');
+                $('#div-requisitos').addClass('d-none');
+                $('#div-facturacion').addClass('d-none');
+                $('#div-documentos').addClass('d-none');
+                $('#div-historial').addClass('d-none');
+
+                if (container.css('display') == 'none')
+                    $('#div-mercancias').removeClass('d-none');
+                else
+                    $('#div-mercancias').addClass('d-none');
+
+            });
+
+            $('#facturacion').on('click', function () {
+                var container = $('#div-facturacion');
+                $('#div-servicios').addClass('d-none');
+                $('#div-requisitos').addClass('d-none');
+                $('#div-documentos').addClass('d-none');
+                $('#div-mercancias').addClass('d-none');
+                $('#div-hostorial').addClass('d-none');
+
+                if (container.css('display') == 'none') {
+                    $('#div-facturacion').removeClass('d-none');
+                    loadTableFactura();                    
+                }
+                else
+                    $('#div-facturacion').addClass('d-none');
+
+            });
+
+            $('#documentos').on('click', function () {
+
+                var container = $('#div-documentos');
+                $('#div-servicios').addClass('d-none');
+                $('#div-requisitos').addClass('d-none');
+                $('#div-facturacion').addClass('d-none');
+                $('#div-mercancias').addClass('d-none');
+                $('#div-historial').addClass('d-none');
+
+                if (container.css('display') == 'none')
+                    $('#div-documentos').removeClass('d-none');
+                else
+                    $('#div-documentos').addClass('d-none');
+
+            });
+
+            $('#historial').on('click', function () {
+
+                var container = $('#div-historial');
+                $('#div-servicios').addClass('d-none');
+                $('#div-requisitos').addClass('d-none');
+                $('#div-mercancias').addClass('d-none');
+                $('#div-facturacion').addClass('d-none');
+                $('#div-documentos').addClass('d-none');
+
+                if (container.css('display') == 'none')
+                    $('#div-historial').removeClass('d-none');
+                else
+                    $('#div-historial').addClass('d-none');
+
+            });
+        })
+
+        function selectServicios(element) {
+            const elemento = jQuery(element);
+            elemento.attr('disabled', true);
+            $("#modalDiv").modal("show");
+        }       
+        // Add the following code if you want the name of the file appear on select
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });         
+
+        function UploadFile() {            
+            var formData = new FormData();  
+            var myfile = $('#customFile')[0].files[0];
+            formData.append('file', $('#customFile')[0].files[0]);
+            console.log(myfile);
+            if (myfile !== undefined) {
+                $.ajax({
+                    url: "/Facturacion/UploadFile",
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        $("#modalDiv .close").click();
+                        dToast("success", "Archivo guardado correctamente.", "Exitoso");
+                        loadTableFactura();
+                    },
+                    error: function (data) {                        
+                        dToast("error","Ocurrio un error al intentar guardar el archivo.", "Error");
+                    }
+                });
+            } else {
+                dToast("error","Seleccione un archivo.", "Error");
+            }                      
+        }
+
+        function downloadFile(nombre, fullpath) {
+            console.log({ nombre, fullpath });
+            var a = $("<a>")
+                .attr("href", fullpath)
+                .attr("download", nombre)
+                .appendTo("body");
+
+            a[0].click();
+
+            a.remove();
+            //$.ajax({
+            //    type: 'GET',
+            //    url: '/Facturacion/downloadFile',
+            //    data: { fileName: nombre },
+            //    contentType: 'application/json; charset=utf-8',
+            //    success: function (data) {
+            //        console.log(data);
+            //        var blob = new Blob([data]);
+            //        //var blob = new Blob([data], { type: 'image/png' });
+            //        var link = document.createElement('a');
+            //        link.href = window.URL.createObjectURL(blob);
+            //        link.download = nombre;
+            //        link.click();
+            //    },
+            //    error: function (err) {
+            //        console.log("error", err);
+            //    }
+            //});
+        }
+
+        function loadTableFactura() {
+            var DataFacturas = [];
+
+            var stable = $('.table-facturas').DataTable();
+
+            stable.destroy();
+            $("#table-info").empty();
+
+            $.get("/Facturacion/getFacturas", function (res) {
+                DataFacturas = res;
+                res.map(({ nombre, fechacarga, usuario, fullpath }) => {
+                    $("#table-info").append(`
+                                <tr>
+                                <td>${nombre}</td>
+                                <td>${moment(fechacarga).format('DD/MM/YYYY')}</td>
+                                <td>${usuario}</td>                               
+                                <td class="text-center">
+                                    <a onclick="downloadFile('${nombre}','${fullpath}')">
+                                        <span class="material-icons">
+                                            file_download
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>`);
+                });
+                dTable("table-facturas");
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+            });
+        }
+    </script>    
+}

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KLS_API.Models.Travels
 {
@@ -19,6 +20,11 @@ namespace KLS_API.Models.Travels
         public DateTime FechaLlegada { get; set; }
         public string DireccionRemitente { get; set; }
         public string DireccionDestinatario { get; set; }
+        //Cálculos
+        [Column(TypeName = "decimal(18,4)")]
+        public decimal CostoTotal { get; set; }
+        [Column(TypeName = "decimal(18,4)")]
+        public decimal PrecioClienteTotal { get; set; }
         public string Estatus { get; set; }
 
         //Extras
@@ -29,6 +35,6 @@ namespace KLS_API.Models.Travels
         public string Consignee { get; set; }
         public string HBL { get; set; }
         public string Intercom { get; set; }
-        public ICollection<Services> Servicios { get; set; }
+        public List<Services> Servicios { get; set; }
     }
 }

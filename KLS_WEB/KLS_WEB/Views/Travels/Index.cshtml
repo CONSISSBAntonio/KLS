@@ -1,17 +1,10 @@
 @{
     ViewData["Title"] = "Viajes";
 }
-<div class="data-content p-4 text-left">
+<div class="data-content">
     <div class="p-4">
-        <div class="text-left d-flex mb-3">
+        <div class="text-left mb-3">
             <div class="text-uppercase poppins medium size-24 pl-2">Viajes</div>
-            <div style="padding-left:20%;">
-                <a class="btn btn-sm btn-dark" href="/Travels/formTravels/0">
-                    <span class="material-icons">
-                        add
-                    </span>
-                </a>
-            </div>
         </div>
 
         <div class="p-4 shadow bg-white">
@@ -41,7 +34,7 @@
 
 
         $(document).ready(function (event) {
-            //loadTable();
+            loadTable();
         });
 
         function loadTable() {
@@ -49,28 +42,33 @@
             stable.destroy();
             $("#table-info").empty();
 
-            $.get("Carriers/getCarriers", function (res) {
-                console.log(res);
-                $.each(res, function (item, key) {
+            $.get("/Travels/getTravels", response => {
+                response.map(({ id, cliente, origen, destino, salida, llegada, estatus, folio }) => {
                     $("#table-info").append(`
                         <tr>
-                            <td>${nCon(key.id)}</td>
-                            <td>${nCon(key.id)}</td>
-                            <td>${nCon(key.nombreComercial)}</td>
-                            <td>${nCon(key.nombreComercial)}</td>
-                            <td>${nCon(key.tamanio)}</td>
-                            <td>${nCon(key.comentario)}</td>
-                            <td>${statusTable(key.estatus)}</td>
-                            <td>
-                                <a href="/Carriers/formCarriers/${nCon(key.id)}">
+                            <td>${folio}</td>
+                            <td>${cliente}</td>
+                            <td>${origen}</td>
+                            <td>${destino}</td>
+                            <td class="text-center">${salida}</td>
+                            <td class="text-center">${llegada}</td>
+                            <td class="text-primary text-center"><b>${estatus}</b></td>
+                            <td class="text-center">
+                                <a href="/Travels/${id}">
                                     <span class="material-icons">
-                                        mode_edit
+                                        open_in_new
                                     </span>
                                 </a>
                             </td>
                         </tr>`);
                 });
                 dTable("table-viajes");
+                $('#table_length').html(`
+                            <a href="/Travels/0" class="btn btn-sm btn-outline-secondary float-right">
+                                <span class="material-icons">
+                                    add
+                                </span>
+                            </a>`).show();
             }).fail(function (error, xhr, status) {
                 dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
             });

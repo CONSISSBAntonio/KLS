@@ -1,10 +1,8 @@
-﻿@{
+﻿@model KLS_WEB.Models.Travels.Travel
+@{
     ViewData["Title"] = "Configuracion viajes";
 }
 
-@{
-    int id = ViewBag.id;
-}
 <style>
     .form-check-label {
         font-size: 12px !important;
@@ -33,7 +31,7 @@
             </div>
             <div>
                 @*Folio es el tipo de viaje + día del mes + numero de mes + consecutivo de 4 números*@
-                <h4 class="text-secondary" id="folio">VTNOW@(string.Concat(DateTime.Now.ToString("ddMM"), id.ToString("D4")))</h4>
+                <h4 class="text-secondary" id="folio">VT@(string.Concat(DateTime.Now.ToString("ddMM"), (++Model.Id).ToString("D4")))</h4>
             </div>
         </div>
 
@@ -122,7 +120,7 @@
                     <div class="form-group col-3">
                         <label class="col-form-label col-form-label-sm">Tipo de Viaje</label>
                         <div>
-                            <select class="form-control form-control-sm" id="tipoviaje" name="tipoviaje" onchange="{$('#folio').text($('#folio').text().replace(/[a-zA-Z_]+/g, this.value)); }">
+                            <select class="form-control form-control-sm" id="tipoviaje" name="tipoviaje" onchange="{ SetFolio(this.value); }">
                                 <option value="VTNOW">TERRESTRE NACIONAL ONE WAY</option>
                                 <option value="VTNTW">TERRESTRE NACIONAL TWO WAY</option>
                                 <option value="VTNC">TERRESTRE NACIONAL CIRCUITEABLE</option>
@@ -339,26 +337,20 @@
             event.preventDefault();
             $(".guardar").attr("disabled", true);
 
-            const equipo = {
-                equipo: getEquipos()
-            };
-            const unidad = {
-                unidad: getUnidades()
-            };
-            const servicios = {
-                servicios: $('#frmServicios').serialize()
-            }
-
             let jsonData = convertJson($(".viaje"));
-            const folio = $('#folio').text();
-            const estatus = 'REGISTRADO';
-            jsonData = { ...jsonData, ...equipo };
-            jsonData = { ...jsonData, ...unidad };
-            jsonData = { ...jsonData, ...servicios };
-            jsonData = { ...jsonData, folio };
-            jsonData = { ...jsonData, estatus }
+            const details = {
+                folio: $('#folio').text(),
+                estatus: 'REGISTRADO',
+                equipo: getEquipos(),
+                unidad: getUnidades(),
+                servicios: $('#frmServicios').serialize(),
+                preciototal: $('#preciocliente').text(),
+                costototal: $('#costos').text()
+            };
 
-            const serviceExists = jsonData.servicios && jsonData.unidad != '' ? true : false;
+            jsonData = { ...jsonData, ...details };
+
+            const serviceExists = jsonData.servicios != '' && jsonData.unidad != '' && true;
             if (serviceExists) {
                 $.post("/Travels/setTravels", jsonData, function (res) {
                     dToast("success", "Registro guardado exitosamente.", "Registrado");
@@ -374,6 +366,34 @@
             }
         });
     });
+
+        function SetFolio(tipoviaje) {
+            switch (tipoviaje) {
+                case 'VTNOW':
+                    tipoviaje = tipoviaje.replace('NOW', '');
+                    break;
+                case 'VTNTW':
+                    tipoviaje = tipoviaje.replace('NTW', '');
+                    break;
+                case 'VTNW':
+                    tipoviaje = tipoviaje.replace('NW', '');
+                    break;
+                case 'VTNC':
+                    tipoviaje = tipoviaje.replace('NC', '');
+                    break;
+                case 'VTI':
+                    tipoviaje = tipoviaje.replace('T', '');
+                    break;
+                case 'VMM':
+                    tipoviaje = tipoviaje.replace('MM', 'V');
+                    break;
+                default:
+                    break;
+            }
+
+            $('#folio').text($('#folio').text().replace(/[a-zA-Z_]+/g, tipoviaje));
+        }
+
         function initSelects() {
             $.get("/Clients/getClients", res => {
                 res.map(({ id, nombreCorto, estatus }) => estatus === 1 ? $('#cliente').append(`<option value="${id}">${nombreCorto}</option>`) : null);

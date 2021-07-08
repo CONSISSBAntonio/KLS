@@ -7,6 +7,7 @@ namespace KLS_WEB.Models.Travels
 {
     public class Travel
     {
+        public int Id { get; set; }
         public int Chofer { get; set; }
         public int Cliente { get; set; }
         public int Destino { get; set; }
@@ -23,11 +24,18 @@ namespace KLS_WEB.Models.Travels
         public string Servicios { get; set; }
         public decimal TerrestreNacionalPrecio { get; set; }
         public decimal TerrestreNacionalCosto { get; set; }
+        public decimal Costototal { get; set; }
+        public decimal Preciototal { get; set; }
         public int TipoUnidad { get; set; }
         public string TipoViaje { get; set; }
         public int Transportista { get; set; }
         public string Unidad { get; set; }
         public string Folio { get; set; }
         public string Estatus { get; set; }
+
+        //Detail
+        public string NombreCliente { get; set; }
+        public string NombreRuta { get; set; }
+        public string TipoUnidadNombre { get; set; }
     }
 }
