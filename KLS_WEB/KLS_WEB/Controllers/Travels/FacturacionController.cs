@@ -8,9 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace KLS_WEB.Controllers.Travels
 {
@@ -23,7 +21,7 @@ namespace KLS_WEB.Controllers.Travels
         private string _UrlApi = "Travels/Facturacion";
         private readonly IAppContextService _appContext;
         private readonly IWebHostEnvironment _hostingEnvironment;
-        
+
         #endregion
 
         #region constructor
@@ -49,18 +47,18 @@ namespace KLS_WEB.Controllers.Travels
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
             try
-            {              
+            {
                 //string projectRootPath = _hostingEnvironment.ContentRootPath; ruta del poryecto
                 string ruta = Path.Combine(_hostingEnvironment.WebRootPath + @"\Resources\Facturas\" + DateTime.Now.ToString("yyyy/MM/dd"));
-                string res = Path.Combine(@"\Resources\Facturas\" + DateTime.Now.ToString("yyyy") +"\\" + DateTime.Now.ToString("MM") + "\\" + DateTime.Now.ToString("dd") + "\\"+ file.FileName);
+                string res = Path.Combine(@"\Resources\Facturas\" + DateTime.Now.ToString("yyyy") + "\\" + DateTime.Now.ToString("MM") + "\\" + DateTime.Now.ToString("dd") + "\\" + file.FileName);
 
-                string rutaFile = res.Replace("\\","\\\\");
+                string rutaFile = res.Replace("\\", "\\\\");
 
                 string fullpath = Path.Combine(ruta, file.FileName);
                 if (!Directory.Exists(ruta))
                     Directory.CreateDirectory(ruta);
 
-                var isSaved = await SaveFile(file, fullpath);               
+                var isSaved = await SaveFile(file, fullpath);
 
                 Facturacion facturacion = new Facturacion()
                 {
@@ -87,18 +85,18 @@ namespace KLS_WEB.Controllers.Travels
         private async Task<bool> SaveFile(IFormFile file, string fullpath)
         {
             if (file is null)
-                return false;          
-                        
+                return false;
+
             using (var fileStream = new FileStream(fullpath, FileMode.Create))
             {
-               await file.CopyToAsync(fileStream);
+                await file.CopyToAsync(fileStream);
             }
-            return true;            
+            return true;
         }
 
         [HttpGet]
         [Route("downloadFile")]
-        public FileResult DownloadFile(string fileName,string fullpath)
+        public FileResult DownloadFile(string fileName, string fullpath)
         {
             //string ruta = Path.Combine(_hostingEnvironment.WebRootPath + @"\Resources\Facturas\");
             //string fullpath = Path.Combine(ruta, fileName);
