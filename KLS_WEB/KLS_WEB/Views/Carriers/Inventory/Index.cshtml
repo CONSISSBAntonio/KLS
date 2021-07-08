@@ -90,23 +90,23 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="">Marca</label>
-                                <input type="text" class="form-control" name="Marca" id="Marca" value="654" />
+                                <input type="text" class="form-control" name="Marca" id="Marca" required/>
                             </div>
                         </div>
 
                         <div class="col-md-3">
                             <label class="">Modelo</label>
-                            <input type="text" class="form-control" name="Modelo" id="Modelo" />
+                            <input type="text" class="form-control" name="Modelo" id="Modelo" required/>
                         </div>
 
                         <div class="col-md-3">
                             <label class="">Año</label>
-                            <input type="text" name="Anio" id="Anio" class="form-control" value="2020" />
+                            <input type="text" name="Anio" id="Anio" class="form-control" required/>
                         </div>
 
                         <div class="col-md-3">
                             <label class=""># serie</label>
-                            <input type="text" name="NoSerie" id="NoSerie" class="form-control" value="654" />
+                            <input type="text" name="NoSerie" id="NoSerie" class="form-control" required/>
                         </div>
                     </div>
 
@@ -114,33 +114,31 @@
                     <div class="row">
                         <div class="col-md-3">
                             <label class=""># económico</label>
-                            <input type="text" class="form-control" name="NoEconomico" id="NoEconomico">
+                            <input type="text" class="form-control" name="NoEconomico" id="NoEconomico" required/>
                         </div>
                         <div class="col-md-3">
                             <label class="">Placa</label>
-                            <input type="text" class="form-control" name="Placa" id="Placa" value="654">
+                            <input type="text" class="form-control" name="Placa" id="Placa" required>
                         </div>
                         <div class="col-md-3">
                             <label class="">Color</label>
-                            <input type="text" class="form-control" name="Color" id="Color" value="azul">
+                            <input type="text" class="form-control" name="Color" id="Color" required>
                         </div>
                         <div class="col-md-3">
                             <label class="">Tipo de Unidad</label>
-                            <select class="form-control form-control-sm" name="TipoUnidad" id="TipoUnidad">
-                                <option value="0">Selecciona</option>
-                            </select>
+                            <select class="form-control form-control-sm" name="TipoUnidad" id="TipoUnidad"></select>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-3">
                             <label class="">Capacidad</label>
-                            <input type="text" class="form-control" name="Capacidad" id="Capacidad" value="Capacidad">
+                            <input type="text" class="form-control" name="Capacidad" id="Capacidad" required>
                         </div>
 
                         <div class="col-md-3">
                             <label class="">Volumen</label>
-                            <input type="text" class="form-control" name="Volumen" id="Volumen" value="Volumen">
+                            <input type="text" class="form-control" name="Volumen" id="Volumen" required>
                         </div>
                         <div class="col-md-3">
                             <label class="">Estatus</label>
@@ -271,8 +269,8 @@
             $("#table-info").empty();
             $.get("/Carriers/Inventory/getInventory/", { "IdTransportista":@id}, function (res) {
                 dataInventory = res;
-                console.log(res);
                 $.each(dataInventory, function (item, key) {
+                    console.log(key);
                     $("#table-info").append(`
                              <tr>
                                 <td>${nCon(key.id)}</td>
@@ -343,10 +341,10 @@
 
         function loadTipo() {
             $.get("../../Catalogs/TypesOfUnits/getUnidades", function (res) {
-                console.log(res);
-
                 $.each(res, function (item, key) {
-                    $("#TipoUnidad").append(`<option value="${ key.id }">${key.nombre}</option>`)
+                    if (parseInt(key.estatus) != 2) {
+                        $("#TipoUnidad").append(`<option value="${key.id}">${key.nombre}</option>`)
+                    }
                 });
             }).fail(function (error) {
                 dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");

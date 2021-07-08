@@ -102,5 +102,21 @@ namespace KLS_API.Controllers.Carriers.Inventory
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("getInventario/{id}")]
+        public IActionResult GetOperator(int id)
+        {
+            try
+            {
+                var aerolinea = context.Tr_Has_Inventario.FirstOrDefault(f => f.Id == id);
+                return Ok(aerolinea);
+                //return Ok(context.Tr_Has_Operadores.Find(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
     }
 }

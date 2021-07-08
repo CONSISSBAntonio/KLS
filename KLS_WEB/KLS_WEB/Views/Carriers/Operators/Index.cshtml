@@ -50,7 +50,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Nombre</th>
-                        <th>Numero Tel</th>
+                        <th>Número Tel</th>
                         <th>Licencia</th>
                         <th># Licencia</th>
                         <th>INE</th>
@@ -90,19 +90,19 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="">Nombre</label>
-                                <input type="text" class="form-control" name="nombre" id="nombre" />
+                                <input type="text" class="form-control" name="nombre" id="nombre" required/>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label class="">Numero de teléfono</label>
-                                <input type="number" class="form-control" name="NoTelefono" id="NoTelefono" />
+                                <label class="">Número de teléfono</label>
+                                <input type="text" class="form-control" name="NoTelefono" id="NoTelefono" maxlength="10" required/>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="">Licencia</label>
-                                <input type="file" class="form-control" name="Licencia" id="Licencia" />
+                                <input type="file" class="form-control" name="Licencia" id="Licencia" accept="image/png, image/gif, image/jpeg"/>
                             </div>
                         </div>
                     </div>
@@ -110,20 +110,20 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class=""># Licencia</label>
-                                <input type="text" class="form-control" name="NoLicencia" id="NoLicencia" />
+                                <input type="number" class="form-control" name="NoLicencia" id="NoLicencia" required/>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="">INE</label>
-                                <input type="file" class="form-control" name="Ine" id="Ine" />
+                                <input type="file" class="form-control" name="Ine" id="Ine" accept="image/png, image/gif, image/jpeg"/>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class=""># INE</label>
-                                <input type="text" class="form-control" name="NoIne" id="NoIne" />
+                                <input type="number" class="form-control" name="NoIne" id="NoIne" required/>
                             </div>
                         </div>
                     </div>
@@ -131,13 +131,13 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="">Seguro Social</label>
-                                <input type="file" class="form-control" name="SeguroSocial" id="SeguroSocial" />
+                                <input type="file" class="form-control" name="SeguroSocial" id="SeguroSocial" accept="image/png, image/gif, image/jpeg"/>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="">IMSS</label>
-                                <input type="text" class="form-control" name="Imss" id="Imss" />
+                                <input type="number" class="form-control" name="Imss" id="Imss" required/>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -277,20 +277,20 @@
                         <td>${nCon(key.id)}</td>
                         <td>${nCon(key.nombre)}</td>
                         <td>${nCon(key.noTelefono)}</td>
-                        <td>${nCon(key.noLicencia)}</td>
                         <td style="cursor: pointer;cursos:hand;">
                             <input type="checkbox" ${checkedLicencia}  onmouseover="verImagen('img-capa${key.id}')" onmouseout="Fin('img-capa${key.id}')">
                             <div id="capa2" class="img-capa${key.id}" style="display:none;">
                                 <img src="../../Resources/Operadores/${key.ruta}/${key.fotoLicencia}" />
                             </div>
                         </td>
-                        <td>${nCon(key.noIne)}</td>
+                        <td>${nCon(key.noLicencia)}</td>
                         <td style="cursor: pointer;cursos:hand;">
                             <input type="checkbox" ${checkedIne} onmouseover="verImagen('img-Ine${key.id}')" onmouseout="Fin('img-Ine${key.id}')">
                             <div id="capa2" class="img-Ine${key.id}" style="display:none;">
                                 <img src="../../Resources/Operadores/${key.ruta}/${key.fotoIne}" />
                             </div>
                         </td>
+                        <td>${nCon(key.noIne)}</td>
                         <td style="cursor: pointer;cursos:hand;">
                             <input type="checkbox" ${checkedSeguro} onmouseover="verImagen('img-Seguro${key.id}')" onmouseout="Fin('img-Seguro${key.id}')">
                             <div id="capa2" class="img-Seguro${key.id}" style="display:none;">
@@ -331,6 +331,10 @@
             a[0].click();
             a.remove();
         }
+
+        $('.NoTelefono').on('input', function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        })
 
     </script>
 }

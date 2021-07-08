@@ -1,4 +1,5 @@
-﻿using KLS_WEB.Models;
+﻿using Ionic.Zip;
+using KLS_WEB.Models;
 using KLS_WEB.Models.Carriers;
 using KLS_WEB.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -134,6 +135,36 @@ namespace KLS_WEB.Controllers.Carriers.CarriersInventory
             return Json(dataReport);
         }
 
+        [Route("DescargarZip/{id}")]
+        public async Task<FileResult> DescargarAsync(string id)
+        {
+
+            Random rdn = new Random();
+            int nombreRandom = rdn.Next(10000, 100000) + rdn.Next(10000, 100000);
+            using (ZipFile zip = new ZipFile())
+            {
+                Tr_Has_Inventario operador = new Tr_Has_Inventario();
+                Tr_Has_Inventario data = await AppContext.Execute<Tr_Has_Inventario>(MethodType.GET, Path.Combine(_UrlApi, "getInventario", id), operador);
+
+                var rutas = @_hostingEnvironment.WebRootPath + "/Resources/Inventario/" + data.Ruta + "/";
+
+                //zip.AddDirectory(rutas);
+                if (data.FotoPoliza != null)
+                {
+                    zip.AddFile(Path.Combine(rutas + data.FotoPoliza), "");
+                }
+                if (data.FotoUnidad != null)
+                {
+                    zip.AddFile(Path.Combine(rutas + data.FotoUnidad), "");
+                }
+
+                using (MemoryStream output = new MemoryStream())
+                {
+                    zip.Save(output);
+                    return File(output.ToArray(), "application/zip", nombreRandom + ".zip");
+                }
+            }
+        }
         private async Task<bool> SaveFile(IFormFile file, string fullpath)
         {
             if (file is null)
@@ -145,8 +176,5 @@ namespace KLS_WEB.Controllers.Carriers.CarriersInventory
             }
             return true;
         }
-
-
-
     }
 }
