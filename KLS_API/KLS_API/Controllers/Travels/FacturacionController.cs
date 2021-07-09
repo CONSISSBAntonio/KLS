@@ -29,11 +29,11 @@ namespace KLS_API.Controllers.Travels
 
         #region Methods
         [HttpGet]
-        public IActionResult GetAllAsync()
+        public IActionResult GetAllAsync([FromBody] Facturacion facturacion)
         {
             try
             {                
-                var result =  _context.Facturacion.ToList();
+                var result =  _context.Facturacion.Where(x => x.TravelId == facturacion.TravelId).ToList();
                 return Ok(result);
             }
             catch (Exception ex)

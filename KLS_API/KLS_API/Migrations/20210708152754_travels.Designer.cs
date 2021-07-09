@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210707152641_travel")]
-    partial class travel
+    [Migration("20210708152754_travels")]
+    partial class travels
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,14 +25,23 @@ namespace KLS_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("Archivo")
+                        .HasColumnType("varchar(100)");
+
                     b.Property<int>("Estatus")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaEvento")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("Id_Transportista")
                         .HasColumnType("int");
 
                     b.Property<string>("Nombre")
                         .HasColumnType("varchar(55)");
+
+                    b.Property<string>("Ruta")
+                        .HasColumnType("varchar(155)");
 
                     b.HasKey("Id");
 
@@ -67,7 +76,6 @@ namespace KLS_API.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Notas")
-                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.Property<bool>("OlorPenetrante")
@@ -216,6 +224,9 @@ namespace KLS_API.Migrations
                     b.Property<string>("FotoLicencia")
                         .HasColumnType("varchar(250)");
 
+                    b.Property<string>("FotoSeguro")
+                        .HasColumnType("varchar(250)");
+
                     b.Property<int>("Id_Transportista")
                         .HasColumnType("int");
 
@@ -232,10 +243,7 @@ namespace KLS_API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Ruta")
-                        .HasColumnType("varchar(15)");
-
-                    b.Property<string>("SeguroSocial")
-                        .HasColumnType("varchar(25)");
+                        .HasColumnType("varchar(150)");
 
                     b.Property<int>("estatus")
                         .HasColumnType("int");
@@ -255,12 +263,15 @@ namespace KLS_API.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Costo")
-                        .HasColumnType("decimal(2,2)");
+                        .HasColumnType("decimal(14,2)");
 
                     b.Property<int>("Estatus")
                         .HasColumnType("int");
 
                     b.Property<int>("Id_Ruta")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id_Transportista")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -684,6 +695,192 @@ namespace KLS_API.Migrations
                     b.ToTable("Cat_Tipos_Unidades");
                 });
 
+            modelBuilder.Entity("KLS_API.Models.Clients.Cl_Has_Biblioteca", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Archivo")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("Estatus")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaEvento")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Id_Cliente")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("Ruta")
+                        .HasColumnType("varchar(155)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cl_Has_Biblioteca");
+                });
+
+            modelBuilder.Entity("KLS_API.Models.Clients.Cl_Has_Box", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Custodia")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("D_Opcional")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<bool>("Densidad")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("Derramable")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("Id_Cliente")
+                        .HasColumnType("int");
+
+                    b.Property<string>("M_Opcional")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<bool>("Material")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Notas")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<bool>("OlorPenetrante")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("Peligroso")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("TipoPresentacion")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Tp_Opcional")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("V_Opcional")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("Valor")
+                        .HasColumnType("varchar(55)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cl_Has_Box");
+                });
+
+            modelBuilder.Entity("KLS_API.Models.Clients.Cl_Has_Certificacion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("C_Opcional")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<bool>("Ctpat")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("Id_Cliente")
+                        .HasColumnType("int");
+
+                    b.Property<string>("O_Opcional")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<bool>("Otro")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cl_Has_Certificacion");
+                });
+
+            modelBuilder.Entity("KLS_API.Models.Clients.Cl_Has_Checkpoint", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Checkpoint")
+                        .HasColumnType("varchar(30)");
+
+                    b.Property<int>("Estatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id_Ruta")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Tiempo")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cl_Has_Checkpoint");
+                });
+
+            modelBuilder.Entity("KLS_API.Models.Clients.Cl_Has_Contactos", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Correo")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<int>("Estatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id_Cliente")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nombre")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("Telefono")
+                        .HasColumnType("varchar(35)");
+
+                    b.Property<string>("TipoContacto")
+                        .HasColumnType("varchar(55)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cl_Has_Contactos");
+                });
+
+            modelBuilder.Entity("KLS_API.Models.Clients.Cl_Has_Routes", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("Estatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id_Cliente")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id_Cliente_Kls")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id_Ruta")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Monitoreable")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cl_Has_Routes");
+                });
+
             modelBuilder.Entity("KLS_API.Models.Clients.Clientes", b =>
                 {
                     b.Property<int>("id")
@@ -838,6 +1035,9 @@ namespace KLS_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<int>("TravelId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("fechacarga")
                         .HasColumnType("datetime(6)");
 
@@ -850,10 +1050,9 @@ namespace KLS_API.Migrations
                     b.Property<string>("usuario")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<int>("usuarioId")
-                        .HasColumnType("int");
-
                     b.HasKey("id");
+
+                    b.HasIndex("TravelId");
 
                     b.ToTable("Facturacion");
                 });
@@ -1203,6 +1402,15 @@ namespace KLS_API.Migrations
                     b.HasOne("KLS_API.Models.Cat_Region", null)
                         .WithMany("Region_Has_Estados")
                         .HasForeignKey("Cat_RegionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("KLS_API.Models.Travels.Facturacion", b =>
+                {
+                    b.HasOne("KLS_API.Models.Travels.Travel", "Travel")
+                        .WithMany("Facturas")
+                        .HasForeignKey("TravelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

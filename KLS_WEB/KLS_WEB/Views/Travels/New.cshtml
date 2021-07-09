@@ -31,7 +31,8 @@
             </div>
             <div>
                 @*Folio es el tipo de viaje + día del mes + numero de mes + consecutivo de 4 números*@
-                <h4 class="text-secondary" id="folio">VT@(string.Concat(DateTime.Now.ToString("ddMM"), (++Model.Id).ToString("D4")))</h4>
+                @{string id = Model is null ? "0001" : (++Model.Id).ToString("D4"); }
+                <h4 class="text-secondary" id="folio">VT@(string.Concat(DateTime.Now.ToString("ddMM"), id))</h4>
             </div>
         </div>
 
