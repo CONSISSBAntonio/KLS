@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KLS_WEB.Models;
+using KLS_WEB.Models.Clients;
 using KLS_WEB.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,6 +27,30 @@ namespace KLS_WEB.Controllers.Clients
         {
             ViewBag.id = id;
             return View(this._UrlView + "index.cshtml");
+        }
+
+        [Route("getOrigen")]
+        public async Task<JsonResult> Get(Cl_Has_Origen dataModel)
+        {
+            List<Cl_Has_Origen> dataReport;
+            dataReport = await this.AppContext.Execute<List<Cl_Has_Origen>>(MethodType.GET, _UrlApi, dataModel);
+            return Json(dataReport);
+        }
+
+        [Route("setOrigen")]
+        public async Task<JsonResult> Post(Cl_Has_Origen dataModel)
+        {
+            Cl_Has_Origen dataReport;
+            dataReport = await this.AppContext.Execute<Cl_Has_Origen>(MethodType.POST, _UrlApi, dataModel);
+            return Json(dataReport);
+        }
+
+        [Route("putOrigen")]
+        public async Task<JsonResult> Put(Cl_Has_Origen dataModel)
+        {
+            Cl_Has_Origen dataReport;
+            dataReport = await this.AppContext.Execute<Cl_Has_Origen>(MethodType.PUT, _UrlApi, dataModel);
+            return Json(dataReport);
         }
     }
 }

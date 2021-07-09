@@ -4,6 +4,7 @@ using KLS_API.Models.Travels;
 using KLS_API.Models.Clients;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using KLS_API.Controllers.Clients;
 
 namespace KLS_API.Context
 {
@@ -47,6 +48,10 @@ namespace KLS_API.Context
         public DbSet<Cl_Has_Box> Cl_Has_Box { get; set; }
         public DbSet<Cl_Has_Biblioteca> Cl_Has_Biblioteca { get; set; }
         public DbSet<Cl_Has_Contactos> Cl_Has_Contactos { get; set; }
+        public DbSet<Cl_Has_Origen> Cl_Has_Origen { get; set; }
+        public DbSet<Cl_Has_Destinos> Cl_Has_Destinos { get; set; }
+        public DbSet<Cl_Has_Evidencia> Cl_Has_Evidencia { get; set; }
+        public DbSet<Cl_Has_Otros> Cl_Has_Otros { get; set; }
 
         //Viajes
         public DbSet<Facturacion> Facturacion { get; set; }

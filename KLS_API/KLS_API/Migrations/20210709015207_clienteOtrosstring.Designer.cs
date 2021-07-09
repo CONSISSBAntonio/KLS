@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210709015207_clienteOtrosstring")]
+    partial class clienteOtrosstring
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1173,9 +1175,6 @@ namespace KLS_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("TravelId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("fechacarga")
                         .HasColumnType("datetime(6)");
 
@@ -1188,9 +1187,10 @@ namespace KLS_API.Migrations
                     b.Property<string>("usuario")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.HasKey("id");
+                    b.Property<int>("usuarioId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("TravelId");
+                    b.HasKey("id");
 
                     b.ToTable("Facturacion");
                 });
@@ -1540,15 +1540,6 @@ namespace KLS_API.Migrations
                     b.HasOne("KLS_API.Models.Cat_Region", null)
                         .WithMany("Region_Has_Estados")
                         .HasForeignKey("Cat_RegionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("KLS_API.Models.Travels.Facturacion", b =>
-                {
-                    b.HasOne("KLS_API.Models.Travels.Travel", "Travel")
-                        .WithMany("Facturas")
-                        .HasForeignKey("TravelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

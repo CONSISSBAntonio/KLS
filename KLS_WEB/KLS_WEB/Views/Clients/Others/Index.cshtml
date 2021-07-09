@@ -1,5 +1,333 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿
 @{
+    ViewData["Title"] = "Clientes|Otros";
+}
+@{ int id = ViewBag.id; }
+<div class="data-content p-4 text-left">
+    <div class="p-4">
+        <div class="d-flex flex-nowrap">
+            <div class="p-2">
+                <div class="text-left d-flex p-2">
+                    <a href="/Clients/formClients/@id">
+                        <div class="material-icons icon-red">arrow_back</div>
+                    </a>
+                    <div class="text-uppercase poppins medium size-24 pl-2">Otros</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <form id="otherRegister" name="otherRegister" action="#" method="post">
+                    <input type="hidden" id="idEditarOtros" value="0" />
+                    <div class="d-flex flex-nowrap">
+                        <div class="ml-auto p-2">
+                            <button type="submit" class="btn btn-sm btn-secondary">
+                                <span class="material-icons">
+                                    save
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-4 shadow bg-white">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h5>Referencias</h5>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="Referencia1" id="Referencia1" value="true">
+                                    <label class="form-check-label">Referencia 1</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>Texto a mostrar</h5>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="Treferencia1" id="Treferencia1">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>Mandatario</h5>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="Mandatario1" name="Mandatario1" value="true">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="Referencia2" id="Referencia2" value="true">
+                                    <label class="form-check-label">Referencia 2</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="Treferencia2" id="Treferencia2">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="Mandatario2" name="Mandatario2" value="true">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="Referencia3" id="Referencia3" value="true">
+                                    <label class="form-check-label">Referencia 3</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="Treferencia3" id="Treferencia3">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="Mandatario3" name="Mandatario3" value="true">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-8">
+                <div class="p-4 shadow bg-white">
+                    <div class="p-4 shadow bg-white">
+                        <div class="d-flex flex-nowrap">
+                            <div class="text-left d-flex">
+                                <div class="text-uppercase poppins medium size-20 pl-2">Evidencia</div>
+                            </div>
+                            <div class="ml-auto">
+                                <button class="btn btn-sm btn-secondary" onclick="showModal('AGREGAR','Agregar');">
+                                    <span class="material-icons">
+                                        add
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                        <table id="table" class="table table-striped table-bordered display table-hover table-viajes" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>NOMBRE</th>
+                                    <th>FÍSICA</th>
+                                    <th>MANDATARIO</th>
+                                    <th>TIEMPO DE ENTREGA</th>
+                                    <th>ACCIONES</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-info"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal global-->
+<div class="modal fade" id="modalDiv" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo-modal"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                <form id="frmRegister" action="#" method="post">
+                    <input type="hidden" name="id" id="idEditar" value="0" />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="">Nombre</label>
+                                <input type="text" class="form-control" name="Nombre" id="Nombre" required />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="">Física</label>
+                                <input type="checkbox" class="form-check" value="true" name="Fisica" id="Fisica"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="">Estado</label>
+                                <input type="checkbox" class="form-check" value="true" name="Mandatario" id="Mandatario" >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="">Tiempo de entrega</label>
+                                <input type="text" class="form-control" name="Tiempo_Entrega" id="Tiempo_Entrega"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="">Estatus</label>
+                            <select class="form-control form-control-sm" name="Estatus" id="Estatus">
+                                <option value="1">Activo</option>
+                                <option value="2">Inactivo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-dark guardar" style="width:22%;" id="btnAccion">
+                        Guardar
+                    </button>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal global-->
+
+@section Scripts{ 
+    <script>
+        var dataEvidencia = [];
+        $(window).ready(function () {
+            loadTable();
+            loadOtro();
+            $("#otherRegister").submit(function (event) {
+                event.preventDefault();
+                var jsonData = convertJson($("#otherRegister"));
+                jsonData["Id_Cliente"] = @id;
+                jsonData["Id"] = $("#idEditarOtros").val();
+                if (parseInt($("#idEditarOtros").val()) != 0) {
+                    $.post("/Clients/Others/putOtros", jsonData, function (res) {
+                        loadTable();
+                        dToast("success", "Registro actualizado exitosamente.", "Actualizado");
+                        $(".guardar").attr("disabled", false);
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de guardar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                } else {
+                    $.post("/Clients/Others/setOtros", jsonData, function (res) {
+                        loadTable();
+                        dToast("success", "Registro guardado exitosamente.", "Registrado");
+                        $(".guardar").attr("disabled", false);
+                        $('#frmRegister').trigger("reset");
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de guardar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                }
+
+            });
+            //-----------------------------------
+
+
+            $("#frmRegister").submit(function (event) {
+                event.preventDefault();
+                var jsonData = convertJson($("#frmRegister"));
+                jsonData["Id_Cliente"] = @id;
+                if (parseInt($("#idEditar").val()) != 0) {
+                    $.post("/Clients/Others/putEvidencia", jsonData, function (res) {
+                        loadTable();
+                        dToast("success", "Registro actualizado exitosamente.", "Actualizado");
+                        $(".guardar").attr("disabled", false);
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de guardar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                } else {
+                    $.post("/Clients/Others/setEvidencia", jsonData, function (res) {
+                        loadTable();
+                        dToast("success", "Registro guardado exitosamente.", "Registrado");
+                        $(".guardar").attr("disabled", false);
+                        $('#frmRegister').trigger("reset");
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de guardar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                }
+            });
+        });
+
+        function loadOtro() {
+            $.get("/Clients/Others/getOtros/", { "Id_Cliente":@id}, function (res) {
+                if (res != null) {
+                    $("#idEditarOtros").val(res.id)
+                    $("#Mandatario1").prop('checked', res.mandatario1);
+                    $("#Mandatario2").prop('checked', res.mandatario2);
+                    $("#Mandatario3").prop('checked', res.mandatario3);
+                    $("#Referencia1").prop('checked', res.referencia1);
+                    $("#Referencia2").prop('checked', res.referencia2);
+                    $("#Referencia3").prop('checked', res.referencia3);
+                    $("#Treferencia1").val(res.treferencia1);
+                    $("#Treferencia2").val(res.treferencia2);
+                    $("#Treferencia3").val(res.treferencia3);
+                }
+            });
+        }
+
+        function loadTable() {
+            var stable = $('.table-viajes').DataTable();
+            stable.destroy();
+            $("#table-info").empty();
+            $.get("/Clients/Others/getEvidencia/", { "Id_Cliente":@id}, function (res) {
+                dataEvidencia = res;
+                $.each(res, function (item, key) {
+                    let mandatario = "";
+                    let fisica = "";
+
+                    if (key.mandatario) {
+                        mandatario = "checked";
+                    }
+                    if (key.fisica) {
+                        fisica = "checked";
+                    }
+
+                    $("#table-info").append(`
+                        <tr>
+                            <td>${nCon(key.nombre)}</td>
+                            <td><input type="checkbox" ${fisica}></td>
+                            <td><input type="checkbox" ${mandatario}></td>
+                            <td>${nCon(key.tiempo_Entrega)}</td>
+                            <td>
+                                <a href="#">
+                                    <span class="material-icons" onclick="showModal('EDITAR','Editar',${nCon(key.id)});">
+                                        mode_edit
+                                    </span>
+                                </a>
+                            </td>
+                        </tr>`);
+                });
+                dTable("table-viajes");
+            });
+        }
+
+        function showModal(titulo = "Title", accion, idEditar = 0) {
+            $('#frmRegister').trigger("reset");
+            $(".guardar").html(accion);
+            $("#titulo-modal").empty("");
+            $("#titulo-modal").html(titulo);
+            $("#idEditar").val(idEditar);
+            if (accion == "Editar") {
+                try {
+                    let indice = dataEvidencia.findIndex(service => service.id === idEditar);
+                    $("#Nombre").val(dataEvidencia[indice].nombre);
+                    $("#Tiempo_Entrega").val(dataEvidencia[indice].tiempo_Entrega);
+                    //$('#Ctpat').prop('checked', res.ctpat);
+                    $("#Fisica").prop('checked', dataEvidencia[indice].fisica);
+                    $("#Mandatario").prop('checked', dataEvidencia[indice].mandatario);
+                    $('#Estatus option[value="' + dataEvidencia[indice].estatus + '"]').attr("selected", true);
+                    $("#modalDiv").modal("show");
+                } catch (error) {
+                    dToast("error", "Error al tratar de editar, intenta recargar la página.", "Error");
+                    $("#modalDiv").modal("hide");
+                }
+            } else {
+                $("#modalDiv").modal("show");
+            }
+        }
+    </script>
 }
