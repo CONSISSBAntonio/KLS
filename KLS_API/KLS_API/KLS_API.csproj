@@ -72,6 +72,12 @@
     <Compile Remove="Migrations\20210707152400_viajes.Designer.cs" />
     <Compile Remove="Migrations\20210707152416_travel.cs" />
     <Compile Remove="Migrations\20210707152416_travel.Designer.cs" />
+    <Compile Remove="Migrations\20210708161446_clientestrOrigen.cs" />
+    <Compile Remove="Migrations\20210708161446_clientestrOrigen.Designer.cs" />
+    <Compile Remove="Migrations\20210708170511_clientesDestinos.cs" />
+    <Compile Remove="Migrations\20210708170511_clientesDestinos.Designer.cs" />
+    <Compile Remove="Migrations\20210709010454_clienteOtros.cs" />
+    <Compile Remove="Migrations\20210709010454_clienteOtros.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,267 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿
 @{
+    ViewData["Title"] = "Clientes|Origenes";
+}
+@{ int id = ViewBag.id; }
+<div class="data-content p-4 text-left">
+    <div class="p-4">
+        <div class="d-flex flex-nowrap">
+            <div class="p-2">
+                <div class="text-left d-flex p-2">
+                    <a href="/Clients/formClients/@id">
+                        <div class="material-icons icon-red">arrow_back</div>
+                    </a>
+                    <div class="text-uppercase poppins medium size-24 pl-2">ORIGENES</div>
+                </div>
+            </div>
+
+            <div class="ml-auto p-2">
+                <button class="btn btn-sm btn-secondary" onclick="showModal('AGREGAR','Agregar');">
+                    <span class="material-icons">
+                        add
+                    </span>
+                </button>
+            </div>
+        </div>
+
+        <div class="p-4 shadow bg-white">
+            <table id="table" class="table table-striped table-bordered display table-hover table-viajes" width="100%">
+                <thead>
+                    <tr>
+                        <th>NOMBRE</th>
+                        <th>CP</th>
+                        <th>ESTADO</th>
+                        <th>CIUDAD</th>
+                        <th>DIRECCIÓN</th>
+                        <th>ESTATUS</th>
+                        <th>ACCIONES</th>
+                    </tr>
+                </thead>
+                <tbody id="table-info"></tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<!--Modal global-->
+<div class="modal fade" id="modalDiv" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo-modal"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                <form id="frmRegister" action="#" method="post">
+                    <input type="hidden" name="id" id="idEditar" value="0" />
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="">Nombre</label>
+                                <input type="text" class="form-control" name="Nombre" id="Nombre" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="">CP</label>
+                                <input type="number" class="form-control" name="Cp" id="Cp" required />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="">Estado</label>
+                                <select class="form-control form-control-sm" name="Id_Estado" id="Id_Estado">
+                                    <option value="0">Selecciona</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="">Ciudad</label>
+                                <select class="form-control form-control-sm" name="Id_Ciudad" id="Id_Ciudad">
+                                    <option value="0">Selecciona</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="">Colonia</label>
+                                <select class="form-control form-control-sm" name="Id_Colonia" id="Id_Colonia">
+                                    <option value="0">Selecciona</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="">Dirección</label>
+                                <input type="text" class="form-control" name="Direccion" id="Direccion" required />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="">Estatus</label>
+                            <select class="form-control form-control-sm" name="Estatus" id="Estatus">
+                                <option value="1">Activo</option>
+                                <option value="2">Inactivo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-dark guardar" style="width:22%;" id="btnAccion">
+                        Guardar
+                    </button>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
+                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal global-->
+
+
+@section Scripts{
+    <script>
+        var dataOrigenes = [];
+        var dataState = [];
+        var dataCity = [];
+        var dataColonies = [];
+
+        $(window).ready(function () {
+            getCatalogos();
+            $("#frmRegister").submit(function (event) {
+                event.preventDefault();
+                var jsonData = convertJson($("#frmRegister"));
+                jsonData["Id_Cliente"] = @id;
+                console.log(jsonData);
+                if (parseInt($("#idEditar").val()) != 0) {
+                    $.post("/Clients/Origins/putOrigen", jsonData, function (res) {
+                        console.log(res);
+                        loadTable();
+                        dToast("success", "Registro actualizado exitosamente.", "Actualizado");
+                        $(".guardar").attr("disabled", false);
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de guardar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                } else {
+                    $.post("/Clients/Origins/setOrigen", jsonData, function (res) {
+                        loadTable();
+                        dToast("success", "Registro guardado exitosamente.", "Registrado");
+                        $(".guardar").attr("disabled", false);
+                        $('#frmRegister').trigger("reset");
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de guardar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                }
+            });
+
+        });
+
+        function showModal(titulo = "Title", accion, idEditar = 0) {
+            $('#frmRegister').trigger("reset");
+            $(".guardar").html(accion);
+            $("#titulo-modal").empty("");
+            $("#titulo-modal").html(titulo);
+            $("#idEditar").val(idEditar);
+            if (accion == "Editar") {
+                try {
+                    let indice = dataOrigenes.findIndex(service => service.id === idEditar);
+                    $("#Nombre").val(dataOrigenes[indice].nombre);
+                    $("#Cp").val(dataOrigenes[indice].cp);
+                    $("#Direccion").val(dataOrigenes[indice].direccion);
+                    $('#Id_Estado option[value="' + dataOrigenes[indice].id_Estado + '"]').attr("selected", true);
+                    $('#Id_Ciudad option[value="' + dataOrigenes[indice].id_Ciudad + '"]').attr("selected", true);
+                    $('#Id_Colonia option[value="' + dataOrigenes[indice].id_Colonia + '"]').attr("selected", true);
+                    $("#modalDiv").modal("show");
+                } catch (error) {
+                    dToast("error", "Error al tratar de editar, intenta recargar la página.", "Error");
+                    $("#modalDiv").modal("hide");
+                }
+            } else {
+                $("#modalDiv").modal("show");
+            }
+        }
+
+        function loadTable() {
+            var stable = $('.table-viajes').DataTable();
+            stable.destroy();
+            $("#table-info").empty();
+            $.get("/Clients/Origins/getOrigen/", { "Id_Cliente":@id}, function (res) {
+                dataOrigenes = res;
+                $.each(res, function (item, key) {
+                    let ciudad = dataCity.findIndex(service => parseInt(service.id) == parseInt(key.id_Ciudad));
+                    let estado = dataState.findIndex(service => parseInt(service.id) == parseInt(key.id_Estado));
+                    $("#table-info").append(`
+                        <tr>
+                            <td>${nCon(key.id)}</td>
+                            <td>${nCon(key.cp)}</td>
+                            <td>${dataState[estado].nombre}</td>
+                            <td>${dataCity[ciudad].nombre}</td>
+                            <td>${nCon(key.direccion)}</td>
+                            <td>`+ statusTable(key.estatus) + `</td>
+                            <td>
+                                <a href="#">
+                                    <span class="material-icons" onclick="showModal('EDITAR','Editar',${nCon(key.id)});">
+                                        mode_edit
+                                    </span>
+                                </a>
+                            </td>
+                        </tr>`);
+                });
+                dTable("table-viajes");
+            });
+        }
+
+        //Catalogos
+        function getCatalogos() {
+            $.get("/Catalogs/Geography/State/getState", function (res) {
+                dataState = res;
+                $("#Id_Estado").empty();
+                $.each(dataState, function (item, key) {
+                    if (parseInt(key.estatus) == 1) {
+                        $("#Id_Estado").append(`<option value="${key.id}">${key.nombre}</option>`);
+                    };
+                });
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+            });
+
+            $.get("/Catalogs/Geography/City/getCity", function (res) {
+                dataCity = res;
+                $("#Id_Ciudad").empty();
+                $.each(dataCity, function (item, key) {
+                    if (parseInt(key.estatus) == 1) {
+                        $("#Id_Ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
+                    };
+                });
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+            });
+
+            $.get("/Catalogs/Geography/Colonies/getColonies", function (res) {
+                dataColonies = res;
+                $("#Id_Colonia").empty();
+                $.each(dataColonies, function (item, key) {
+                    if (parseInt(key.estatus) == 1) {
+                        $("#Id_Colonia").append(`<option value="${key.id}">${key.nombre}</option>`);
+                    };
+                });
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+            });
+            loadTable();
+        }
+
+
+    </script>
 }

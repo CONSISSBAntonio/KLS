@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210708220034_clienteEvidencia")]
+    partial class clienteEvidencia
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -897,14 +899,8 @@ namespace KLS_API.Migrations
                     b.Property<int>("Estatus")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Fisica")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<int>("Id_Cliente")
                         .HasColumnType("int");
-
-                    b.Property<bool>("Mandatario")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Nombre")
                         .HasColumnType("varchar(55)");
@@ -950,47 +946,6 @@ namespace KLS_API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cl_Has_Origen");
-                });
-
-            modelBuilder.Entity("KLS_API.Models.Clients.Cl_Has_Otros", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Id_Cliente")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("Mandatario1")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("Mandatario2")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("Mandatario3")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("Referencia1")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("Referencia2")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("Referencia3")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Treferencia1")
-                        .HasColumnType("varchar(55)");
-
-                    b.Property<string>("Treferencia2")
-                        .HasColumnType("varchar(55)");
-
-                    b.Property<string>("Treferencia3")
-                        .HasColumnType("varchar(55)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Cl_Has_Otros");
                 });
 
             modelBuilder.Entity("KLS_API.Models.Clients.Cl_Has_Routes", b =>
