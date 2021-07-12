@@ -94,8 +94,6 @@ namespace KLS_API.Controllers.Travels
                                            preciototal = viajes.PrecioClienteTotal,
                                            tipounidadnombre = unidad.nombre
                                        }).OrderByDescending(x => x.Id).FirstOrDefault();
-
-
                 return Ok(viaje);
             }
             catch (Exception ex)

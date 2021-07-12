@@ -111,7 +111,7 @@
                     @Html.DropDownListFor(x => x.estatus, new List<SelectListItem>
                     {
                         new SelectListItem() {Text = "Activo", Value="1", Selected=true},
-                        new SelectListItem() {Text = "Inactivo", Value="0"}
+                        new SelectListItem() {Text = "Inactivo", Value="2"}
                     }, new { @class = "form-control form-control-sm", @id = "festatus", @required = "" })
                 </div>
             </div>
@@ -295,8 +295,8 @@
                             const origen = $('#fciudadorigen').val();
                             const destino = $('#fciudaddestino').val();
 
-                            console.log(origen, destino);
-                            console.log(String(origen).padStart(4, '0'), String(destino).padStart(4, '0'));
+                            //console.log(origen, destino);
+                            //console.log(String(origen).padStart(4, '0'), String(destino).padStart(4, '0'));
                             $('#idgenerado').val(String(origen).padStart(4, '0') + String(destino).padStart(4, '0'));
                             $('#factualizadopor').html(res.actualizadopor);
                             $('#fultimocambio').html(new Date(res.ultimocambio).toLocaleString());
@@ -318,7 +318,7 @@
                     });
                 }
             } else {
-                dToast("error", "Todos los campos son obligatorios.", "Error");
+                dToast("error", "LOS CAMPOS DEBEN SER MAYOR A 0", "Error");
             }
 
         });
@@ -354,8 +354,8 @@
         const origen = $('#fciudadorigen').val();
         const destino = $('#fciudaddestino').val();
 
-        console.log(origen, destino);
-        console.log(String(origen).padStart(4, '0'), String(destino).padStart(4, '0'));
+        //console.log(origen, destino);
+        //console.log(String(origen).padStart(4, '0'), String(destino).padStart(4, '0'));
         //const IdGenerado = `${String(key.id_ciudadorigen).padStart(4, '0')}${String(key.id_ciudaddestino).padStart(4, '0')}`;
         //console.log(IdGenerado);
     }
