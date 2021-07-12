@@ -23,6 +23,7 @@
     <Folder Include="Controllers\Catalogs\TypesOfUnits\" />
     <Folder Include="Controllers\Catalogs\Subservices\" />
     <Folder Include="Controllers\Catalogs\ShippingCompanies\" />
+    <Folder Include="Models\Catalogs\" />
     <Folder Include="wwwroot\Resources\Facturas\" />
   </ItemGroup>
 

@@ -28,7 +28,8 @@ namespace KLS_API.Models.Carriers
         public string FotoSeguro { get; set; }
         [Column(TypeName = "varchar(150)")]
         public string Ruta { get; set; }
-        public int NoTelefono { get; set; }
+        [Column(TypeName = "varchar(15)")]
+        public string NoTelefono { get; set; }
         public int estatus { get; set; }
         [Column(TypeName = "varchar(55)")]
         public string nombre { get; set; }

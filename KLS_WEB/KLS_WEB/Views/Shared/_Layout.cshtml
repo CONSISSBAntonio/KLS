@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -13,8 +15,9 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/theme.css">
     <link rel="stylesheet" href="~/css/toastr.css">
-    <link href="/css/dataTable.css" rel="stylesheet"><link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+    <link href="/css/dataTable.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
     @RenderSection("Styles", required: false)
 </head>
 <body>
@@ -31,7 +34,7 @@
                 <div class="pr-4 text-right">
                     <div class="d-block pt-2 mt-2">
                         @*<div class="d-inline size-12">Hola @User.Identity.Name!</div>*@
-                        <div class="d-inline size-12">Hola @User.Identity.Name!</div>
+                        <div class="d-inline size-12">Hola @HttpContextAccessor.HttpContext.Session.GetString("Nombre") @HttpContextAccessor.HttpContext.Session.GetString("Apaterno")</div>
                         <a asp-controller="Login" asp-action="Logout">
                             <div class="d-inline material-icons pl-2 c-pointer" style="vertical-align: -8px;">logout</div>
                         </a>

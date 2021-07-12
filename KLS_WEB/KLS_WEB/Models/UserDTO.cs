@@ -8,6 +8,12 @@ namespace KLS_API.Models.DTO
 {
     public class UserDTO
     {
+        [Column(TypeName = "varchar(25)")]
+        public string Nombre { get; set; }
+        [Column(TypeName = "varchar(25)")]
+        public string Apaterno { get; set; }
+        [Column(TypeName = "varchar(25)")]
+        public string Amaterno { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
         [Column(TypeName = "varchar(15)")]

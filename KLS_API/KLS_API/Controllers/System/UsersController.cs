@@ -1,4 +1,6 @@
-﻿using KLS_API.Models.DTO;
+﻿using KLS_API.Context;
+using KLS_API.Models;
+using KLS_API.Models.DTO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -17,13 +19,13 @@ namespace KLS_API.Controllers.System
     [Route("Users")]
     public class UsersController : Controller
     {
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly UserManager<AddUser> userManager;
+        private readonly SignInManager<AddUser> signInManager;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly IConfiguration configuration;
 
-        public UsersController(UserManager<IdentityUser> userManager,
-                              SignInManager<IdentityUser> signInManager,
+        public UsersController(UserManager<AddUser> userManager,
+                              SignInManager<AddUser> signInManager,
                               RoleManager<IdentityRole> roleManager,
                               IHttpClientFactory httpClientFactory,
                               IConfiguration configuration)
@@ -37,7 +39,7 @@ namespace KLS_API.Controllers.System
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] UserDTO userDTO)
         {
-            var user = new IdentityUser { UserName = userDTO.Email, Email = userDTO.Email };
+            var user = new AddUser { UserName = userDTO.Email, Email = userDTO.Email, Apaterno = userDTO.Apaterno, Nombre = userDTO.Nombre, Amaterno = userDTO.Amaterno };
 
             var result = await userManager.CreateAsync(user, userDTO.Password);
 
@@ -65,29 +67,34 @@ namespace KLS_API.Controllers.System
 
             return StatusCode(400, ModelState);
         }
-
+        
         [HttpPost("Login")]
         public async Task<ActionResult<UserTokenDTO>> Login([FromBody] UserDTO userDTO)
         {
             var result = await signInManager.PasswordSignInAsync(userDTO.Email, userDTO.Password, isPersistent: false, lockoutOnFailure: false);
             if (result.Succeeded)
             {
+
                 var user = await userManager.FindByEmailAsync(userDTO.Email);
                 var roles = await userManager.GetRolesAsync(user);
                 var token = CreateToken(user, roles);
-
+                
                 return new UserTokenDTO
                 {
                     Token = token,
                     UserName = user.UserName,
-                    Roles = roles
+                    Roles = roles,
+                    Id = user.Id,
+                    Nombre = user.Nombre,
+                    Apaterno = user.Apaterno,
+                    Amaterno = user.Amaterno,
                 };
             }
             ModelState.AddModelError("Response", "Nombre de usuario/contraseña no válido");
             return StatusCode(400, ModelState);
         }
 
-        private string CreateToken(IdentityUser user, IList<string> roles)
+        private string CreateToken(AddUser user, IList<string> roles)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:key"]));

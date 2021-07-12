@@ -82,6 +82,14 @@
     <Compile Remove="Migrations\20210708151552_facturs.Designer.cs" />
     <Compile Remove="Migrations\20210708152204_travel.cs" />
     <Compile Remove="Migrations\20210708152204_travel.Designer.cs" />
+    <Compile Remove="Migrations\20210711222655_updateoperadorestr.cs" />
+    <Compile Remove="Migrations\20210711222655_updateoperadorestr.Designer.cs" />
+    <Compile Remove="Migrations\20210711235322_nombreUsers.cs" />
+    <Compile Remove="Migrations\20210711235322_nombreUsers.Designer.cs" />
+    <Compile Remove="Migrations\20210712004607_addparamsId.cs" />
+    <Compile Remove="Migrations\20210712004607_addparamsId.Designer.cs" />
+    <Compile Remove="Migrations\20210712004848_addparamsIduser.cs" />
+    <Compile Remove="Migrations\20210712004848_addparamsIduser.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -180,9 +180,11 @@
 @section Scripts{
     <script>
         var dataInventory = [];
+        var catUnidad = [];
+
         $(window).ready(function () {
-            loadTable();
             loadTipo();
+            //loadTable();
             $("#frmRegister").submit(function (event) {
                 event.preventDefault();
                 var jsonData = convertJson($("#frmRegister"));
@@ -253,6 +255,7 @@
                     $("#FotoPoliza").val(dataInventory[indice].fotoPoliza);
 
                     $('#Estatus option[value="' + dataInventory[indice].estatus + '"]').attr("selected", true);
+                    $('#TipoUnidad option[value="' + dataInventory[indice].tipoUnidad + '"]').attr("selected", true);
                     $("#modalDiv").modal("show");
                 } catch (error) {
                     dToast("error", "Error al tratar de editar, intenta recargar la página.", "Error");
@@ -271,6 +274,7 @@
                 dataInventory = res;
                 $.each(dataInventory, function (item, key) {
                     console.log(key);
+                    let indice = catUnidad.findIndex(service => service.id === key.tipoUnidad);
                     $("#table-info").append(`
                              <tr>
                                 <td>${nCon(key.id)}</td>
@@ -281,7 +285,7 @@
                                 <td>${nCon(key.noEconomico)}</td>
                                 <td>${nCon(key.placa)}</td>
                                 <td>${nCon(key.color)}</td>
-                                <td>${nCon(key.tipoUnidad)}</td>
+                                <td>${catUnidad[indice].nombre}</td>
                                 <td>${nCon(key.capacidad)}</td>
                                 <td>${nCon(key.volumen)}</td>
                                 <td>`+ statusTable(key.estatus) + `</td>
@@ -341,11 +345,13 @@
 
         function loadTipo() {
             $.get("../../Catalogs/TypesOfUnits/getUnidades", function (res) {
+                catUnidad = res;
                 $.each(res, function (item, key) {
                     if (parseInt(key.estatus) != 2) {
                         $("#TipoUnidad").append(`<option value="${key.id}">${key.nombre}</option>`)
                     }
                 });
+                loadTable();
             }).fail(function (error) {
                 dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
             });
