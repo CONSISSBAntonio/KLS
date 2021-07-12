@@ -58,6 +58,7 @@ namespace KLS_API.Controllers.Travels
                                       join ciudaddestino in _dbContext.Cat_Ciudad on viajes.IdDestino equals ciudaddestino.id
                                       join estadodestino in _dbContext.Cat_Estado on ciudaddestino.id_estado equals estadodestino.id
                                       join unidad in _dbContext.Cat_Tipos_Unidades on viajes.IdUnidad equals unidad.id
+                                      join servicio in _dbContext.Servicios on viajes.Id equals servicio.TravelId
                                       where viajes.Id == id
                                       select new
                                       {
@@ -71,7 +72,8 @@ namespace KLS_API.Controllers.Travels
                                           viajes.FechaLlegada,
                                           viajes.CostoTotal,
                                           preciototal = viajes.PrecioClienteTotal,
-                                          tipounidadnombre = unidad.nombre
+                                          tipounidadnombre = unidad.nombre,
+                                          Transportista = servicio.IdTransportista
                                       }).FirstOrDefault() :
                                       (from viajes in _dbContext.Viajes
                                        join cliente in _dbContext.Clientes on viajes.IdCliente equals cliente.id
@@ -80,6 +82,7 @@ namespace KLS_API.Controllers.Travels
                                        join ciudaddestino in _dbContext.Cat_Ciudad on viajes.IdDestino equals ciudaddestino.id
                                        join estadodestino in _dbContext.Cat_Estado on ciudaddestino.id_estado equals estadodestino.id
                                        join unidad in _dbContext.Cat_Tipos_Unidades on viajes.IdUnidad equals unidad.id
+                                       join servicio in _dbContext.Servicios on viajes.Id equals servicio.TravelId
                                        select new
                                        {
                                            viajes.Id,
@@ -92,7 +95,8 @@ namespace KLS_API.Controllers.Travels
                                            viajes.FechaLlegada,
                                            viajes.CostoTotal,
                                            preciototal = viajes.PrecioClienteTotal,
-                                           tipounidadnombre = unidad.nombre
+                                           tipounidadnombre = unidad.nombre,
+                                           Transportista = servicio.IdTransportista
                                        }).OrderByDescending(x => x.Id).FirstOrDefault();
                 return Ok(viaje);
             }
