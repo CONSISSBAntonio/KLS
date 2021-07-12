@@ -139,10 +139,13 @@
 }
 <script>
 
-    downloadChofer = button => {
-        const boton = jQuery(button);
+    downloadChofer = element => {
         const idchofer = $('#chofer').val();
-        console.log(idchofer);
+        const a = $("<a>")
+            .attr("href", "/Carriers/Operators/DescargarZip/" + idchofer)
+            .appendTo("body");
+        a[0].click();
+        a.remove();
     }
 
     getOperador = idoperador => {

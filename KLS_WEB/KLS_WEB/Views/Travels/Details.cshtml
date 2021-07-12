@@ -58,7 +58,7 @@
         <div class="col-5" style="margin-top: 1.3rem;">
             <div class="card p-3">
 
-                <form id="form">
+                <form>
                     <div class="form-group row">
                         <label class="col-5 col-form-label col-form-label-sm">Folio de viaje</label>
                         <div class="col-7">
@@ -136,7 +136,7 @@
                         <div class="name font-barlow">Servicios</div>
                     </div>
                 </a>
-                <a href="javascript:void();" class="catalog" id="requisitos" onclick="{ showPanel(this.id); }">
+                <a href="javascript:void(0);" class="catalog" id="requisitos" onclick="{ showPanel(this.id); }">
                     <div class="content" id="requisitos">
                         <span class="material-icons">
                             inventory_2
@@ -144,7 +144,7 @@
                         <div class="name font-barlow">Requisitos</div>
                     </div>
                 </a>
-                <a href="#" class="catalog" id="mercancias">
+                <a href="javascript:void(0);" class="catalog" id="mercancia" onclick="{ showPanel(this.id); }">
                     <div class="content">
                         <span class="material-icons">
                             store
@@ -153,7 +153,7 @@
                     </div>
                 </a>
 
-                <a href="javascript:void();" class="catalog" id="facturacion" onclick="{ showPanel(this.id); }">
+                <a href="javascript:void(0);" class="catalog" id="facturacion" onclick="{ showPanel(this.id); }">
                     <div class="content">
                         <span class="material-icons">
                             receipt_long
@@ -162,7 +162,7 @@
                     </div>
                 </a>
 
-                <a href="#" class="catalog" id="documentos">
+                <a href="javascript:void(0);" class="catalog" id="documentos" onclick="{ showPanel(this.id); }">
                     <div class="content">
                         <span class="material-icons">
                             folder
@@ -170,7 +170,7 @@
                         <div class="name font-barlow">Documentos</div>
                     </div>
                 </a>
-                <a href="#" class="catalog" id="historial">
+                <a href="javascript:void(0);" class="catalog" id="historial" onclick="{ showPanel(this.id); }">
                     <div class="content">
                         <span class="material-icons">
                             manage_search
@@ -178,15 +178,14 @@
                         <div class="name font-barlow">Historial</div>
                     </div>
                 </a>
-                <a href="#" class="catalog">
+                @*<a href="#" class="catalog">
                     <div class="content">
                         <span class="material-icons">
                             pin_drop
                         </span>
                         <div class="name font-barlow">Monitoreo</div>
                     </div>
-                </a>
-
+                </a>*@
             </div>
         </div>
 
@@ -206,7 +205,7 @@
                 </div>
             </div>
 
-            <table id="table" class="table table-striped table-bordered display table-hover table-facturas text-uppercase" width="100%">
+            <table id="table" class="table table-striped table-bordered display table-hover text-uppercase table-facturas" width="100%">
                 <thead>
                     <tr>
                         <th>Nombre</th>
@@ -215,12 +214,12 @@
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody id="table-info"></tbody>
+                <tbody id="facturacionInfo"></tbody>
             </table>
         </div>
 
         @*Mercancia*@
-        <div class="col-12 mercancia">
+        <div class="col-12 mercancia mb-5 d-none">
             <div class="text-left d-flex justify-content-start mb-3">
                 <h4>MERCANCIA</h4>
             </div>
@@ -252,85 +251,125 @@
                         </form>
                     </div>
                     <div class="card">
-                        <form class="row g-3 text-left">
+                        <form class="text-left mt-3 pr-4">
                             <div class="form-group row">
                                 <div class="col-1">
-                                    <input type="checkbox" class="custome-check form-control form-control-sm" id="folio" disabled>
+                                    <input type="checkbox" class="custome-check form-control form-control-sm" disabled>
                                 </div>
-                                <label class="col-11 col-form-label col-form-label-sm pl-0"><strong>Instrucción</strong></label>
+                                <div class="col-5">
+                                    <label class="col-form-label col-form-label-sm pl-0"><strong>TIPOS</strong></label>
+                                </div>
+                                <div class="col-6 text-left">
+                                    <label class="col-form-label col-form-label-sm pl-0"><strong>COMENTARIOS ADICIONALES</strong></label>
+                                </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-1">
-                                    <input type="checkbox" class="custome-check form-control form-control-sm" id="cliente" disabled>
+                                    <input type="checkbox" class="custome-check form-control form-control-sm" name="densidad">
                                 </div>
-                                <label class="col-11 col-form-label col-form-label-sm pl-0">Equipo de seguridad; chaleco reflejante verde o naranja, casco y botas de casquillo, lentes de seguridad y guantes de seguridad.</label>
+                                <div class="col-5">
+                                    <label class="col-form-label col-form-label-sm pl-0">DENSIDAD</label>
+                                </div>
+                                <div class="col-6 text-left">
+                                    <select class="form-control form-control-sm" name="densidadval" id="densidad" style="width:100%">
+                                        <option selected disabled>SELECIONAR</option>
+                                        <option value="baja">BAJA</option>
+                                        <option value="media">MEDIA</option>
+                                        <option value="alta">ALTA</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-1">
-                                    <input type="checkbox" class="custome-check form-control form-control-sm" id="direccionorigen" disabled>
+                                    <input type="checkbox" class="custome-check form-control form-control-sm" name="tipopresentacion">
                                 </div>
-                                <label class="col-11 col-form-label col-form-label-sm pl-0">Equipo COVID; guantes, cubrebocas, careta y lentes</label>
+                                <div class="col-5">
+                                    <label class="col-form-label col-form-label-sm pl-0">TIPO PRESENTACIÓN</label>
+                                </div>
+                                <div class="col-6 text-left">
+                                    <select class="form-control form-control-sm" name="tipopresentacionval" id="tipopresentacion" style="width:100%">
+                                        <option selected disabled>SELECIONAR</option>
+                                        <option value="envase">ENVASE</option>
+                                        <option value="granel">GRANEL</option>
+                                        <option value="tarima">TARIMA</option>
+                                        <option value="otros">OTROS</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-1">
-                                    <input type="checkbox" class="custome-check form-control form-control-sm" id="direcciondestino" disabled="disabled">
+                                    <input type="checkbox" class="custome-check form-control form-control-sm" name="peligroso">
                                 </div>
-                                <label class="col-11 col-form-label col-form-label-sm pl-0">Llevar SUA en fisico</label>
+                                <div class="col-5">
+                                    <label class="col-form-label col-form-label-sm pl-0">PELIGROSO</label>
+                                </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-1">
-                                    <input type="checkbox" class="custome-check form-control form-control-sm" id="ruta" disabled="disabled" required>
+                                    <input type="checkbox" class="custome-check form-control form-control-sm" name="material">
                                 </div>
-                                <label class="col-11 col-form-label col-form-label-sm pl-0">Llevar licencia vigente y en fisico</label>
+                                <div class="col-5">
+                                    <label class="col-form-label col-form-label-sm pl-0">MATERIAL</label>
+                                </div>
+                                <div class="col-6 text-left">
+                                    <select class="form-control form-control-sm" name="materialval" id="material" style="width:100%">
+                                        <option selected disabled>SELECIONAR</option>
+                                        <option value="materiaprima">MATERIA PRIMA</option>
+                                        <option value="materialdeenvase">MATERIAL DE ENVASE</option>
+                                        <option value="productoterminado">PRODUCTO TERMINADO</option>
+                                        <option value="perecederos">PERECEDEROS</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-1">
-                                    <input type="checkbox" class="custome-check form-control form-control-sm" id="fechasalida" disabled="disabled" required>
+                                    <input type="checkbox" class="custome-check form-control form-control-sm" name="derramable">
                                 </div>
-                                <label class="col-11 col-form-label col-form-label-sm pl-0">Llevar tarjeta de circulación de tracto físico</label>
+                                <div class="col-5">
+                                    <label class="col-form-label col-form-label-sm pl-0">DERRAMABLE</label>
+                                </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-1">
-                                    <input type="checkbox" class="custome-check form-control form-control-sm" id="fechaentrega" disabled="disabled" required>
+                                    <input type="checkbox" class="custome-check form-control form-control-sm" name="valor">
                                 </div>
-                                <label class="col-11 col-form-label col-form-label-sm pl-0">Llevar certificado de fumigación impreso</label>
+                                <div class="col-5">
+                                    <label class="col-form-label col-form-label-sm pl-0">VALOR</label>
+                                </div>
+                                <div class="col-6 text-left">
+                                    <select class="form-control form-control-sm" name="valorval" id="valor" style="width:100%">
+                                        <option selected disabled>SELECIONAR</option>
+                                        <option value="alto">ALTO</option>
+                                        <option value="medio">MEDIO</option>
+                                        <option value="bajo">BAJO</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-1">
-                                    <input type="checkbox" class="custome-check form-control form-control-sm" id="costo" disabled="disabled" required>
+                                    <input type="checkbox" class="custome-check form-control form-control-sm" name="custodia">
                                 </div>
-                                <label class="col-11 col-form-label col-form-label-sm pl-0">Llevar dos gatas</label>
+                                <div class="col-5">
+                                    <label class="col-form-label col-form-label-sm pl-0">CUSTODIA</label>
+                                </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-1">
-                                    <input type="checkbox" class="custome-check form-control form-control-sm" id="preciocliente" disabled="disabled" required>
+                                    <input type="checkbox" class="custome-check form-control form-control-sm" name="olorpenetrante">
                                 </div>
-                                <label class="col-11 col-form-label col-form-label-sm pl-0">Llevar INE</label>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-1">
-                                    <input type="checkbox" class="custome-check form-control form-control-sm" id="tipounidad" disabled="disabled" required>
+                                <div class="col-5">
+                                    <label class="col-form-label col-form-label-sm pl-0">OLOR PENETRANTE</label>
                                 </div>
-                                <label class="col-11 col-form-label col-form-label-sm pl-0">Llevar póliza de segur en físico</label>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-1">
-                                    <input type="checkbox" class="custome-check form-control form-control-sm" id="tipounidad" disabled="disabled" required>
-                                </div>
-                                <label class="col-11 col-form-label col-form-label-sm pl-0">contar con alarma de reversa que funcione</label>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-1">
-                                    <input type="checkbox" class="custome-check form-control form-control-sm" id="tipounidad" disabled="disabled" required>
-                                </div>
-                                <label class="col-11 col-form-label col-form-label-sm pl-0">Unidad en buenas condiciones</label>
                             </div>
                         </form>
                     </div>
                 </div>
 
-                <div class="card col-6">
-                    @*<button asp-route="Tester" asp-controller="Travels" class="btn btn-primary">xxx</button>*@
+                <div class="card col-6 mb-3 p-3">
+                    <p class="text-left font-weight-bold">REQUISITOS ESPECIALES</p>
+                    <div class="form-floating">
+                        <textarea class="form-control" placeholder="OPCIONALES" name="requisitosespeciales" rows="35"></textarea>
+                    </div>
                 </div>
             </div>
         </div>
@@ -503,6 +542,31 @@
             </div>
 
         </div>
+
+        @*HISTORIAL*@
+        <div class="col-6 historial d-none">
+            <div class="text-left d-flex justify-content-between mb-3">
+                <h4>HISTORIAL</h4>
+                <div style="padding-left:20%;" onclick="selectServicios(this);">
+                    <a class="btn btn-sm bg-white" style="font-size:1.8rem;width:3.5rem" href="#">
+                        <span class="material-icons">
+                            add
+                        </span>
+                    </a>
+                </div>
+            </div>
+
+            <table id="table" class="table table-striped table-bordered display table-hover table-historial text-uppercase" width="100%">
+                <thead>
+                    <tr>
+                        <th>REGISTRO</th>
+                        <th>USUARIO</th>
+                        <th>FECHA</th>
+                    </tr>
+                </thead>
+                <tbody id="historialInfo"></tbody>
+            </table>
+        </div>
     </div>
 
 
@@ -591,7 +655,7 @@
                 </button>
             </div>
             <div class="modal-body text-left">
-                <form id="form" name="form" enctype="multipart/form-data" method="post">
+                <form id="formFactura" name="form" enctype="multipart/form-data" method="post">
                     <div class="form-group col-12">
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" name="file" id="customFile" required>
@@ -622,6 +686,7 @@
     <script>
         $(document).ready(function () {
             loadTableFactura();
+            loadTableHistorial();
             $('#servicios').on('click', function () {
 
                 var container = $('#div-servicios');
@@ -794,17 +859,11 @@
         }
 
         function loadTableFactura() {
-            var DataFacturas = [];
-
-            var stable = $('.table-facturas').DataTable();
-
-            stable.destroy();
-            $("#table-info").empty();
+            $("#facturacionInfo").empty();
             const TravelId = @TempData["TravelId"] ;
             $.get("/Facturacion/getFacturas", { TravelId: TravelId }, function (res) {
-                DataFacturas = res;
                 res.map(({ nombre, fechacarga, usuario, fullpath }) => {
-                    $("#table-info").append(`
+                    $("#facturacionInfo").append(`
                         <tr>
                         <td>${nombre}</td>
                         <td>${moment(fechacarga).format('DD/MM/YYYY')}</td>
@@ -819,6 +878,31 @@
                     </tr>`);
                 });
                 dTable("table-facturas");
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+            });
+        }
+
+        function loadTableHistorial() {
+            $("#historialInfo").empty();
+            const TravelId = @TempData["TravelId"] ;
+            $.get("/Facturacion/getFacturas", { TravelId: TravelId }, function (res) {
+                //res.map(({ nombre, fechacarga, usuario, fullpath }) => {
+                //    $("#facturacionInfo").append(`
+                //        <tr>
+                //        <td>${nombre}</td>
+                //        <td>${moment(fechacarga).format('DD/MM/YYYY')}</td>
+                //        <td>${usuario}</td>
+                //        <td class="text-center">
+                //            <a href="javascript:void();" onclick="downloadFile('${nombre}','${fullpath}')">
+                //                <span class="material-icons">
+                //                    file_download
+                //                </span>
+                //            </a>
+                //        </td>
+                //    </tr>`);
+                //});
+                dTable("table-historial");
             }).fail(function (error) {
                 dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
             });
