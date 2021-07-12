@@ -2,6 +2,7 @@
 using KLS_API.Models;
 using KLS_API.Models.DTO;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -23,17 +24,23 @@ namespace KLS_API.Controllers.System
         private readonly SignInManager<AddUser> signInManager;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly IConfiguration configuration;
-
+        private readonly AppDbContext context;
         public UsersController(UserManager<AddUser> userManager,
                               SignInManager<AddUser> signInManager,
                               RoleManager<IdentityRole> roleManager,
                               IHttpClientFactory httpClientFactory,
-                              IConfiguration configuration)
+                              IConfiguration configuration, AppDbContext context)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.roleManager = roleManager;
             this.configuration = configuration;
+        }
+
+        public ActionResult ListUsers()
+        {
+            var users = userManager.Users;
+            return Ok(users);
         }
 
         [HttpPost("Register")]
@@ -74,7 +81,7 @@ namespace KLS_API.Controllers.System
             var result = await signInManager.PasswordSignInAsync(userDTO.Email, userDTO.Password, isPersistent: false, lockoutOnFailure: false);
             if (result.Succeeded)
             {
-
+                
                 var user = await userManager.FindByEmailAsync(userDTO.Email);
                 var roles = await userManager.GetRolesAsync(user);
                 var token = CreateToken(user, roles);
