@@ -75,13 +75,14 @@
                     $.post("/Carriers/Certifications/setCertifiacions/", jsonData, function (res) {
                         $("#idCertificacion").val(res.id);
                         dToast("success", "Registro guardado exitosamente.", "Registrado");
+                        valId();
                     }).fail(function (error) {
                         dToast("error", "Error al tratar de guardar el registro", "Error");
                         $(".guardar").attr("disabled", false);
                     });
                 } else {
                     $.post("/Carriers/Certifications/putCertifiacions/",jsonData, function (res) {
-                        console.log(res);
+                        valId();
                         dToast("success", "Registro actualizado exitosamente.", "Actualizado");
                     }).fail(function (error) {
                         dToast("error", "Error al tratar de actualizar el registro", "Error");

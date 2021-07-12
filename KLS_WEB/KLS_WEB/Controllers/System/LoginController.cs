@@ -58,6 +58,10 @@ namespace KLS_WEB.Controllers.System
 
                 HttpContext.Session.SetString("Token", modelStateError.Token);
                 HttpContext.Session.SetString("UserName", modelStateError.UserName);
+                HttpContext.Session.SetString("Nombre", modelStateError.Nombre);
+                HttpContext.Session.SetString("Apaterno", modelStateError.Apaterno);
+                HttpContext.Session.SetString("Amaterno", modelStateError.Amaterno);
+                HttpContext.Session.SetString("Id", modelStateError.Id);
                 return RedirectToAction("Index", "Home");
             }
             return View(user);

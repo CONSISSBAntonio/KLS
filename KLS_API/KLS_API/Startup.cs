@@ -16,6 +16,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using KLS_API.Models;
 
 namespace KLS_API
 {
@@ -35,7 +36,7 @@ namespace KLS_API
             //Lineas agregadas 10/06/2021
             services.AddDbContext<AppDbContext>(options => options.UseMySql(Configuration.GetConnectionString("ConnectionString")));
             
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<AddUser, IdentityRole>()
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<AppDbContext>();
 

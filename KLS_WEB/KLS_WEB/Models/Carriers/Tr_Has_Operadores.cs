@@ -30,7 +30,7 @@ namespace KLS_WEB.Models.Carriers
 
         [Column(TypeName = "varchar(150)")]
         public string Ruta { get; set; }
-        public int NoTelefono { get; set; }
+        public string NoTelefono { get; set; }
         public int estatus { get; set; }
         [Column(TypeName = "varchar(55)")]
         public string nombre { get; set; }

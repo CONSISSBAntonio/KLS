@@ -216,10 +216,10 @@ form input {
     color: #ff0036;
 }
 
-input[type="checkbox"] {
+/*input[type="checkbox"] {
     position: relative;
     top: 5px;
-}
+}*/
 
 form .form-group {
     position: relative;
