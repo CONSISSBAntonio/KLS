@@ -28,6 +28,14 @@ namespace KLS_WEB.Controllers.Security
             return View(this._UrlView + "index.cshtml");
         }
 
+        [Route("getSecurity")]
+        public async Task<JsonResult> Get(UserDTO dataModel)
+        {
+            List<UserDTO> dataReport;
+            dataReport = await this.AppContext.Execute<List<UserDTO>>(MethodType.GET, "Users", dataModel);
+            return Json(dataReport);
+        }
+
         [HttpPost]
         [Route("setSecurity")]
         public async Task<JsonResult> Post(UserDTO dataModel)

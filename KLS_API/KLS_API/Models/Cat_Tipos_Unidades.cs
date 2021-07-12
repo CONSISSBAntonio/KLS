@@ -30,5 +30,10 @@ namespace KLS_API.Models
 
         [Column(TypeName = "Varchar(35)")]
         public string limite_volumen { get; set; }
+
+        [Column(TypeName = "Decimal(11,4)")]
+        public decimal operador { get; set; }
+        [Column(TypeName = "Decimal(11,4)")]
+        public decimal administrativo { get; set; }
     }
 }

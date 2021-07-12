@@ -24,14 +24,16 @@
                     <tr>
                         <th>#</th>
                         <th>Nombre</th>
+                        <th>A. paterno</th>
+                        <th>A. materno</th>
                         <th>Correo</th>
                         <th>Estatus</th>
+                        <th style="width:5%;">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="table-info"></tbody>
             </table>
         </div>
-
     </div>
 
     <!--Modal global-->
@@ -82,6 +84,7 @@
 @section Scripts{
     <script>
         $(document).ready(function () {
+            loadTable();
             $("#frmRegister").submit(function (event) {
                 event.preventDefault();
                 var jsonData = convertJson($("#frmRegister"));
@@ -108,6 +111,39 @@
             } else {
                 $("#modalDiv").modal("show");
             }
+        }
+
+        function loadTable() {
+            var stable = $('.table-viajes').DataTable();
+            stable.destroy();
+            $("#table-info").empty();
+            $.get("Security/getSecurity", function (res) {
+                dataUnidades = res;
+                console.log(dataUnidades);
+                let i = 0;
+                $.each(res, function (item, key) {
+                    i++;
+                    $("#table-info").append(`
+                         <tr>
+                            <td>${i}</td>
+                            <td>${nCon(key.nombre)}</td>
+                            <td>${nCon(key.apaterno)}</td>
+                            <td>${nCon(key.amaterno)}</td>
+                            <td>${nCon(key.email)}</td>
+                            <td>`+ statusTable(key.estatus) + `</td>
+                            <td>
+                                <a href="#">
+                                    <span class="material-icons" onclick="showModal('EDITAR','Editar',${nCon(key.id)});">
+                                        mode_edit
+                                    </span>
+                                </a>
+                            </td>
+                        </tr>`);
+                });
+                dTable("table-viajes");
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+            });
         }
     </script>
 }
