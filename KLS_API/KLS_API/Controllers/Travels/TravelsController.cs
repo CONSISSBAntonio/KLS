@@ -121,6 +121,34 @@ namespace KLS_API.Controllers.Travels
             }
         }
 
+        [HttpGet("[action]/{id}")]
+        public IActionResult GetMercancia(int id)
+        {
+            try
+            {
+                return Ok(_dbContext.Mercancias.LastOrDefault(x => x.TravelId == id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpPost("[action]")]
+        public IActionResult PostMercancia([FromBody] Mercancia mercancia)
+        {
+            try
+            {
+                _dbContext.Mercancias.Add(mercancia);
+                _dbContext.SaveChanges();
+                return Ok(mercancia);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         [HttpPost("[action]")]
         public IActionResult PostService([FromBody] Services service)
         {

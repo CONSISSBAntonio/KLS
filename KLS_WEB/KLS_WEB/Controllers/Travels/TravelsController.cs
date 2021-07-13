@@ -39,10 +39,12 @@ namespace KLS_WEB.Controllers.Travels
             return View(this._UrlView + (id == 0 ? "New.cshtml" : "Details.cshtml"), travel);
         }
 
-        [Route("[action]")]
-        public void Tester()
+        [Route("setMercancia")]
+        public async Task<JsonResult> PostMercancia(MercanciaDTO mercanciaDTO)
         {
+            MercanciaDTO mercancia = await AppContext.Execute<MercanciaDTO>(MethodType.POST, Path.Combine(_UrlApi, "PostMercancia"), mercanciaDTO);
 
+            return Json(mercancia);
         }
 
         [Route("getTravels")]
