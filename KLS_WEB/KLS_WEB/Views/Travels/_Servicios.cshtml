@@ -24,13 +24,13 @@
                                 <div class="form-group row mr-3 my-auto">
                                     <label class="col-sm-3 col-form-label col-form-label-sm">COSTO</label>
                                     <div class="col-sm-9 my-auto">
-                                        <input type="number" class="form-control form-control-sm costos" name="terrestrenacionalcosto" onkeyup="{ setCostos(); }" required>
+                                        <input type="number" class="form-control form-control-sm costos" name="terrestrenacionalcosto" onkeyup="{ setCostos(this); }" onchange="{ this.value = parseFloat(this.value).toFixed(2); }" required>
                                     </div>
                                 </div>
                                 <div class="form-group row my-auto">
                                     <label class="col-sm-6 col-form-label col-form-label-sm mr-0">PRECIO A CLIENTE</label>
                                     <div class="col-sm-6 my-auto">
-                                        <input type="number" class="form-control form-control-sm precios" name="terrestrenacionalprecio" onkeyup="setPrecios();" required>
+                                        <input type="number" class="form-control form-control-sm precios" name="terrestrenacionalprecio" onkeyup="{ setPrecios(this); }" onchange="{ this.value = parseFloat(this.value).toFixed(2); }" required>
                                     </div>
                                 </div>
                             </div>
@@ -96,7 +96,7 @@
 
                                     <div class="col-9 d-flex justify-content-between flex-row">
                                         <span id="noimss" class="size-12 my-2"></span>
-                                        <i class="material-icons text-danger" style="cursor:pointer; font-size:2.5rem;" onclick="downloadChofer(this);">cloud_download</i>
+                                        <i class="material-icons text-danger" style="cursor:pointer; font-size:2.5rem;" onclick="{ downloadChofer(this); }">cloud_download</i>
                                     </div>
 
                                 </div>
@@ -141,11 +141,15 @@
 
     downloadChofer = element => {
         const idchofer = $('#chofer').val();
-        const a = $("<a>")
-            .attr("href", "/Carriers/Operators/DescargarZip/" + idchofer)
-            .appendTo("body");
-        a[0].click();
-        a.remove();
+        if (idchofer == 0) {
+            dToast("error", "NO HAY UN CHOFER SELECCIONADO", "Error");
+        } else {
+            const a = $("<a>")
+                .attr("href", "/Carriers/Operators/DescargarZip/" + idchofer)
+                .appendTo("body");
+            a[0].click();
+            a.remove();
+        }
     }
 
     getOperador = idoperador => {

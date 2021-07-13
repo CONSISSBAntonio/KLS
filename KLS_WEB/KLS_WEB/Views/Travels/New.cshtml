@@ -208,13 +208,10 @@
                 </button>
             </div>
             <div class="modal-body text-left">
-                <form id="frmServicios" class="viaje"
-                      onsubmit="event.preventDefault();">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="0" name="terrestrenacional">
-                        <label class="form-check-label" for="0">
-                            Terrestre nacional
-                        </label>
+                <form id="frmServicios" class="viaje" onsubmit="event.preventDefault();">
+                    <div class="form-check d-flex align-items-center">
+                        <input class="form-check-input my-auto" type="checkbox" id="0" name="terrestrenacional">
+                        <label class="form-check-label" for="0">Terrestre nacional</label>
                     </div>
                     @*<div class="form-check">
                             <input class="form-check-input" type="checkbox" id="1" name="naviera">
@@ -331,6 +328,7 @@
         loadCity();
         loadUnits();
         initSelects();
+        dSelect('tipoviaje');
 
         $(".viaje").submit(function (event) {
             event.preventDefault();
@@ -350,17 +348,19 @@
             jsonData = { ...jsonData, ...details };
 
             const serviceExists = jsonData.servicios != '' && jsonData.unidad != '' && true;
+            console.log('post', jsonData);
             if (serviceExists) {
-                $.post("/Travels/setTravels", jsonData, function (res) {
+                @*$.post("/Travels/setTravels", jsonData, function (res) {
                     dToast("success", "Registro guardado exitosamente.", "Registrado");
                     $(".guardar").attr("disabled", false);
                     window.location.replace("@Url.Action("", "Travels")");
                 }).fail(function (error) {
                     dToast("error", "Error al tratar de guardar el registro", "Error");
                     $(".guardar").attr("disabled", false);
-                });
+                });*@
             } else {
-                dToast("error", "LOS SERVICIOS SON OBLIGATORIOS", "Error");
+                const { servicios } = jsonData;
+                dToast("error", servicios == '' ? "LOS SERVICIOS SON OBLIGATORIOS" : "LA UNIDAD ES OBLIGATORIA", "Error");
                 $(".guardar").attr("disabled", false);
             }
         });
@@ -516,6 +516,7 @@
                 $('#modalAgregarCiudad').modal('hide');
                 dToast("success", "Registro actualizado exitosamente.", "Registrado");
                 $(".guardar").attr("disabled", false);
+                $('#frmAgregarCiudad')[0].reset();
             }).fail(function (error) {
                 dToast("error", "Error al tratar de guardar el registro", "Error");
                 $(".guardar").attr("disabled", false);
@@ -534,25 +535,12 @@
         }
         }
 
-        //Cargar ciudades
-        function loadUnits() {
-            $.get("/Catalogs/TypesOfUnits/getUnidades", function (res) {
-                $("#tipounidad").empty();
-                $.each(res, function (item, key) {
-                    $("#tipounidad").append(`<option value="${key.id}">${key.nombre}</option>`);
-                });
-                dSelect('tipounidad');
-            }).fail(function (error) {
-                dToast("error", "Error al obtener ciudades", "Atencion!");
-            });
-        }
-
         //Cargar unidades
         function loadUnits() {
             $.get("/Catalogs/TypesOfUnits/getUnidades", function (res) {
                 $("#tipounidad").empty();
                 $.each(res, function (item, key) {
-                    $("#tipounidad").append(`<option value="${key.id}">${key.nombre}</option>`);
+                    key.estatus === 1 && $("#tipounidad").append(`<option value="${key.id}">${key.nombre}</option>`);
                 });
                 dSelect('tipounidad');
             }).fail(function (error) {
