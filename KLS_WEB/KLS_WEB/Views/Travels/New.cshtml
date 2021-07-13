@@ -348,16 +348,15 @@
             jsonData = { ...jsonData, ...details };
 
             const serviceExists = jsonData.servicios != '' && jsonData.unidad != '' && true;
-            console.log('post', jsonData);
             if (serviceExists) {
-                @*$.post("/Travels/setTravels", jsonData, function (res) {
+                $.post("/Travels/setTravels", jsonData, function (res) {
                     dToast("success", "Registro guardado exitosamente.", "Registrado");
                     $(".guardar").attr("disabled", false);
                     window.location.replace("@Url.Action("", "Travels")");
                 }).fail(function (error) {
                     dToast("error", "Error al tratar de guardar el registro", "Error");
                     $(".guardar").attr("disabled", false);
-                });*@
+                });
             } else {
                 const { servicios } = jsonData;
                 dToast("error", servicios == '' ? "LOS SERVICIOS SON OBLIGATORIOS" : "LA UNIDAD ES OBLIGATORIA", "Error");
@@ -412,7 +411,7 @@
                 total += parseFloat(cantidad);
             });
             total = parseFloat(total).toFixed(2);
-            $('#preciocliente').text(total);
+            $('#preciocliente').text(`$${total}`);
         }
 
         function setCostos() {
@@ -423,7 +422,7 @@
                 total += parseFloat(cantidad);
             });
             total = parseFloat(total).toFixed(2);
-            $('#costos').text(total);
+            $('#costos').text(`$${total}`);
         }
 
         function getEquipos() {

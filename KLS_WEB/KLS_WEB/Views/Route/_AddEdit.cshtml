@@ -284,6 +284,10 @@
             if (validselect) {
                 if (rutaid != 0) {
                     if (action === 'edit') {
+                        const idorigen = $('#festadoorigen').val();
+                        const iddestino= $('#festadodestino').val();
+                        getCities('origen', idorigen);
+                        getCities('destino', iddestino);
                         botonse.removeClass('btn-outline-secondary').addClass('btn-outline-info').html(`<i class="material-icons">save</i>`);
                         $('.frmRegister :input').prop("disabled", false);
                         $(this).attr('rel', 'post');
