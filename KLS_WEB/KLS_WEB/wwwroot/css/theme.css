@@ -303,7 +303,8 @@ form .form-group {
     }
 
     .left-bar.expand {
-        width: 240px !important;
+        /*width: 240px !important;*/
+        width: 14% !important;
     }
 
         .left-bar.expand .expand-control {
@@ -311,7 +312,8 @@ form .form-group {
         }
 
         .left-bar.expand .bar-container {
-            width: 240px;
+            /*width: 240px;*/
+            width: 14%;
         }
 
         .left-bar.expand .arrow-bar {

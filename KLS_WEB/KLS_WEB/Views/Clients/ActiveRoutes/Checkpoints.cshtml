@@ -7,7 +7,7 @@
 @{ int idruta = ViewBag.idruta; }
 
 
-<div class="data-content p-4 text-left">
+<div class="data-content p-1 text-left">
     <div class="p-4">
         <div class="d-flex flex-nowrap">
             <div class="p-2">
@@ -35,7 +35,7 @@
                         <th>CHECKPOINT</th>
                         <th>TIEMPO DESDE PUNTO DE ORIGEN</th>
                         <th>ESTATUS</th>
-                        <th>ACCIONES</th>
+                        <th style="width:3%;" class="text-center">ACCIONES</th>
                     </tr>
                 </thead>
                 <tbody id="table-info"></tbody>
@@ -67,12 +67,12 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="">Tiempo</label>
                             <input type="number" class="form-control" name="Tiempo" id="Tiempo">
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="">Estatus</label>
                             <select class="form-control form-control-sm" name="estatus" id="estatus">
                                 <option value="1">Activo</option>
@@ -106,7 +106,7 @@
             $("#frmRegister").submit(function (event) {
                 event.preventDefault();
                 var jsonData = convertJson($("#frmRegister"));
-                jsonData["Id_Ruta"] = @id;
+                jsonData["Id_Ruta"] = @idruta;
                 if (parseInt($("#idEditar").val()) != 0) {
                     $.post("/Clients/Checkpoints/putCheckpoints", jsonData, function (res) {
                         loadTable();
@@ -156,7 +156,7 @@
             var stable = $('.table-viajes').DataTable();
             stable.destroy();
             $("#table-info").empty();
-            $.get("/Clients/Checkpoints/getCheckpoints", function (res) {
+            $.get("/Clients/Checkpoints/getCheckpoints", { "Id_Ruta": @idruta}, function (res) {
                 dataCheck = res;
                 $.each(res, function (item, key) {
                     $("#table-info").append(`
@@ -164,7 +164,7 @@
                                 <td>${nCon(key.checkpoint)}</td>
                                 <td>${key.tiempo}</td>
                                 <td>`+ statusTable(key.estatus) + `</td>
-                                <td>
+                                <td class="text-center">
                                     <a href="#">
                                         <span class="material-icons" onclick="showModal('EDITAR','Editar',${nCon(key.id)});">
                                             mode_edit

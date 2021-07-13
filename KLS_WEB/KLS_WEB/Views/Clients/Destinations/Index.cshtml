@@ -3,7 +3,7 @@
 }
 @{ int id = ViewBag.id; }
 <div class="data-content p-4 text-left">
-    <div class="p-4">
+    <div class="p-2">
         <div class="d-flex flex-nowrap">
             <div class="p-2">
                 <div class="text-left d-flex p-2">
@@ -202,7 +202,7 @@
                     let estado = dataState.findIndex(service => parseInt(service.id) == parseInt(key.id_Estado));
                     $("#table-info").append(`
                         <tr>
-                            <td>${nCon(key.id)}</td>
+                            <td>${nCon(key.nombre)}</td>
                             <td>${nCon(key.cp)}</td>
                             <td>${dataState[estado].nombre}</td>
                             <td>${dataCity[ciudad].nombre}</td>
