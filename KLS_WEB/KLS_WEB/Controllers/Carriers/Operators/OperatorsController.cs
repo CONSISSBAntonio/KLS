@@ -64,8 +64,8 @@ namespace KLS_WEB.Controllers.Carriers.CarriersOperators
             Random rdn = new Random();
             int rutaRandom = rdn.Next(10000, 100000) + rdn.Next(10000, 100000);
 
-            string rutaHoy = @DateTime.Now.ToString("yyyy/MM/dd") + "/" + IdTransportista + "/" + rutaRandom;
-            string ruta = Path.Combine(_hostingEnvironment.WebRootPath + @"/Resources/Operadores/" + rutaHoy);
+            string rutaHoy = DateTime.Now.ToString("yyyy/MM/dd") + "\\" + IdTransportista + "\\" + rutaRandom;
+            string ruta = Path.Combine(_hostingEnvironment.WebRootPath + "\\Resources\\Operadores\\" + rutaHoy);
 
             if (!Directory.Exists(ruta))
             {
@@ -140,7 +140,7 @@ namespace KLS_WEB.Controllers.Carriers.CarriersOperators
             string LicenciaPath = "";
             string SeguroPath = "";
 
-            string ruta = Path.Combine(_hostingEnvironment.WebRootPath + @"/Resources/Operadores/" + jsonData.Ruta);
+            string ruta = Path.Combine(_hostingEnvironment.WebRootPath + "\\Resources\\Operadores\\" + jsonData.Ruta);
 
             if (file != null)
             {
@@ -184,7 +184,7 @@ namespace KLS_WEB.Controllers.Carriers.CarriersOperators
                 Tr_Has_Operadores operador = new Tr_Has_Operadores();
                 Tr_Has_Operadores data = await AppContext.Execute<Tr_Has_Operadores>(MethodType.GET, Path.Combine(_UrlApi, "GetOperator", id), operador);
 
-                var rutas = @_hostingEnvironment.WebRootPath + "/Resources/Operadores/" + data.Ruta+"/";
+                var rutas = @_hostingEnvironment.WebRootPath + "\\Resources\\Operadores\\" + data.Ruta+"/";
 
                 //zip.AddDirectory(rutas);
                 if (data.FotoSeguro != null)

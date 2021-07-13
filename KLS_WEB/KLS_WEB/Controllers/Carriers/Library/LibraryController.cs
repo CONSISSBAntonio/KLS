@@ -51,8 +51,8 @@ namespace KLS_WEB.Controllers.Carriers.CarriersLibrary
         {
             Random rdn = new Random();
             int rutaRandom = rdn.Next(10000, 100000) + rdn.Next(10000, 100000);
-            string rutaHoy = @DateTime.Now.ToString("yyyy/MM/dd") + "/" + IdTransportista + "/" + rutaRandom;
-            string ruta = Path.Combine(_hostingEnvironment.WebRootPath + @"/Resources/Biblioteca/" + rutaHoy);
+            string rutaHoy = DateTime.Now.ToString("yyyy/MM/dd") + "/" + IdTransportista + "/" + rutaRandom;
+            string ruta = Path.Combine(_hostingEnvironment.WebRootPath + "/Resources/Biblioteca/" + rutaHoy);
 
             if (!Directory.Exists(ruta))
             {
@@ -63,13 +63,13 @@ namespace KLS_WEB.Controllers.Carriers.CarriersLibrary
 
             if (file != null)
             {
-                nombreArchivo = string.Format("{0}{1:yyyyMMdd_HHmm_ss}.{2}", Path.GetFileNameWithoutExtension(file.FileName), DateTime.Now, Path.GetExtension(file.FileName));
+                nombreArchivo = string.Format("{0}{1:yyyyMMdd_HHmm_ss}{2}", Path.GetFileNameWithoutExtension(file.FileName), DateTime.Now, Path.GetExtension(file.FileName));
                 archivoPath = Path.Combine(ruta, nombreArchivo);
                 await SaveFile(file, archivoPath);
                 jsonData.Archivo = nombreArchivo;
             }
 
-            jsonData.Ruta = rutaHoy;
+            jsonData.Ruta = Path.Combine(rutaHoy,"");
             jsonData.Id_Transportista = IdTransportista;
             var culture = new CultureInfo("en-US");
 
@@ -88,11 +88,14 @@ namespace KLS_WEB.Controllers.Carriers.CarriersLibrary
             string nombreArchivo = "";
             string archivoPath = "";
 
-            string ruta = Path.Combine(_hostingEnvironment.WebRootPath + @"/Resources/Biblioteca/" + jsonData.Ruta);
-
+            string ruta = Path.Combine(_hostingEnvironment.WebRootPath + "\\Resources\\Biblioteca\\" + jsonData.Ruta);
+            if (!Directory.Exists(ruta))
+            {
+                Directory.CreateDirectory(ruta);
+            }
             if (file != null)
             {
-                nombreArchivo = string.Format("{0}{1:yyyyMMdd_HHmm_ss}.{2}", Path.GetFileNameWithoutExtension(file.FileName), DateTime.Now, Path.GetExtension(file.FileName));
+                nombreArchivo = string.Format("{0}{1:yyyyMMdd_HHmm_ss}{2}", Path.GetFileNameWithoutExtension(file.FileName), DateTime.Now, Path.GetExtension(file.FileName));
                 archivoPath = Path.Combine(ruta, nombreArchivo);
                 await SaveFile(file, archivoPath);
                 jsonData.Archivo = nombreArchivo;

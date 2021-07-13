@@ -15,26 +15,20 @@
 }
 
 <div class="data-content p-4 text-left">
-    <div class="p-4">
-        <div class="text-left d-flex mb-3">
+    <div class="p-0">
+        <div class="text-left d-flex">
             <a href="/Clients">
                 <div class="material-icons icon-red">arrow_back</div>
             </a>
-            <div class="text-uppercase poppins medium size-24 pl-2">Clientes</div>
+            <div class="text-uppercase poppins medium size-23 pl-2"><b id="dato-cliente"></b></div>
         </div>
         <div class="row">
             <div class="col-md-4 text-right">
-
                 <form id="frmRegister" action="#" method="post">
-
                     <button class="btn btn-sm" type="submit" style="background-color:transparent;">
-                        <span class="material-icons" style="color:cornflowerblue;" id="span-icon">
-
-                        </span>
+                        <span class="material-icons" style="color:cornflowerblue;" id="span-icon"></span>
                     </button>
-
-                    <div class="p-4 shadow bg-white">
-                        
+                    <div class="p-3 shadow bg-white">
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label col-form-label-sm">Id</label>
                             <div class="col-sm-7">
@@ -178,7 +172,7 @@
                     <a href="/Clients/Requirements/@id" class="catalog">
                         <div class="content">
                             <span class="material-icons">
-                                heart
+                                verified
                             </span>
                             <div class="name font-barlow">Requisitos</div>
                         </div>
@@ -202,7 +196,7 @@
                     <a href="/Clients/Destinations/@id" class="catalog">
                         <div class="content">
                             <span class="material-icons">
-                                
+                                location_on
                             </span>
                             <div class="name font-barlow">Destinos</div>
                         </div>
@@ -255,7 +249,8 @@
                 $("#Id").val(@id);
                 $("#span-icon").append("edit");
                 $.get("/Clients/getClient/", { "Id":@id}, function (res) {
-                    console.log(res);
+                    $("#dato-cliente").empty();
+                    $("#dato-cliente").append("Cliente " +@id+" " + res.nombreComercial);
                     $("#NombreComercial").val(res.nombreComercial);
                     $("#NombreCorto").val(res.nombreCorto);
                     $("#RazonSocial").val(res.razonSocial);
@@ -275,6 +270,8 @@
                 });
             } else {
                 $("#Id").val("0000");
+                $("#dato-cliente").empty();
+                $("#dato-cliente").append("Agregar cliente");
                 $("#catalogList").addClass("disabledbutton");
                 $("#span-icon").append("save");
             }

@@ -3,10 +3,16 @@
 }
 <div class="data-content p-4 text-left">
     <div class="p-4">
-        <div class="text-left d-flex mb-3">
-            <div class="text-uppercase poppins medium size-24 pl-2">Clientes</div>
-            <div style="padding-left:20%;">
-                <a class="btn btn-sm btn-dark" href="/Clients/formClients/0">
+
+        <div class="d-flex flex-nowrap">
+            <div class="p-2">
+                <div class="text-left d-flex">
+                    <div class="text-uppercase poppins medium size-24">CLIENTES </div>
+                </div>
+            </div>
+
+            <div class="ml-auto p-2 pb-2">
+                <a class="btn btn-sm btn-secondary" href="/Clients/formClients/0">
                     <span class="material-icons">
                         add
                     </span>
@@ -24,7 +30,7 @@
                         <th>Ejecutivo</th>
                         <th>Comentario</th>
                         <th>Estatus</th>
-                        <th>Acciones</th>
+                        <th style="width:3%;">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="table-info"></tbody>
@@ -57,10 +63,10 @@
                         <td>Ejecutivo</td>
                         <td>${nCon(key.comentario)}</td>
                         <td>${statusTable(key.estatus)}</td>
-                        <td>
-                            <a href="/Clients/formClients/${nCon(key.id)}">
+                        <td class="text-center">
+                            <a href="/Clients/formClients/${nCon(key.id)}" >
                                 <span class="material-icons">
-                                    mode_edit
+                                    search
                                 </span>
                             </a>
                         </td>

@@ -257,21 +257,30 @@
                     var checkedLicencia = "";
                     var checkedSeguro = "";
 
+                    var rutaLicencia = "../../img/sinImagen.jpg";
+                    var rutaIne = "../../img/sinImagen.jpg";
+                    var rutaSeguro = "../../img/sinImagen.jpg";
+
                     if (key.fotoLicencia != "" && key.fotoLicencia != null)
                     {
                         checkedLicencia = "checked";
+                        rutaLicencia = `../../Resources/Operadores/${key.ruta}/${key.fotoLicencia}`;
                     }
 
                     if (key.fotoIne != "" && key.fotoIne != null)
                     {
                         checkedIne = "checked";
+                        rutaIne = `../../Resources/Operadores/${key.ruta}/${key.fotoIne}`;
                     }
 
                     if (key.fotoSeguro != "" && key.fotoSeguro != null)
                     {
                         checkedSeguro = "checked";
+                        rutaSeguro = `../../Resources/Operadores/${key.ruta}/${key.fotoSeguro}`;
                     }
-                    console.log("/Resource/Operadores/"+key.ruta+"/"+key.fotoLicencia );
+
+                    
+
                     $("#table-info").append(`
                         <tr>
                         <td>${nCon(key.id)}</td>
@@ -280,21 +289,21 @@
                         <td style="cursor: pointer;cursos:hand;">
                             <input type="checkbox" ${checkedLicencia}  onmouseover="verImagen('img-capa${key.id}')" onmouseout="Fin('img-capa${key.id}')">
                             <div id="capa2" class="img-capa${key.id}" style="display:none;">
-                                <img src="../../Resources/Operadores/${key.ruta}/${key.fotoLicencia}" />
+                                <img src="${rutaLicencia}" />
                             </div>
                         </td>
                         <td>${nCon(key.noLicencia)}</td>
                         <td style="cursor: pointer;cursos:hand;">
                             <input type="checkbox" ${checkedIne} onmouseover="verImagen('img-Ine${key.id}')" onmouseout="Fin('img-Ine${key.id}')">
                             <div id="capa2" class="img-Ine${key.id}" style="display:none;">
-                                <img src="../../Resources/Operadores/${key.ruta}/${key.fotoIne}" />
+                                <img src="${rutaIne}" />
                             </div>
                         </td>
                         <td>${nCon(key.noIne)}</td>
                         <td style="cursor: pointer;cursos:hand;">
                             <input type="checkbox" ${checkedSeguro} onmouseover="verImagen('img-Seguro${key.id}')" onmouseout="Fin('img-Seguro${key.id}')">
                             <div id="capa2" class="img-Seguro${key.id}" style="display:none;">
-                                <img src="../../Resources/Operadores/${key.ruta}/${key.fotoSeguro}" />
+                                <img src="${rutaSeguro}" />
                             </div>
                         </td>
                         <td>${nCon(key.imss)}</td>

@@ -66,8 +66,8 @@ namespace KLS_WEB.Controllers.Carriers.CarriersInventory
         {
             Random rdn = new Random();
             int rutaRandom = rdn.Next(10000, 100000) + rdn.Next(10000, 100000);
-            string rutaHoy = @DateTime.Now.ToString("yyyy/MM/dd") + "/" + IdTransportista + "/" + rutaRandom;
-            string ruta = Path.Combine(_hostingEnvironment.WebRootPath + @"/Resources/Inventario/" + rutaHoy);
+            string rutaHoy = @DateTime.Now.ToString("yyyy/MM/dd") + "\\" + IdTransportista + "\\" + rutaRandom;
+            string ruta = Path.Combine(_hostingEnvironment.WebRootPath + "\\Resources\\Inventario\\" + rutaHoy);
 
             if (!Directory.Exists(ruta))
             {
@@ -112,7 +112,7 @@ namespace KLS_WEB.Controllers.Carriers.CarriersInventory
             string unidadPath = "";
             string polizaPath = "";
 
-            string ruta = Path.Combine(_hostingEnvironment.WebRootPath + @"/Resources/Inventario/" + jsonData.Ruta);
+            string ruta = Path.Combine(_hostingEnvironment.WebRootPath + "\\Resources\\Inventario\\" + jsonData.Ruta);
 
             if (file != null)
             {
@@ -146,7 +146,7 @@ namespace KLS_WEB.Controllers.Carriers.CarriersInventory
                 Tr_Has_Inventario operador = new Tr_Has_Inventario();
                 Tr_Has_Inventario data = await AppContext.Execute<Tr_Has_Inventario>(MethodType.GET, Path.Combine(_UrlApi, "getInventario", id), operador);
 
-                var rutas = @_hostingEnvironment.WebRootPath + "/Resources/Inventario/" + data.Ruta + "/";
+                var rutas = @_hostingEnvironment.WebRootPath + "\\Resources\\Inventario\\" + data.Ruta + "\\";
 
                 //zip.AddDirectory(rutas);
                 if (data.FotoPoliza != null)

@@ -58,8 +58,19 @@
                     <input type="hidden" name="id" id="idEditar" />
                     <div class="row">
                         <div class="col-md-12">
-                            <label class="">Ruta</label>
-                            <select class="form-control form-control-md" id="Id_Ruta" name="Id_Ruta" style="width:100%;font-size:8px;"></select>
+                            <label class="">Ruta origen</label>
+                            <select class="form-control form-control-md" id="Id_Ruta_Origen" name="Id_Ruta_Origen" style="width:100%;font-size:6px;" onchange="selectRuta();">
+                                <option value="0">Selecciona una option</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="">Ruta destino</label>
+                            <select class="form-control form-control-md" id="Id_Ruta" name="Id_Ruta" style="width:100%;font-size:8px;">
+                                <option value="0">Selecciona una option</option>
+                            </select>
                         </div>
                     </div>
                     <div class="row">
@@ -103,28 +114,32 @@
                 event.preventDefault();
                 var jsonData = convertJson($("#frmRegister"));
                 jsonData["Id_Transportista"] = @id;
-                console.log(jsonData);
-                if (parseInt($("#idEditar").val()) != 0) {
-                    $.post("/Carriers/Routes/putRoutes", jsonData, function (res) {
-                        console.log(res);
-                        getRuta();
-                        dToast("success", "Registro actualizado exitosamente.", "Registrado");
-                        $(".guardar").attr("disabled", false);
-                    }).fail(function (error) {
-                        dToast("error", "Error al tratar de guardar el registro", "Error");
-                        $(".guardar").attr("disabled", false);
-                    });
+                var idruta = $("#Id_Ruta").val();
+                if (parseInt(idruta) != 0) {
+                    if (parseInt($("#idEditar").val()) != 0) {
+                        $.post("/Carriers/Routes/putRoutes", jsonData, function (res) {
+                            getRuta();
+                            dToast("success", "Registro actualizado exitosamente.", "Registrado");
+                            $(".guardar").attr("disabled", false);
+                        }).fail(function (error) {
+                            dToast("error", "Error al tratar de guardar el registro", "Error");
+                            $(".guardar").attr("disabled", false);
+                        });
+                    } else {
+                        $.post("/Carriers/Routes/setRoutes", jsonData, function (res) {
+                            getRuta();
+                            dToast("success", "Se guardó el registro", "Registrado");
+                            $(".guardar").attr("disabled", false);
+                            $('#frmRegister').trigger("reset");
+                        }).fail(function (error) {
+                            dToast("error", "Error al tratar de guardar el registro", "Error");
+                            $(".guardar").attr("disabled", false);
+                        });
+                    }
                 } else {
-                    $.post("/Carriers/Routes/setRoutes", jsonData, function (res) {
-                        getRuta();
-                        dToast("success", "Se guardó el registro", "Registrado");
-                        $(".guardar").attr("disabled", false);
-                        $('#frmRegister').trigger("reset");
-                    }).fail(function (error) {
-                        dToast("error", "Error al tratar de guardar el registro", "Error");
-                        $(".guardar").attr("disabled", false);
-                    });
+                    dToast("error", "Selecciona una opción", "Error");
                 }
+
             });
 
         });
@@ -132,19 +147,42 @@
         function getRutas() {
             $.get("/Carriers/Routes/getRoutes", function (res) {
                 catRutas = res;
-                $("#Id_Ruta").empty();
+                $("#Id_Ruta_Origen").empty();
+                $("#Id_Ruta_Origen").append(`<option value="0">Selecciona una opcion</option>`);
                 $.each(res, function (item, key) {
                     //console.log(key);
-                    let indice_co = catCiudad.findIndex(service => service.id === key.id_ciudadorigen);
-                    let indice_cd = catCiudad.findIndex(service => service.id === key.id_ciudaddestino);
-                    let indice_eo = catEstado.findIndex(service => service.id === key.id_estadoorigen);
-                    let indice_ed = catEstado.findIndex(service => service.id === key.id_estadodestino);
-
-                    $("#Id_Ruta").append(`<option value="${key.id}">Estado origen: ${catEstado[indice_eo].nombre}--Ciudad Origen:${catCiudad[indice_co].nombre}-- Estado De:${catEstado[indice_ed].nombre}--Ciudad De:${catCiudad[indice_cd].nombre}</option>`);
+                    if (parseInt(key.estatus) == 1)
+                    {
+                        let indice_co = catCiudad.findIndex(service => service.id === key.id_ciudadorigen);
+                        let indice_cd = catCiudad.findIndex(service => service.id === key.id_ciudaddestino);
+                        let indice_eo = catEstado.findIndex(service => service.id === key.id_estadoorigen);
+                        let indice_ed = catEstado.findIndex(service => service.id === key.id_estadodestino);
+                        $("#Id_Ruta_Origen").append(`<option value="${key.id}">Estado origen: ${catEstado[indice_eo].nombre}--Ciudad Origen:${catCiudad[indice_co].nombre}</option>`);
+                    }
                 });
-                $("#Id_Ruta").select2();
+                $("#Id_Ruta_Origen").select2();
                 getRuta();
             });
+        }
+
+        function selectRuta() {
+            $("#Id_Ruta").empty();
+            $("#Id_Ruta").append(`<option value="0">Selecciona una opcion</option>`);
+            var idRut = $("#Id_Ruta_Origen").val();
+            $.each(catRutas, function (item, key) {
+                if (parseInt(key.estatus) == 1)
+                {
+                    let indice = catRutas.findIndex(service => service.id == idRut);
+                    if (indice >= 0) {
+                        if (catRutas[indice].id_estadoorigen == key.id_estadoorigen) {
+                            let indice_cd = catCiudad.findIndex(service => service.id === key.id_ciudaddestino);
+                            let indice_ed = catEstado.findIndex(service => service.id === key.id_estadodestino);
+                            $("#Id_Ruta").append(`<option value="${key.id}">Estado destino:${catEstado[indice_ed].nombre}--Ciudad destino:${catCiudad[indice_cd].nombre}</option>`);
+                        }
+                    }
+                }
+            });
+            $("#Id_Ruta").select2();
         }
 
         function loadCity() {
@@ -178,12 +216,13 @@
                 $.each(res, function (item, key) {
                     //console.log(key);
                     let rutaI = catRutas.findIndex(service => parseInt(service.id) === parseInt(key.id_Ruta));
-                    const IdGenerado = `${String(catRutas[rutaI].id_ciudadorigen).padStart(4, '0')}${String(catRutas[rutaI].id_ciudaddestino).padStart(4, '0')}`;
-                    let indice_co = catCiudad.findIndex(service => service.id === catRutas[rutaI].id_ciudadorigen);
-                    let indice_cd = catCiudad.findIndex(service => service.id === catRutas[rutaI].id_ciudaddestino);
-                    let indice_eo = catEstado.findIndex(service => service.id === catRutas[rutaI].id_estadoorigen);
-                    let indice_ed = catEstado.findIndex(service => service.id === catRutas[rutaI].id_estadodestino);
-                    $("#table-info").append(`
+                    if (rutaI >= 0) {
+                        const IdGenerado = `${String(catRutas[rutaI].id_ciudadorigen).padStart(4, '0')}${String(catRutas[rutaI].id_ciudaddestino).padStart(4, '0')}`;
+                        let indice_co = catCiudad.findIndex(service => service.id === catRutas[rutaI].id_ciudadorigen);
+                        let indice_cd = catCiudad.findIndex(service => service.id === catRutas[rutaI].id_ciudaddestino);
+                        let indice_eo = catEstado.findIndex(service => service.id === catRutas[rutaI].id_estadoorigen);
+                        let indice_ed = catEstado.findIndex(service => service.id === catRutas[rutaI].id_estadodestino);
+                        $("#table-info").append(`
                              <tr>
                                 <td>${nCon(IdGenerado)}</td>
                                 <td>${catEstado[indice_eo].nombre}</td>
@@ -200,6 +239,8 @@
                                     </a>
                                 </td>
                             </tr>`);
+                    
+                    }
                 });
                 dTable("table-viajes");
             }).fail(function (error) {

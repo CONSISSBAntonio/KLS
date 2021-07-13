@@ -95,7 +95,6 @@
                 });
             });
         });
-
         function showModal(titulo = "Title", accion, idEditar = 0) {
             $('#frmRegister').trigger("reset");
             $(".guardar").html(accion);
@@ -112,7 +111,6 @@
                 $("#modalDiv").modal("show");
             }
         }
-
         function loadTable() {
             var stable = $('.table-viajes').DataTable();
             stable.destroy();
