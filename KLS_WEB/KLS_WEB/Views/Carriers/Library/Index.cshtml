@@ -195,18 +195,20 @@
                 dataLibrary = res;
                 console.log(dataLibrary);
                 $.each(dataLibrary, function (item, key) {
-                    console.log(key);
-
                     let d = new Date(key.fechaEvento);
                     let fecha = d.getFullYear() + "-" + d.getMonth() + "-" + d.getDay() + "  " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
-                    if (parseInt(key.estatus)!=2) {
+                    if (parseInt(key.estatus) != 2) {
+                        var archivo = key.archivo;
+                        console.log(archivo);
+                        var ruta = String(key.ruta);
+                        console.log(key.ruta);
                         $("#table-info").append(`
                              <tr>
                                 <td>${nCon(key.nombre)}</td>
                                 <td>`+ fecha+ `</td>
                                 <td class="text-center">
                                     <a href="#">
-                                        <span class="material-icons" style="color:#EC694D;" onclick="downloadFile('${key.archivo}','${key.ruta}')">
+                                        <span class="material-icons" style="color:#EC694D;" onclick="downloadFile('${archivo}','${ruta}')">
                                             cloud_download
                                         </span>
                                     </a>
@@ -233,8 +235,10 @@
         }
 
         function downloadFile(nombre, fullpath) {
+            ruta = "../../Resources/Biblioteca/" + String(fullpath) + "/"+String(nombre);
+            //var pathName = path.resolve(ruta).replace(/\\/g, '/');
             var a = $("<a>")
-                .attr("href", "/Resources/Biblioteca/" + fullpath +"/"+nombre)
+                .attr("href", ruta)
                 .attr("download", nombre)
                 .appendTo("body");
 

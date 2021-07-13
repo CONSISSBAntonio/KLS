@@ -52,6 +52,7 @@ namespace KLS_API.Context
         public DbSet<Cl_Has_Destinos> Cl_Has_Destinos { get; set; }
         public DbSet<Cl_Has_Evidencia> Cl_Has_Evidencia { get; set; }
         public DbSet<Cl_Has_Otros> Cl_Has_Otros { get; set; }
+        public DbSet<Cl_Has_Requisitos> Cl_Has_Requisitos { get; set; }
 
         //Viajes
         public DbSet<Facturacion> Facturacion { get; set; }

@@ -90,6 +90,8 @@
     <Compile Remove="Migrations\20210712004607_addparamsId.Designer.cs" />
     <Compile Remove="Migrations\20210712004848_addparamsIduser.cs" />
     <Compile Remove="Migrations\20210712004848_addparamsIduser.Designer.cs" />
+    <Compile Remove="Migrations\20210713154006_Requisitos.cs" />
+    <Compile Remove="Migrations\20210713154006_Requisitos.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

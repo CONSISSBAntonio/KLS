@@ -2,19 +2,253 @@
     ViewData["Title"] = "Transportista|Certificaciones";
 }
 @{ int id = ViewBag.id; }
+
 <div class="data-content p-4 text-left">
     <div class="p-4">
         <div class="text-left d-flex mb-3">
             <a href="/Clients/formClients/@id">
                 <div class="material-icons icon-red">arrow_back</div>
             </a>
-            <div class="text-uppercase poppins medium size-24 pl-2"> REQUISITOS @id</div>
+            <div class="text-uppercase poppins medium size-24 pl-2">REQUISITOS</div>
         </div>
-        
+        <form id="frmRegister" action="#" method="post">
+            <input type="hidden" value="0" id="IdEditar" name="Id" />
+            <div class="text-right">
+                <button class="btn btn-sm" type="submit" style="background-color:transparent;">
+                    <span class="material-icons" style="color:cornflowerblue;" id="span-icon">save</span>
+                </button>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <h4>REQUISITOS CARGA</h4>
+                    <div class="p-4 card">
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="Instruccion" name="Instruccion" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0"><strong>Instrucción</strong></label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="EquipoSeguridad" name="EquipoSeguridad" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0">Equipo de seguridad; chaleco reflejante verde o naranja, casco y botas de casquillo, lentes de seguridad y guantes de seguridad.</label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="EquipoCovid" name="EquipoCovid" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0">Equipo COVID; guantes, cubrebocas, careta y lentes</label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="LlevarSua" name="LlevarSua" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0">Llevar SUA en fisico</label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="LlevarLicencia" name="LlevarLicencia" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0">Llevar licencia vigente y en fisico</label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="LlevarTarjeta" name="LlevarTarjeta" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0">Llevar tarjeta de circulación de tracto físico</label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="LlevarCertificado" name="LlevarCertificado" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0">Llevar certificado de fumigación impreso</label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="LlevarGatas" name="LlevarGatas" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0">Llevar dos gatas</label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="LlevarIne" name="LlevarIne" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0">Llevar INE</label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="LlevarPoliza" name="LlevarPoliza" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0">Llevar póliza de segur en físico</label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="ContarAlarma" name="ContarAlarma" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0">contar con alarma de reversa que funcione</label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="UnidadCondiciones" name="UnidadCondiciones" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0">Unidad en buenas condiciones</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <h4>REQUISITOS DESCARGA</h4>
+
+                    <div class="p-4 shadow bg-white">
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="IntruccionDescarga" name="IntruccionDescarga" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0"><strong>Instrucción</strong></label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="EquipoSeguridad_" name="EquipoSeguridad_" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0">Equipo de seguridad; chaleco reflejante verde o naranja, casco y botas de casquillo, lentes de seguridad y guantes de seguridad.</label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="EquipoCovid_" name="EquipoCovid_" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0">Equipo COVID; guantes, cubrebocas, careta y lentes</label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="LlevarSua_" name="LlevarSua_" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0">Llevar SUA en fisico</label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="LlevarLicencia_" name="LlevarLicencia_" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0">Llevar licencia vigente y en fisico</label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="LlevarTarjeta_" name="LlevarTarjeta_" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0">Llevar tarjeta de circulación de tracto físico</label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="LlevarCertificado_" name="LlevarCertificado_" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0">Llevar certificado de fumigación impreso</label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="LlevarGatas_" name="LlevarGatas_" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0">Llevar dos gatas</label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="LlevarIne_" name="LlevarIne_" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0">Llevar INE</label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="LlevarPoliza_" name="LlevarPoliza_" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0">Llevar póliza de segur en físico</label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="ContarAlarma_" name="ContarAlarma_" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0">contar con alarma de reversa que funcione</label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="PresentarseMin_" name="PresentarseMin_" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0">Presentarse 40 minutos antes de su descarga</label>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-2">
+                                <input type="checkbox" class="custome-check form-control form-control-sm" id="LlevarTodos_" name="LlevarTodos_" value="true">
+                            </div>
+                            <label class="col-10 col-form-label col-form-label-sm pl-0">Llevar todos los documentos que le dan al cargar: Hoja de remisión, certificado de calidad, certificado del producto</label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
     </div>
 </div>
+
 @section Scripts{
     <script>
+        $(window).ready(function () {
+            //valId();
+            $("#frmRegister").submit(function (event) {
+                event.preventDefault();
+                var jsonData = convertJson($("#frmRegister"));
+                jsonData["Id_Cliente"] = @id;
+                console.log(jsonData);
+
+                if (parseInt($("#IdEditar").val()) == 0) {
+                    $.post("/Clients/Requirements/setRequirements/", jsonData, function (res) {
+                        $("#idBox").val(res.id);
+                        dToast("success", "Registro guardado exitosamente.", "Registrado");
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de guardar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                } else {
+                    $.post("/Clients/Requirements/putRequirements/",jsonData, function (res) {
+                        dToast("success", "Registro actualizado exitosamente.", "Actualizado");
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de actualizar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                }
+
+            });
+            loadRequisito();
+        });
+
+
+        function loadRequisito() {
+            $.get("/Clients/Requirements/getRequirements/", { "Id_Cliente":@id}, function (res) {
+                $("#IdEditar").val(res.id);
+                $("#ContarAlarma").prop("checked", res.contarAlarma);
+                $("#ContarAlarma_").prop("checked", res.contarAlarma_);
+                $("#EquipoCovid").prop("checked", res.equipoCovid);
+                $("#EquipoCovid_").prop("checked", res.equipoCovid_);
+                $("#EquipoSeguridad").prop("checked", res.equipoSeguridad);
+                $("#EquipoSeguridad_").prop("checked", res.equipoSeguridad_);
+                $("#Instruccion").prop("checked", res.instruccion);
+                $("#IntruccionDescarga").prop("checked", res.intruccionDescarga);
+                $("#LlevarCertificado").prop("checked", res.llevarCertificado);
+                $("#LlevarCertificado_").prop("checked", res.llevarCertificado_);
+                $("#LlevarGatas").prop("checked", res.llevarGatas);
+                $("#LlevarGatas_").prop("checked", res.llevarGatas_);
+                $("#LlevarIne").prop("checked", res.llevarIne);
+                $("#LlevarIne_").prop("checked", res.llevarIne_);
+                $("#LlevarLicencia").prop("checked", res.llevarLicencia);
+                $("#LlevarLicencia_").prop("checked", res.llevarLicencia_);
+                $("#LlevarPoliza").prop("checked", res.llevarPoliza);
+                $("#LlevarPoliza_").prop("checked", res.llevarPoliza_);
+                $("#LlevarSua").prop("checked", res.llevarSua);
+                $("#LlevarSua_").prop("checked", res.llevarSua_);
+                $("#LlevarTarjeta").prop("checked", res.llevarTarjeta);
+                $("#LlevarTarjeta_").prop("checked", res.llevarTarjeta_);
+                $("#LlevarTodos_").prop("checked", res.llevarTodos_);
+                $("#PresentarseMin_").prop("checked", res.presentarseMin_);
+                $("#UnidadCondiciones").prop("checked", res.unidadCondiciones);
+            });
+        }
 
     </script>
 }
