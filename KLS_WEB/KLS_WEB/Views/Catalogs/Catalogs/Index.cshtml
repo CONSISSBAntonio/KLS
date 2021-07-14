@@ -1,6 +1,13 @@
 ﻿@{
     ViewData["Title"] = "Catalogos";
 }
+@section Styles{
+    <style>
+        .content-bell:hover img {
+            filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(5%) contrast(97%);
+        }
+    </style>
+}
 <div class="data-content p-4 text-left">
     <div class="title font-barlow">Catálogos</div>
     <div class="catalog-list">
@@ -55,8 +62,14 @@
         </a>
 
         <a href="Catalogs/InternationalLand" class="catalog">
-            <div class="content">
-                <img src="../img/shipping.svg" class="name" style="width: 60px; margin-bottom: 13px;">
+            <div class="content content-bell">
+                <div class="material-icons">
+                    <img src="../img/shipping.svg" class="icon-bell" style="width: 60px;margin-bottom: 13px;fill: red;">
+                    @*<object type="image/svg+xml" data="../img/shipping.svg" class="icon-bell">
+                        Bike
+                    </object>*@
+                </div>
+                @*<div class="material-icons">local_shipping</div>*@
                 <div class="name font-barlow">Terrestres inter.</div>
             </div>
         </a>

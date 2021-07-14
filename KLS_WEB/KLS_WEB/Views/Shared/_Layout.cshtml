@@ -115,7 +115,7 @@
                     </div>
                 </div>
                 <!-- END LEFT BAR -->
-                <div class="data-content pt-4 mt-40">
+                <div class="data-content pt-4 mt-30">
                     @RenderBody()
                 </div>
             </div>
@@ -179,11 +179,11 @@
 
         function updateContainer() {
             var $containerHeight = $(window).height();
-            //console.log($containerHeight);
-            if ($containerHeight <= 775) {
+            console.log($containerHeight);
+            if ($containerHeight <= 872) {
                 $(".left-bar").removeClass("expand");
             }
-            if ($containerHeight > 776) {
+            if ($containerHeight > 873) {
                 $(".left-bar").addClass("expand");
                 eventHide();
             }

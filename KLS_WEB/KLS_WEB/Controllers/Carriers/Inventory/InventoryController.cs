@@ -158,10 +158,12 @@ namespace KLS_WEB.Controllers.Carriers.CarriersInventory
                     zip.AddFile(Path.Combine(rutas + data.FotoUnidad), "");
                 }
 
+                string nombreDescarga = data.Id+data.Placa;
+
                 using (MemoryStream output = new MemoryStream())
                 {
                     zip.Save(output);
-                    return File(output.ToArray(), "application/zip", nombreRandom + ".zip");
+                    return File(output.ToArray(), "application/zip", nombreDescarga.ToUpper() + ".zip");
                 }
             }
         }
