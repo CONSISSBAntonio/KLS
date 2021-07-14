@@ -47,6 +47,13 @@ namespace KLS_WEB.Controllers.Travels
             return Json(mercancia);
         }
 
+        [Route("GetServicios/{id}")]
+        public async Task<JsonResult>GetServicios(string id)
+        {
+            List<ServicesDTO> servicios = await AppContext.Execute<List<ServicesDTO>>(MethodType.GET, Path.Combine(_UrlApi, "GetServicios", id), null);
+            return Json(servicios);
+        }
+
         [Route("getTravels")]
         public async Task<JsonResult> Get()
         {
