@@ -3,21 +3,37 @@
 }
 @{ int id = ViewBag.id; }
 
-<div class="data-content p-4 text-left">
+<div class="data-content p-1 text-left">
     <div class="p-4">
-        <div class="text-left d-flex mb-3">
-            <a href="/Clients/formClients/@id">
-                <div class="material-icons icon-red">arrow_back</div>
-            </a>
-            <div class="text-uppercase poppins medium size-24 pl-2">REQUISITOS</div>
-        </div>
         <form id="frmRegister" action="#" method="post">
-            <input type="hidden" value="0" id="IdEditar" name="Id" />
-            <div class="text-right">
-                <button class="btn btn-sm" type="submit" style="background-color:transparent;">
-                    <span class="material-icons" style="color:cornflowerblue;" id="span-icon">save</span>
-                </button>
+            <div class="d-flex flex-nowrap pb-3">
+                <div class="p-2">
+                    <div class="text-left d-flex p-2">
+                        <a href="/Clients/formClients/@id">
+                            <div class="material-icons icon-red">arrow_back</div>
+                        </a>
+                        <div class="text-uppercase poppins medium size-24 pl-2">REQUISITOS</div>
+                    </div>
+                </div>
+
+                <div class="ml-auto p-2">
+                    <div class="text-right">
+                        <button class="btn btn-sm" type="submit" style="background-color:transparent;">
+                            <span class="material-icons" style="color:cornflowerblue;" id="span-icon">save</span>
+                        </button>
+                    </div>
+                </div>
             </div>
+
+            @*<div class="text-left d-flex">
+                <a href="/Clients/formClients/@id">
+                    <div class="material-icons icon-red">arrow_back</div>
+                </a>
+                <div class="text-uppercase poppins medium size-24 pl-2">REQUISITOS</div>
+            </div>*@
+
+
+            <input type="hidden" value="0" id="IdEditar" name="Id" />
             <div class="row">
                 <div class="col-6">
                     <h4>REQUISITOS CARGA</h4>

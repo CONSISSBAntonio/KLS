@@ -13,10 +13,9 @@
         }
     </style>
 }
-
 <div class="data-content p-4 text-left">
     <div class="p-2">
-        <div class="d-flex flex-nowrap">
+        @*<div class="d-flex flex-nowrap">
             <div class="p-2">
                 <div class="text-left d-flex p-2">
                     <a href="/Clients/formClients/@id">
@@ -33,9 +32,26 @@
                     </span>
                 </button>
             </div>
-        </div>
+        </div>*@
         <div class="row">
             <div class="col-md-6">
+                <div class="d-flex flex-nowrap">
+                    <div class="">
+                        <div class="text-left d-flex">
+                            <a href="/Clients/formClients/@id">
+                                <div class="material-icons icon-red">arrow_back</div>
+                            </a>
+                            <div class="text-uppercase poppins medium size-24 pl-2">BIBLIOTECA DIGITAL</div>
+                        </div>
+                    </div>
+                    <div class="ml-auto pb-2">
+                        <button class="btn btn-sm btn-secondary" onclick="showModal('AGREGAR','Agregar');">
+                            <span class="material-icons">
+                                add
+                            </span>
+                        </button>
+                    </div>
+                </div>
                 <div class="p-4 shadow bg-white">
                     <table id="table" class="table table-striped table-bordered display table-hover table-viajes">
                         <thead>
@@ -71,27 +87,26 @@
                     <input type="hidden" name="Archivo" id="Archivo" value="" />
 
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label class="">Nombre</label>
                                 <input type="text" class="form-control" name="nombre" id="nombre" required />
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label class="">Archivo</label>
                                 <input type="file" name="FileArchivo" id="FileArchivo" />
                             </div>
                         </div>
-
-                        <div class="col-md-4">
+                        @*<div class="col-md-4">
                             <label class="">Estatus</label>
                             <select class="form-control form-control-sm" name="estatus" id="estatus">
                                 <option value="1">Disponible</option>
                                 <option value="2">No Disponible</option>
                             </select>
-                        </div>
+                        </div>*@
                     </div>
 
                     <button type="submit" class="btn btn-dark guardar" style="width:20%;" id="btnAccion">
@@ -119,6 +134,7 @@
                 event.preventDefault();
                 var jsonData = convertJson($("#frmRegister"));
                 jsonData["Id_Cliente"] = @id;
+                jsonData["estatus"] = 1;
                 var formData = new FormData(document.getElementById("frmRegister"));
                 formData.append('file', $('#FileArchivo')[0].files[0]);
                 formData.append('Id_Cliente', @id);
@@ -175,7 +191,7 @@
                     $("#nombre").val(dataLibrary[indice].nombre);
                     $("#Archivo").val(dataLibrary[indice].archivo);
                     $("#Ruta").val(dataLibrary[indice].ruta);
-                    $('#estatus option[value="' + dataLibrary[indice].estatus + '"]').attr("selected", true);
+                    //$('#estatus option[value="' + dataLibrary[indice].estatus + '"]').attr("selected", true);
                     $("#modalDiv").modal("show");
                 } catch (error) {
                     dToast("error", "Error al tratar de editar, intenta recargar la página.", "Error");

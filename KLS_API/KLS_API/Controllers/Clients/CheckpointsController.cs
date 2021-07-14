@@ -23,11 +23,13 @@ namespace KLS_API.Controllers.Clients
             this.context = context;
         }
         [HttpGet]
-        public ActionResult Get()
+        public ActionResult Get([FromBody] Cl_Has_Checkpoint check)
         {
             try
             {
-                return Ok(context.Cl_Has_Checkpoint.ToList());
+                //return Ok(context.Cl_Has_Checkpoint.ToList());
+                var rutas = context.Cl_Has_Checkpoint.Where(f => f.Id_Ruta == check.Id_Ruta).ToList();
+                return Ok(rutas);
             }
             catch (Exception ex)
             {

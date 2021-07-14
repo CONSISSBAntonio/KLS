@@ -6,7 +6,7 @@
 @{ int id = ViewBag.id; }
 
 <div class="data-content p-4 text-left">
-    <div class="p-4">
+    <div class="p-2">
         <div class="d-flex flex-nowrap">
             <div class="p-2">
                 <div class="text-left d-flex p-2">
@@ -62,20 +62,30 @@
                     <input type="hidden" name="id" id="idEditar" value="0" />
                     <div class="row">
                         <div class="col-md-12">
+                            <label class="">Ruta origen</label>
+                            <select class="form-control" id="Id_Ruta_Origen" name="Id_Ruta_Origen" style="width:100%;" onchange="selectRuta();">
+                                <option value="0">Selecciona una option</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
                             <div class="form-group">
                                 <label class="">Ruta</label>
-                                <select id="Id_Ruta" class="form-control" name="Id_Ruta" style="width:100%;"></select>
+                                <select id="Id_Ruta" class="form-control" name="Id_Ruta" style="width:100%;">
+                                    <option value="0">Selecciona una option</option>
+                                </select>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <label class="">ID Cliente</label>
-                            <input type="number"class="form-control" name="Id_Cliente_Kls" id="Id_Cliente_Kls">
+                            <input type="number"class="form-control" name="Id_Cliente_Kls" id="Id_Cliente_Kls" required>
                         </div>
                         
                         <div class="col-md-4">
-                            <label class="">Monitoreable</label>
+                            <label class="">Monitoreable</label><br />
                             <input type="checkbox" value="true" name="Monitoreable" id="Monitoreable"/>
                         </div>
 
@@ -118,25 +128,31 @@
                 event.preventDefault();
                 var jsonData = convertJson($("#frmRegister"));
                 jsonData["Id_Cliente"] = @id;
-                if (parseInt($("#idEditar").val()) != 0) {
-                    $.post("/Clients/ActiveRoutes/putRoutes", jsonData, function (res) {
-                        loadTable();
-                        dToast("success", "Registro actualizado exitosamente.", "Registrado");
-                        $(".guardar").attr("disabled", false);
-                    }).fail(function (error) {
-                        dToast("error", "Error al tratar de guardar el registro", "Error");
-                        $(".guardar").attr("disabled", false);
-                    });
+                var idruta = $("#Id_Ruta").val();
+                console.log(idruta);
+                if (parseInt(idruta) != 0 && idruta!=null) {
+                    if (parseInt($("#idEditar").val()) != 0) {
+                        $.post("/Clients/ActiveRoutes/putRoutes", jsonData, function (res) {
+                            loadTable();
+                            dToast("success", "Registro actualizado exitosamente.", "Registrado");
+                            $(".guardar").attr("disabled", false);
+                        }).fail(function (error) {
+                            dToast("error", "Error al tratar de guardar el registro", "Error");
+                            $(".guardar").attr("disabled", false);
+                        });
+                    } else {
+                        $.post("/Clients/ActiveRoutes/setRoutes", jsonData, function (res) {
+                            loadTable();
+                            dToast("success", "Se guardó el registro", "Registrado");
+                            $(".guardar").attr("disabled", false);
+                            $('#frmRegister').trigger("reset");
+                        }).fail(function (error) {
+                            dToast("error", "Error al tratar de guardar el registro", "Error");
+                            $(".guardar").attr("disabled", false);
+                        });
+                    }
                 } else {
-                    $.post("/Clients/ActiveRoutes/setRoutes", jsonData, function (res) {
-                        loadTable();
-                        dToast("success", "Se guardó el registro", "Registrado");
-                        $(".guardar").attr("disabled", false);
-                        $('#frmRegister').trigger("reset");
-                    }).fail(function (error) {
-                        dToast("error", "Error al tratar de guardar el registro", "Error");
-                        $(".guardar").attr("disabled", false);
-                    });
+                    dToast("error", "Selecciona una opción", "Error");
                 }
             });
         });
@@ -144,18 +160,57 @@
         function getRutas() {
             $.get("/Carriers/Routes/getRoutes", function (res) {
                 catRutas = res;
-                $("#Id_Ruta").empty();
+                $("#Id_Ruta_Origen").empty();
+                $("#Id_Ruta_Origen").append(`<option value="0">Selecciona una opcion</option>`);
                 $.each(res, function (item, key) {
-                    let indice_co = catCiudad.findIndex(service => service.id === key.id_ciudadorigen);
-                    let indice_cd = catCiudad.findIndex(service => service.id === key.id_ciudaddestino);
-                    let indice_eo = catEstado.findIndex(service => service.id === key.id_estadoorigen);
-                    let indice_ed = catEstado.findIndex(service => service.id === key.id_estadodestino);
-
-                    $("#Id_Ruta").append(`<option value="${key.id}">Estado origen: ${catEstado[indice_eo].nombre}--Ciudad Origen:${catCiudad[indice_co].nombre}-- Estado De:${catEstado[indice_ed].nombre}--Ciudad De:${catCiudad[indice_cd].nombre}</option>`);
+                    //console.log(key);
+                    if (parseInt(key.estatus) == 1) {
+                        let indice_co = catCiudad.findIndex(service => service.id === key.id_ciudadorigen);
+                        let indice_cd = catCiudad.findIndex(service => service.id === key.id_ciudaddestino);
+                        let indice_eo = catEstado.findIndex(service => service.id === key.id_estadoorigen);
+                        let indice_ed = catEstado.findIndex(service => service.id === key.id_estadodestino);
+                        $("#Id_Ruta_Origen").append(`<option value="${key.id}">Estado origen: ${catEstado[indice_eo].nombre}--Ciudad Origen:${catCiudad[indice_co].nombre}</option>`);
+                    }
                 });
-                $("#Id_Ruta").select2();
+                $("#Id_Ruta_Origen").select2();
+                //getRuta();
                 loadTable();
             });
+        }
+        //function getRutas() {
+        //    $.get("/Carriers/Routes/getRoutes", function (res) {
+        //        catRutas = res;
+        //        $("#Id_Ruta").empty();
+        //        $.each(res, function (item, key) {
+        //            let indice_co = catCiudad.findIndex(service => service.id === key.id_ciudadorigen);
+        //            let indice_cd = catCiudad.findIndex(service => service.id === key.id_ciudaddestino);
+        //            let indice_eo = catEstado.findIndex(service => service.id === key.id_estadoorigen);
+        //            let indice_ed = catEstado.findIndex(service => service.id === key.id_estadodestino);
+
+        //            $("#Id_Ruta").append(`<option value="${key.id}">Estado origen: ${catEstado[indice_eo].nombre}--Ciudad Origen:${catCiudad[indice_co].nombre}-- Estado De:${catEstado[indice_ed].nombre}--Ciudad De:${catCiudad[indice_cd].nombre}</option>`);
+        //        });
+        //        $("#Id_Ruta").select2();
+        //        loadTable();
+        //    });
+        //}
+
+        function selectRuta() {
+            $("#Id_Ruta").empty();
+            $("#Id_Ruta").append(`<option value="0">Selecciona una opcion</option>`);
+            var idRut = $("#Id_Ruta_Origen").val();
+            $.each(catRutas, function (item, key) {
+                if (parseInt(key.estatus) == 1) {
+                    let indice = catRutas.findIndex(service => service.id == idRut);
+                    if (indice >= 0) {
+                        if (catRutas[indice].id_estadoorigen == key.id_estadoorigen) {
+                            let indice_cd = catCiudad.findIndex(service => service.id === key.id_ciudaddestino);
+                            let indice_ed = catEstado.findIndex(service => service.id === key.id_estadodestino);
+                            $("#Id_Ruta").append(`<option value="${key.id}">Estado destino:${catEstado[indice_ed].nombre}--Ciudad destino:${catCiudad[indice_cd].nombre}</option>`);
+                        }
+                    }
+                }
+            });
+            $("#Id_Ruta").select2();
         }
 
         function showModal(titulo = "Title", accion, idEditar = 0) {
@@ -207,12 +262,13 @@
             $.get("/Clients/ActiveRoutes/getRutas", function (res) {
                 dataRutas = res;
                 $.each(res, function (item, key) {
+                    console.log(key);
                     let rutaI = catRutas.findIndex(service => parseInt(service.id) === parseInt(key.id_Ruta));
-                    const IdGenerado = `${String(catRutas[rutaI].id_ciudadorigen).padStart(4, '0')}${String(catRutas[rutaI].id_ciudaddestino).padStart(4, '0')}`;
-                    let indice_co = catCiudad.findIndex(service => service.id === catRutas[rutaI].id_ciudadorigen);
-                    let indice_cd = catCiudad.findIndex(service => service.id === catRutas[rutaI].id_ciudaddestino);
+                    if (rutaI >= 0) {
+                        const IdGenerado = `${String(catRutas[rutaI].id_ciudadorigen).padStart(4, '0')}${String(catRutas[rutaI].id_ciudaddestino).padStart(4, '0')}`;
                     let indice_eo = catEstado.findIndex(service => service.id === catRutas[rutaI].id_estadoorigen);
                     let indice_ed = catEstado.findIndex(service => service.id === catRutas[rutaI].id_estadodestino);
+
                     var check = "";
                     if (key.monitoreable == true) {
                         check = "checked";
@@ -224,9 +280,9 @@
                                 <td>${key.id_Cliente_Kls}</td>
                                 <td>${catEstado[indice_eo].id_sepomex}-${catEstado[indice_eo].nombre}</td>
                                 <td>${catEstado[indice_ed].id_sepomex}-${catEstado[indice_ed].nombre}</td>
-                                <td>S/H</td>
+                                <td>12 Hr</td>
                                 <td>
-                                    <input type="checkbox" ${check}>
+                                    <input type="checkbox" ${check} style="pointer-events:none;">
                                 </td>
                                 <td>`+ statusTable(key.estatus) + `</td>
                                 <td>
@@ -235,13 +291,14 @@
                                             mode_edit
                                         </span>
                                     </a>
-                                    <a href="/Clients/Checkpoints/${nCon(key.id)}/${@id}">
+                                    <a href="/Clients/Checkpoints/${@id}/${nCon(key.id)}">
                                         <span class="material-icons">
                                             flag
                                         </span>
                                     </a>
                                 </td>
                             </tr>`);
+                    }
                 });
                 dTable("table-viajes");
             }).fail(function (error) {

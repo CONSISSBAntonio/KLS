@@ -39,37 +39,37 @@
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label col-form-label-sm">Nombre Comercial</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="NombreComercial" name="NombreComercial">
+                                <input type="text" class="form-control form-control-sm" id="NombreComercial" name="NombreComercial" required>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label col-form-label-sm">Nombre corto</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="NombreCorto" name="NombreCorto">
+                                <input type="text" class="form-control form-control-sm" id="NombreCorto" name="NombreCorto" required>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label col-form-label-sm">Razón Social</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="RazonSocial" name="RazonSocial">
+                                <input type="text" class="form-control form-control-sm" id="RazonSocial" name="RazonSocial" required>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label col-form-label-sm">RFC</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="Rfc" name="Rfc">
+                                <input type="text" class="form-control form-control-sm" id="Rfc" name="Rfc" required>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label col-form-label-sm">Dirección fiscal</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="DireccionFiscal" name="DireccionFiscal">
+                                <input type="text" class="form-control form-control-sm" id="DireccionFiscal" name="DireccionFiscal" required>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label col-form-label-sm">Sector</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="Sector" name="Sector">
+                                <input type="text" class="form-control form-control-sm" id="Sector" name="Sector" required>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -87,7 +87,14 @@
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label col-form-label-sm">Tamaño</label>
                             <div class="col-sm-7">
-                                <input type="text" class="form-control form-control-sm" id="Tamanio" name="Tamanio">
+                                @*<input type="text" class="form-control form-control-sm" id="Tamanio" name="Tamanio">*@
+                                <select class="form-control form-control-sm" id="Tamanio" name="Tamanio">
+                                    <option value="Pequeño">Pequeño</option>
+                                    <option value="Mediano">Mediano</option>
+                                    <option value="Grande">Grande</option>
+                                    <option value="Logística">Logística</option>
+                                    <option value="Hombre Camión">Hombre Camión</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -259,7 +266,7 @@
                     $("#Sector").val(res.sector);
                     $("#InegiDenue").val(res.inegiDenue);
                     $("#Industria").val(res.industria);
-                    $("#Tamanio").val(res.tamanio);
+                    $('#Tamanio option[value="' + res.tamanio + '"]').attr("selected", true);
                     $("#PaginaWeb").val(res.paginaWeb);
                     $("#Facebook").val(res.facebook);
                     $("#OtraRed").val(res.otraRed);
