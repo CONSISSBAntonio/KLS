@@ -110,7 +110,7 @@
                                 </div>
                                 <div class="equipocontainer">
                                 </div>
-                                <i class="material-icons" style="cursor:pointer;" onclick="addEquipo('terrestrenacional', this);">add_box</i>
+                                <i id="addEquipo" class="material-icons" style="cursor:pointer;" onclick="addEquipo('terrestrenacional', this);">add_box</i>
                             </div>
                         </div>
                     </div>
@@ -138,6 +138,103 @@
     }
 }
 <script>
+    getEquipos = () => {
+        const length = --$('.selectequipo').length;
+        let data = ``;
+        i = 0;
+        while (i <= length) {
+            const select = document.getElementsByClassName('selectequipo')[i],
+                options = select.options;
+            data += `${i !== 0 ? '&' : ''}${select.name}=${options[options.selectedIndex].value}`;
+            ++i;
+        }
+        return data;
+    }
+
+    getUnidades = () => {
+        const length = --$('.selectunidad').length;
+        let data = ``;
+        i = 0;
+        while (i <= length) {
+            const select = document.getElementsByClassName('selectunidad')[i],
+                options = select.options;
+            data += `${i !== 0 ? '&' : ''}${select.name}=${options[options.selectedIndex].value}`;
+            ++i;
+        }
+        return data;
+    }
+
+    setPrecios = () => {
+        const precios = $('.precios');
+        let total = 0;
+        precios.map(index => {
+            const cantidad = Number.isNaN(Number.parseFloat(precios.eq(index).val())) ? 0 : precios.eq(index).val();
+            total += parseFloat(cantidad);
+        });
+        total = parseFloat(total).toFixed(2);
+        $('#preciocliente, .preciocliente').text(`${total}`);
+    }
+
+    setCostos = () => {
+        const costos = $('.costos');
+        let total = 0;
+        costos.map(index => {
+            const cantidad = Number.isNaN(Number.parseFloat(costos.eq(index).val())) ? 0 : costos.eq(index).val();
+            total += parseFloat(cantidad);
+        });
+        total = parseFloat(total).toFixed(2);
+        $('#costos').text(`${total}`);
+    }
+
+    selectEquipo = (IdTransportista, IdTipoUnidad, selectid) => {
+        $.get(`/Carriers/Inventory/GetEquipos/${IdTransportista}`, ({ dataReport }) => {
+            const equipos = dataReport.filter(x => x.tipoUnidad == IdTipoUnidad);
+            $(`#equipo${selectid}`).empty();
+            if (equipos.length > 0) {
+                equipos.map(({ id, marca, modelo, placa }) => {
+                    $(`#equipo${selectid}`).append(`<option value="${id}">${marca}, ${modelo}. PLACA: ${placa}</option>"`);
+                });
+            } else {
+                $(`#equipo${selectid}`).append(`<option value="0">No existen unidades activas</option>"`);
+            }
+        });
+    }
+    getInventario = (IdTransportista, elementId) => {
+        $.get(`/Carriers/Inventory/GetEquipos/${IdTransportista}`, res => {
+            const { unidades } = res;
+            if (unidades.length > 0) {
+                unidades.map(({ tipoUnidad, nombre }) => {
+                    $(`#unidad${elementId}`).append(`<option value="${tipoUnidad}">${nombre[0]}</option>`);
+                });
+                selectEquipo(IdTransportista, unidades[0].tipoUnidad, elementId);
+            } else {
+                $('.selectunidad').append(`<option value="0">No existen unidades activas</option>`);
+                $('.selecUrlequipo').append(`<option value="0">No existen equipos activos</option>`);
+            }
+        });
+    };
+
+    addEquipo = (servicio, element) => {
+        const boton = jQuery(element);
+        const idtransportista = $('#transportista').val();
+        const elementid = $('.equipocontainer').children().length;
+        $('.equipocontainer').attr('rel', idtransportista);
+        boton.remove();
+
+        const equipo = `<div class="d-flex justify-content-between equipo mt-2">
+                <select id="unidad${elementid}" class="form-control form-control-sm col-4 selectunidad" name="unidad${servicio}" required onchange="{selectEquipo(${idtransportista}, this.value, ${elementid});}">
+                </select>
+                <div class="col-8 d-flex flex-row justify-content-between">
+                    <select id="equipo${elementid}" class="form-control form-control-sm col-10 selectequipo" name="equipo${servicio}" required>
+                    </select>
+                    <i class="material-icons text-danger" style="cursor: pointer;" onClick="{$(this).parent().parent().remove();}">delete</i>
+                </div>
+            </div>
+            <i id="addEquipo" class="material-icons" style="cursor:pointer;" onclick="addEquipo('${servicio}', this);">add_box</i>`;
+
+        $('.equipocontainer').append(equipo);
+        getInventario(idtransportista, elementid);
+    }
 
     downloadChofer = element => {
         const idchofer = $('#chofer').val();
@@ -180,7 +277,7 @@
     removeService = service => {
         $(`#${service}`).hide('slow', () => {
             $(`#${service}`).remove();
-            $('.serviciosseleccionados').children().length === 1 ? $(`.addServicios`).show('slow', () => { $('.addServicios').show(); }) : null;
+            $('.serviciosseleccionados').children().length === 1 ? ($(`.addServicios`).show('slow', () => { $('.addServicios').show(); }), $('#frmServicios input').prop('checked', false)) : null;
         });
     }
 

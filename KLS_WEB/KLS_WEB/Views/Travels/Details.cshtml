@@ -31,6 +31,24 @@
     label {
         text-align: left;
     }
+
+    .form-check-label {
+        font-size: 12px !important;
+    }
+
+    .select2-selection__rendered {
+        float: left;
+        font-size: 12px;
+        text-transform: uppercase;
+    }
+
+    select {
+        text-transform: uppercase;
+    }
+
+    .wrapper > .data-content {
+        text-align: unset;
+    }
 </style>
 
 <div class="pl-5 pr-5">
@@ -631,11 +649,6 @@
             <div class="text-left d-flex justify-content-between mb-3">
                 <h4>HISTORIAL</h4>
                 <div style="padding-left:20%;" onclick="selectServicios(this);">
-                    <a class="btn btn-sm bg-white" style="font-size:1.8rem;width:3.5rem" href="#">
-                        <span class="material-icons">
-                            add
-                        </span>
-                    </a>
                 </div>
             </div>
 
@@ -726,26 +739,18 @@
         </div>
 
         @*Servicios*@
-        @*<div class="col-12 servicios d-none">
-                <div class="text-left d-flex justify-content-between mb-3">
-                    <h4>SERVICIOS</h4>
-                    <div style="padding-left:20%;" onclick="selectServicios(this);">
-                        <a class="btn btn-sm bg-white" style="font-size:1.8rem;width:3.5rem" href="#">
-                            <span class="material-icons">
-                                add
-                            </span>
-                        </a>
-                    </div>
-                </div>
-            </div>*@
-
-        <div class="col-12 servicios">
+        <div class="col-12 servicios d-none mb-5">
             <div class="card p-3">
                 <div class="form-group col-12 d-flex justify-content-between">
                     <h6 class="font-weight-bold">SERVICIOS</h6>
-                    <a class="btn btn-outline-secondary btn-sm" onclick="selectServicios(this);">
-                        <i class="material-icons">add</i>
-                    </a>
+                    <div>
+                        <a class="btn btn-outline-light btn-sm" onclick="updateServicios(this);">
+                            <i class="material-icons text-primary">save</i>
+                        </a>
+                        <a class="btn btn-outline-secondary btn-sm" onclick="selectServicios(this);">
+                            <i class="material-icons">add</i>
+                        </a>
+                    </div>
                 </div>
                 <div class="form-group col-12 addServicios">
                     <div class="border rounded d-flex justify-content-center align-items-center font-weight-bolder"
@@ -755,7 +760,9 @@
                     </div>
 
                 </div>
-                <div class="col-12 serviciosseleccionados" style="display: none;"></div>
+                <b class="d-none" id="costos">0.00</b>
+                <b class="preciocliente d-none">0.00</b>
+                <div class="col-12 serviciosseleccionados d-flex flex-column" style="display: none;"></div>
 
             </div>
         </div>
@@ -873,14 +880,96 @@
         loadTableHistorial();
         getMercancia();
     });
+        updateServicios = e => {
+            $(e).attr("disabled", true);
 
-    closeModal = action => {
-        $('#modalDiv').modal('hide');
-            const servicios = $('#frmServicios').serialize();
+            let jsonData = {};
+            const details = {
+                equipo: getEquipos(),
+                unidad: getUnidades(),
+                servicios: $('#frmServicios').serialize(),
+                preciototal: $('#preciocliente').text(),
+                costototal: $('#costos').text()
+            };
+
+            jsonData = { ...jsonData, ...details };
+            console.log('updateServicios', jsonData);
+            const serviceExists = jsonData.servicios != '' && jsonData.unidad != '' && true;
+            if (serviceExists) {
+                console.log('update');
+                @*$.post("/Travels/setTravels", jsonData, function (res) {
+                    dToast("success", "Registro guardado exitosamente.", "Registrado");
+                    $(e).attr("disabled", false);
+                    window.location.replace("@Url.Action("", "Travels")");
+                }).fail(function (error) {
+                    dToast("error", "Error al tratar de guardar el registro", "Error");
+                    $(".guardar").attr("disabled", false);
+                });*@
+            } else {
+                const { servicios } = jsonData;
+                dToast("error", servicios == '' ? "LOS SERVICIOS SON OBLIGATORIOS" : "LA UNIDAD ES OBLIGATORIA", "Error");
+                $(".guardar").attr("disabled", false);
+            }
+        }
+
+        closeModal = (servicios, servicesobject) => {
+            $('#modalDiv').modal('hide');
+            servicios = servicios ? servicios : $('#frmServicios').serialize();
+            console.log(servicesobject);
             if (servicios) {
-                $.post("@Url.Action("ReturnServicios", "Travels")", { servicios: servicios }, function (res) {
+                $.post("@Url.Action("ReturnServicios", "Travels")", { servicios: servicios }, res => {
                     $('.addServicios').hide();
                     $('.serviciosseleccionados').html(res).show('slow', () => { $('.serviciosseleccionados').show(); });
+                    setTimeout(() => {
+                        servicesobject && servicesobject.map(({
+                            id,
+                            costo,
+                            idAerolinea,
+                            buque,
+                            idAgenteAduanal,
+                            idChofer,
+                            idCoLoader,
+                            idContatctoA,
+                            idContactoAA,
+                            idContactoCL,
+                            idNaviera,
+                            idTransportista,
+                            nombre,
+                            precio,
+                            travelId,
+                            unidades
+                        }) => {
+                            $(`[name=${nombre}`).prop('checked', true);
+                            $(`[name=${nombre}costo`).val(parseFloat(costo).toFixed(2));
+                            $(`[name=${nombre}precio`).val(parseFloat(precio).toFixed(2));
+                            $('#transportista').val(idTransportista).trigger('change');
+                            setTimeout(() => {
+                                $('#chofer').val(idChofer).trigger('change');
+
+                            }, 100);
+                            $('.equipocontainer').attr('rel', idTransportista);
+                            unidades.map(({
+                                id,
+                                idUnidad,
+                                idEquipo,
+                                services,
+                                servicesId
+                            }) => {
+                                const elementid = $('.equipocontainer').children().length;
+                                $('#addEquipo').attr('onclick', `addEquipo('${nombre}', this);`);
+                                document.getElementById('addEquipo').click();
+                                setTimeout(() => {
+                                    $(`#unidad${elementid}`).val(idUnidad).trigger('change');
+
+                                }, 100);
+                                setTimeout(() => {
+                                    $(`#equipo${elementid}`).val(idEquipo).trigger('change');
+                                }, 300);
+                            });
+                        });
+                        setPrecios();
+                        setCostos();
+                    }, 400);
                 });
             } else {
                 $(`.addServicios`).show('slow', () => { $('.addServicios').show(); });
@@ -895,7 +984,7 @@
                     services += `${nombre}&`;
                 });
 
-                console.log('adsk', services);
+                closeModal(services, response);
             });
         }
 
@@ -932,7 +1021,7 @@
             const clienteid = @Model.ClienteId;
             $.get(`/Clients/Requirements/getRequirements/?Id_Cliente=${clienteid}`, response => {
                 !response && dToast("error", "El cliente de este viaje no tiene parametros de requisitos", "Error");
-                Object.entries(response).map(([key, val]) => {
+                response && Object.entries(response).map(([key, val]) => {
                     $(`[name=${key}]`).attr('checked', val);
                 });
             });
