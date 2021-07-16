@@ -1196,10 +1196,16 @@ namespace KLS_API.Migrations
                     b.Property<string>("Banco")
                         .HasColumnType("varchar(55)");
 
+                    b.Property<string>("Comentario")
+                        .HasColumnType("varchar(55)");
+
                     b.Property<string>("Cuenta")
                         .HasColumnType("varchar(55)");
 
                     b.Property<string>("DireccionFiscal")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("Ejecutivo")
                         .HasColumnType("varchar(55)");
 
                     b.Property<int>("Estatus")
