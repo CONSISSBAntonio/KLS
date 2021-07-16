@@ -31,6 +31,14 @@ namespace KLS_WEB.Controllers.Travels
             return View(this._UrlView + "Index.cshtml");
         }
 
+        [Route("GetMercancia/{id}")]
+        public async Task<JsonResult> GetMercancia(int id)
+        {
+            MercanciaDTO mercancia = await AppContext.Execute<MercanciaDTO>(MethodType.GET, Path.Combine(_UrlApi, "GetMercancia", id.ToString()), null);
+
+            return Json(mercancia);
+        }
+
         [Route("{id}")]
         public async Task<IActionResult> AddEdit(int id)
         {
@@ -45,6 +53,13 @@ namespace KLS_WEB.Controllers.Travels
             MercanciaDTO mercancia = await AppContext.Execute<MercanciaDTO>(MethodType.POST, Path.Combine(_UrlApi, "PostMercancia"), mercanciaDTO);
 
             return Json(mercancia);
+        }
+
+        [Route("GetServicios/{id}")]
+        public async Task<JsonResult>GetServicios(string id)
+        {
+            List<ServicesDTO> servicios = await AppContext.Execute<List<ServicesDTO>>(MethodType.GET, Path.Combine(_UrlApi, "GetServicios", id), null);
+            return Json(servicios);
         }
 
         [Route("getTravels")]
@@ -106,21 +121,25 @@ namespace KLS_WEB.Controllers.Travels
 
                 int IdServicio = newService.Id;
 
-                var unidades = dataModel.Equipo.Split("&");
-
+                var unidades = dataModel.Unidad.Split("&");
+                var equipos = dataModel.Equipo.Split("&");
+                int index = 0;
                 foreach (var unidad in unidades)
                 {
                     if (unidad.Contains(nombre))
                     {
                         string Id = new string(unidad.Where(char.IsDigit).ToArray());
+                        string IdEquipo = new string(equipos[index].Where(char.IsDigit).ToArray());
                         UnidadDTO unidaddb = new UnidadDTO
                         {
-                            IdEquipo = Convert.ToInt32(Id),
+                            IdUnidad = Convert.ToInt32(Id),
+                            IdEquipo = Convert.ToInt32(IdEquipo),
                             ServicesId = IdServicio
                         };
 
                         UnidadDTO newUnity = await AppContext.Execute<UnidadDTO>(MethodType.POST, Path.Combine(_UrlApi, "PostUnit"), unidaddb);
                         units.Add(newUnity);
+                        ++index;
                     }
                 }
             }

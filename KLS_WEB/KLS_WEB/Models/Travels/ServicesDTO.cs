@@ -17,6 +17,7 @@ namespace KLS_WEB.Models.Travels
         public int IdChofer { get; set; }
         public decimal Costo { get; set; }
         public decimal Precio { get; set; }
+        public List<UnidadDTO> Unidades { get; set; }
 
         // Naviera
         public int IdNaviera { get; set; }

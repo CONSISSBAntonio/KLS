@@ -21,9 +21,9 @@ namespace KLS_API.Models.Travels
         public string DireccionRemitente { get; set; }
         public string DireccionDestinatario { get; set; }
         //Cálculos
-        [Column(TypeName = "decimal(18,4)")]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal CostoTotal { get; set; }
-        [Column(TypeName = "decimal(18,4)")]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal PrecioClienteTotal { get; set; }
         public string Estatus { get; set; }
 

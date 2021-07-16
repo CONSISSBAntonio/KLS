@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using KLS_API.Models.DTO;
 using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace KLS_API.Controllers.Travels
 {
@@ -14,6 +15,39 @@ namespace KLS_API.Controllers.Travels
         public TravelsController(AppDbContext dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        [HttpGet("[action]/{id}")]
+        public IActionResult GetServicios(int id)
+        {
+            try
+            {
+                var servicios = _dbContext.Servicios.Where(x => x.TravelId == id).Select(x => new Services
+                {
+                    Id = x.Id,
+                    TravelId = x.TravelId,
+                    Nombre = x.Nombre,
+                    IdTransportista = x.IdTransportista,
+                    IdChofer = x.IdChofer,
+                    Costo = x.Costo,
+                    Precio = x.Precio,
+                    IdNaviera = x.IdNaviera,
+                    Buque = x.Buque,
+                    IdAgenteAduanal = x.IdAgenteAduanal,
+                    IdContactoAA = x.IdContactoAA,
+                    IdAerolinea = x.IdAerolinea,
+                    IdContactoA = x.IdContactoA,
+                    IdCoLoader = x.IdCoLoader,
+                    IdContactoCL = x.IdContactoCL,
+                    Unidades = x.Unidades.Where(x => x.ServicesId == x.Services.Id).ToList()
+                }).ToList();
+
+                return Ok(servicios);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
         [HttpGet]
@@ -64,6 +98,7 @@ namespace KLS_API.Controllers.Travels
                                       {
                                           viajes.Id,
                                           viajes.Folio,
+                                          clienteid = cliente.id,
                                           nombrecliente = cliente.NombreCorto,
                                           viajes.DireccionRemitente,
                                           viajes.DireccionDestinatario,
@@ -74,6 +109,7 @@ namespace KLS_API.Controllers.Travels
                                           preciototal = viajes.PrecioClienteTotal,
                                           tipounidadnombre = unidad.nombre,
                                           Transportista = servicio.IdTransportista
+                                          
                                       }).FirstOrDefault() :
                                       (from viajes in _dbContext.Viajes
                                        join cliente in _dbContext.Clientes on viajes.IdCliente equals cliente.id
@@ -87,6 +123,7 @@ namespace KLS_API.Controllers.Travels
                                        {
                                            viajes.Id,
                                            viajes.Folio,
+                                           clienteid = cliente.id,
                                            nombrecliente = cliente.NombreCorto,
                                            viajes.DireccionRemitente,
                                            viajes.DireccionDestinatario,
@@ -126,7 +163,7 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
-                return Ok(_dbContext.Mercancias.LastOrDefault(x => x.TravelId == id));
+                return Ok(_dbContext.Mercancias.OrderBy(x => x.Id).LastOrDefault(x => x.TravelId == id));
             }
             catch (Exception ex)
             {
