@@ -40,5 +40,10 @@ namespace KLS_WEB.Models.Travels
         public string Salida => FechaSalida.ToString("dd/MM/yyyy. HH:mm tt");
         public string Llegada => FechaLlegada.ToString("dd/MM/yyyy. HH:mm tt");
         public int ClienteId { get; set; }
+
+        // ServicesId para details
+        public string ServiciosIds { get; set; }
+        public List<int> ServicesId { get; set; }
+
     }
 }

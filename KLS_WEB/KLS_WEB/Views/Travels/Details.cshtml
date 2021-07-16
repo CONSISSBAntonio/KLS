@@ -78,7 +78,7 @@
         <div class="col-5" style="margin-top: 1.3rem;">
             <div class="card p-3">
 
-                <form>
+                <form onsubmit="event.preventDefault();">
                     <div class="form-group row">
                         <label class="col-5 col-form-label col-form-label-sm">Folio de viaje</label>
                         <div class="col-7">
@@ -174,7 +174,7 @@
                         <div class="name font-barlow">Requisitos</div>
                     </div>
                 </a>
-                <a href="javascript:void(0);" class="catalog" id="mercancia" onclick="{ showPanel(this.id); }">
+                <a href="javascript:void(0);" class="catalog" id="mercancia" onclick="{ showPanel(this.id); getMercancia(); }">
                     <div class="content">
                         <span class="material-icons">
                             store
@@ -284,7 +284,7 @@
                         </form>
                     </div>
                     <div class="card">
-                        <form class="text-left mt-3 pr-4">
+                        <form onsubmit="event.preventDefault();" class="text-left mt-3 pr-4">
                             <div class="form-group row">
                                 <div class="col-1">
                                     <input type="checkbox" class="custome-check form-control form-control-sm" disabled>
@@ -744,9 +744,9 @@
                 <div class="form-group col-12 d-flex justify-content-between">
                     <h6 class="font-weight-bold">SERVICIOS</h6>
                     <div>
-                        <a class="btn btn-outline-light btn-sm" onclick="updateServicios(this);">
+                        <button class="btn btn-outline-light btn-sm" onclick="updateServicios(this);">
                             <i class="material-icons text-primary">save</i>
-                        </a>
+                        </button>
                         <a class="btn btn-outline-secondary btn-sm" onclick="selectServicios(this);">
                             <i class="material-icons">add</i>
                         </a>
@@ -762,8 +762,9 @@
                 </div>
                 <b class="d-none" id="costos">0.00</b>
                 <b class="preciocliente d-none">0.00</b>
-                <div class="col-12 serviciosseleccionados d-flex flex-column" style="display: none;"></div>
-
+                <form class="services">
+                    <div class="col-12 serviciosseleccionados d-flex flex-column" style="display: none;"></div>
+                </form>
             </div>
         </div>
     </div>
@@ -870,54 +871,116 @@
     </div>
 </div>
 <!--Modal servicio-->
+<!-- Modal confirm delete -->
+<div class="modal fade" id="popup" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo-modal"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                <p>¿Estas seguro de que deseas eliminar el SERVICIO seleccionado?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
+                <button id="confirm" type="button" class="btn">Si</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
     <script>
-    const TravelId = @TempData["TravelId"] ;
-    $(document).ready(function () {
-        loadTableFactura();
-        loadTableHistorial();
-        getMercancia();
-    });
-        updateServicios = e => {
-            $(e).attr("disabled", true);
+        const TravelId = @TempData["TravelId"] ;
+        $(document).ready(function () {
+            loadTableFactura();
+            loadTableHistorial();
+        });
 
-            let jsonData = {};
+        validarSelect = () => {
+            let isset = true;
+            $('.serviciosseleccionados select').map((k, { value }) => {
+                if (value == 0) {
+                    isset = false;
+                    return;
+                }
+            });
+            return isset;
+        }
+
+        existenServicios = () => {
+            let isset = false;
+            $('#frmServicios input').map((k, { checked }) => {
+                if (checked) {
+                    isset = checked;
+                    return;
+                }
+            });
+            return isset;
+        }
+
+        getServicesId = () => {
+            let ids = [];
+            $('.service').map((k, v) => {
+                ids = [...ids, parseInt($(v).attr('rel'))];
+            });
+            return ids;
+        }
+
+        updateServicios = e => {
+            if (!existenServicios()) {
+                dToast("error", "LOS SERVICIOS SON OBLIGATORIOS", "Error");
+                return;
+            } else if (!validarSelect()) {
+                dToast("error", "LOS PARÁMETROS DE LOS SERVICIOS SON OBLIGATORIOS", "Error");
+                return;
+            }
+            $('.service').map((k, v) => {
+                let ids = [];
+                ids = [...ids, parseInt($(v).attr('rel'))];
+            })
+            let jsonData = convertJson($(".services"));
             const details = {
+                Id: TravelId,
                 equipo: getEquipos(),
                 unidad: getUnidades(),
                 servicios: $('#frmServicios').serialize(),
                 preciototal: $('#preciocliente').text(),
-                costototal: $('#costos').text()
+                costototal: $('#costos').text(),
+                ServicesId: getServicesId()
             };
 
             jsonData = { ...jsonData, ...details };
-            console.log('updateServicios', jsonData);
-            const serviceExists = jsonData.servicios != '' && jsonData.unidad != '' && true;
+            const { servicios, unidad, costototal, preciototal } = jsonData;
+            const serviceExists = servicios != '' && unidad != '' && costototal != 0 && preciototal != 0 && true;
+
             if (serviceExists) {
-                console.log('update');
-                @*$.post("/Travels/setTravels", jsonData, function (res) {
+                $(e).prop('disabled', true);
+                $.post("/Travels/setTravels", jsonData, ({ services }) => {
                     dToast("success", "Registro guardado exitosamente.", "Registrado");
                     $(e).attr("disabled", false);
-                    window.location.replace("@Url.Action("", "Travels")");
+                    services.map(({ id, nombre }) => ($(`.delete${nombre}`).attr('onclick', `confirmDelete('${nombre}', ${id});`), $(`.delete${nombre}`).attr('rel', id)));
                 }).fail(function (error) {
+                    $(e).attr("disabled", false);
                     dToast("error", "Error al tratar de guardar el registro", "Error");
                     $(".guardar").attr("disabled", false);
-                });*@
+                });
             } else {
-                const { servicios } = jsonData;
-                dToast("error", servicios == '' ? "LOS SERVICIOS SON OBLIGATORIOS" : "LA UNIDAD ES OBLIGATORIA", "Error");
+                const { unidad } = jsonData;
+                dToast("error", unidad == '' ? "DEBES SELECCIONAR AL MENOS UNA UNIDAD" : "LOS COSTOS Y PRECIOS NO PUEDEN SER 0", "Error");
                 $(".guardar").attr("disabled", false);
             }
         }
 
-        closeModal = (servicios, servicesobject) => {
+        closeModal = (servicios, servicesobject, servicesids) => {
             $('#modalDiv').modal('hide');
             servicios = servicios ? servicios : $('#frmServicios').serialize();
-            console.log(servicesobject);
             if (servicios) {
-                $.post("@Url.Action("ReturnServicios", "Travels")", { servicios: servicios }, res => {
+                $.post("@Url.Action("ReturnServicios", "Travels")", { servicios: servicios, serviciosids: servicesids }, res => {
                     $('.addServicios').hide();
                     $('.serviciosseleccionados').html(res).show('slow', () => { $('.serviciosseleccionados').show(); });
                     setTimeout(() => {
@@ -980,11 +1043,13 @@
         getServicios = () => {
             $.get(`/Travels/GetServicios/${TravelId}`, response => {
                 let services = '';
-                Object.entries(response).map(([k, { nombre }]) => {
+                let servicesids = '';
+                Object.entries(response).map(([k, { id, nombre }]) => {
                     services += `${nombre}&`;
+                    servicesids += `${id}&`;
                 });
 
-                closeModal(services, response);
+                closeModal(services, response, servicesids);
             });
         }
 
@@ -1001,8 +1066,8 @@
 
         getMercancia = () => {
             const TransportistaId = @Model.Transportista;
-
-            $.post(`/Carriers/Box/getBox/`, { Id_Transportista: TransportistaId }, (response) => {
+            if (TransportistaId > 0) {
+            $.post(`/Carriers/Box/getBox/`, { Id_Transportista: TransportistaId }, response => {
                 !response && dToast("error", "El transportista de este viaje no tiene parametros de mercancia", "Error");
                 const { densidad, d_Opcional, tipoPresentacion, tp_Opcional, peligroso, material, m_Opcional, derramable, valor, v_Opcional, custodia, olorPenetrante, notas } = response;
                 densidad && ($('#densidad').val(d_Opcional), $('[name=densidad]').attr('checked', true));
@@ -1015,6 +1080,9 @@
                 olorPenetrante && $('[name=olorpenetrante]').attr('checked', true);
                 $('[name=requisitosespeciales]').val(notas);
             });
+            } else {
+                dToast("error", "ES NECESARIO TENER SERVICIOS EN EL VIAJE PARA VER ESTA INFORMACIÓN", "Error");
+            }
         }
 
         getRequisitos = () => {

@@ -85,55 +85,120 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
+                //var viaje = id > 0 ? (from viajes in _dbContext.Viajes
+                //                      where viajes.Id == id
+                //                      join cliente in _dbContext.Clientes on viajes.IdCliente equals cliente.id
+                //                      join ciudadorigen in _dbContext.Cat_Ciudad on viajes.IdOrigen equals ciudadorigen.id
+                //                      join estadoorigen in _dbContext.Cat_Estado on ciudadorigen.id_estado equals estadoorigen.id
+                //                      join ciudaddestino in _dbContext.Cat_Ciudad on viajes.IdDestino equals ciudaddestino.id
+                //                      join estadodestino in _dbContext.Cat_Estado on ciudaddestino.id_estado equals estadodestino.id
+                //                      join unidad in _dbContext.Cat_Tipos_Unidades on viajes.IdUnidad equals unidad.id
+                //                      join servicio in _dbContext.Servicios on viajes.Id equals servicio.TravelId
+                //                      select new
+                //                      {
+                //                          viajes.Id,
+                //                          viajes.Folio,
+                //                          clienteid = cliente.id,
+                //                          nombrecliente = cliente.NombreCorto,
+                //                          viajes.DireccionRemitente,
+                //                          viajes.DireccionDestinatario,
+                //                          nombreruta = string.Concat(estadoorigen.nombre, " - ", estadodestino.nombre),
+                //                          viajes.FechaSalida,
+                //                          viajes.FechaLlegada,
+                //                          viajes.CostoTotal,
+                //                          preciototal = viajes.PrecioClienteTotal,
+                //                          tipounidadnombre = unidad.nombre,
+                //                          Transportista = servicio.IdTransportista
+                //                      }).FirstOrDefault() :
+                //                      (from viajes in _dbContext.Viajes
+                //                       join cliente in _dbContext.Clientes on viajes.IdCliente equals cliente.id
+                //                       join ciudadorigen in _dbContext.Cat_Ciudad on viajes.IdOrigen equals ciudadorigen.id
+                //                       join estadoorigen in _dbContext.Cat_Estado on ciudadorigen.id_estado equals estadoorigen.id
+                //                       join ciudaddestino in _dbContext.Cat_Ciudad on viajes.IdDestino equals ciudaddestino.id
+                //                       join estadodestino in _dbContext.Cat_Estado on ciudaddestino.id_estado equals estadodestino.id
+                //                       join unidad in _dbContext.Cat_Tipos_Unidades on viajes.IdUnidad equals unidad.id
+                //                       join servicio in _dbContext.Servicios on viajes.Id equals servicio.TravelId
+                //                       select new
+                //                       {
+                //                           viajes.Id,
+                //                           viajes.Folio,
+                //                           clienteid = cliente.id,
+                //                           nombrecliente = cliente.NombreCorto,
+                //                           viajes.DireccionRemitente,
+                //                           viajes.DireccionDestinatario,
+                //                           nombreruta = string.Concat(estadoorigen.nombre, " - ", estadodestino.nombre),
+                //                           viajes.FechaSalida,
+                //                           viajes.FechaLlegada,
+                //                           viajes.CostoTotal,
+                //                           preciototal = viajes.PrecioClienteTotal,
+                //                           tipounidadnombre = unidad.nombre,
+                //                           Transportista = servicio.IdTransportista
+                //                       }).OrderByDescending(x => x.Id).FirstOrDefault();
+
+
                 var viaje = id > 0 ? (from viajes in _dbContext.Viajes
-                                      join cliente in _dbContext.Clientes on viajes.IdCliente equals cliente.id
-                                      join ciudadorigen in _dbContext.Cat_Ciudad on viajes.IdOrigen equals ciudadorigen.id
-                                      join estadoorigen in _dbContext.Cat_Estado on ciudadorigen.id_estado equals estadoorigen.id
-                                      join ciudaddestino in _dbContext.Cat_Ciudad on viajes.IdDestino equals ciudaddestino.id
-                                      join estadodestino in _dbContext.Cat_Estado on ciudaddestino.id_estado equals estadodestino.id
-                                      join unidad in _dbContext.Cat_Tipos_Unidades on viajes.IdUnidad equals unidad.id
-                                      join servicio in _dbContext.Servicios on viajes.Id equals servicio.TravelId
-                                      where viajes.Id == id
-                                      select new
-                                      {
-                                          viajes.Id,
-                                          viajes.Folio,
-                                          clienteid = cliente.id,
-                                          nombrecliente = cliente.NombreCorto,
-                                          viajes.DireccionRemitente,
-                                          viajes.DireccionDestinatario,
-                                          nombreruta = string.Concat(estadoorigen.nombre, " - ", estadodestino.nombre),
-                                          viajes.FechaSalida,
-                                          viajes.FechaLlegada,
-                                          viajes.CostoTotal,
-                                          preciototal = viajes.PrecioClienteTotal,
-                                          tipounidadnombre = unidad.nombre,
-                                          Transportista = servicio.IdTransportista
-                                      }).FirstOrDefault() :
-                                      (from viajes in _dbContext.Viajes
-                                       join cliente in _dbContext.Clientes on viajes.IdCliente equals cliente.id
-                                       join ciudadorigen in _dbContext.Cat_Ciudad on viajes.IdOrigen equals ciudadorigen.id
-                                       join estadoorigen in _dbContext.Cat_Estado on ciudadorigen.id_estado equals estadoorigen.id
-                                       join ciudaddestino in _dbContext.Cat_Ciudad on viajes.IdDestino equals ciudaddestino.id
-                                       join estadodestino in _dbContext.Cat_Estado on ciudaddestino.id_estado equals estadodestino.id
-                                       join unidad in _dbContext.Cat_Tipos_Unidades on viajes.IdUnidad equals unidad.id
-                                       join servicio in _dbContext.Servicios on viajes.Id equals servicio.TravelId
-                                       select new
-                                       {
-                                           viajes.Id,
-                                           viajes.Folio,
-                                           clienteid = cliente.id,
-                                           nombrecliente = cliente.NombreCorto,
-                                           viajes.DireccionRemitente,
-                                           viajes.DireccionDestinatario,
-                                           nombreruta = string.Concat(estadoorigen.nombre, " - ", estadodestino.nombre),
-                                           viajes.FechaSalida,
-                                           viajes.FechaLlegada,
-                                           viajes.CostoTotal,
-                                           preciototal = viajes.PrecioClienteTotal,
-                                           tipounidadnombre = unidad.nombre,
-                                           Transportista = servicio.IdTransportista
-                                       }).OrderByDescending(x => x.Id).FirstOrDefault();
+                             where viajes.Id == id
+
+                             join cliente in _dbContext.Clientes on viajes.IdCliente equals cliente.id
+                             into viajecliente
+                             from clientedata in viajecliente.DefaultIfEmpty()
+
+                             join ciudadorigen in _dbContext.Cat_Ciudad on viajes.IdOrigen equals ciudadorigen.id
+                             join estadoorigen in _dbContext.Cat_Estado on ciudadorigen.id_estado equals estadoorigen.id
+                             join ciudaddestino in _dbContext.Cat_Ciudad on viajes.IdDestino equals ciudaddestino.id
+                             join estadodestino in _dbContext.Cat_Estado on ciudaddestino.id_estado equals estadodestino.id
+
+                             join servicio in _dbContext.Servicios on viajes.Id equals servicio.TravelId
+                             into viajeservicio
+                             from serviciodata in viajeservicio.DefaultIfEmpty()
+
+                             join unidad in _dbContext.Unidades on serviciodata.Id equals unidad.ServicesId
+                             into unidadservicio
+                             from unidaddata in unidadservicio.DefaultIfEmpty()
+
+                             join unidadt in _dbContext.Cat_Tipos_Unidades on viajes.IdUnidad equals unidadt.id
+
+                             select new
+                             {
+                                 viajes.Id,
+                                 viajes.Folio,
+                                 clienteid = clientedata.id,
+                                 nombrecliente = clientedata.NombreCorto,
+                                 viajes.DireccionRemitente,
+                                 viajes.DireccionDestinatario,
+                                 nombreruta = string.Concat(estadoorigen.nombre, " - ", estadodestino.nombre),
+                                 viajes.FechaSalida,
+                                 viajes.FechaLlegada,
+                                 viajes.CostoTotal,
+                                 preciototal = viajes.PrecioClienteTotal,
+                                 tipounidadnombre = unidadt.nombre,
+                                 Transportista = serviciodata.IdTransportista
+                             }).FirstOrDefault() : (
+                                 from viajes in _dbContext.Viajes
+                                 join cliente in _dbContext.Clientes on viajes.IdCliente equals cliente.id
+                                 join ciudadorigen in _dbContext.Cat_Ciudad on viajes.IdOrigen equals ciudadorigen.id
+                                 join estadoorigen in _dbContext.Cat_Estado on ciudadorigen.id_estado equals estadoorigen.id
+                                 join ciudaddestino in _dbContext.Cat_Ciudad on viajes.IdDestino equals ciudaddestino.id
+                                 join estadodestino in _dbContext.Cat_Estado on ciudaddestino.id_estado equals estadodestino.id
+                                 join unidad in _dbContext.Cat_Tipos_Unidades on viajes.IdUnidad equals unidad.id
+                                 join servicio in _dbContext.Servicios on viajes.Id equals servicio.TravelId
+                                 select new
+                                 {
+                                     viajes.Id,
+                                     viajes.Folio,
+                                     clienteid = cliente.id,
+                                     nombrecliente = cliente.NombreCorto,
+                                     viajes.DireccionRemitente,
+                                     viajes.DireccionDestinatario,
+                                     nombreruta = string.Concat(estadoorigen.nombre, " - ", estadodestino.nombre),
+                                     viajes.FechaSalida,
+                                     viajes.FechaLlegada,
+                                     viajes.CostoTotal,
+                                     preciototal = viajes.PrecioClienteTotal,
+                                     tipounidadnombre = unidad.nombre,
+                                     Transportista = servicio.IdTransportista
+                                 }).OrderByDescending(x => x.Id).FirstOrDefault();
+
                 return Ok(viaje);
             }
             catch (Exception ex)
@@ -208,6 +273,25 @@ namespace KLS_API.Controllers.Travels
                 _dbContext.Unidades.Add(unidad);
                 _dbContext.SaveChanges();
                 return Ok(unidad);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpDelete("[action]/{ServiceId}")]
+        public IActionResult DeleteService(int ServiceId)
+        {
+            try
+            {
+                Services service = _dbContext.Servicios.Find(ServiceId);
+                if (service is null)
+                    return NotFound();
+                _dbContext.Remove(service);
+                _dbContext.SaveChanges();
+
+                return Ok(service);
             }
             catch (Exception ex)
             {

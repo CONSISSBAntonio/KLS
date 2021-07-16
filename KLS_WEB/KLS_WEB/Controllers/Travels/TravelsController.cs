@@ -48,7 +48,7 @@ namespace KLS_WEB.Controllers.Travels
         }
 
         [Route("GetServicios/{id}")]
-        public async Task<JsonResult>GetServicios(string id)
+        public async Task<JsonResult> GetServicios(string id)
         {
             List<ServicesDTO> servicios = await AppContext.Execute<List<ServicesDTO>>(MethodType.GET, Path.Combine(_UrlApi, "GetServicios", id), null);
             return Json(servicios);
@@ -61,36 +61,55 @@ namespace KLS_WEB.Controllers.Travels
             return Json(dataReport);
         }
 
+        [Route("DeleteService/{id}")]
+        public async Task<JsonResult> DeleteService(string id)
+        {
+            ServicesDTO service = await AppContext.Execute<ServicesDTO>(MethodType.DELETE, Path.Combine(_UrlApi, "DeleteService", id), null);
+            return Json(service);
+        }
+
+
         [Route("setTravels")]
         public async Task<JsonResult> Post(Travel dataModel)
         {
             List<ServicesDTO> services = new List<ServicesDTO>();
             List<UnidadDTO> units = new List<UnidadDTO>();
+            int ViajeId = dataModel.Id != 0 ? dataModel.Id : 0;
 
-            TravelDTO viaje = new TravelDTO
+            if (ViajeId == 0)
             {
-                Estatus = dataModel.Estatus,
-                Folio = dataModel.Folio,
-                IdCliente = dataModel.Cliente,
-                FechaSalida = dataModel.FechaSalida,
-                FechaLlegada = dataModel.FechaLlegada,
-                IdOrigen = dataModel.Origen,
-                DireccionRemitente = dataModel.DireccionRemitente,
-                IdDestino = dataModel.Destino,
-                DireccionDestinatario = dataModel.DireccionDestinatario,
-                CostoTotal = dataModel.Costototal,
-                PrecioClienteTotal = dataModel.Preciototal,
-                IdRuta = dataModel.Ruta,
-                IdUnidad = dataModel.TipoUnidad,
-                TipoViaje = dataModel.TipoViaje,
-                OrdenCompra = dataModel.OrdenCompra,
-                ReferenciaDos = dataModel.Referencia2,
-                ReferenciaTres = dataModel.Referencia3
-            };
+                TravelDTO viaje = new TravelDTO
+                {
+                    Estatus = dataModel.Estatus,
+                    Folio = dataModel.Folio,
+                    IdCliente = dataModel.Cliente,
+                    FechaSalida = dataModel.FechaSalida,
+                    FechaLlegada = dataModel.FechaLlegada,
+                    IdOrigen = dataModel.Origen,
+                    DireccionRemitente = dataModel.DireccionRemitente,
+                    IdDestino = dataModel.Destino,
+                    DireccionDestinatario = dataModel.DireccionDestinatario,
+                    CostoTotal = dataModel.Costototal,
+                    PrecioClienteTotal = dataModel.Preciototal,
+                    IdRuta = dataModel.Ruta,
+                    IdUnidad = dataModel.TipoUnidad,
+                    TipoViaje = dataModel.TipoViaje,
+                    OrdenCompra = dataModel.OrdenCompra,
+                    ReferenciaDos = dataModel.Referencia2,
+                    ReferenciaTres = dataModel.Referencia3
+                };
 
-            TravelDTO newTravel = await this.AppContext.Execute<TravelDTO>(MethodType.POST, _UrlApi, viaje);
+                TravelDTO newTravel = await this.AppContext.Execute<TravelDTO>(MethodType.POST, _UrlApi, viaje);
+                ViajeId = newTravel.Id;
+            }
 
-            int ViajeId = newTravel.Id;
+            foreach (var id in dataModel.ServicesId)
+            {
+                if (id > 0)
+                {
+                    ServicesDTO service = await AppContext.Execute<ServicesDTO>(MethodType.DELETE, Path.Combine(_UrlApi, "DeleteService", id.ToString()), null);
+                }
+            }
 
             var servicios = dataModel.Servicios.Split("&");
 
@@ -136,7 +155,7 @@ namespace KLS_WEB.Controllers.Travels
                 }
             }
 
-            return Json(new { newTravel, services, units });
+            return Json(new { services, units });
         }
 
         [Route("putTravels")]

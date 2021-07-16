@@ -319,6 +319,28 @@
 </div>
 <!--Modal agregar ciudad-->
 
+<!-- modal confirm delete-->
+
+<div class="modal fade" id="popup" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo-modal"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                <p>¿Estas seguro de que deseas eliminar el SERVICIO seleccionado?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
+                <button id="confirm" type="button" class="btn">Si</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts{
     <script>
     var dataCity = [];
@@ -336,6 +358,14 @@
 
         $(".viaje").submit(function (event) {
             event.preventDefault();
+            if (!existenServicios()) {
+                dToast("error", "LOS SERVICIOS SON OBLIGATORIOS", "Error");
+                return;
+            } else if (!validarSelect()) {
+                dToast("error", "LOS PARÁMETROS DE LOS SERVICIOS SON OBLIGATORIOS", "Error");
+                return;
+            }
+
             $(".guardar").attr("disabled", true);
 
             let jsonData = convertJson($(".viaje"));
@@ -352,15 +382,16 @@
             jsonData = { ...jsonData, ...details };
 
             const serviceExists = jsonData.servicios != '' && jsonData.unidad != '' && true;
+            console.log('post', jsonData);
             if (serviceExists) {
-                $.post("/Travels/setTravels", jsonData, function (res) {
+                @*$.post("/Travels/setTravels", jsonData, function (res) {
                     dToast("success", "Registro guardado exitosamente.", "Registrado");
                     $(".guardar").attr("disabled", false);
                     window.location.replace("@Url.Action("", "Travels")");
                 }).fail(function (error) {
                     dToast("error", "Error al tratar de guardar el registro", "Error");
                     $(".guardar").attr("disabled", false);
-                });
+                });*@
             } else {
                 const { servicios } = jsonData;
                 dToast("error", servicios == '' ? "LOS SERVICIOS SON OBLIGATORIOS" : "LA UNIDAD ES OBLIGATORIA", "Error");
@@ -368,6 +399,28 @@
             }
         });
     });
+
+        validarSelect = () => {
+            let isset = true;
+            $('.serviciosseleccionados select').map((k, { value }) => {
+                if (value == 0) {
+                    isset = false;
+                    return;
+                }
+            });
+            return isset;
+        }
+
+        existenServicios = () => {
+            let isset = false;
+            $('#frmServicios input').map((k, { checked }) => {
+                if (checked) {
+                    isset = checked;
+                    return;
+                }
+            });
+            return isset;
+        }
 
         function SetFolio(tipoviaje) {
             switch (tipoviaje) {

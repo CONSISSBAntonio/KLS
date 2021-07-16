@@ -5,17 +5,18 @@
 {
     string html = string.Empty;
     var servicios = Model.Servicios.Replace("=on", "").Split("&");
+    var serviciosids = Model.ServiciosIds is null ? Array.Empty<string>() : Model.ServiciosIds.Split("&");
+    int index = 0;
 
     foreach (var item in servicios)
     {
         switch (item)
         {
             case "terrestrenacional":
-
                 <div id="terrestrenacional">
                     <div class="row mt-3">
                         <div class="col-4 d-flex flex-row">
-                            <i class="material-icons text-danger my-auto" style="cursor:pointer;" onclick="{ removeService('terrestrenacional'); }">delete</i>
+                            <i class="material-icons text-danger my-auto deleteterrestrenacional service" rel="@(serviciosids.Any() ? serviciosids[index] : "0")" style="cursor:pointer;" onclick="{ confirmDelete('terrestrenacional', @(serviciosids.Any() ? serviciosids[index] : "0")) }">delete</i>
                             <h5 class="my-auto">Terrestre Nacional</h5>
                         </div>
                         <div class="col-8 d-flex justify-content-end">
@@ -135,6 +136,7 @@
             default:
                 break;
         }
+        ++index;
     }
 }
 <script>
@@ -190,6 +192,7 @@
         $.get(`/Carriers/Inventory/GetEquipos/${IdTransportista}`, ({ dataReport }) => {
             const equipos = dataReport.filter(x => x.tipoUnidad == IdTipoUnidad);
             $(`#equipo${selectid}`).empty();
+            $(`#equipo${selectid}`).append(`<option value="0">SELECCIONA UN EQUIPO</option>"`)
             if (equipos.length > 0) {
                 equipos.map(({ id, marca, modelo, placa }) => {
                     $(`#equipo${selectid}`).append(`<option value="${id}">${marca}, ${modelo}. PLACA: ${placa}</option>"`);
@@ -199,17 +202,19 @@
             }
         });
     }
+
     getInventario = (IdTransportista, elementId) => {
         $.get(`/Carriers/Inventory/GetEquipos/${IdTransportista}`, res => {
             const { unidades } = res;
             if (unidades.length > 0) {
+                $(`#unidad${elementId}`).append(`<option value="0">SELECCIONA UNA UNIDAD</option>`);
                 unidades.map(({ tipoUnidad, nombre }) => {
                     $(`#unidad${elementId}`).append(`<option value="${tipoUnidad}">${nombre[0]}</option>`);
                 });
                 selectEquipo(IdTransportista, unidades[0].tipoUnidad, elementId);
             } else {
                 $('.selectunidad').append(`<option value="0">No existen unidades activas</option>`);
-                $('.selecUrlequipo').append(`<option value="0">No existen equipos activos</option>`);
+                $('.selectequipo').append(`<option value="0">No existen equipos activos</option>`);
             }
         });
     };
@@ -263,6 +268,7 @@
         $.get("/Carriers/Operators/getOperators", { Id_Transportista: idtransportista }, res => {
             res.find(x => x.estatus === 1) && getOperador(res.find(x => x.estatus === 1).id);
             $('#chofer').empty();
+            $('#chofer').append(`<option value="0">SELECCIONA UN CHOFER</option>`)
             res.length > 0 ? res.map(({ id, nombre, estatus }) => estatus === 1 ? $('#chofer').append(`<option value="${id}">${nombre}</option>`) : null) : $('#chofer').append(`<option value="0">SIN OPERADORES ACTIVOS</option>`);
             dSelect('chofer');
         });
@@ -270,15 +276,25 @@
 
     $.get("/Carriers/getCarriers", res => {
         res.find(x => x.estatus === 1) && getOperadores(res.find(x => x.estatus === 1).id);
+        $('#transportista').append(`<option value="0">SELECCIONA UNA TRANSPORTISTA</option>`);
         res.map(({ id, nombreComercial, estatus }) => estatus === 1 ? $('#transportista').append(`<option value="${id}">${nombreComercial}</option>`) : null);
         dSelect('transportista');
     });
 
-    removeService = service => {
+    removeService = (service, serviceid) => {
+        serviceid > 0 && $.post(`/Travels/DeleteService/${serviceid}`, () => dToast("success", "Se eliminó el servicio", "Registrado"));
+
         $(`#${service}`).hide('slow', () => {
+            $('#popup').modal('hide');
             $(`#${service}`).remove();
+            $(`[name=${service}]`).prop('checked', false);
             $('.serviciosseleccionados').children().length === 1 ? ($(`.addServicios`).show('slow', () => { $('.addServicios').show(); }), $('#frmServicios input').prop('checked', false)) : null;
         });
+    }
+
+    confirmDelete = (service, serviceid) => {
+        $('#confirm').attr('onClick', `removeService('${service}', ${serviceid});`);
+        $('#popup').modal('show');
     }
 
 </script>
