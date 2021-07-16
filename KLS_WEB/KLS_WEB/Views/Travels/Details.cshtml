@@ -174,7 +174,7 @@
                         <div class="name font-barlow">Requisitos</div>
                     </div>
                 </a>
-                <a href="javascript:void(0);" class="catalog" id="mercancia" onclick="{ showPanel(this.id); getMercancia(); }">
+                <a href="javascript:void(0);" class="catalog" id="mercancia" onclick="{ showPanel(this.id); getMercancia(); getMercanciaD(); }">
                     <div class="content">
                         <span class="material-icons">
                             store
@@ -1055,9 +1055,9 @@
 
         getMercanciaD = () => {
             $.post(`/Travels/GetMercancia/${TravelId}`, (response) => {
-                for (const [key, val] of Object.entries(response)) {
-                    $(`[name=${key.toLowerCase()}`).val(val);
-                }
+                Object.entries(response).map(([k, v]) => {
+                    $(`[name=${k.toLowerCase()}`).val(v);
+                });
             }).fail(function (error) {
                 dToast("error", "Error al obtener la mercancia", "Error");
             });
