@@ -807,103 +807,17 @@
         loadTableFactura();
         loadTableHistorial();
         getMercancia();
-        $('#servicios').on('click', function () {
-
-            var container = $('#div-servicios');
-            $('#div-requisitos').addClass('d-none');
-            $('#div-mercancias').addClass('d-none');
-            $('#div-facturacion').addClass('d-none');
-            $('#div-documentos').addClass('d-none');
-            $('#div-historial').addClass('d-none');
-
-            if (container.css('display') == 'none')
-                $('#div-servicios').removeClass('d-none');
-            else
-                $('#div-servicios').addClass('d-none');
-
-        });
-
-        $('#requisitos').on('click', function () {
-
-            var container = $('#div-requisitos');
-            $('#div-servicios').addClass('d-none');
-            $('#div-mercancias').addClass('d-none');
-            $('#div-facturacion').addClass('d-none');
-            $('#div-documentos').addClass('d-none');
-            $('#div-historial').addClass('d-none');
-
-            if (container.css('display') == 'none') {
-                $('#div-requisitos').removeClass('d-none');
-            }
-            else
-                $('#div-requisitos').addClass('d-none');
-        });
-
-        $('#mercancias').on('click', function () {
-
-            var container = $('#div-mercancias');
-            $('#div-servicios').addClass('d-none');
-            $('#div-requisitos').addClass('d-none');
-            $('#div-facturacion').addClass('d-none');
-            $('#div-documentos').addClass('d-none');
-            $('#div-historial').addClass('d-none');
-
-            if (container.css('display') == 'none')
-                $('#div-mercancias').removeClass('d-none');
-            else
-                $('#div-mercancias').addClass('d-none');
-
-        });
-
-        $('#facturacion').on('click', function () {
-            var container = $('#div-facturacion');
-            $('#div-servicios').addClass('d-none');
-            $('#div-requisitos').addClass('d-none');
-            $('#div-documentos').addClass('d-none');
-            $('#div-mercancias').addClass('d-none');
-            $('#div-hostorial').addClass('d-none');
-
-            if (container.css('display') == 'none') {
-                $('#div-facturacion').removeClass('d-none');
-                loadTableFactura();
-            }
-            else
-                $('#div-facturacion').addClass('d-none');
-
-        });
-
-        $('#documentos').on('click', function () {
-
-            var container = $('#div-documentos');
-            $('#div-servicios').addClass('d-none');
-            $('#div-requisitos').addClass('d-none');
-            $('#div-facturacion').addClass('d-none');
-            $('#div-mercancias').addClass('d-none');
-            $('#div-historial').addClass('d-none');
-
-            if (container.css('display') == 'none')
-                $('#div-documentos').removeClass('d-none');
-            else
-                $('#div-documentos').addClass('d-none');
-
-        });
-
-        $('#historial').on('click', function () {
-
-            var container = $('#div-historial');
-            $('#div-servicios').addClass('d-none');
-            $('#div-requisitos').addClass('d-none');
-            $('#div-mercancias').addClass('d-none');
-            $('#div-facturacion').addClass('d-none');
-            $('#div-documentos').addClass('d-none');
-
-            if (container.css('display') == 'none')
-                $('#div-historial').removeClass('d-none');
-            else
-                $('#div-historial').addClass('d-none');
-
-        });
     });
+
+        getMercanciaD = () => {
+            $.post(`/Travels/GetMercancia/${TravelId}`, (response) => {
+                for (const [key, val] of Object.entries(response)) {
+                    $(`[name=${key.toLowerCase()}`).val(val);
+                }
+            }).fail(function (error) {
+                dToast("error", "Error al obtener la mercancia", "Error");
+            });
+        }
 
         postMercancia = form => {
             const data = jQuery(form).serializeArray();
@@ -918,7 +832,7 @@
 
         getMercancia = () => {
             const TransportistaId = @Model.Transportista;
-
+            getMercanciaD();
             $.post(`/Carriers/Box/getBox/`, { Id_Transportista: TransportistaId }, (response) => {
                 response === null && dToast("error", "El transportista de este viaje no tiene parametros de mercancia", "Error");
                 const { densidad, d_Opcional, tipoPresentacion, tp_Opcional, peligroso, material, m_Opcional, derramable, valor, v_Opcional, custodia, olorPenetrante, notas } = response;

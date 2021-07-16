@@ -74,6 +74,7 @@ namespace KLS_API.Controllers.Travels
                                           preciototal = viajes.PrecioClienteTotal,
                                           tipounidadnombre = unidad.nombre,
                                           Transportista = servicio.IdTransportista
+                                          
                                       }).FirstOrDefault() :
                                       (from viajes in _dbContext.Viajes
                                        join cliente in _dbContext.Clientes on viajes.IdCliente equals cliente.id
@@ -126,7 +127,7 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
-                return Ok(_dbContext.Mercancias.LastOrDefault(x => x.TravelId == id));
+                return Ok(_dbContext.Mercancias.OrderBy(x => x.Id).LastOrDefault(x => x.TravelId == id));
             }
             catch (Exception ex)
             {

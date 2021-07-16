@@ -31,6 +31,14 @@ namespace KLS_WEB.Controllers.Travels
             return View(this._UrlView + "Index.cshtml");
         }
 
+        [Route("GetMercancia/{id}")]
+        public async Task<JsonResult> GetMercancia(int id)
+        {
+            MercanciaDTO mercancia = await AppContext.Execute<MercanciaDTO>(MethodType.GET, Path.Combine(_UrlApi, "GetMercancia", id.ToString()), null);
+
+            return Json(mercancia);
+        }
+
         [Route("{id}")]
         public async Task<IActionResult> AddEdit(int id)
         {
