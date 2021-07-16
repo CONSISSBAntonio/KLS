@@ -34,33 +34,9 @@ namespace KLS_API.Controllers.Carriers.Routes
             {
                 return BadRequest(ex.Message);
             }
-
-            //try
-            //{
-            //    var rutas = context.Tr_Has_Rutas.FirstOrDefault(f => f.Id_Transportista == tr_rutas.Id_Transportista);
-            //    return Ok(rutas);
-            //}
-            //catch (Exception ex)
-            //{
-            //    return BadRequest(ex.Message);
-            //}
         }
 
-        //[Route("getRoutes")]
-        //public ActionResult getRoutes([FromBody] Tr_Has_Rutas tr_rutas)
-        //{
-        //    try
-        //    {
-        //        var asd = context.Tr_Has_Rutas.Where(f => f.Id_Transportista == tr_rutas.Id_Transportista).ToList();
-        //        return Ok(asd);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-
-            [HttpPost]
+        [HttpPost]
         public ActionResult Post([FromBody] Tr_Has_Ruta tr_rutas)
         {
             try

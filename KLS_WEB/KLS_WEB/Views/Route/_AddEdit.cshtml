@@ -84,6 +84,12 @@
                 </div>
             </div>
             <div class="row">
+                <label for="ftiemporuta" class="col-sm-4 col-form-label col-form-label-sm">TIEMPO DE RUTA (HRS)</label>
+                <div class="col-sm-8">
+                    @Html.TextBoxFor(x => x.tiemporuta, new { @type = "number", @class = "form-control form-control-sm", @id = "ftiemporuta", @required = "" })
+                </div>
+            </div>
+            <div class="row">
                 <label for="fseguridad" class="col-sm-4 col-form-label col-form-label-sm">Seguridad</label>
                 <div class="col-sm-8">
                     @Html.DropDownListFor(x => x.seguridad, new List<SelectListItem>

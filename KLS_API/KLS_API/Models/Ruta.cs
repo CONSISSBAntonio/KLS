@@ -15,6 +15,7 @@ namespace KLS_API.Models
         public int id_ciudaddestino { get; set; }
         public int totalkilometros { get; set; }
         public int eficiencia { get; set; }
+        public int tiemporuta { get; set; }
         [Column(TypeName = "varchar(20)")]
         public string seguridad { get; set; }
         [Column(TypeName = "varchar(20)")]
