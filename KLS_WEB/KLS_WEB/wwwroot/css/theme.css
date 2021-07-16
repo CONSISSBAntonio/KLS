@@ -113,6 +113,7 @@ body, label {
 
 .bg-white {
     background-color: white;
+
 }
 
 .bg-light-grey {
@@ -264,7 +265,7 @@ form .form-group {
 }
 
     .wrapper > .left-bar {
-        width: 90px;
+        width: 5%;
     }
 
     .wrapper > .data-content {
@@ -273,15 +274,16 @@ form .form-group {
         text-align: center;
     }
 
-        .wrapper > .data-content .title {
-            font-size: 24px;
-            text-transform: uppercase;
-        }
-/* Left bar */
-.left-bar {
-    height: 100vh;
-    transition: all 0.15s ease-in;
-}
+    .wrapper > .data-content .title {
+        font-size: 24px;
+        text-transform: uppercase;
+    }
+    
+    /* Left bar */
+    .left-bar {
+        height: 100vh;
+        transition: all 0.15s ease-in;
+    }
 
     .left-bar .expand-control {
         text-align: left;
@@ -307,31 +309,31 @@ form .form-group {
         width: 14% !important;
     }
 
-        .left-bar.expand .expand-control {
-            text-align: right !important;
-        }
+    .left-bar.expand .expand-control {
+        text-align: right !important;
+    }
 
         .left-bar.expand .bar-container {
             /*width: 240px;*/
-            width: 14%;
+            width: 14% !important;
         }
 
-        .left-bar.expand .arrow-bar {
-            transform: rotate(180deg);
-        }
+    .left-bar.expand .arrow-bar {
+        transform: rotate(180deg);
+    }
 
-        .left-bar.expand label {
-            display: inline-block;
-        }
+    .left-bar.expand label {
+        display: inline-block;
+    }
 
-        .left-bar.expand li a {
-            text-decoration: none !important;
-        }
+    .left-bar.expand li a {
+        text-decoration: none !important;
+    }
 
-        .left-bar.expand li:hover {
-            transition: all 0.2s ease-in-out;
-            background-color: #6f6f6f;
-        }
+    .left-bar.expand li:hover {
+        transition: all 0.2s ease-in-out;
+        background-color: #6f6f6f;
+    }
 /* Material icons */
 @font-face {
     font-family: 'Material Icons';

@@ -17,9 +17,9 @@ namespace KLS_API.Models.Travels
         public string Nombre { get; set; }
         public int IdTransportista { get; set; }
         public int IdChofer { get; set; }
-        [Column(TypeName = "decimal(18,4)")]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Costo { get; set; }
-        [Column(TypeName = "decimal(18,4)")]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Precio { get; set; }
         public List<Unidad> Unidades { get; set; }
 

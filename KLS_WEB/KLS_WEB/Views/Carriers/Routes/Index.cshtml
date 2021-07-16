@@ -57,9 +57,21 @@
                 <form id="frmRegister" action="#" method="post">
                     <input type="hidden" name="id" id="idEditar" />
                     <div class="row">
-                        <div class="col-md-12">
+                        @*<div class="col-md-12">
                             <label class="">Ruta origen</label>
                             <select class="form-control form-control-md" id="Id_Ruta_Origen" name="Id_Ruta_Origen" style="width:100%;font-size:6px;" onchange="selectRuta();">
+                                <option value="0">Selecciona una option</option>
+                            </select>
+                        </div>*@
+                        <div class="col-md-6">
+                            <label class="">Ruta origen</label>
+                            <select class="form-control form-control-md" id="Estado" style="width:100%;font-size:6px;" onchange="selectCiudad();">
+                                <option value="0">Selecciona una option</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="">Ruta origen</label>
+                            <select class="form-control form-control-md" id="Ciudad" style="width:100%;font-size:6px;" onchange="selectRuta();">
                                 <option value="0">Selecciona una option</option>
                             </select>
                         </div>
@@ -110,6 +122,9 @@
 
         $(window).ready(function () {
             loadCity();
+            $("#Estado").select2();
+            $("#Ciudad").select2();
+            $("#Id_Ruta").select2();
             $("#frmRegister").submit(function (event) {
                 event.preventDefault();
                 var jsonData = convertJson($("#frmRegister"));
@@ -150,7 +165,7 @@
                 $("#Id_Ruta_Origen").empty();
                 $("#Id_Ruta_Origen").append(`<option value="0">Selecciona una opcion</option>`);
                 $.each(res, function (item, key) {
-                    //console.log(key);
+
                     if (parseInt(key.estatus) == 1)
                     {
                         let indice_co = catCiudad.findIndex(service => service.id === key.id_ciudadorigen);
@@ -168,38 +183,58 @@
         function selectRuta() {
             $("#Id_Ruta").empty();
             $("#Id_Ruta").append(`<option value="0">Selecciona una opcion</option>`);
-            var idRut = $("#Id_Ruta_Origen").val();
+            //var idRut = $("#Id_Ruta_Origen").val();
+
+            var idEstado = parseInt($("#Estado").val());
+            var idCiudad = parseInt($("#Ciudad").val());
+
             $.each(catRutas, function (item, key) {
                 if (parseInt(key.estatus) == 1)
                 {
-                    let indice = catRutas.findIndex(service => service.id == idRut);
-                    if (indice >= 0) {
-                        if (catRutas[indice].id_estadoorigen == key.id_estadoorigen) {
-                            let indice_cd = catCiudad.findIndex(service => service.id === key.id_ciudaddestino);
-                            let indice_ed = catEstado.findIndex(service => service.id === key.id_estadodestino);
-                            $("#Id_Ruta").append(`<option value="${key.id}">Estado destino:${catEstado[indice_ed].nombre}--Ciudad destino:${catCiudad[indice_cd].nombre}</option>`);
-                        }
+                    //let indice = catRutas.findIndex(service => service.id == idRut);
+                    //if (indice >= 0) {
+                    if (idEstado == key.id_estadoorigen && idCiudad == key.id_ciudadorigen) {
+                        let indice_cd = catCiudad.findIndex(service => service.id === key.id_ciudaddestino);
+                        let indice_ed = catEstado.findIndex(service => service.id === key.id_estadodestino);
+                        $("#Id_Ruta").append(`<option value="${key.id}">Estado destino: ${catEstado[indice_ed].nombre}--Ciudad destino:${catCiudad[indice_cd].nombre}</option>`);
                     }
+                    //}
                 }
             });
             $("#Id_Ruta").select2();
-        }
-
-        function loadCity() {
-            $.get("/Catalogs/Geography/City/getCity", function (res) {
-                //console.log(res);
-                catCiudad = res;
-                loadState();
-            }).fail(function (error) {
-                dToast("error", "Error al obtener paises", "Atencion!");
-            });
         }
 
         //Cargar estados
         function loadState() {
             $.get("/Catalogs/Geography/State/getState", function (res) {
                 catEstado = res;
+
+                $.each(res, function (item, key) {
+                    $("#Estado").append(`<option value="${key.id}">${key.nombre}</option>`);
+                });
+                $("#Estado").select2();
                 getRutas();
+            }).fail(function (error) {
+                dToast("error", "Error al obtener paises", "Atencion!");
+            });
+        }
+
+        function selectCiudad() {
+            var idEstado = $("#Estado").val();
+            $("#Ciudad").empty();
+            $("#Ciudad").append(`<option value="0">Selecciona una opción</option>`);
+            $.each(catCiudad, function (item, key) {
+                if (parseInt(key.id_estado) == parseInt(idEstado)) {
+                    $("#Ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
+                }
+            });
+            $("#Ciudad").select2();
+        }
+
+        function loadCity() {
+            $.get("/Catalogs/Geography/City/getCity", function (res) {
+                catCiudad = res;
+                loadState();
             }).fail(function (error) {
                 dToast("error", "Error al obtener paises", "Atencion!");
             });
@@ -212,7 +247,7 @@
             $.get("/Carriers/Routes/getRuta", { "Id_Transportista":@id}, function (res) {
                 DataAirlines = res;
                 //console.log(res);
-                console.log(catRutas);
+
                 $.each(res, function (item, key) {
                     //console.log(key);
                     let rutaI = catRutas.findIndex(service => parseInt(service.id) === parseInt(key.id_Ruta));

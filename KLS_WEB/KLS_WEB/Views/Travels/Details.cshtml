@@ -31,6 +31,24 @@
     label {
         text-align: left;
     }
+
+    .form-check-label {
+        font-size: 12px !important;
+    }
+
+    .select2-selection__rendered {
+        float: left;
+        font-size: 12px;
+        text-transform: uppercase;
+    }
+
+    select {
+        text-transform: uppercase;
+    }
+
+    .wrapper > .data-content {
+        text-align: unset;
+    }
 </style>
 
 <div class="pl-5 pr-5">
@@ -140,7 +158,7 @@
         <div class="col-7">
             <div class="catalog-list">
 
-                <a href="#" class="catalog" id="servicios">
+                <a href="javascript:void(0);" class="catalog" id="servicios" onclick="{ showPanel(this.id); getServicios(); }">
                     <div class="content">
                         <span class="material-icons">
                             people
@@ -148,7 +166,7 @@
                         <div class="name font-barlow">Servicios</div>
                     </div>
                 </a>
-                <a href="javascript:void(0);" class="catalog" id="requisitos" onclick="{ showPanel(this.id); }">
+                <a href="javascript:void(0);" class="catalog" id="requisitos" onclick="{ showPanel(this.id); getRequisitos(); }">
                     <div class="content" id="requisitos">
                         <span class="material-icons">
                             inventory_2
@@ -208,8 +226,8 @@
         <div class="col-6 facturacion d-none">
             <div class="text-left d-flex justify-content-between mb-3">
                 <h4>FACTURACIÓN</h4>
-                <div style="padding-left:20%;" onclick="selectServicios(this);">
-                    <a class="btn btn-sm bg-white" style="font-size:1.8rem;width:3.5rem" href="#">
+                <div style="padding-left:20%;" onclick="selectFactura(this);">
+                    <a class="btn btn-sm bg-white" style="font-size:1.8rem;width:3.5rem" href="javascript:void(0);">
                         <span class="material-icons">
                             add
                         </span>
@@ -217,9 +235,7 @@
                 </div>
             </div>
 
-            <table id="table"
-                   class="table table-striped table-bordered display table-hover text-uppercase table-facturas"
-                   width="100%">
+            <table class="table table-striped table-bordered display table-hover text-uppercase table-facturas" width="100%">
                 <thead>
                     <tr>
                         <th>Nombre</th>
@@ -418,15 +434,14 @@
                 <div class="p-2 card">
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm" id="folio"
+                            <input type="checkbox" class="custome-check form-control form-control-sm"
                                    disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0"><strong>Instrucción</strong></label>
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm" id="cliente"
-                                   disabled>
+                            <input type="checkbox" class="custome-check form-control form-control-sm" name="equipoSeguridad" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0">
                             Equipo de seguridad; chaleco
@@ -436,8 +451,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm"
-                                   id="direccionorigen" disabled>
+                            <input type="checkbox" class="custome-check form-control form-control-sm" name="equipoCovid" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0">
                             Equipo COVID; guantes, cubrebocas,
@@ -446,15 +460,13 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm"
-                                   id="direcciondestino" disabled="disabled">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarSua" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0">Llevar SUA en fisico</label>
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm" id="ruta"
-                                   disabled="disabled" required>
+                            <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarLicencia" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0">
                             Llevar licencia vigente y en
@@ -463,8 +475,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm" id="fechasalida"
-                                   disabled="disabled" required>
+                            <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarTarjeta" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0">
                             Llevar tarjeta de circulación de
@@ -473,8 +484,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm" id="fechaentrega"
-                                   disabled="disabled" required>
+                            <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarCertificado" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0">
                             Llevar certificado de fumigación
@@ -483,32 +493,27 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm" id="costo"
-                                   disabled="disabled" required>
+                            <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarGatas" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0">Llevar dos gatas</label>
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm" id="preciocliente"
-                                   disabled="disabled" required>
+                            <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarIne" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0">Llevar INE</label>
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm" id="tipounidad"
-                                   disabled="disabled" required>
+                            <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarPoliza" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0">
-                            Llevar póliza de segur en
-                            físico
+                            Llevar póliza de seguro en físico
                         </label>
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm" id="tipounidad"
-                                   disabled="disabled" required>
+                            <input type="checkbox" class="custome-check form-control form-control-sm" name="contarAlarma" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0">
                             contar con alarma de reversa que
@@ -517,8 +522,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm" id="tipounidad"
-                                   disabled="disabled" required>
+                            <input type="checkbox" class="custome-check form-control form-control-sm" name="unidadCondiciones" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0">Unidad en buenas condiciones</label>
                     </div>
@@ -531,15 +535,13 @@
                 <div class="p-4 shadow bg-white">
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm" id="folio"
-                                   disabled>
+                            <input type="checkbox" class="custome-check form-control form-control-sm" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0"><strong>Instrucción</strong></label>
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm" id="cliente"
-                                   disabled>
+                            <input type="checkbox" class="custome-check form-control form-control-sm" name="equipoSeguridad_" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0">
                             Equipo de seguridad; chaleco
@@ -549,8 +551,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm"
-                                   id="direccionorigen" disabled>
+                            <input type="checkbox" class="custome-check form-control form-control-sm" name="equipoCovid_" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0">
                             Equipo COVID; guantes, cubrebocas,
@@ -559,15 +560,13 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm"
-                                   id="direcciondestino" disabled="disabled">
+                            <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarSua_" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0">Llevar SUA en fisico</label>
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm" id="ruta"
-                                   disabled="disabled" required>
+                            <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarLicencia_" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0">
                             Llevar licencia vigente y en
@@ -576,8 +575,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm" id="fechasalida"
-                                   disabled="disabled" required>
+                            <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarTarjeta_" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0">
                             Llevar tarjeta de circulación de
@@ -586,8 +584,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm" id="fechaentrega"
-                                   disabled="disabled" required>
+                            <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarCertificado_" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0">
                             Llevar certificado de fumigación
@@ -596,22 +593,19 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm" id="costo"
-                                   disabled="disabled" required>
+                            <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarGatas_" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0">Llevar dos gatas</label>
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm" id="preciocliente"
-                                   disabled="disabled" required>
+                            <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarIne_" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0">Llevar INE</label>
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm" id="tipounidad"
-                                   disabled="disabled" required>
+                            <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarPoliza_" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0">
                             Llevar póliza de segur en
@@ -620,8 +614,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm" id="tipounidad"
-                                   disabled="disabled" required>
+                            <input type="checkbox" class="custome-check form-control form-control-sm" name="contarAlarma_" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0">
                             contar con alarma de reversa que
@@ -630,8 +623,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm" id="tipounidad"
-                                   disabled="disabled" required>
+                            <input type="checkbox" class="custome-check form-control form-control-sm" name="presentarseMin_" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0">
                             Presentarse 40 minutos antes de su
@@ -640,8 +632,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <input type="checkbox" class="custome-check form-control form-control-sm" id="tipounidad"
-                                   disabled="disabled" required>
+                            <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarTodos_" disabled>
                         </div>
                         <label class="col-11 col-form-label col-form-label-sm pl-0">
                             Llevar todos los documentos que le
@@ -658,11 +649,6 @@
             <div class="text-left d-flex justify-content-between mb-3">
                 <h4>HISTORIAL</h4>
                 <div style="padding-left:20%;" onclick="selectServicios(this);">
-                    <a class="btn btn-sm bg-white" style="font-size:1.8rem;width:3.5rem" href="#">
-                        <span class="material-icons">
-                            add
-                        </span>
-                    </a>
                 </div>
             </div>
 
@@ -679,86 +665,113 @@
                 <tbody id="historialInfo"></tbody>
             </table>
         </div>
-    </div>
 
 
-    @* documentos *@
-    <div class="data-content px-4 text-left d-none" id="div-documentos">
-        <div class="p-4">
-            <h4>DOCUMENTOS</h4>
-            <button class="btn btn-dark px-5" style="border-radius:0px">Generar carta porte</button>
-            <div class="row">
-                <div class="col-md-6 mt-5">
-                    <div class="text-left d-flex justify-content-between">
-                        <h4>EVIDENCIA DIGITAL</h4>
-                    </div>
-                    <div class="p-4 shadow bg-white">
-                        <table id="table"
-                               class="table table-striped table-bordered display table-hover table-viajes text-uppercase"
-                               width="100%">
-                            <thead>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Tiempo de entrega</th>
-                                    <th>Estatus</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-info"></tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="col-md-4 mt-5">
-                    <div class="text-left d-flex justify-content-between">
-                        <h4>EVIDENCIA FÍSICA</h4>
-                        <div style="padding-left:20%;">
-                            <a class="btn btn-sm bg-white mb-2" href="#">
-                                <span class="material-icons">
-                                    save
-                                </span>
-                            </a>
+        @* documentos *@
+        <div class="data-content documentos px-4 text-left d-none">
+            <div class="p-4">
+                <h4>DOCUMENTOS</h4>
+                <button class="btn btn-dark px-5" style="border-radius:0px">Generar carta porte</button>
+                <div class="row">
+                    <div class="col-md-6 mt-5">
+                        <div class="text-left d-flex justify-content-between">
+                            <h4>EVIDENCIA DIGITAL</h4>
+                        </div>
+                        <div class="p-4 shadow bg-white">
+                            <table id="table"
+                                   class="table table-striped table-bordered display table-hover table-viajes text-uppercase"
+                                   width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Tiempo de entrega</th>
+                                        <th>Estatus</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-info"></tbody>
+                            </table>
                         </div>
                     </div>
-                    <div class="p-4 shadow bg-white">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h6 class="text-center"><strong>Nombre</strong></h6>
-                                <div class="">
-                                    <div>
-                                        <input type="checkbox" class="custome-check">
-                                        <label class="col-form-label col-form-label-sm pl-0">Carta de recepción</label>
-                                    </div>
-                                </div>
-                                <div class="">
-                                    <div>
-                                        <input type="checkbox" class="custome-check">
-                                        <label class="col-form-label col-form-label-sm pl-0">Sello de vigilancia</label>
-                                    </div>
-                                </div>
+                    <div class="col-md-4 mt-5">
+                        <div class="text-left d-flex justify-content-between">
+                            <h4>EVIDENCIA FÍSICA</h4>
+                            <div style="padding-left:20%;">
+                                <a class="btn btn-sm bg-white mb-2" href="#">
+                                    <span class="material-icons">
+                                        save
+                                    </span>
+                                </a>
                             </div>
-                            <div class="col-md-6">
-                                <h6 class="text-center"><strong>Tiempo de entrega</strong></h6>
-                                <div class="">
-                                    <label class="col-form-label col-form-label-sm pl-4">Vencida</label>
+                        </div>
+                        <div class="p-4 shadow bg-white">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="text-center"><strong>Nombre</strong></h6>
+                                    <div class="">
+                                        <div>
+                                            <input type="checkbox" class="custome-check">
+                                            <label class="col-form-label col-form-label-sm pl-0">Carta de recepción</label>
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div>
+                                            <input type="checkbox" class="custome-check">
+                                            <label class="col-form-label col-form-label-sm pl-0">Sello de vigilancia</label>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="">
-                                    <label class="col-form-label col-form-label-sm pl-4">3d 2hrs</label>
-                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="text-center"><strong>Tiempo de entrega</strong></h6>
+                                    <div class="">
+                                        <label class="col-form-label col-form-label-sm pl-4">Vencida</label>
+                                    </div>
+                                    <div class="">
+                                        <label class="col-form-label col-form-label-sm pl-4">3d 2hrs</label>
+                                    </div>
 
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        @*Servicios*@
+        <div class="col-12 servicios d-none mb-5">
+            <div class="card p-3">
+                <div class="form-group col-12 d-flex justify-content-between">
+                    <h6 class="font-weight-bold">SERVICIOS</h6>
+                    <div>
+                        <a class="btn btn-outline-light btn-sm" onclick="updateServicios(this);">
+                            <i class="material-icons text-primary">save</i>
+                        </a>
+                        <a class="btn btn-outline-secondary btn-sm" onclick="selectServicios(this);">
+                            <i class="material-icons">add</i>
+                        </a>
+                    </div>
+                </div>
+                <div class="form-group col-12 addServicios">
+                    <div class="border rounded d-flex justify-content-center align-items-center font-weight-bolder"
+                         onclick="selectServicios(this);"
+                         style="border: 5px dashed #585858 !important; height: 7rem; opacity: 0.2; cursor: pointer;">
+                        <h3>AGREGA SERVICIOS</h3>
+                    </div>
+
+                </div>
+                <b class="d-none" id="costos">0.00</b>
+                <b class="preciocliente d-none">0.00</b>
+                <div class="col-12 serviciosseleccionados d-flex flex-column" style="display: none;"></div>
+
+            </div>
+        </div>
     </div>
-
-
 </div>
 
 
 <!--Modal agregar factura-->
-<div class="modal fade" id="modalDiv" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false"
+<div class="modal fade" id="modalFactura" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false"
      aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -777,10 +790,10 @@
                         </div>
                     </div>
                     <br />
-                    <button type="button" class="btn btn-dark guardar" style="width:100%"
-                            onclick="UploadFile()">
+                    <a href="javascript:void(0);" class="btn btn-dark guardar" style="width:100%"
+                       onclick="UploadFile()">
                         Agregar
-                    </button>
+                    </a>
                 </form>
                 @*<form asp-controller="Facturacion" asp-action="UploadFile" method="post"
                     enctype="multipart/form-data">
@@ -798,6 +811,65 @@
     </div>
 </div>
 <!--Modal agregar factura-->
+<!--Modal servicio-->
+<div class="modal fade" id="modalDiv" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo-modal">AGREGAR</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                <form id="frmServicios" class="viaje" onsubmit="event.preventDefault();">
+                    <div class="form-check d-flex align-items-center">
+                        <input class="form-check-input my-auto" type="checkbox" id="0" name="terrestrenacional">
+                        <label class="form-check-label" for="0">Terrestre nacional</label>
+                    </div>
+                    @*<div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="1" name="naviera">
+                            <label class="form-check-label" for="1">
+                                Naviera
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="2" name="agenteaduanal">
+                            <label class="form-check-label" for="2">
+                                Agente aduanal
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="3"
+                                   name="terrestreinternacional">
+                            <label class="form-check-label" for="3">
+                                Terrestre Internacional
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="4" name="aerolinea">
+                            <label class="form-check-label" for="4">
+                                Aerolinea
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="5" name="coloaders">
+                            <label class="form-check-label" for="5">
+                                Coloaders
+                            </label>
+                        </div>*@
+                </form>
+                <br />
+                <button onclick="{ closeModal(); }" class="btn btn-dark" style="width:100%;">
+                    Agregar
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal servicio-->
 
 @section Scripts{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
@@ -808,6 +880,113 @@
         loadTableHistorial();
         getMercancia();
     });
+        updateServicios = e => {
+            $(e).attr("disabled", true);
+
+            let jsonData = {};
+            const details = {
+                equipo: getEquipos(),
+                unidad: getUnidades(),
+                servicios: $('#frmServicios').serialize(),
+                preciototal: $('#preciocliente').text(),
+                costototal: $('#costos').text()
+            };
+
+            jsonData = { ...jsonData, ...details };
+            console.log('updateServicios', jsonData);
+            const serviceExists = jsonData.servicios != '' && jsonData.unidad != '' && true;
+            if (serviceExists) {
+                console.log('update');
+                @*$.post("/Travels/setTravels", jsonData, function (res) {
+                    dToast("success", "Registro guardado exitosamente.", "Registrado");
+                    $(e).attr("disabled", false);
+                    window.location.replace("@Url.Action("", "Travels")");
+                }).fail(function (error) {
+                    dToast("error", "Error al tratar de guardar el registro", "Error");
+                    $(".guardar").attr("disabled", false);
+                });*@
+            } else {
+                const { servicios } = jsonData;
+                dToast("error", servicios == '' ? "LOS SERVICIOS SON OBLIGATORIOS" : "LA UNIDAD ES OBLIGATORIA", "Error");
+                $(".guardar").attr("disabled", false);
+            }
+        }
+
+        closeModal = (servicios, servicesobject) => {
+            $('#modalDiv').modal('hide');
+            servicios = servicios ? servicios : $('#frmServicios').serialize();
+            console.log(servicesobject);
+            if (servicios) {
+                $.post("@Url.Action("ReturnServicios", "Travels")", { servicios: servicios }, res => {
+                    $('.addServicios').hide();
+                    $('.serviciosseleccionados').html(res).show('slow', () => { $('.serviciosseleccionados').show(); });
+                    setTimeout(() => {
+                        servicesobject && servicesobject.map(({
+                            id,
+                            costo,
+                            idAerolinea,
+                            buque,
+                            idAgenteAduanal,
+                            idChofer,
+                            idCoLoader,
+                            idContatctoA,
+                            idContactoAA,
+                            idContactoCL,
+                            idNaviera,
+                            idTransportista,
+                            nombre,
+                            precio,
+                            travelId,
+                            unidades
+                        }) => {
+                            $(`[name=${nombre}`).prop('checked', true);
+                            $(`[name=${nombre}costo`).val(parseFloat(costo).toFixed(2));
+                            $(`[name=${nombre}precio`).val(parseFloat(precio).toFixed(2));
+                            $('#transportista').val(idTransportista).trigger('change');
+                            setTimeout(() => {
+                                $('#chofer').val(idChofer).trigger('change');
+
+                            }, 100);
+                            $('.equipocontainer').attr('rel', idTransportista);
+                            unidades.map(({
+                                id,
+                                idUnidad,
+                                idEquipo,
+                                services,
+                                servicesId
+                            }) => {
+                                const elementid = $('.equipocontainer').children().length;
+                                $('#addEquipo').attr('onclick', `addEquipo('${nombre}', this);`);
+                                document.getElementById('addEquipo').click();
+                                setTimeout(() => {
+                                    $(`#unidad${elementid}`).val(idUnidad).trigger('change');
+
+                                }, 100);
+                                setTimeout(() => {
+                                    $(`#equipo${elementid}`).val(idEquipo).trigger('change');
+                                }, 300);
+                            });
+                        });
+                        setPrecios();
+                        setCostos();
+                    }, 400);
+                });
+            } else {
+                $(`.addServicios`).show('slow', () => { $('.addServicios').show(); });
+                $('.serviciosseleccionados').empty().hide();
+            }
+        }
+
+        getServicios = () => {
+            $.get(`/Travels/GetServicios/${TravelId}`, response => {
+                let services = '';
+                Object.entries(response).map(([k, { nombre }]) => {
+                    services += `${nombre}&`;
+                });
+
+                closeModal(services, response);
+            });
+        }
 
         getMercanciaD = () => {
             $.post(`/Travels/GetMercancia/${TravelId}`, (response) => {
@@ -825,7 +1004,7 @@
 
             $.post('/Travels/setMercancia', data, () => {
                 dToast("success", "Guardado", "Exitoso");
-            }).fail(function (error) {
+            }).fail(error => {
                 dToast("error", "Error al guardar los datos", "Error");
             });
         }
@@ -834,37 +1013,48 @@
             const TransportistaId = @Model.Transportista;
             getMercanciaD();
             $.post(`/Carriers/Box/getBox/`, { Id_Transportista: TransportistaId }, (response) => {
-                response === null && dToast("error", "El transportista de este viaje no tiene parametros de mercancia", "Error");
+                !response && dToast("error", "El transportista de este viaje no tiene parametros de mercancia", "Error");
                 const { densidad, d_Opcional, tipoPresentacion, tp_Opcional, peligroso, material, m_Opcional, derramable, valor, v_Opcional, custodia, olorPenetrante, notas } = response;
-                densidad && $('#densidad').val(d_Opcional); $('[name=densidad]').attr('checked', true);
-                tipoPresentacion && $('#tipopresentacion').val(tp_Opcional); $('[name=tipopresentacion]').attr('checked', true);
+                densidad && ($('#densidad').val(d_Opcional), $('[name=densidad]').attr('checked', true));
+                tipoPresentacion && ($('#tipopresentacion').val(tp_Opcional), $('[name=tipopresentacion]').attr('checked', true));
                 peligroso && $('[name=peligroso]').attr('checked', true);
-                material && $('#material').val(m_Opcional); $('[name=material').attr('checked', true);
+                material && ($('#material').val(m_Opcional), $('[name=material').attr('checked', true));
                 derramable && $('[name=derramable]').attr('checked', true);
-                valor && $('#valor').val(v_Opcional); $('[name=valor').attr('checked', true);
+                valor && ($('#valor').val(v_Opcional), $('[name=valor').attr('checked', true));
                 custodia && $('[name=custodia]').attr('checked', true);
                 olorPenetrante && $('[name=olorpenetrante]').attr('checked', true);
                 $('[name=requisitosespeciales]').val(notas);
             });
-    }
+        }
+
+        getRequisitos = () => {
+            const clienteid = @Model.ClienteId;
+            $.get(`/Clients/Requirements/getRequirements/?Id_Cliente=${clienteid}`, response => {
+                !response && dToast("error", "El cliente de este viaje no tiene parametros de requisitos", "Error");
+                response && Object.entries(response).map(([key, val]) => {
+                    $(`[name=${key}]`).attr('checked', val);
+                });
+            });
+        }
 
     showPanel = name => {
         $('.bottomPanel').children().hide();
         $(`.${name}`).removeClass('d-none').show();
     }
 
-    function selectServicios(element) {
+    selectFactura = element => {
         const elemento = jQuery(element);
         elemento.attr('disabled', true);
-        $("#modalDiv").modal("show");
-    }
-    // Add the following code if you want the name of the file appear on select
-    $(".custom-file-input").on("change", function () {
-        var fileName = $(this).val().split("\\").pop();
+        $("#modalFactura").modal("show");
+        }
+
+
+    $(".custom-file-input").on("change", () => {
+        const fileName = $(this).val().split("\\").pop();
         $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
     });
 
-    function UploadFile() {
+    UploadFile = () => {
         var formData = new FormData();
         var myfile = $('#customFile')[0].files[0];
         formData.append('file', $('#customFile')[0].files[0]);
@@ -879,9 +1069,10 @@
                 success: function (data) {
                     $("#modalDiv .close").click();
                     dToast("success", "Archivo guardado correctamente.", "Exitoso");
+                    $('#formFactura')[0].reset();
                     loadTableFactura();
                 },
-                error: function (data) {
+                error: data => {
                     dToast("error", "Ocurrio un error al intentar guardar el archivo.", "Error");
                 }
             });
@@ -890,8 +1081,8 @@
         }
     }
 
-    function downloadFile(nombre, fullpath) {
-        var a = $("<a>")
+    downloadFile = (nombre, fullpath) => {
+        const a = $("<a>")
             .attr("href", fullpath)
             .attr("download", nombre)
             .appendTo("body");
@@ -901,9 +1092,12 @@
         a.remove();
     }
 
-    function loadTableFactura() {
+    loadTableFactura = () => {
+            const stable = $('.table-facturas').DataTable();
+
+            stable.destroy();
         $("#facturacionInfo").empty();
-        $.get("/Facturacion/getFacturas", { TravelId: TravelId }, function (res) {
+        $.get("/Facturacion/getFacturas", { TravelId: TravelId }, res => {
             res.map(({ nombre, fechacarga, usuario, fullpath }) => {
                 $("#facturacionInfo").append(`
                         <tr>
@@ -911,7 +1105,7 @@
                         <td>${moment(fechacarga).format('DD/MM/YYYY')}</td>
                         <td>${usuario}</td>
                         <td class="text-center">
-                            <a href="javascript:void();" onclick="downloadFile('${nombre}','${fullpath}')">
+                            <a href="javascript:void(0);" onclick="downloadFile('${nombre}','${fullpath}')">
                                 <span class="material-icons">
                                     file_download
                                 </span>
@@ -920,14 +1114,16 @@
                     </tr>`);
             });
             dTable("table-facturas");
-        }).fail(function (error) {
+            $('#DataTables_Table_0_wrapper div.row').eq(0).remove();
+            $('#DataTables_Table_0_info').remove();
+        }).fail(error => {
             dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
         });
     }
 
-    function loadTableHistorial() {
+    loadTableHistorial = () => {
         $("#historialInfo").empty();
-        $.get("/Facturacion/getFacturas", { TravelId: TravelId }, function (res) {
+        $.get("/Facturacion/getFacturas", { TravelId: TravelId }, res => {
             //res.map(({ nombre, fechacarga, usuario, fullpath }) => {
             //    $("#facturacionInfo").append(`
             //        <tr>
@@ -944,9 +1140,15 @@
             //    </tr>`);
             //});
             dTable("table-historial");
-        }).fail(function (error) {
+        }).fail(error => {
             dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
         });
+    }
+
+    selectServicios = element => {
+        const elemento = jQuery(element);
+        elemento.attr('disabled', true);
+        $("#modalDiv").modal("show");
     }
     </script>
 }

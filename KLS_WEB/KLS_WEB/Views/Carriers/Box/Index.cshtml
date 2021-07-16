@@ -6,8 +6,8 @@
 @{ int id = ViewBag.id; }
 
 <div class="data-content p-4 text-left">
-    <div class="p-4">
-        <div class="text-left d-flex mb-3">
+    <div class="p-1">
+        <div class="text-left d-flex mb-0">
             <a href="/Carriers/formCarriers/@id">
                 <div class="material-icons icon-red">arrow_back</div>
             </a>
@@ -40,7 +40,13 @@
                                 </label>
                             </div>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control form-control-sm" id="D_Opcional" name="D_Opcional" placeholder="Opcionales">
+                                @*<input type="text" class="form-control form-control-sm" id="D_Opcional" name="D_Opcional" placeholder="Opcionales">*@
+                                <select class="form-control form-control-sm" name="D_Opcional" id="D_Opcional" style="width:100%">
+                                    <option value="0">SELECIONAR</option>
+                                    <option value="baja">BAJA</option>
+                                    <option value="media">MEDIA</option>
+                                    <option value="alta">ALTA</option>
+                                </select>
                             </div>
                         </div>
 
@@ -52,7 +58,14 @@
                                 </label>
                             </div>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control form-control-sm" id="Tp_Opcional" name="Tp_Opcional" placeholder="Opcionales">
+                                @*<input type="text" class="form-control form-control-sm" id="Tp_Opcional" name="Tp_Opcional" placeholder="Opcionales">*@
+                                <select class="form-control form-control-sm" name="Tp_Opcional"  id="Tp_Opcional" style="width:100%">
+                                    <option value="0">SELECIONAR</option>
+                                    <option value="envase">ENVASE</option>
+                                    <option value="granel">GRANEL</option>
+                                    <option value="tarima">TARIMA</option>
+                                    <option value="otros">OTROS</option>
+                                </select>
                             </div>
                         </div>
 
@@ -72,7 +85,14 @@
                                 </label>
                             </div>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control form-control-sm" id="M_Opcional" name="M_Opcional" placeholder="Opcionales">
+                                @*<input type="text" class="form-control form-control-sm" id="M_Opcional" name="M_Opcional" placeholder="Opcionales">*@
+                                <select class="form-control form-control-sm" name="M_Opcional" id="M_Opcional" style="width:100%">
+                                    <option value="0">SELECIONAR</option>
+                                    <option value="materiaprima">MATERIA PRIMA</option>
+                                    <option value="materialdeenvase">MATERIAL DE ENVASE</option>
+                                    <option value="productoterminado">PRODUCTO TERMINADO</option>
+                                    <option value="perecederos">PERECEDEROS</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -91,7 +111,13 @@
                                 </label>
                             </div>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control form-control-sm" id="V_Opcional" name="V_Opcional" placeholder="Opcionales">
+                                @*<input type="text" class="form-control form-control-sm" id="V_Opcional" name="V_Opcional" placeholder="Opcionales">*@
+                                <select class="form-control form-control-sm" name="V_Opcional" id="V_Opcional" style="width:100%">
+                                    <option value="0">SELECIONAR</option>
+                                    <option value="alto">ALTO</option>
+                                    <option value="medio">MEDIO</option>
+                                    <option value="bajo">BAJO</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -140,24 +166,33 @@
                 console.log("----------");
                 console.log(jsonData);
 
-                if (parseInt($("#idBox").val()) == 0) {
-                    $.post("/Carriers/Box/setBox/", jsonData, function (res) {
-                        $("#idBox").val(res.id);
-                        console.log(res);
-                        dToast("success", "Registro guardado exitosamente.", "Registrado");
-                    }).fail(function (error) {
-                        dToast("error", "Error al tratar de guardar el registro", "Error");
-                        $(".guardar").attr("disabled", false);
-                    });
+                if (parseInt($("#D_Opcional").val()) != 0 &&
+                    parseInt($("#TipoPresentacion").val()) != 0 &&
+                    parseInt($("#Tp_Opcional").val()) != 0 &&
+                    parseInt($("#M_Opcional").val()) != 0) {
+                    if (parseInt($("#idBox").val()) == 0) {
+                        $.post("/Carriers/Box/setBox/", jsonData, function (res) {
+                            $("#idBox").val(res.id);
+                            console.log(res);
+                            dToast("success", "Registro guardado exitosamente.", "Registrado");
+                        }).fail(function (error) {
+                            dToast("error", "Error al tratar de guardar el registro", "Error");
+                            $(".guardar").attr("disabled", false);
+                        });
+                    } else {
+                        $.post("/Carriers/Box/putBox/", jsonData, function (res) {
+                            console.log(res);
+                            dToast("success", "Registro actualizado exitosamente.", "Actualizado");
+                        }).fail(function (error) {
+                            dToast("error", "Error al tratar de actualizar el registro", "Error");
+                            $(".guardar").attr("disabled", false);
+                        });
+                    }
                 } else {
-                    $.post("/Carriers/Box/putBox/",jsonData, function (res) {
-                        console.log(res);
-                        dToast("success", "Registro actualizado exitosamente.", "Actualizado");
-                    }).fail(function (error) {
-                        dToast("error", "Error al tratar de actualizar el registro", "Error");
-                        $(".guardar").attr("disabled", false);
-                    });
+                    dToast("error", "Selecciona una opción", "Error");
                 }
+
+                
             });
         });
 

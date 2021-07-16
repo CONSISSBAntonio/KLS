@@ -55,6 +55,13 @@ namespace KLS_WEB.Controllers.Travels
             return Json(mercancia);
         }
 
+        [Route("GetServicios/{id}")]
+        public async Task<JsonResult>GetServicios(string id)
+        {
+            List<ServicesDTO> servicios = await AppContext.Execute<List<ServicesDTO>>(MethodType.GET, Path.Combine(_UrlApi, "GetServicios", id), null);
+            return Json(servicios);
+        }
+
         [Route("getTravels")]
         public async Task<JsonResult> Get()
         {
@@ -114,21 +121,25 @@ namespace KLS_WEB.Controllers.Travels
 
                 int IdServicio = newService.Id;
 
-                var unidades = dataModel.Equipo.Split("&");
-
+                var unidades = dataModel.Unidad.Split("&");
+                var equipos = dataModel.Equipo.Split("&");
+                int index = 0;
                 foreach (var unidad in unidades)
                 {
                     if (unidad.Contains(nombre))
                     {
                         string Id = new string(unidad.Where(char.IsDigit).ToArray());
+                        string IdEquipo = new string(equipos[index].Where(char.IsDigit).ToArray());
                         UnidadDTO unidaddb = new UnidadDTO
                         {
-                            IdEquipo = Convert.ToInt32(Id),
+                            IdUnidad = Convert.ToInt32(Id),
+                            IdEquipo = Convert.ToInt32(IdEquipo),
                             ServicesId = IdServicio
                         };
 
                         UnidadDTO newUnity = await AppContext.Execute<UnidadDTO>(MethodType.POST, Path.Combine(_UrlApi, "PostUnit"), unidaddb);
                         units.Add(newUnity);
+                        ++index;
                     }
                 }
             }
