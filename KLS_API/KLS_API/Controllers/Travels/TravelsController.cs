@@ -227,7 +227,7 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
-                return Ok(_dbContext.Mercancias.LastOrDefault(x => x.TravelId == id));
+                return Ok(_dbContext.Mercancias.OrderBy(x => x.Id).LastOrDefault(x => x.TravelId == id));
             }
             catch (Exception ex)
             {

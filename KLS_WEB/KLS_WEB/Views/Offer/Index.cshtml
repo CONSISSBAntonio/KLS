@@ -1,0 +1,181 @@
+﻿@{
+    ViewData["Title"] = "Ofertas";
+}
+<div class="data-content p-1 text-left">
+    <div class="p-4">
+
+        <div class="d-flex flex-nowrap">
+            <div class="p-2">
+                <div class="text-left d-flex">
+                    <div class="text-uppercase poppins medium size-24">OFERTAS DISPONIBLES</div>
+                </div>
+            </div>
+
+            <div class="ml-auto p-2 pb-2">
+                <a class="btn btn-sm btn-secondary" href="#">
+                    <span class="material-icons">
+                        add
+                    </span>
+                </a>
+            </div>
+        </div>
+
+        <div class="p-4 shadow bg-white">
+            <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" style="background-color:#EDECEC" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Oferta (99)</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" style="background-color:#EDECEC" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Rutas con servicio (93)</a>
+                </li>
+                <li class="nav-item pl-lg-5">
+                    <!--<a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">-->@*Contact*@<!--</a>-->
+                    <select class="form-control form-control-sm" style="width:200px;background-color:#EDECEC">
+                        <option value="value">Todos</option>
+                    </select>
+                </li>
+                <li class="nav-item pl-lg-5">
+                    <!--<a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">-->@*Contact*@<!--</a>-->
+                    <input type="text" class="form-control" style="background-color:#EDECEC" placeholder="Buscar" />
+                </li>
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                    <table id="table-ofertas" class="table table-striped table-bordered display table-hover table-ofertas" width="100%">
+                        <thead>
+                            <tr>
+                                <th>TRANSPORTISTA</th>
+                                <th>TIPO DE UNIDAD</th>
+                                <th>ORIGEN</th>
+                                <th>DESTINO</th>
+                                <th>FECHA DISPONIBILIDAD</th>
+                                <th>EXPIRA EN</th>
+                                <th>Estatus</th>
+                                <th style="width:3%;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-ofertas-info"></tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                    <table id="table" class="table table-striped table-bordered display table-hover table-viajes" width="100%">
+                        <thead>
+                            <tr>
+                                <th>TRANSPORTISTA</th>
+                                <th>ID RUTA</th>
+                                <th>ORIGEN</th>
+                                <th>DESTINO</th>
+                                <th>COSTO</th>
+                                <th>Estatus</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-info"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+
+        //Cargar datos de las rutas
+        var dataRutas = [];
+        var dataCheckpoint = [];
+        var catCiudad = [];
+        var catEstado = [];
+
+        $(document).ready(function () {
+            loadCity();
+            loadState();
+        });
+
+        function loadCity() {
+            $.get("/Catalogs/Geography/City/getCity", function (res) {
+                res.map(data => {
+                    const { estatus } = data;
+
+                    if (estatus === 1) {
+                        catCiudad = [...catCiudad, data];
+                    }
+                });
+
+            }).fail(function (error) {
+                dToast("error", "Error al obtener paises", "Atencion!");
+            });
+        }
+
+        //Cargar estados
+        function loadState() {
+            $.get("/Catalogs/Geography/State/getState", function (res) {
+                catEstado = res;
+                loadTable();
+            }).fail(function (error) {
+                dToast("error", "Error al obtener paises", "Atencion!");
+            });
+        }
+
+        function loadTable() {
+            var stable = $('.table').DataTable();
+            stable.destroy();
+            $("#table-info").empty();
+            $.get("Route/getRoute", function (res) {
+                dataRutas = res;
+                console.log(res);
+                $.each(res, (item, key) => {
+                    const IdGenerado = `${String(key.id_ciudadorigen).padStart(4, '0')}${String(key.id_ciudaddestino).padStart(4, '0')}`;
+                    let indice_co = catCiudad.findIndex(service => service.id === key.id_ciudadorigen);
+                    let indice_cd = catCiudad.findIndex(service => service.id === key.id_ciudaddestino);
+                    let indice_eo = catEstado.findIndex(service => service.id === key.id_estadoorigen);
+                    let indice_ed = catEstado.findIndex(service => service.id === key.id_estadodestino);
+                    const color = nCon(key.seguridad) == 'Alto' ? 'success' : nCon(key.seguridad) == 'Medio' ? 'warning' : 'danger';
+                    const status = nCon(key.estatus) == 1 ? 'Activo' : 'Inactivo';
+                    $("#table-info").append(`
+                        <tr class="text-uppercase">
+                            <td></td>
+                            <td>${IdGenerado}</td>
+                            <td>${catEstado[indice_eo].nombre} - ${catCiudad[indice_co].nombre}</td>
+                            <td>${catEstado[indice_ed].nombre} - ${catCiudad[indice_cd].nombre}</td>
+                            <td>${nCon(key.totalkilometros)} km</td>
+                            <td class="text-center">${status}</td>
+                        </tr>`);
+                });
+                dataTbl("table");
+
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+            });
+        }
+
+        function dataTbl(tabla) {
+            $('#' + tabla).dataTable(
+                {
+                    searching: false, paging: true, info: false,
+                    language: {
+                        "decimal": "",
+                        "emptyTable": "No hay información",
+                        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                        "infoPostFix": "",
+                        "thousands": ",",
+                        "lengthMenu": "Mostrar _MENU_ Entradas",
+                        "loadingRecords": "Cargando...",
+                        "processing": "Procesando...",
+                        "search": "Buscar",
+                        "zeroRecords": "Sin resultados encontrados",
+                        "paginate": {
+                            "first": "Primero",
+                            "last": "Ultimo",
+                            "next": "Siguiente",
+                            "previous": "Anterior"
+                        }
+                    }
+                }
+            );
+        }
+    </script>
+} 

@@ -14,6 +14,7 @@
         }
         #capa2 {
             position: absolute;
+            top:10%;
             z-index: 0;
         }
 
@@ -51,11 +52,11 @@
                         <th>ID</th>
                         <th>Nombre</th>
                         <th>Número Tel</th>
-                        <th>Licencia</th>
+                        <th style="width:3%;text-align:center;">Licencia</th>
                         <th># Licencia</th>
-                        <th>INE</th>
+                        <th style="width:3%;text-align:center;">INE</th>
                         <th>#INE</th>
-                        <th>SS</th>
+                        <th style="width:3%;text-align:center;">SS</th>
                         <th>IMSS</th>
                         <th>Estatus</th>
                         <th style="width:5%;" class="text-center">Acciones</th>
@@ -286,22 +287,22 @@
                         <td>${nCon(key.id)}</td>
                         <td>${nCon(key.nombre)}</td>
                         <td>${nCon(key.noTelefono)}</td>
-                        <td style="cursor: pointer;cursos:hand;">
-                            <input type="checkbox" ${checkedLicencia}  onmouseover="verImagen('img-capa${key.id}')" onmouseout="Fin('img-capa${key.id}')">
+                        <td style="cursor: pointer;cursos:hand;"  >
+                            <input type="checkbox" ${checkedLicencia} onmouseover="verImagen('img-capa${key.id}')" onmouseout="Fin('img-capa${key.id}')" class="text-center" >
                             <div id="capa2" class="img-capa${key.id}" style="display:none;">
                                 <img src="${rutaLicencia}" />
                             </div>
                         </td>
                         <td>${nCon(key.noLicencia)}</td>
-                        <td style="cursor: pointer;cursos:hand;">
-                            <input type="checkbox" ${checkedIne} onmouseover="verImagen('img-Ine${key.id}')" onmouseout="Fin('img-Ine${key.id}')">
+                        <td style="cursor: pointer;cursos:hand;" >
+                            <input type="checkbox" ${checkedIne}  onmouseover="verImagen('img-Ine${key.id}')" onmouseout="Fin('img-Ine${key.id}')"  class="text-center" >
                             <div id="capa2" class="img-Ine${key.id}" style="display:none;">
                                 <img src="${rutaIne}" />
                             </div>
                         </td>
                         <td>${nCon(key.noIne)}</td>
                         <td style="cursor: pointer;cursos:hand;">
-                            <input type="checkbox" ${checkedSeguro} onmouseover="verImagen('img-Seguro${key.id}')" onmouseout="Fin('img-Seguro${key.id}')">
+                            <input type="checkbox" ${checkedSeguro} onmouseover="verImagen('img-Seguro${key.id}')" onmouseout="Fin('img-Seguro${key.id}')"  class="text-center" >
                             <div id="capa2" class="img-Seguro${key.id}" style="display:none;">
                                 <img src="${rutaSeguro}" />
                             </div>

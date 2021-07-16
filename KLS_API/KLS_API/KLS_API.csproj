@@ -92,6 +92,10 @@
     <Compile Remove="Migrations\20210712004848_addparamsIduser.Designer.cs" />
     <Compile Remove="Migrations\20210713154006_Requisitos.cs" />
     <Compile Remove="Migrations\20210713154006_Requisitos.Designer.cs" />
+    <Compile Remove="Migrations\20210713220517_mercancia.cs" />
+    <Compile Remove="Migrations\20210713220517_mercancia.Designer.cs" />
+    <Compile Remove="Migrations\20210714210257_clientesParams.cs" />
+    <Compile Remove="Migrations\20210714210257_clientesParams.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

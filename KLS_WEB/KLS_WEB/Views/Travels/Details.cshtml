@@ -1053,6 +1053,16 @@
             });
         }
 
+        getMercanciaD = () => {
+            $.post(`/Travels/GetMercancia/${TravelId}`, (response) => {
+                for (const [key, val] of Object.entries(response)) {
+                    $(`[name=${key.toLowerCase()}`).val(val);
+                }
+            }).fail(function (error) {
+                dToast("error", "Error al obtener la mercancia", "Error");
+            });
+        }
+
         postMercancia = form => {
             const data = jQuery(form).serializeArray();
             data.push({ name: 'TravelId', value: TravelId });

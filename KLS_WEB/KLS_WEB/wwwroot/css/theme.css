@@ -382,3 +382,13 @@ input[type=text]{
 li, .selection {
     text-transform: uppercase !important;
 }
+
+/*BOTONES DE NAV*/
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff !important;
+    background-color: black !important;
+}
+
+.nav-pills .nav-link {
+    border-radius: 0rem;
+}

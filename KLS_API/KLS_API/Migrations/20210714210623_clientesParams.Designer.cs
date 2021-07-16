@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210713220517_mercancia")]
-    partial class mercancia
+    [Migration("20210714210623_clientesParams")]
+    partial class clientesParams
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1198,10 +1198,16 @@ namespace KLS_API.Migrations
                     b.Property<string>("Banco")
                         .HasColumnType("varchar(55)");
 
+                    b.Property<string>("Comentario")
+                        .HasColumnType("varchar(55)");
+
                     b.Property<string>("Cuenta")
                         .HasColumnType("varchar(55)");
 
                     b.Property<string>("DireccionFiscal")
+                        .HasColumnType("varchar(55)");
+
+                    b.Property<string>("Ejecutivo")
                         .HasColumnType("varchar(55)");
 
                     b.Property<int>("Estatus")

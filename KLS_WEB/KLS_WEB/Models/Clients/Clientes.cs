@@ -40,5 +40,9 @@ namespace KLS_WEB.Models.Clients
         public string Banco { get; set; }
         [Column(TypeName = "varchar(55)")]
         public string Cuenta { get; set; }
+        [Column(TypeName = "varchar(55)")]
+        public string Ejecutivo { get; set; }
+        [Column(TypeName = "varchar(55)")]
+        public string Comentario { get; set; }
     }
 }

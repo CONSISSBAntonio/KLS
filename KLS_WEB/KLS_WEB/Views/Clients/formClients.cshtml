@@ -58,6 +58,7 @@
                             <label class="col-sm-5 col-form-label col-form-label-sm">RFC</label>
                             <div class="col-sm-7">
                                 <input type="text" class="form-control form-control-sm" id="Rfc" name="Rfc" required>
+                                <span id='result' style="font-size:12px;"></span>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -136,6 +137,19 @@
                                 <input type="text" class="form-control form-control-sm" id="Cuenta" name="Cuenta">
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Ejecutivo</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="Ejecutivo" name="Ejecutivo">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label col-form-label-sm">Comentario</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control form-control-sm" id="Comentario" name="Comentario">
+                            </div>
+                        </div>
+
                     </div>
 
                 </form>
@@ -226,6 +240,29 @@
 @section Scripts{
 
     <script>
+        function validateEmail(email) {
+            var re = /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
+            email = email.toUpperCase();
+            return re.test(email);
+        }
+
+        function validate() {
+            var $result = $("#result");
+            var email = $("#Rfc").val();
+            $result.text("");
+
+            if (validateEmail(email)) {
+                $result.text(email + " Válido");
+                $result.css("color", "green");
+            } else {
+                $result.text(email + " No es válido");
+                $result.css("color", "red");
+            }
+            return false;
+        }
+
+        $("#Rfc").on("keyup", validate);
+
         $(window).ready(function () {
             valId();
             $("#frmRegister").submit(function (event) {
@@ -272,6 +309,8 @@
                     $("#OtraRed").val(res.otraRed);
                     $("#Banco").val(res.banco);
                     $("#Cuenta").val(res.cuenta);
+                    $("#Ejecutivo").val(res.cuenta);
+                    $("#Comentario").val(res.cuenta);
                 }).fail(function (error, xhr, status) {
                     console.log(error);
                 });
