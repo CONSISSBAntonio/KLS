@@ -26,6 +26,8 @@ namespace KLS_API.Models.Travels
         [Column(TypeName = "decimal(18,2)")]
         public decimal PrecioClienteTotal { get; set; }
         public string Estatus { get; set; }
+        public string SubEstatus { get; set; }
+        public DateTime StatusUpdated { get; set; }
 
         //Extras
         public string OrdenCompra { get; set; }

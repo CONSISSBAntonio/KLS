@@ -1,0 +1,522 @@
+﻿@{
+    ViewData["Title"] = "Listado demandas";
+}
+
+<div class="data-content">
+    <div class="p-4">
+        <div class="text-left mb-3 d-flex justify-content-between">
+            <div class="poppins medium size-24 pl-2">DEMANDAS DISPONIBLES</div>
+            <button type="button" class="btn btn-primary" onclick="{ $('#modalbusqueda').modal('show'); }">
+                BUSCAR
+            </button>
+        </div>
+
+        <div class="p-4 shadow bg-white">
+            <table id="table" class="table table-striped table-bordered display table-hover table-demand text-uppercase"
+                width="100%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>CLIENTE</th>
+                        <th>TIPO DE UNIDAD</th>
+                        <th>ORIGEN</th>
+                        <th>DESTINO</th>
+                        <th>FECHA SALIDA</th>
+                        <th>ARRIBO</th>
+                        <th>ACCIONES</th>
+                    </tr>
+                </thead>
+                <tbody id="table-info"></tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<!--MODAL EDITAR DEMANDA-->
+<div class="modal fade" id="modaleditardemanda" tabindex="-1" aria-labelledby="modaleditardemandalabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modaleditardemandalabel">AGREGAR DEMANDA</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editDemand" onsubmit="{ event.preventDefault(); editDemand(this); }">
+                    <div class="row">
+                        <div class="col-8">
+                            <label for="editcliente"
+                                class="form-label size-12 font-weight-bold float-left">CLIENTE</label>
+                            <select class="form-control form-control-sm" id="editcliente" name="clienteId"
+                                onchange="{ console.log(this.value); }">
+                                <option value="0">SELECCIONA</option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <label for="editreferencia"
+                                class="form-label size-12 font-weight-bold float-left">REFERENCIA</label>
+                            <input type="text" class="form-control form-control-sm" id="editreferencia"
+                                name="clienteeId" disabled>
+                            </input>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-3">
+                            <label for="edittipounidad" class="form-label size-12 font-weight-bold float-left">TIPO DE
+                                UNIDAD</label>
+                            <select class="form-control form-control-sm" id="edittipounidad" name="tipounidadId">
+                                <option value="0">SELECCIONA</option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label for="editfechasalida" class="form-label size-12 font-weight-bold float-left">FECHA DE
+                                SALIDA</label>
+                            <input type="date" class="form-control form-control-sm" id="editfechasalida"
+                                name="fechasalida"></input>
+                        </div>
+                        <div class="col-3">
+                            <label for="edithorasalida" class="form-label size-12 font-weight-bold float-left">HORA DE
+                                SALIDA</label>
+                            <input type="time" class="form-control" id="edithorasalida" name="fechadisponibilidad">
+                        </div>
+                        <div class="col-3">
+                            <label for="editarribo"
+                                class="form-label size-12 font-weight-bold float-left">ARRIBO</label>
+                            <input type="datetime" class="form-control form-control-sm" id="editarribo"
+                                name="rangoespera">
+                            </input>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-6">
+                            <div class="d-flex justify-content-between">
+                                <label class="col-form-label col-form-label-sm">ORIGEN</label>
+                                <a class="btn btn-link text-primary" onclick="agregarCiudad(this);">Agregar</a>
+                            </div>
+                            <div>
+                                <select class="form-control form-control-sm text-uppercase" id="editorigen"
+                                    name="origenId" style="width: 100%;">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6 mt-3">
+                            <label for="editremitente" class="form-label size-12 font-weight-bold float-left">DIRECCIÓN
+                                REMITENTE</label>
+                            <input type="text" class="form-control form-control-sm" id="editremitente"
+                                name="direccionremitente">
+                            </input>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-6">
+                            <div class="d-flex justify-content-between">
+                                <label class="col-form-label col-form-label-sm">DESTINO</label>
+                                <a class="btn btn-link text-primary" onclick="agregarCiudad(this);">AGREGAR</a>
+                            </div>
+                            <div>
+                                <select class="form-control form-control-sm text-uppercase" id="editdestino"
+                                    name="destinoId" style="width: 100%;">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6 mt-3">
+                            <label for="editdestinatario"
+                                class="form-label size-12 font-weight-bold float-left">DIRECCIÓN
+                                DESTINATARIO</label>
+                            <input type="text" class="form-control form-control-sm" id="editdestinatario"
+                                name="direcciondestinatario">
+                            </input>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-6 mt-3">
+                            <label for="editruta" class="form-label size-12 font-weight-bold float-left">RUTA</label>
+                            <input type="text" class="form-control form-control-sm" id="editruta" name="ruta">
+                            </input>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <b class="float-left size-14">MERCANCIA</b>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-6 mt-3">
+                            <label for="tonelaje"
+                                class="form-label size-12 font-weight-bold float-left">TONELAJE</label>
+                            <input type="text" class="form-control form-control-sm" id="tonelaje" name="tonelaje">
+                            </input>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-4 mt-3">
+                            <div class="form-check d-flex align-items-center">
+                                <input class="form-check-input my-auto" type="checkbox" id="tipopresentacion" name="tipopresentacion">
+                                <label class="form-check-label size-12" for="0">TIPO PRESENTACIÓN</label>
+                            </div>
+                        </div>
+                        <div class="col-5 mt-3">
+                            <select class="form-control form-control-sm" id="tipopresentacionval" name="tipopresentacionval">
+                                <option value="0">SELECCIONA</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-4 mt-3">
+                            <div class="form-check d-flex align-items-center">
+                                <input class="form-check-input my-auto" type="checkbox" id="material" name="material">
+                                <label class="form-check-label size-12" for="0">MATERIAL</label>
+                            </div>
+                        </div>
+                        <div class="col-5 mt-3">
+                            <select class="form-control form-control-sm" id="materialval" name="materialval">
+                                <option value="0">SELECCIONA</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-4 mt-3">
+                            <div class="form-check d-flex align-items-center">
+                                <input class="form-check-input my-auto" type="checkbox" id="valor" name="valor">
+                                <label class="form-check-label size-12" for="0">VALOR</label>
+                            </div>
+                        </div>
+                        <div class="col-5 mt-3">
+                            <select class="form-control form-control-sm" id="valorval" name="valorval">
+                                <option value="0">SELECCIONA</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-4 float-left w-25" id="editar">GUARDAR</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--MODAL NUEVA DEMANDA-->
+<div class="modal fade" id="modaldemanda" tabindex="-1" aria-labelledby="modaldemandalabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modaldemandalabel">AGREGAR DEMANDA</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addDemand" onsubmit="{ event.preventDefault(); addDemand(this); }">
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="addcliente"
+                                class="form-label size-12 font-weight-bold float-left">CLIENTE</label>
+                            <select class="form-control form-control-sm" id="addcliente" name="clienteId"
+                                onchange="{ console.log(this.value); }">
+                                <option value="0">SELECCIONA</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-3">
+                            <label for="addtipounidad" class="form-label size-12 font-weight-bold float-left">TIPO DE
+                                UNIDAD</label>
+                            <select class="form-control form-control-sm" id="addtipounidad" name="tipounidadId"
+                                onchange="{ console.log(this.value); }">
+                                <option value="0">SELECCIONA</option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label for="addcantidad"
+                                class="form-label size-12 font-weight-bold float-left">CANTIDAD</label>
+                            <input type="number" class="form-control form-control-sm" id="addcantidad" name="cantidad"
+                                placeholder="MÍNIMO 1">
+                            </input>
+                        </div>
+                        <div class="col-3">
+                            <label for="addfechadisponibilidad"
+                                class="form-label size-12 font-weight-bold float-left">FECHA DISPONIBILIDAD</label>
+                            <input type="date" class="form-control" id="addfechadisponibilidad"
+                                name="fechadisponibilidad">
+                        </div>
+                        <div class="col-3">
+                            <label for="addrangoespera" class="form-label size-12 font-weight-bold float-left">RANGO DE
+                                ESPERA</label>
+                            <input type="number" class="form-control form-control-sm" id="addrangoespera"
+                                name="rangoespera">
+                            </input>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <b class="float-left size-14">ORIGEN</b>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-3">
+                            <label for="addregiono"
+                                class="form-label size-12 font-weight-bold float-left">REGIÓN</label>
+                            <select class="form-control form-control-sm" id="addregiono" name="regionoId"
+                                onchange="{ console.log(this.value); }">
+                                <option value="0">SELECCIONA</option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label for="addestadoo"
+                                class="form-label size-12 font-weight-bold float-left">ESTADO</label>
+                            <select class="form-control form-control-sm" id="addestadoo" name="estadooId"
+                                onchange="{ console.log(this.value); }">
+                                <option value="0">SELECCIONA</option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label for="addciudadoId"
+                                class="form-label size-12 font-weight-bold float-left">CIUDAD</label>
+                            <select class="form-control form-control-sm" id="addciudadoId" name="ciudadoId"
+                                onchange="{ console.log(this.value); }">
+                                <option value="0">SELECCIONA</option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label for="addtoleranciao"
+                                class="form-label size-12 font-weight-bold float-left">TOLERANCIA</label>
+                            <input type="number" class="form-control form-control-sm" id="addtoleranciao"
+                                name="toleranciao">
+                            </input>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <b class="float-left size-14">DESTINO</b>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-3">
+                            <label for="addregiond"
+                                class="form-label size-12 font-weight-bold float-left">REGIÓN</label>
+                            <select class="form-control form-control-sm" id="addregiond" name="regiondId"
+                                onchange="{ console.log(this.value); }">
+                                <option value="0">SELECCIONA</option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label for="addestadod"
+                                class="form-label size-12 font-weight-bold float-left">ESTADO</label>
+                            <select class="form-control form-control-sm" id="addestadod" name="estadodId"
+                                onchange="{ console.log(this.value); }">
+                                <option value="0">SELECCIONA</option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label for="addciudaddId"
+                                class="form-label size-12 font-weight-bold float-left">CIUDAD</label>
+                            <select class="form-control form-control-sm" id="addciudaddId" name="ciudaddId"
+                                onchange="{ console.log(this.value); }">
+                                <option value="0">SELECCIONA</option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label for="addtoleranciad"
+                                class="form-label size-12 font-weight-bold float-left">TOLERANCIA</label>
+                            <input type="number" class="form-control form-control-sm" id="addtoleranciad"
+                                name="toleranciad">
+                            </input>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3 float-left" id="agregar">AGREGAR</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--MODAL BÚSQUEDA-->
+<!-- Modal -->
+<div class="modal fade" id="modalbusqueda" tabindex="-1" aria-labelledby="modalbusquedalabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalbusquedalabel">BUSCAR DEMANDA</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="busqueda" onsubmit="{ event.preventDefault(); searchdemand(this); }">
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="cliente" class="form-label size-12 font-weight-bold float-left">CLIENTE</label>
+                            <select class="form-control form-control-sm" id="cliente" name="clienteId"
+                                onchange="{ console.log(this.value); }">
+                                <option value="0">SELECCIONA</option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <label for="tipounidad" class="form-label size-12 font-weight-bold float-left">TIPO
+                                UNIDAD</label>
+                            <select class="form-control form-control-sm" id="tipounidad" name="tipounidadId"
+                                onchange="{ console.log(this.value); }">
+                                <option value="0">SELECCIONA</option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <label for="fechasalida" class="form-label size-12 font-weight-bold float-left">FECHA
+                                SALIDA</label>
+                            <input type="date" class="form-control" id="fechasalida" name="fechasalida">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-4">
+                            <label for="rango" class="form-label size-12 font-weight-bold float-left">RANGO</label>
+                            <select class="form-control form-control-sm" id="rango" name="rango"
+                                onchange="{ console.log(this.value); }">
+                                <option value="0">SELECCIONA</option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <label for="estadoorigen" class="form-label size-12 font-weight-bold float-left">ESTADO
+                                ORIGEN</label>
+                            <select class="form-control form-control-sm" id="estadoorigen" name="estadoorigenId"
+                                onchange="{ console.log(this.value); }">
+                                <option value="0">SELECCIONA</option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <label for="ciudadorigen" class="form-label size-12 font-weight-bold float-left">CIUDAD
+                                ORIGEN</label>
+                            <select class="form-control form-control-sm" id="ciudadorigen" name="ciudadorigenId"
+                                onchange="{ console.log(this.value); }">
+                                <option value="0">SELECCIONA</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-4">
+                            <label for="estadodestino" class="form-label size-12 font-weight-bold float-left">ESTADO
+                                DESTINO</label>
+                            <select class="form-control form-control-sm" id="estadodestino" name="estadodestinoId"
+                                onchange="{ console.log(this.value); }">
+                                <option value="0">SELECCIONA</option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <label for="ciudaddestino" class="form-label size-12 font-weight-bold float-left">CIUDAD
+                                DESTINO</label>
+                            <select class="form-control form-control-sm" id="ciudaddestino" name="ciudaddestinoId"
+                                onchange="{ console.log(this.value); }">
+                                <option value="0">SELECCIONA</option>
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <label for="tamanioempresa" class="form-label size-12 font-weight-bold float-left">TAMAÑO
+                                EMPRESA</label>
+                            <select class="form-control form-control-sm" id="tamanioempresa" name="TamanioEmpresa"
+                                onchange="{ console.log(this.value); }">
+                                <option value="0">SELECCIONA</option>
+                                <option value="chica">CHICA</option>
+                                <option value="mediana">MEDIANA</option>
+                                <option value="grande">GRANDE</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3 float-left" id="search">BUSCAR</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+<script>
+    $(() => {
+        loadTable();
+
+        $('#modaleditardemanda').on('shown.bs.modal', event => {
+        });
+
+        $('#modalbusqueda').on('shown.bs.modal', event => {
+        });
+
+        $('#modaldemanda').on('shown.bs.modal', event => {
+        });
+    });
+
+    editDemand = e => {
+        const button = $('#editar');
+        $(button).prop('disabled', true);
+
+        const data = $(e).serialize();
+        console.log(data);
+
+        setTimeout(() => $(button).prop('disabled', false), 1000);
+    }
+
+    addDemand = e => {
+        const button = $('#agregar');
+        $(button).prop('disabled', true);
+
+        const data = $(e).serialize();
+        console.log(data);
+
+        setTimeout(() => $(button).prop('disabled', false), 1000);
+    }
+
+    searchdemand = e => {
+        const button = $('#search');
+        $(button).prop('disabled', true);
+
+        const data = $(e).serialize();
+        $.post('/Demand/Search', data, response => {
+            $(button).prop('disabled', false);
+            console.log(response);
+        });
+    }
+
+    loadTable = () => {
+        var stable = $('.table-demand').DataTable();
+        stable.destroy();
+        $("#table-info").empty();
+        @*
+                $.get("/Travels/getTravels", response => {
+                response.map(({ id, cliente, origen, destino, salida, llegada, estatus, folio }) => {
+                $("#table-info").append(`
+                <tr>
+                <td>${folio}</td>
+                <td>${cliente}</td>
+                <td>${origen}</td>
+                <td>${destino}</td>
+                <td class="text-center">${salida}</td>
+                <td class="text-center">${llegada}</td>
+                <td class="text-primary text-center"><b>${estatus}</b></td>
+                <td class="text-center">
+                <a href="/Travels/${id}">
+                <span class="material-icons">
+                open_in_new
+                </span>
+                </a>
+                </td>
+                </tr>`);
+                });
+                dTable("table-demand");
+                $('#table_length').html(`
+                <a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary float-right">
+                <span class="material-icons">
+                add
+                </span>
+                </a>`).show();
+                }).fail(function (error, xhr, status) {
+                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+                }); *@
+            dTable("table-demand");
+        $('#table_length').html(`
+                        <a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary float-right" onclick="{ $('#modaldemanda').modal('show'); }">
+                            <span class="material-icons">
+                                add
+                            </span>
+                        </a>`).show();
+    }
+</script>
+}

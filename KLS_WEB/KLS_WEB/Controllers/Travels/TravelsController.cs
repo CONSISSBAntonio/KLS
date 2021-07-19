@@ -111,11 +111,14 @@ namespace KLS_WEB.Controllers.Travels
                 ViajeId = newTravel.Id;
             }
 
-            foreach (var id in dataModel.ServicesId)
+            if (dataModel.ServicesId != null)
             {
-                if (id > 0)
+                foreach (var id in dataModel.ServicesId)
                 {
-                    ServicesDTO service = await AppContext.Execute<ServicesDTO>(MethodType.DELETE, Path.Combine(_UrlApi, "DeleteService", id.ToString()), null);
+                    if (id > 0)
+                    {
+                        ServicesDTO service = await AppContext.Execute<ServicesDTO>(MethodType.DELETE, Path.Combine(_UrlApi, "DeleteService", id.ToString()), null);
+                    }
                 }
             }
 

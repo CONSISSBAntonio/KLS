@@ -60,7 +60,7 @@
             <div class="text-uppercase poppins medium size-24 pl-2">Viaje @Model.Folio</div>
         </div>
         <div class="col-7 d-flex justify-content-center align-items-center">
-            <div class="card w-75 h-100 d-flex flex-row justify-content-around">
+            <div class="card w-75 h-100 d-flex flex-row justify-content-around" onclick="{ $('#modalEstatus').modal('show'); }" style="cursor: pointer;">
                 <div class="d-flex justify-content-start w-50">
                     <span class="dot my-auto mr-3 ml-3"></span>
                     <h6 class="my-auto justify-content-start">EN TRÁNSITO</h6>
@@ -668,12 +668,12 @@
 
 
         @* documentos *@
-        <div class="data-content documentos px-4 text-left d-none">
+        <div class="col-12 documentos">
             <div class="p-4">
                 <h4>DOCUMENTOS</h4>
                 <button class="btn btn-dark px-5" style="border-radius:0px">Generar carta porte</button>
                 <div class="row">
-                    <div class="col-md-6 mt-5">
+                    <div class="col-6 mt-3">
                         <div class="text-left d-flex justify-content-between">
                             <h4>EVIDENCIA DIGITAL</h4>
                         </div>
@@ -693,12 +693,12 @@
                             </table>
                         </div>
                     </div>
-                    <div class="col-md-4 mt-5">
+                    <div class="col-6 mt-1">
                         <div class="text-left d-flex justify-content-between">
                             <h4>EVIDENCIA FÍSICA</h4>
                             <div style="padding-left:20%;">
                                 <a class="btn btn-sm bg-white mb-2" href="#">
-                                    <span class="material-icons">
+                                    <span class="material-icons text-primary">
                                         save
                                     </span>
                                 </a>
@@ -706,28 +706,33 @@
                         </div>
                         <div class="p-4 shadow bg-white">
                             <div class="row">
-                                <div class="col-md-6">
-                                    <h6 class="text-center"><strong>Nombre</strong></h6>
-                                    <div class="">
-                                        <div>
-                                            <input type="checkbox" class="custome-check">
-                                            <label class="col-form-label col-form-label-sm pl-0">Carta de recepción</label>
-                                        </div>
+                                <div class="col-6">
+                                    <div class="d-flex ml-3">
+                                        <h6>NOMBRE</h6>
                                     </div>
-                                    <div class="">
-                                        <div>
+
+                                    <div class="d-flex flex-column">
+                                        <div class="d-flex align-items-center">
                                             <input type="checkbox" class="custome-check">
-                                            <label class="col-form-label col-form-label-sm pl-0">Sello de vigilancia</label>
+                                            <label class="col-form-label col-form-label-sm">Carta de recepción</label>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <input type="checkbox" class="custome-check mt">
+                                            <label class="col-form-label col-form-label-sm">Sello de vigilancia</label>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <h6 class="text-center"><strong>Tiempo de entrega</strong></h6>
-                                    <div class="">
-                                        <label class="col-form-label col-form-label-sm pl-4">Vencida</label>
+                                <div class="col-6">
+                                    <div class="d-flex">
+                                        <h6>TIEMPO DE ENTREGA</h6>
                                     </div>
-                                    <div class="">
-                                        <label class="col-form-label col-form-label-sm pl-4">3d 2hrs</label>
+                                    <div class="d-flex flex-column mt-2">
+                                        <div class="d-flex align-items-center">
+                                            <label class="size-12">Vencida</label>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <label class="size-12">3d 2hrs</label>
+                                        </div>
                                     </div>
 
                                 </div>
@@ -812,6 +817,51 @@
     </div>
 </div>
 <!--Modal agregar factura-->
+<!--Modal actualizar estado-->
+<div class="modal fade" id="modalEstatus" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo-modal">CAMBIAR ESTATUS</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                <form id="formEstatus">
+                    <div class="row">
+                        <div class="col-6 text-left">
+                            <b class="size-12">ESTATUS</b>
+                            <select class="form-control form-control-sm" name="estatus" id="estatus" style="width:100%" onchange="{ console.log('event'); }">
+                                <option selected disabled>SELECIONA</option>
+                                <option value="cancelado">CANCELADO</option>
+                                <option value="registrado">REGISTRADO</option>
+                                <option value="confirmado">CONFIRMADO</option>
+                                <option value="nocolocado">NO COLOCADO</option>
+                                <option value="entransito">EN TRÁNSITO</option>
+                                <option value="conculuido">CONCLUIDO</option>
+                                <option value="administracion">ADMINISTRACIÓN</option>
+                                <option value="cerrado">CERRADO</option>
+                            </select>
+                        </div>
+                        <div class="col-6 text-left">
+                            <b class="size-12">SUB ESTATUS</b>
+                            <select class="form-control form-control-sm" name="subestatus" id="subestatus" style="width:100%">
+                                <option selected disabled>SELECCIONA</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br />
+                    <a href="javascript:void(0);" class="btn btn-dark guardar" style="width:100%" onclick="updateStatus();">
+                        GUARDAR
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal actualizar estado-->
 <!--Modal servicio-->
 <div class="modal fade" id="modalDiv" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false"
      aria-labelledby="exampleModalLabel" aria-hidden="true">
