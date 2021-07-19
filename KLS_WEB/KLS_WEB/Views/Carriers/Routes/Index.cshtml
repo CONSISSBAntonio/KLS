@@ -66,13 +66,13 @@
                         <div class="col-md-6">
                             <label class="">Ruta origen</label>
                             <select class="form-control form-control-md" id="Estado" style="width:100%;font-size:6px;" onchange="selectCiudad();">
-                                <option value="0">Selecciona una option</option>
+                                <option value="0">Selecciona una opción</option>
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label class="">Ruta origen</label>
                             <select class="form-control form-control-md" id="Ciudad" style="width:100%;font-size:6px;" onchange="selectRuta();">
-                                <option value="0">Selecciona una option</option>
+                                <option value="0">Selecciona una opción</option>
                             </select>
                         </div>
                     </div>
@@ -81,7 +81,7 @@
                         <div class="col-md-12">
                             <label class="">Ruta destino</label>
                             <select class="form-control form-control-md" id="Id_Ruta" name="Id_Ruta" style="width:100%;font-size:8px;">
-                                <option value="0">Selecciona una option</option>
+                                <option value="0">Selecciona una opción</option>
                             </select>
                         </div>
                     </div>
@@ -146,6 +146,9 @@
                             dToast("success", "Se guardó el registro", "Registrado");
                             $(".guardar").attr("disabled", false);
                             $('#frmRegister').trigger("reset");
+                            $("#Estado").change();
+                            $("#Ciudad").change();
+                            $("#Id_Ruta").change();
                         }).fail(function (error) {
                             dToast("error", "Error al tratar de guardar el registro", "Error");
                             $(".guardar").attr("disabled", false);
@@ -163,7 +166,7 @@
             $.get("/Carriers/Routes/getRoutes", function (res) {
                 catRutas = res;
                 $("#Id_Ruta_Origen").empty();
-                $("#Id_Ruta_Origen").append(`<option value="0">Selecciona una opcion</option>`);
+                $("#Id_Ruta_Origen").append(`<option value="0">Selecciona una opción</option>`);
                 $.each(res, function (item, key) {
 
                     if (parseInt(key.estatus) == 1)
@@ -182,7 +185,7 @@
 
         function selectRuta() {
             $("#Id_Ruta").empty();
-            $("#Id_Ruta").append(`<option value="0">Selecciona una opcion</option>`);
+            $("#Id_Ruta").append(`<option value="0">Selecciona una opción</option>`);
             //var idRut = $("#Id_Ruta_Origen").val();
 
             var idEstado = parseInt($("#Estado").val());

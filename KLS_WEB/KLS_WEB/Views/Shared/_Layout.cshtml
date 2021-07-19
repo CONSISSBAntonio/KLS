@@ -177,12 +177,12 @@
         }
 
         function updateContainer() {
-            var $containerHeight = $(window).height();
-            //console.log($containerHeight);
-            if ($containerHeight <= 768) {
+            var $containerHeight = $(window).width();
+            console.log($containerHeight);
+            if ($containerHeight <= 1284) {
                 $(".left-bar").removeClass("expand");
             }
-            if ($containerHeight > 769) {
+            if ($containerHeight > 1285) {
                 $(".left-bar").addClass("expand");
                 eventHide();
             }
