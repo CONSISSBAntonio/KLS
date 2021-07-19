@@ -135,6 +135,50 @@
         var dataCity = [];
         var dataColonies = [];
 
+
+        //Buscar por CP
+        $('#Cp').keypress(function (e) {
+            var keycode = (e.keyCode ? e.keyCode : e.which);
+            if (keycode == '13') {
+                searcCP();
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        function searcCP() {
+            var codigoP = $("#Cp").val();
+
+            $("#Id_Estado").empty();
+            $.each(dataState, function (item, key) {
+                if (parseInt(key.estatus) == 1) {
+                    $("#Id_Estado").append(`<option value="${key.id}">${key.nombre}</option>`);
+                };
+            });
+
+            $("#Id_Ciudad").empty();
+            $.each(dataCity, function (item, key) {
+                if (parseInt(key.estatus) == 1) {
+                    $("#Id_Ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
+                };
+            });
+
+            $("#Id_Colonia").empty();
+            $.each(dataColonies, function (item, key) {
+                if (parseInt(key.estatus) == 1) {
+                    if (parseInt(key.cp) == parseInt(codigoP)) {
+                        console.log(key);
+                        $("#Id_Colonia").append(`<option value="${key.id}">${key.nombre}</option>`);
+                        $('#Id_Ciudad option[value="' + key.id_ciudad + '"]').attr("selected", true);
+                        $('#Id_Estado option[value="' + key.id_estado + '"]').attr("selected", true);
+                        $("#Id_Ciudad").change();
+                        $("#Id_Estado").change();
+                    }
+                };
+            });
+
+        }
+
         $(window).ready(function () {
             getCatalogos();
             $("#frmRegister").submit(function (event) {
@@ -226,36 +270,36 @@
         function getCatalogos() {
             $.get("/Catalogs/Geography/State/getState", function (res) {
                 dataState = res;
-                $("#Id_Estado").empty();
-                $.each(dataState, function (item, key) {
-                    if (parseInt(key.estatus) == 1) {
-                        $("#Id_Estado").append(`<option value="${key.id}">${key.nombre}</option>`);
-                    };
-                });
+                //$("#Id_Estado").empty();
+                //$.each(dataState, function (item, key) {
+                //    if (parseInt(key.estatus) == 1) {
+                //        $("#Id_Estado").append(`<option value="${key.id}">${key.nombre}</option>`);
+                //    };
+                //});
             }).fail(function (error) {
                 dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
             });
 
             $.get("/Catalogs/Geography/City/getCity", function (res) {
                 dataCity = res;
-                $("#Id_Ciudad").empty();
-                $.each(dataCity, function (item, key) {
-                    if (parseInt(key.estatus) == 1) {
-                        $("#Id_Ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
-                    };
-                });
+                //$("#Id_Ciudad").empty();
+                //$.each(dataCity, function (item, key) {
+                //    if (parseInt(key.estatus) == 1) {
+                //        $("#Id_Ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
+                //    };
+                //});
             }).fail(function (error) {
                 dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
             });
 
             $.get("/Catalogs/Geography/Colonies/getColonies", function (res) {
                 dataColonies = res;
-                $("#Id_Colonia").empty();
-                $.each(dataColonies, function (item, key) {
-                    if (parseInt(key.estatus) == 1) {
-                        $("#Id_Colonia").append(`<option value="${key.id}">${key.nombre}</option>`);
-                    };
-                });
+                //$("#Id_Colonia").empty();
+                //$.each(dataColonies, function (item, key) {
+                //    if (parseInt(key.estatus) == 1) {
+                //        $("#Id_Colonia").append(`<option value="${key.id}">${key.nombre}</option>`);
+                //    };
+                //});
             }).fail(function (error) {
                 dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
             });

@@ -272,7 +272,16 @@
                 if (parseInt(@id) == 0) {
                     $.post("/Clients/setClients", jsonData, function (res) {
                         dToast("success", "Registro guardado exitosamente.", "Registrado");
-                        $(location).attr('href', '/Clients/formClients/' + res.id);
+                        setTimeout(function () {
+                            $(location).attr('href', '/Clients/formClients/' + res.id);
+                        }, 500);
+
+                        //if (res != null) {
+                        //    //var newurl = window.location.protocol + "//" + window.location.Host + window.location.pathname + '/'+res.id;
+                        //    //window.history.pushState({ path: newurl }, '', newurl);
+                        //    window.history.replaceState(null, null, window.location.pathname+res.id);
+                        //    valId();
+                        //}
                     }).fail(function (error) {
                         dToast("error", "Error al tratar de guardar el registro", "Error");
                         $(".guardar").attr("disabled", false);
