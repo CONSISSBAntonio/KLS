@@ -1376,19 +1376,19 @@ namespace KLS_API.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Alto")
-                        .HasColumnType("decimal(18,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Ancho")
-                        .HasColumnType("decimal(18,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Largo")
-                        .HasColumnType("decimal(18,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Peso")
-                        .HasColumnType("decimal(18,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("PesoVolumetrico")
-                        .HasColumnType("decimal(18,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("TravelId")
                         .HasColumnType("int");
@@ -1410,7 +1410,7 @@ namespace KLS_API.Migrations
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<decimal>("Costo")
-                        .HasColumnType("decimal(18,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("IdAerolinea")
                         .HasColumnType("int");
@@ -1443,7 +1443,7 @@ namespace KLS_API.Migrations
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<decimal>("Precio")
-                        .HasColumnType("decimal(18,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("TravelId")
                         .HasColumnType("int");
@@ -1465,7 +1465,7 @@ namespace KLS_API.Migrations
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<decimal>("CostoTotal")
-                        .HasColumnType("decimal(18,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("DireccionDestinatario")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -1510,7 +1510,7 @@ namespace KLS_API.Migrations
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<decimal>("PrecioClienteTotal")
-                        .HasColumnType("decimal(18,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("ReferenciaDos")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -1536,6 +1536,9 @@ namespace KLS_API.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("IdEquipo")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdUnidad")
                         .HasColumnType("int");
 
                     b.Property<int>("ServicesId")
