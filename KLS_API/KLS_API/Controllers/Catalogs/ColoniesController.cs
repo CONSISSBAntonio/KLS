@@ -1,11 +1,13 @@
 ﻿using KLS_API.Context;
+using KLS_API.Helpers;
 using KLS_API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace KLS_API.Controllers.Catalogs
 {
@@ -28,6 +30,28 @@ namespace KLS_API.Controllers.Catalogs
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("prueba")]
+        public ActionResult prueba([FromQuery] Paginacion paginacion)
+        {
+            try
+            {
+                var queryable = context.Cat_Colonia.AsQueryable();
+                HttpContext.InsertarParametrosPaginacionEnRespuesta(queryable, paginacion.CantidadAMostrar);
+                double conteo = queryable.Count();
+
+                var colonias = new { 
+                    colonias = queryable.Paginar(paginacion).ToList(),
+                    total = conteo
+                };
+                return Ok(colonias);
+
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message);
             }
         }
 

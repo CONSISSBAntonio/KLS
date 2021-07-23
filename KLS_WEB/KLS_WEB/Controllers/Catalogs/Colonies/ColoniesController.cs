@@ -25,12 +25,27 @@ namespace KLS_WEB.Controllers.Catalogs.Colonies
         {
             return View(this._UrlView + "index.cshtml");
         }
+        class colonia
+        {
+            public List<colonias> colonias { get; set; }
+            public int total { get; set; }
+        };
+
+        class colonias
+        { 
+            public int id { get; set; }
+            public int id_estado { get; set; }
+            public int id_ciudad { get; set; }
+            public string cp { get; set; }
+            public string nombre { get; set; }
+            public int estatus { get; set; }
+        }
 
         [Route("getColonies")]
-        public async Task<JsonResult> Get(Cat_Colonia dataModel)
+        public async Task<JsonResult> Get(Paginacion paginacion)
         {
-            List<Cat_Colonia> dataReport;
-            dataReport = await this.AppContext.Execute<List<Cat_Colonia>>(MethodType.GET, _UrlApi, dataModel);
+            colonia dataReport;
+            dataReport = await this.AppContext.Execute<colonia>(MethodType.GET, _UrlApi+ "/prueba?Pagina="+paginacion.Pagina+"&CantidadAMostrar="+paginacion.CantidadAMostrar, null);
             return Json(dataReport);
         }
 

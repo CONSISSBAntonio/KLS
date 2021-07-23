@@ -113,7 +113,6 @@ body, label {
 
 .bg-white {
     background-color: white;
-
 }
 
 .bg-light-grey {
@@ -272,6 +271,7 @@ form .form-group {
         flex: 1;
         background-color: #f7f7f7;
         text-align: center;
+        width: 50% !important;
     }
 
     .wrapper > .data-content .title {
@@ -306,7 +306,7 @@ form .form-group {
 
     .left-bar.expand {
         /*width: 240px !important;*/
-        width: 14% !important;
+        width: 17% !important;
     }
 
     .left-bar.expand .expand-control {
@@ -315,7 +315,7 @@ form .form-group {
 
         .left-bar.expand .bar-container {
             /*width: 240px;*/
-            width: 14% !important;
+            width: 17% !important;
         }
 
     .left-bar.expand .arrow-bar {
@@ -391,4 +391,18 @@ li, .selection {
 
 .nav-pills .nav-link {
     border-radius: 0rem;
+}
+
+.select2-selection--single .select2-selection__rendered {
+    font-size: 12px !important;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }

@@ -64,13 +64,13 @@
                             </select>
                         </div>*@
                         <div class="col-md-6">
-                            <label class="">Ruta origen</label>
+                            <label class="">Estado origen</label>
                             <select class="form-control form-control-md" id="Estado" style="width:100%;font-size:6px;" onchange="selectCiudad();">
                                 <option value="0">Selecciona una opción</option>
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label class="">Ruta origen</label>
+                            <label class="">Ciudad origen</label>
                             <select class="form-control form-control-md" id="Ciudad" style="width:100%;font-size:6px;" onchange="selectRuta();">
                                 <option value="0">Selecciona una opción</option>
                             </select>
@@ -197,8 +197,8 @@
                     //let indice = catRutas.findIndex(service => service.id == idRut);
                     //if (indice >= 0) {
                     if (idEstado == key.id_estadoorigen && idCiudad == key.id_ciudadorigen) {
-                        let indice_cd = catCiudad.findIndex(service => service.id === key.id_ciudaddestino);
-                        let indice_ed = catEstado.findIndex(service => service.id === key.id_estadodestino);
+                        let indice_cd = catCiudad.findIndex(service => service.id === key.id_ciudadorigen);
+                        let indice_ed = catEstado.findIndex(service => service.id === key.id_estadoorigen);
                         $("#Id_Ruta").append(`<option value="${key.id}">Estado destino: ${catEstado[indice_ed].nombre}--Ciudad destino:${catCiudad[indice_cd].nombre}</option>`);
                     }
                     //}
@@ -288,6 +288,10 @@
 
         function showModal(titulo = "Title", accion, idEditar = 0) {
             $('#frmRegister').trigger("reset");
+            $("#Estado").change();
+            $("#Ciudad").change();
+            $("#Id_Ruta").change();
+
             $(".guardar").html(accion);
             $("#titulo-modal").empty("");
             $("#titulo-modal").html(titulo);
@@ -295,8 +299,19 @@
             if (accion == "Editar") {
                 try {
                     let indice = DataAirlines.findIndex(service => service.id === idEditar);
+                    let rutaI = catRutas.findIndex(service => parseInt(service.id) === parseInt(DataAirlines[indice].id_Ruta));
+                    console.log(catRutas);
+                    console.log(DataAirlines[indice]);
                     $("#Costo").val(DataAirlines[indice].costo);
+                    $('#Estado option[value="' + catRutas[rutaI].id_estadoorigen + '"]').attr("selected", true);
+                    $("#Estado").change();
+
+                    $('#Ciudad option[value="' + catRutas[rutaI].id_ciudadorigen + '"]').attr("selected", true);
+                    $("#Ciudad").change();
+
                     $('#Id_Ruta option[value="' + DataAirlines[indice].id_Ruta + '"]').attr("selected", true);
+                    $("#Id_Ruta").change();
+
                     $('#Estatus option[value="' + DataAirlines[indice].estatus + '"]').attr("selected", true);
                     $("#modalDiv").modal("show");
                 } catch (error) {

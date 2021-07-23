@@ -177,12 +177,16 @@
         }
 
         function updateContainer() {
-            var $containerHeight = $(window).width();
+            var $containerWidth = $(window).width();
+            var $containerHeight = $(window).height();
+
+            console.log($containerWidth);
             console.log($containerHeight);
-            if ($containerHeight <= 1284) {
+
+            if ($containerWidth <= 1284) {
                 $(".left-bar").removeClass("expand");
             }
-            if ($containerHeight > 1285) {
+            if ($containerWidth > 1285) {
                 $(".left-bar").addClass("expand");
                 eventHide();
             }
@@ -209,6 +213,7 @@
                         "next": "Siguiente",
                         "previous": "Anterior"
                     }
+
                 },
             });
         }

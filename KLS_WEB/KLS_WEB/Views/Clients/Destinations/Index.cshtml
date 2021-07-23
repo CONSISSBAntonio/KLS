@@ -74,7 +74,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="">Estado</label>
-                                <select class="form-control form-control-sm" name="Id_Estado" id="Id_Estado">
+                                <select class="form-control form-control-sm" name="Id_Estado" id="Id_Estado" onchange="setCiudad(this.value);">
                                     <option value="0">Selecciona</option>
                                 </select>
                             </div>
@@ -82,7 +82,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="">Ciudad</label>
-                                <select class="form-control form-control-sm" name="Id_Ciudad" id="Id_Ciudad">
+                                <select class="form-control form-control-sm" name="Id_Ciudad" id="Id_Ciudad" onchange="setColonias(this.value);">
                                     <option value="0">Selecciona</option>
                                 </select>
                             </div>
@@ -90,7 +90,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="">Colonia</label>
-                                <select class="form-control form-control-sm" name="Id_Colonia" id="Id_Colonia">
+                                <select class="form-control form-control-sm" name="Id_Colonia" id="Id_Colonia"  onchange="setCp(this.value);">
                                     <option value="0">Selecciona</option>
                                 </select>
                             </div>
@@ -145,39 +145,52 @@
 
         function searcCP() {
             var codigoP = $("#Cp").val();
-
-            $("#Id_Estado").empty();
-            $("#Id_Estado").append(`<option value="0">Selecciona una opción</option>`);
-            $.each(dataState, function (item, key) {
-                if (parseInt(key.estatus) == 1) {
-                    $("#Id_Estado").append(`<option value="${key.id}">${key.nombre}</option>`);
-                };
-            });
-
-            $("#Id_Ciudad").empty();
-            $("#Id_Ciudad").append(`<option value="0">Selecciona una opción</option>`);
-            $.each(dataCity, function (item, key) {
-                if (parseInt(key.estatus) == 1) {
-                    $("#Id_Ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
-                };
-            });
-
-            $("#Id_Colonia").empty();
             $.each(dataColonies, function (item, key) {
-                if (parseInt(key.estatus) == 1) {
-                    if (parseInt(key.cp) == parseInt(codigoP)) {
-                        console.log(key);
-                        $("#Id_Colonia").append(`<option value="${key.id}">${key.nombre}</option>`);
-                        $('#Id_Ciudad option[value="' + key.id_ciudad + '"]').attr("selected", true);
-                        $('#Id_Estado option[value="' + key.id_estado + '"]').attr("selected", true);
-                        $("#Id_Ciudad").change();
-                        $("#Id_Estado").change();
-                        $("#Id_Colonia").change();
-                    }
+                if (parseInt(key.estatus) == 1 && parseInt(key.cp) == parseInt(codigoP)) {
+                    $('#Id_Estado option[value="' + key.id_estado + '"]').attr("selected", true);
+                    setCiudad(key.id_estado);
+                    $("#Id_Estado").change();
+                    $('#Id_Ciudad option[value="' + key.id_ciudad + '"]').attr("selected", true);
+                    $("#Id_Ciudad").change();
+                    setColonias(key.id_ciudad);
+                    $("#Id_Colonia").change();
                 };
             });
 
         }
+
+        function setCp(id) {
+            let indice = dataColonies.findIndex(service => service.id == id);
+            if (parseInt(id) != 0) {
+                if (parseInt(indice) >= 0) {
+                    $("#Cp").val(dataColonies[indice].cp);
+                } else {
+                    $("#Cp").val("");
+                    dToast("info", "No se encontro ninguna colonia", "Atención");
+                }
+            }
+        }
+
+        function setColonias(id) {
+            $("#Id_Colonia").empty();
+            $("#Id_Colonia").append(`<option value="0">Selecciona una opción</option>`);
+            $.each(dataColonies, function (item, key) {
+                if (parseInt(key.estatus) == 1 && parseInt(id) == parseInt(key.id_ciudad)) {
+                    $("#Id_Colonia").append(`<option value="${key.id}">${key.nombre}</option>`);
+                };
+            });
+        }
+
+        function setCiudad(id) {
+            $("#Id_Ciudad").empty();
+            $("#Id_Ciudad").append(`<option value="0">Selecciona una opción</option>`);
+            $.each(dataCity, function (item, key) {
+                if (parseInt(key.estatus) == 1 && parseInt(id) == parseInt(key.id_estado)) {
+                    $("#Id_Ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
+                };
+            });
+        }
+
 
         $(window).ready(function () {
             getCatalogos();
@@ -186,27 +199,36 @@
                 var jsonData = convertJson($("#frmRegister"));
                 jsonData["Id_Cliente"] = @id;
                 console.log(jsonData);
-                if (parseInt($("#idEditar").val()) != 0) {
-                    $.post("/Clients/Destinations/putDestino", jsonData, function (res) {
-                        console.log(res);
-                        loadTable();
-                        dToast("success", "Registro actualizado exitosamente.", "Actualizado");
-                        $(".guardar").attr("disabled", false);
-                    }).fail(function (error) {
-                        dToast("error", "Error al tratar de guardar el registro", "Error");
-                        $(".guardar").attr("disabled", false);
-                    });
+                
+
+                if (parseInt($("#Id_Ciudad").val()) != 0 && parseInt($("#Id_Estado").val()) != 0 && parseInt($("#Id_Colonia").val()) != 0) {
+                    if (parseInt($("#idEditar").val()) != 0) {
+                        $.post("/Clients/Destinations/putDestino", jsonData, function (res) {
+                            console.log(res);
+                            loadTable();
+                            dToast("success", "Registro actualizado exitosamente.", "Actualizado");
+                            $(".guardar").attr("disabled", false);
+                        }).fail(function (error) {
+                            dToast("error", "Error al tratar de guardar el registro", "Error");
+                            $(".guardar").attr("disabled", false);
+                        });
+                    } else {
+                        $.post("/Clients/Destinations/setDestino", jsonData, function (res) {
+                            loadTable();
+                            dToast("success", "Registro guardado exitosamente.", "Registrado");
+                            $(".guardar").attr("disabled", false);
+                            $('#frmRegister').trigger("reset");
+                        }).fail(function (error) {
+                            dToast("error", "Error al tratar de guardar el registro", "Error");
+                            $(".guardar").attr("disabled", false);
+                        });
+                    }
                 } else {
-                    $.post("/Clients/Destinations/setDestino", jsonData, function (res) {
-                        loadTable();
-                        dToast("success", "Registro guardado exitosamente.", "Registrado");
-                        $(".guardar").attr("disabled", false);
-                        $('#frmRegister').trigger("reset");
-                    }).fail(function (error) {
-                        dToast("error", "Error al tratar de guardar el registro", "Error");
-                        $(".guardar").attr("disabled", false);
-                    });
+                    dToast("error", "Selecciona una opción", "Error");
                 }
+                   
+
+
             });
 
         });
@@ -274,12 +296,13 @@
         function getCatalogos() {
             $.get("/Catalogs/Geography/State/getState", function (res) {
                 dataState = res;
-                //$("#Id_Estado").empty();
-                //$.each(dataState, function (item, key) {
-                //    if (parseInt(key.estatus) == 1) {
-                //        $("#Id_Estado").append(`<option value="${key.id}">${key.nombre}</option>`);
-                //    };
-                //});
+                $("#Id_Estado").empty();
+                $("#Id_Estado").append(`<option value="0">Selecciona una opción</option>`);
+                $.each(dataState, function (item, key) {
+                    if (parseInt(key.estatus) == 1) {
+                        $("#Id_Estado").append(`<option value="${key.id}">${key.nombre}</option>`);
+                    };
+                });
             }).fail(function (error) {
                 dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
             });

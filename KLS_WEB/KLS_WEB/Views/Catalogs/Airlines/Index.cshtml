@@ -22,14 +22,10 @@
         </div>
     </div>
 
-    <div class="p-4 shadow bg-white">
+    <div class="p-4 shadow bg-white" style="overflow-x: auto; overflow-y: hidden;">
         <table id="table" class="table table-striped table-bordered display table-hover table-viajes" width="100%">
             <thead>
                 <tr>
-                    <th>Nombre</th>
-                    <th>Nombre</th>
-                    <th>Nombre</th>
-                    <th>Nombre</th>
                     <th>Nombre</th>
                     <th>Teléfonos</th>
                     <th>Dept.</th>
@@ -191,10 +187,6 @@
                     $("#table-info").append(`
                              <tr>
                                 <td>${nCon(key.nombre)}</td>
-<td>${nCon(key.nombre)}</td>
-<td>${nCon(key.nombre)}</td>
-<td>${nCon(key.nombre)}</td>
-<td>${nCon(key.nombre)}</td>
                                 <td>${nCon(key.telefono)}</td>
                                 <td>${nCon(key.departamento)}</td>
                                 <td>${nCon(key.contactos)}</td>
