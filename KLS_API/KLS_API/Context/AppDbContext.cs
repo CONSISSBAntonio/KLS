@@ -60,5 +60,6 @@ namespace KLS_API.Context
         public DbSet<Services> Servicios { get; set; }
         public DbSet<Unidad> Unidades { get; set; }
         public DbSet<Mercancia> Mercancias { get; set; }
+        public DbSet<Historial> Historial { get; set; }
     }
 }

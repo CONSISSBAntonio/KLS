@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="~/css/toastr.css">
     <link href="/css/dataTable.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/4.0.2/timeago.full.min.js" integrity="sha512-wb3lqal2VtYhmlPAr232VP+Zus676CFAEYdywxIUSxG6F/X9WhN6SpREkWUdwBvMpd6gCKuKTGHhdum6m1wOvQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     @RenderSection("Styles", required: false)
 </head>
 <body>
@@ -159,6 +160,26 @@
             $(window).resize(function () {
                 updateContainer();
             });
+
+            const localeFunc = (number, index, totalSec) => {
+                return [
+                    ['JUSTO AHORA', 'JUSTO AHORA'],
+                    ['HACE %s SEGUNDOS', 'EN %s SEGUNDOS'],
+                    ['HACE 1 MINUTO', 'EN 1 MINUTO'],
+                    ['HACE %s MINUTOS', 'EN %s MINUTOS'],
+                    ['HACE 1 HORA', 'EN 1 HORA'],
+                    ['HACE %s HORAS', 'EN %s HORAS'],
+                    ['HACE 1 DIA', 'EN 1 DIA'],
+                    ['HACE %s DIAS', 'EN %s DIAS'],
+                    ['HACE 1 SEMANA', 'EN 1 SEMANA'],
+                    ['HACE %s SEMANAS', 'EN %s SEMANAS'],
+                    ['HACE 1 MES', 'EN 1 MES'],
+                    ['HACE %s MESES', 'EN %s MESES'],
+                    ['HACE 1 AÑO', 'EN 1 AÑO'],
+                    ['HACE %s AÑOS', 'EN %s AÑOS']
+                ][index];
+            };
+            timeago.register('es-MX', localeFunc);
         });
 
         function hideMenu() {
@@ -194,6 +215,7 @@
 
         function dTable(table) {
             $('.' + table).DataTable({
+                bDestroy: true,
                 language: {
                     "decimal": "",
                     "emptyTable": "No hay información",
@@ -213,8 +235,7 @@
                         "next": "Siguiente",
                         "previous": "Anterior"
                     }
-
-                },
+                }
             });
         }
 

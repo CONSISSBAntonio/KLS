@@ -276,10 +276,12 @@
                     </div>
                     <div class="row mt-1">
                         <div class="col-3">
-                            <label for="addregiono"
-                                   class="form-label size-12 font-weight-bold float-left">REGIÓN</label>
-                            <select class="form-control form-control-sm" id="addregiono" name="regionoId" onchange="{ console.log(this.value); }" style="width: 100%;">
-                                <option value="0">SELECCIONA</option>
+                            <label for="addnivelo" class="form-label size-12 font-weight-bold float-left">NIVEL</label>
+                            <select class="form-control form-control-sm" id="addnivelo" name="nivelorigen" onchange="{ console.log(this.value); }" style="width: 100%;">
+                                <option value="0" selected disabled>SELECCIONA</option>
+                                <option value="region">REGIÓN</option>
+                                <option value="estado">ESTADO</option>
+                                <option value="ciudad">CIUDAD</option>
                             </select>
                         </div>
                         <div class="col-3">
@@ -290,17 +292,14 @@
                             </select>
                         </div>
                         <div class="col-3">
-                            <label for="addciudadoId"
-                                   class="form-label size-12 font-weight-bold float-left">CIUDAD</label>
-                            <select class="form-control form-control-sm" id="addciudadoId" name="ciudadoId" onchange="{ console.log(this.value); }" style="width: 100%;">
+                            <label for="addciudadoId" class="form-label size-12 font-weight-bold float-left">CIUDAD</label>
+                            <select class="form-control form-control-sm" id="addciudadoId" name="ciudadoId" onchange="{ console.log(this.value); }" style="width: 100%;" disabled>
                                 <option value="0">SELECCIONA</option>
                             </select>
                         </div>
                         <div class="col-3">
-                            <label for="addtoleranciao"
-                                   class="form-label size-12 font-weight-bold float-left">TOLERANCIA</label>
-                            <input type="number" class="form-control form-control-sm" id="addtoleranciao"
-                                   name="toleranciao" />
+                            <label for="addtoleranciao" class="form-label size-12 font-weight-bold float-left">TOLERANCIA</label>
+                            <input type="number" class="form-control form-control-sm" id="addtoleranciao" name="toleranciao" disabled />
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -310,10 +309,12 @@
                     </div>
                     <div class="row mt-1">
                         <div class="col-3">
-                            <label for="addregiond"
-                                   class="form-label size-12 font-weight-bold float-left">REGIÓN</label>
-                            <select class="form-control form-control-sm" id="addregiond" name="regiondId" onchange="{ console.log(this.value); }" style="width: 100%;">
-                                <option value="0">SELECCIONA</option>
+                            <label for="addniveld" class="form-label size-12 font-weight-bold float-left">NIVEL</label>
+                            <select class="form-control form-control-sm" id="addniveld" name="niveldestino" onchange="{ console.log(this.value); }" style="width: 100%;">
+                                <option value="0" selected disabled>SELECCIONA</option>
+                                <option value="region">REGIÓN</option>
+                                <option value="estado">ESTADO</option>
+                                <option value="ciudad">CIUDAD</option>
                             </select>
                         </div>
                         <div class="col-3">
@@ -324,17 +325,14 @@
                             </select>
                         </div>
                         <div class="col-3">
-                            <label for="addciudaddId"
-                                   class="form-label size-12 font-weight-bold float-left">CIUDAD</label>
-                            <select class="form-control form-control-sm" id="addciudaddId" name="ciudaddId" onchange="{ console.log(this.value); }" style="width: 100%;">
+                            <label for="addciudaddId" class="form-label size-12 font-weight-bold float-left">CIUDAD</label>
+                            <select class="form-control form-control-sm" id="addciudaddId" name="ciudaddId" onchange="{ console.log(this.value); }" style="width: 100%;" disabled>
                                 <option value="0">SELECCIONA</option>
                             </select>
                         </div>
                         <div class="col-3">
-                            <label for="addtoleranciad"
-                                   class="form-label size-12 font-weight-bold float-left">TOLERANCIA</label>
-                            <input type="number" class="form-control form-control-sm" id="addtoleranciad"
-                                   name="toleranciad" />
+                            <label for="addtoleranciad" class="form-label size-12 font-weight-bold float-left">TOLERANCIA</label>
+                            <input type="number" class="form-control form-control-sm" id="addtoleranciad" name="toleranciad" disabled />
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary mt-3 float-left" id="agregar">AGREGAR</button>
@@ -614,11 +612,11 @@
             //});
             dTable("table-demand");
             $('#table_length').html(`
-            <a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary float-right" onclick="{ $('#modaldemanda').modal('show'); }">
-                <span class="material-icons">
-                    add
-                </span>
-            </a>`).show();
+                <a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary float-right" onclick="{ $('#modaldemanda').modal('show'); }">
+                    <span class="material-icons">
+                        add
+                    </span>
+                </a>`).show();
         }
     </script>
 }

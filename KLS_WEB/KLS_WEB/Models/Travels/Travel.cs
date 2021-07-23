@@ -21,6 +21,7 @@ namespace KLS_WEB.Models.Travels
         public string Referencia2 { get; set; }
         public string Referencia3 { get; set; }
         public int Ruta { get; set; }
+        public int TiempoRuta { get; set; }
         public string Servicios { get; set; }
         public decimal TerrestreNacionalPrecio { get; set; }
         public decimal TerrestreNacionalCosto { get; set; }
@@ -32,6 +33,8 @@ namespace KLS_WEB.Models.Travels
         public string Unidad { get; set; }
         public string Folio { get; set; }
         public string Estatus { get; set; }
+        public string SubEstatus { get; set; }
+        public DateTime StatusUpdated { get; set; }
 
         //Detail
         public string NombreCliente { get; set; }

@@ -62,6 +62,7 @@ namespace KLS_WEB.Controllers.System
                 HttpContext.Session.SetString("Apaterno", modelStateError.Apaterno);
                 HttpContext.Session.SetString("Amaterno", modelStateError.Amaterno);
                 HttpContext.Session.SetString("Id", modelStateError.Id);
+                HttpContext.Session.SetString("UserFN", string.Concat(modelStateError.Nombre, " ", modelStateError.Apaterno));
                 return RedirectToAction("Index", "Home");
             }
             return View(user);

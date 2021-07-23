@@ -99,5 +99,32 @@ namespace KLS_API.Controllers.Catalogs
             }
         }
 
+        [HttpGet("[action]")]
+        public IActionResult DT()
+        {
+            try
+            {
+                var colonias = (from colonia in context.Cat_Colonia
+                               where colonia.estatus == 1
+                               join estado in context.Cat_Estado on colonia.id_estado equals estado.id
+                               join ciudad in context.Cat_Ciudad on colonia.id_ciudad equals ciudad.id
+                               select new
+                               {
+                                   colonia.id,
+                                   estado = estado.nombre,
+                                   ciudad = ciudad.nombre,
+                                   colonia.cp,
+                                   colonia.nombre,
+                                   colonia.estatus
+                               }).ToList();
+
+                return Ok(colonias);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
     }
 }

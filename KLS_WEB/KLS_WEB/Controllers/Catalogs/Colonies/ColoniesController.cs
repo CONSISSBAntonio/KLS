@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KLS_WEB.Models.DT;
+using System.IO;
 
 namespace KLS_WEB.Controllers.Catalogs.Colonies
 {
@@ -32,7 +34,7 @@ namespace KLS_WEB.Controllers.Catalogs.Colonies
         };
 
         class colonias
-        { 
+        {
             public int id { get; set; }
             public int id_estado { get; set; }
             public int id_ciudad { get; set; }
@@ -45,7 +47,7 @@ namespace KLS_WEB.Controllers.Catalogs.Colonies
         public async Task<JsonResult> Get(Paginacion paginacion)
         {
             colonia dataReport;
-            dataReport = await this.AppContext.Execute<colonia>(MethodType.GET, _UrlApi+ "/prueba?Pagina="+paginacion.Pagina+"&CantidadAMostrar="+paginacion.CantidadAMostrar, null);
+            dataReport = await this.AppContext.Execute<colonia>(MethodType.GET, _UrlApi + "/prueba?Pagina=" + paginacion.Pagina + "&CantidadAMostrar=" + paginacion.CantidadAMostrar, null);
             return Json(dataReport);
         }
 
@@ -65,6 +67,70 @@ namespace KLS_WEB.Controllers.Catalogs.Colonies
             Cat_Colonia dataReport;
             dataReport = await this.AppContext.Execute<Cat_Colonia>(MethodType.PUT, _UrlApi, dataModel);
             return Json(dataReport);
+        }
+
+        [HttpPost]
+        [Route("[action]")]
+        public async Task<JsonResult> DT(DataTablesParameters param)
+        {
+            IEnumerable<ColoniaDT> colonias = await AppContext.Execute<List<ColoniaDT>>(MethodType.GET, Path.Combine(_UrlApi, "DT"), null);
+
+            long total = colonias.Count();
+
+            #region Búsqueda
+            if (!string.IsNullOrEmpty(param.search.value[0]))
+            {
+                string keyword = param.search.value[0].ToLower();
+
+                colonias = colonias.Where(x => x.Nombre.ToLower().Contains(keyword) ||
+                x.Estado.ToLower().Contains(keyword) ||
+                x.Ciudad.ToLower().Contains(keyword) ||
+                x.CP.ToString().Contains(keyword));
+            }
+
+            long totalFiltered = colonias.Count();
+            #endregion
+
+            #region Ordenamiento
+            int columnId = param.order[0].column[0];
+
+            Func<ColoniaDT, string> orderFunction = (x => columnId == 0 ? x.Estado :
+            columnId == 1 ? x.Ciudad :
+            columnId == 2 ? x.CP.ToString() : x.Nombre);
+
+            if (param.order[0].dir[0] == "asc")
+            {
+                colonias = colonias.OrderBy(orderFunction);
+            }
+            else
+            {
+                colonias = colonias.OrderByDescending(orderFunction);
+            }
+            #endregion
+
+            #region Paginado
+            colonias.Skip(param.start).Take(param.length);
+            #endregion
+
+            #region DataTable
+            List<ColoniaDT> data = colonias.Select(x => new ColoniaDT
+            {
+                Id = x.Id,
+                Estado = x.Estado,
+                Ciudad = x.Ciudad,
+                CP = x.CP,
+                Nombre = x.Nombre,
+                Estatus = x.Estatus
+            }).ToList();
+            #endregion
+
+            return Json(new
+            {
+                aaData = data,
+                param.draw,
+                iTotalRecords = total,
+                iTotalDisplayRecords = totalFiltered
+            });
         }
     }
 }

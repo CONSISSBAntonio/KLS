@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Rotativa;
+using Rotativa.AspNetCore;
+using Microsoft.AspNetCore.Http;
 
 namespace KLS_WEB.Controllers.Travels
 {
@@ -24,6 +27,54 @@ namespace KLS_WEB.Controllers.Travels
         public TravelsController(IAppContextService _AppContext)
         {
             this.AppContext = _AppContext;
+        }
+
+        [Route("SetHistorial")]
+        public void SetHistorial(string accion)
+        {
+            int TravelId = (int)TempData.Peek("TravelId");
+            var UserName = HttpContext.Session.GetString("UserFN");
+            if (UserName != null && accion != null)
+            {
+                HistorialDTO historial = new HistorialDTO
+                {
+                    TravelId = TravelId,
+                    Registro = accion,
+                    Usuario = UserName,
+                    TimeCreated = DateTime.Now
+                };
+
+                AppContext.Execute<HistorialDTO>(MethodType.POST, Path.Combine(_UrlApi, "SetHistorial"), historial);
+            };
+
+        }
+
+        [Route("GetHistorial")]
+        public async Task<IActionResult> GetHistorial(string TravelId)
+        {
+            List<HistorialDTO> historial = await AppContext.Execute<List<HistorialDTO>>(MethodType.GET, Path.Combine(_UrlApi, "GetHistorial", TravelId), null);
+            return Json(historial);
+        }
+
+        [Route("CartaPorte")]
+        public IActionResult CartaPorte()
+        {
+            return new ViewAsPdf();
+        }
+
+        [Route("GetEstatus")]
+        public async Task<IActionResult> GetEstatus(int Id)
+        {
+            Travel travel = await AppContext.Execute<Travel>(MethodType.GET, Path.Combine(_UrlApi, "GetTravel", Id.ToString()), null);
+            return Json(travel);
+        }
+
+        [Route("UpdateStatus")]
+        public async Task<IActionResult> UpdateStatus(TravelDTO travelDTO)
+        {
+            TravelDTO travel = await AppContext.Execute<TravelDTO>(MethodType.PUT, Path.Combine(_UrlApi, "UpdateStatus"), travelDTO);
+            SetHistorial(travelDTO.Estatus.ToLower() == "cerrado" ? travelDTO.Estatus : string.Concat(travelDTO.Estatus, ", ", travelDTO.SubEstatus));
+            return Json(travel);
         }
 
         public IActionResult Index()
@@ -44,6 +95,7 @@ namespace KLS_WEB.Controllers.Travels
         {
             Travel travel = await AppContext.Execute<Travel>(MethodType.GET, Path.Combine(_UrlApi, "GetTravel", id.ToString()), null);
             TempData["TravelId"] = travel is null ? 0 : travel.Id;
+            TempData.Keep();
             return View(this._UrlView + (id == 0 ? "New.cshtml" : "Details.cshtml"), travel);
         }
 
@@ -51,7 +103,7 @@ namespace KLS_WEB.Controllers.Travels
         public async Task<JsonResult> PostMercancia(MercanciaDTO mercanciaDTO)
         {
             MercanciaDTO mercancia = await AppContext.Execute<MercanciaDTO>(MethodType.POST, Path.Combine(_UrlApi, "PostMercancia"), mercanciaDTO);
-
+            SetHistorial("mercancia actualizada");
             return Json(mercancia);
         }
 
@@ -73,6 +125,7 @@ namespace KLS_WEB.Controllers.Travels
         public async Task<JsonResult> DeleteService(string id)
         {
             ServicesDTO service = await AppContext.Execute<ServicesDTO>(MethodType.DELETE, Path.Combine(_UrlApi, "DeleteService", id), null);
+            SetHistorial(string.Concat(service.Nombre, ", servicio eliminado"));
             return Json(service);
         }
 
@@ -104,11 +157,16 @@ namespace KLS_WEB.Controllers.Travels
                     TipoViaje = dataModel.TipoViaje,
                     OrdenCompra = dataModel.OrdenCompra,
                     ReferenciaDos = dataModel.Referencia2,
-                    ReferenciaTres = dataModel.Referencia3
+                    ReferenciaTres = dataModel.Referencia3,
+                    SubEstatus = "Alta de Viaje",
+                    StatusUpdated = DateTime.Now
                 };
 
                 TravelDTO newTravel = await this.AppContext.Execute<TravelDTO>(MethodType.POST, _UrlApi, viaje);
                 ViajeId = newTravel.Id;
+                TempData["TravelId"] = ViajeId;
+                TempData.Keep();
+                SetHistorial("Alta de viaje");
             }
 
             if (dataModel.ServicesId != null)

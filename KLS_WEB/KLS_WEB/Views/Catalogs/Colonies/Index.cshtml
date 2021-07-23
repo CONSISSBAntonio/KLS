@@ -1,26 +1,25 @@
 ﻿@{
     ViewData["Title"] = "Colonias";
 }
-@section Styles{ 
+@section Styles{
     <style>
         .spinner {
-          border: 4px solid rgba(0, 0, 0, 0.1);
-          width: 36px;
-          height: 36px;
-          border-radius: 50%;
-          border-left-color: #09f;
-
-          animation: spin 1s ease infinite;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #09f;
+            animation: spin 1s ease infinite;
         }
 
         @@keyframes spin {
-          0% {
-            transform: rotate(0deg);
-          }
+            0% {
+                transform: rotate(0deg);
+            }
 
-          100% {
-            transform: rotate(360deg);
-          }
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 }
@@ -44,47 +43,19 @@
         </div>
     </div>
     <div class="p-4 shadow bg-white">
-        <div id="table_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-            <div class="row"><div class="col-sm-12 col-md-6"><div class="dataTables_length" id="table_length"><label>Mostrar <select name="table_length" aria-controls="table" class="custom-select custom-select-sm form-control form-control-sm"><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select> Entradas</label></div></div><div class="col-sm-12 col-md-6"><div id="table_filter" class="dataTables_filter"><label>Buscar<input type="search" class="form-control form-control-sm" placeholder="" aria-controls="table"></label></div></div></div><div class="row">
-                <div class="col-sm-12">
-                    <table id="table" class="table table-striped table-bordered display table-hover table-viajes no-footer dataTable" width="100%" role="grid" aria-describedby="table_info" style="width: 100%;">
-                        <thead>
-                            <tr>
-                                <th>Estado</th>
-                                <th>Ciudad Municipio</th>
-                                <th>CP</th>
-                                <th>Colonia</th>
-                                <th>Estatus</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-info"></tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12 col-md-5">
-                    <div class="dataTables_info" id="table_info" style="display:block;">
-                        Mostrando 1 a 1 de 1 Entradas
-                    </div>
-                </div>
-                <div class="col-sm-12 col-md-7">
-                    <div class="dataTables_paginate paging_simple_numbers" id="table_paginate">
-                        <ul class="pagination">
-                            <li class="paginate_button page-item previous" id="table_previous">
-                                <a href="#" aria-controls="table" data-dt-idx="0" tabindex="0" class="page-link" onclick="paginar('anterior');">Anterior</a>
-                            </li>
-                            <li class="paginate_button page-item active">
-                                <a href="#" aria-controls="table" data-dt-idx="1" tabindex="0" class="page-link"><span id="numerop">1</span></a>
-                            </li>
-                            <li class="paginate_button page-item next" id="table_next">
-                                <a href="#" aria-controls="table" data-dt-idx="2" tabindex="0" class="page-link" onclick="paginar('siguiente');">Siguiente</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <table id="table" class="table table-striped table-bordered display table-hover table-viajes no-footer dataTable" width="100%" role="grid" aria-describedby="table_info" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>Estado</th>
+                    <th>Ciudad Municipio</th>
+                    <th>CP</th>
+                    <th>Colonia</th>
+                    <th>Estatus</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="table-info"></tbody>
+        </table>
     </div>
 </div>
 
@@ -157,6 +128,7 @@
         var dataColonias = [];
 
         $(document).ready(function () {
+            DT();
             loadState();
             //$.get("Colonies/getColonies?", function (res) {
             //    console.log(res);
@@ -169,16 +141,18 @@
                 if (parseInt($("#id_estado").val()) != 0) {
                     if (parseInt($("#idEditar").val()) != 0) {
                         $.post("Colonies/putColonies", jsonData, function (res) {
-                            loadTable();
+                            //loadTable();
                             dToast("success", "Registro actualizado exitosamente.", "Registrado");
                             $(".guardar").attr("disabled", false);
+                            Table.draw();
                         }).fail(function (error) {
                             dToast("error", "Error al tratar de guardar el registro", "Error");
                             $(".guardar").attr("disabled", false);
                         });
                     } else {
                         $.post("Colonies/setColonies", jsonData, function (res) {
-                            loadTable();
+                            //loadTable();
+                            Table.draw();
                             dToast("success", "Se guardó el registro", "Registrado");
                             $(".guardar").attr("disabled", false);
                             $('#frmRegister').trigger("reset");
@@ -245,7 +219,7 @@
             $.get("City/getCity", function (res) {
                 if (res) {
                     catCiudad = res;
-                    loadTable();
+                    //loadTable();
                 }
             }).fail(function (error) {
                 dToast("error", "Error al obtener paises", "Atencion!");
@@ -270,70 +244,120 @@
         var Pagina = 1
         var CantidadAMostrar = 10
 
-        function paginar(paginador)
-        {
+        function paginar(paginador) {
             if (paginador == 'anterior') {
-                if (Pagina >= 2)
-                {
+                if (Pagina >= 2) {
                     Pagina = Pagina - 1;
-                    loadTable();
+                    //loadTable();
                 }
             } else {
                 Pagina = Pagina + 1;
-                loadTable();
+                //loadTable();
             }
 
             $("#numerop").empty();
             $("#numerop").append(Pagina);
         }
 
-        function loadTable() {
-            $("#table-info").empty();
-            $("#table-info").append(`<tr>
-                                        <td colspan="6">
-                                            <div style="float: left;">
-                                                <div class='spinner'></div>
-                                            </div>
-                                            <div style="float: left;padding-top:8px;">
-                                                <b style="padding:18px;">Cargando...</b>
-                                            </div>
-                                        </td>
-                                    </tr>`);
-            $.get("Colonies/getColonies", { "Pagina": Pagina, "CantidadAMostrar": CantidadAMostrar }, function (res) {
-                dataColonias = res.colonias;
-                $("#table_info").empty();
-                $("#table_info").append("Mostrando " + Pagina + " a " + CantidadAMostrar + " de " + res.total + " Registros");
-                $("#table-info").empty();
-                $.each(dataColonias, function (item, key) {
-                    console.log(key);
-                    let indice_e = catEstado.findIndex(service => service.id === key.id_estado);
-                    let indice_c = catCiudad.findIndex(service => service.id === key.id_ciudad);
-                    if (parseInt(indice_c) >= 0) {
-                        $("#table-info").append(`
-                            <tr>
-                            <td>${catEstado[indice_e].nombre}</td>
-                            <td>${catCiudad[indice_c].nombre}</td>
-                            <td>${nCon(key.cp)}</td>
-                            <td>${nCon(key.nombre)}</td>
-                            <td>`+ statusTable(key.estatus) + `</td>
-                            <td>
-                                <a href="#">
-                                    <span class="material-icons" onclick="showModal('EDITAR','Editar',${nCon(key.id)});">
-                                        mode_edit
-                                    </span>
-                                </a>
-                            </td>
-                        </tr>`);
-                    } else {
-                        //console.log(catCiudad[indice_c]);
+        //function loadTable() {
+        //    $("#table-info").empty();
+        //    $("#table-info").append(`<tr>
+        //                                <td colspan="6">
+        //                                    <div style="float: left;">
+        //                                        <div class='spinner'></div>
+        //                                    </div>
+        //                                    <div style="float: left;padding-top:8px;">
+        //                                        <b style="padding:18px;">Cargando...</b>
+        //                                    </div>
+        //                                </td>
+        //                            </tr>`);
+        //    $.get("Colonies/getColonies", { "Pagina": Pagina, "CantidadAMostrar": CantidadAMostrar }, function (res) {
+        //        dataColonias = res.colonias;
+        //        $("#table_info").empty();
+        //        $("#table_info").append("Mostrando " + Pagina + " a " + CantidadAMostrar + " de " + res.total + " Registros");
+        //        $("#table-info").empty();
+        //        $.each(dataColonias, function (item, key) {
+        //            console.log(key);
+        //            let indice_e = catEstado.findIndex(service => service.id === key.id_estado);
+        //            let indice_c = catCiudad.findIndex(service => service.id === key.id_ciudad);
+        //            if (parseInt(indice_c) >= 0) {
+        //                $("#table-info").append(`
+        //                    <tr>
+        //                    <td>${catEstado[indice_e].nombre}</td>
+        //                    <td>${catCiudad[indice_c].nombre}</td>
+        //                    <td>${nCon(key.cp)}</td>
+        //                    <td>${nCon(key.nombre)}</td>
+        //                    <td>`+ statusTable(key.estatus) + `</td>
+        //                    <td>
+        //                        <a href="#">
+        //                            <span class="material-icons" onclick="showModal('EDITAR','Editar',${nCon(key.id)});">
+        //                                mode_edit
+        //                            </span>
+        //                        </a>
+        //                    </td>
+        //                </tr>`);
+        //            } else {
+        //                //console.log(catCiudad[indice_c]);
+        //            }
+
+        //        });
+        //        //dTable("table-viajes");
+        //    }).fail(function (error) {
+        //        dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+        //    });
+        //    //filCiudad();
+        //}
+
+        DT = () => {
+            Table = $('#table').DataTable({
+                destroy: true,
+                responsive: true,
+                autoWidth: true,
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    type: 'POST',
+                    url: '/Catalogs/Geography/Colonies/DT'
+                },
+                columns: [
+                    { data: 'estado' },
+                    { data: 'ciudad' },
+                    { data: 'cp' },
+                    { data: 'nombre' },
+                    {
+                        data: 'estatus',
+                        render: (estatus, type, full, meta) => estatus === 1 ? 'ACTIVO' : 'INACTIVO'
+                    },
+                    {
+                        data: 'id',
+                        render: (Id, type, full, meta) => `<a href="#">
+                                                <span class="material-icons" onclick="showModal('EDITAR','Editar',${Id});">
+                                                    mode_edit
+                                                </span>
+                                            </a>`
                     }
-                    
-                });
-                //dTable("table-viajes");
-            }).fail(function (error) {
-                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+                ],
+                language: {
+                    "decimal": "",
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                }
             });
-            //filCiudad();
         }
     </script>
 } 

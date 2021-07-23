@@ -1,0 +1,402 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        table {
+            table-layout: fixed;
+            width: 100%;
+            word-break: break-all;
+            border-collapse: collapse;
+            font-size: 18px;
+        }
+
+        td, th {
+            border: 1px solid black;
+            padding: 0.3rem;
+        }
+
+        .saltodepagina {
+            page-break-after: always
+        }
+
+        .requisitos, .condiciones {
+            width: 19rem;
+        }
+
+            .condiciones p {
+                font-size: 12px;
+                text-align: justify;
+                line-height: 1;
+            }
+
+            .requisitos p {
+                margin-bottom: 0px;
+                margin-top: 0px;
+                padding-top: 0px;
+                padding-bottom: 0px;
+                font-size: 14px;
+                line-height: 1;
+            }
+    </style>
+</head>
+<body>
+    <div class="d-flex header mb-3">
+        <div class="d-flex mr-5">
+            <img src="~/img/KLSLogo.jpg" width="250" />
+        </div>
+        <div class="d-fle flex-column mr-5">
+            <h4 class="mb-0"><b>KLS S.A DE C.V.</b></h4>
+            <h5><u>RFC KLS150714AJ</u></h5> <br />
+            <p class="mb-0">AV. EUGENIO GARZA SADA #3820 433, 039,</p>
+            <p class="mt-0">NLE, MEX. CP. 64780</p>
+        </div>
+        <div class="d-flex flex-column">
+            <h5 class="text-center"><b>CARTA PORTE</b></h5>
+            <h5 class="m-0"><b>Folio Facturación: MTY-015694</b></h5>
+            <h5><b>Fecha: 29/06/2021</b></h5>
+            <h6><b>Lugar: MONTERREY</b></h6>
+        </div>
+    </div>
+
+    <div class="contenido">
+        <table>
+            <tbody>
+                <tr>
+                    <td colspan="3"><b>Ruta: Guadalajara - Monterrey</b></td>
+                    <td colspan="3"><b>Ejecutivo KLS: SAIDY SALAZAR</b></td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="text-center">
+                        <h5><b>ORIGEN</b></h5><br />
+                        <p>Calz. Lázaro Cárdenas 975, Colón Industrial, 44940 Guadalajara, Jal</p>
+                    </td>
+                    <td colspan="3" class="text-center">
+                        <h5><b>DESTINO</b></h5><br />
+                        <p>Macrocentro Monterrey</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6"><b>Plazo de entrega:</b></td>
+                </tr>
+                <tr>
+                    <td><b>Cantidad:</b></td>
+                    <td><b>Embalaje</b></td>
+                    <td><b>Descripción:</b></td>
+                    <td><b>Peso Kg:</b></td>
+                    <td><b>Volumen m2:</b></td>
+                    <td><b>Valor Declarado:</b></td>
+                </tr>
+                <tr>
+                    <td colspan="6"><b>Descripción del servicio:</b></td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <h5 class="text-center"><b>TRANSPORTISTA</b></h5><br />
+                        <b>Nombre:</b> KLS SA DE CV <br />
+                        <b>Dirección:</b> AV.EUGENIO GARZA SADA MAS PALOMAS #3820 <br /> <br />
+                        <b>Pedido: 92044507006 / 9204454992</b> <br />
+                        <h5 class="mt-5"><b>DATOS DE UNIDAD:</b></h5>
+
+                        T25 Placas: 276EY7 <br />
+                        R-0640 PLACAS: 80UC8Z <br />
+                        R-0440 PLACAS: 954UE2 <br />
+                        OP: ALDO GARCIA <br />
+                    </td>
+                    <td colspan="3">
+                        <b>CITA DE CARGA:</b> 29/06/2021 13:00 <br />
+                        <b>CITA DE DESCARGA:</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2"><b>Póliza de seguro:</b></td>
+                    <td><b>Maniobras:</b></td>
+                    <td colspan="3"><b>Subtotal: </b></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><b>Kilometraje:</b></td>
+                    <td><b>Embalaje: </b></td>
+                    <td colspan="3"><b>IVA 16%: </b></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><b>Flete: </b></td>
+                    <td><b>Otros: </b></td>
+                    <td colspan="3"><b>Total: </b></td>
+                </tr>
+                <tr>
+                    <td colspan="6">
+                        <h4 class="text-center"><b><u>Requisitos Especiales</u></b></h4> <br />
+                        <h5><b>IMPORTANTE</b></h5> <br />
+                        Si se presenta cualquier Incidencia de Robo, Accidente o Situación de riesgo se deberán de comunicar
+                        de inmediato y con alta prioridad al centro de Monitoreo de KLS. <br />
+                        <ul>
+                            <li><b>Teléfonos de contacto: </b>(044)81 1016-0540 / (044)81 1176-6530 / (044) 81 1250-7840</li>
+                            <li><b>Correo: </b> <u>klsmonitoreo@kls-logistics.com</u></li>
+                        </ul> <br />
+                        <h5><b>OTROS:</b></h5> <br /><br />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p class="saltodepagina"></p>
+
+    <div class="d-flex justify-content-between">
+        <div class="requisitos">
+            <p class="text-center mb-3">
+                <b>REQUISITOS GENERALES</b>
+            </p>
+
+            <p>- Portar Equipo de Protección Personal Completo.</p>
+
+            <p>1. Casco</p>
+            <p>2. Zapato de Seguridad</p>
+            <p>3. Chaleco Reflejante (verde)</p>
+            <p>4. Guantes</p>
+            <p>5. Lentes de Seguridad</p>
+            <p>6. Cubrebocas</p>
+            <p>7. Careta</p>
+            <p>8. Gel Antibacterial</p> <br />
+
+            <p>- Portar boligrafo propio.</p>
+            <p>- Llevar Carta Porte Impresa.</p>
+            <p>- Certificado de Fumigación.</p>
+            <p>- Póliza de Seguro Vigente.</p>
+            <p>- Tarjeta de Circulación de Tracto y Remolque(s).</p>
+            <p>- Licencia Vigente.</p>
+            <p>- SUA Vigente e impreso.</p>
+            <p>- Remolques Limpios y libres de olores.</p>
+            <p>- Presentar al menos 2 gatas de seguridad y colocarlas.</p>
+            <p>- Los Operadores deberán reportarse con el Número de Confirmación correspondiente a su viaje y a nombre de KLS.</p>
+            <p>- Favor de reportarse al menos 45 minutos previos a su cita de carga.</p>
+
+        </div>
+        <div class="requisitos">
+            <p class="text-center mb-1">
+                <b>REQUISITOS POR PROTOCOLO DE</b> <br />
+                <b>SEGURIDAD E HIGIENE POR COVID-19</b> <br />
+            </p>
+
+
+            <p>- Desinfectar manos antes de ingresar a carga o descarga.</p>
+            <p>- Evitar contacto con mobiliario del almacén/patio/planta.</p>
+            <p>- Respetar las áreas delimitadasen almacén/patio/planta.</p>
+            <p>- Mantener Distancia de al menos 1.5 mts con personal de almacén/patio/planta.</p>
+            <p>- Evitar la entrega mano a mano de documentos y dejarlos en las áreas establecidas por el almacén.</p>
+            <p>- Uso Obligatorio de Cubre bocas, careta y guantes.</p>
+            <p>- Se restringe el acceso a personas mayores a 60 años.</p>
+            <p>- Se restringe el acceso a personas embarazadas.</p>
+            <p>- Se restringen el acceso a personas con diagnóstico de Hipertensión Arterial, Diabetes, Mellitus, Enfermedad Cardíaca o Pulmonar Crónica, Inmunosupresión (adquirida o provocada), Insuficiencia Renal o Hépatica.</p>
+            <p>- Se restringe el acceso a personas con un índice de masa corporal mayor a 34.9</p>
+            <p>- Se restringe el acceso a personas con barba y/o bigote</p>
+
+        </div>
+        <div class="requisitos">
+            <p class="text-center mb-3">
+                <b>RECOMENDACIONES DE SEGURIDAD VIAL</b> <br />
+            </p>
+
+
+            <p>- No exceder los 85 km/h.</p>
+            <p>- Realizar mantenimiento preventivo periódicamente y que incluya sistema de frenos, eléctrico, iluminación, suspensión, así como el estado de los neumáticos.</p>
+            <p>- Realizar chequeo de nivel de aceite y de agua.</p>
+
+
+            <p>Las unidades deben de contar siempre con los siguientes requisitos:</p>
+
+            <p>- GPS.</p>
+            <p>- Bitácora de horas de manejo.</p>
+            <p>- Físico-mecánicas al corriente.</p>
+            <p>- Llantas en buen estado.</p>
+            <p>- Extintores vigentes/Botiquín de primeros auxilios.</p>
+            <p>- Paro de motor.</p>
+            <p>- Botón de pánico.</p>
+            <p>- El conductor debe tener conocimiento y seguir la ruta establecida por monitoreo KLS.</p>
+            <p>- Respetar paraderos autorizados.</p>
+
+        </div>
+    </div>
+
+    <p class="text-center mt-5" style="font-size: 12px;"><b>CONDICIONES DEL CONTRATO DE TRANSPORTE QUE AMPARA ESTA CARTA DE PORTE</b></p>
+    <div class="d-flex justify-content-between">
+
+        <div class="condiciones">
+            <p>
+                PRIMERA. - Para los efectos del presente contrato de transporte
+                se denomina "Porteador" al transportista y "Remitente" al usuario
+                que contrate el servicio.
+            </p>
+            <p>
+                SEGUNDA. - El "Remitente" es responsable de que la
+                información proporcionada al "Porteador" sea veraz y que la
+                documentación que entregue para efectos del transporte sea la
+                correcta.
+            </p>
+            <p>
+                TERCERA. - El "Remitente" debe declarar al "Porteador" el tipo
+                de mercancía o efectos de que se trate, peso, medidas y/o
+                número de la carga que entrega para su transporte y, en su caso,
+                el valor de la misma. La carga que se entregue a granel será
+                pesada por el "Porteador" en el primer punto donde haya báscula
+                apropiada o, en su defecto, aforada en metros cúbicos con la
+                conformidad del "Remitente".
+            </p>
+            <p>
+                CUARTA. - Para efectos del transporte, el "Remitente" deberá
+                entregar al "Porteador" los documentos que las leyes y
+                reglamentos exijan para llevar a cabo el servicio, en caso de no
+                cumplirse con estos requisitos el "Porteador" está obligado a
+                rehusar el transporte de las mercancías.
+            </p>
+            <p>
+                QUINTA. - Si por sospecha de falsedad en la declaración del
+                contenido de un bulto el "Porteador" deseare proceder a su
+                reconocimiento, podrá hacerlo ante testigos y con asistencia del
+                "Remitente" o del consignatario. Si este último no concurriere, se
+                solicitará la presencia de un inspector de la Secretaría de
+                Comunicaciones y Transportes, y se levantará el acta
+                correspondiente. El porteador tendrá en todo caso la obligación
+                de dejar los bultos en el estado en que se encontraban antes del
+                reconocimiento
+            </p>
+            <p>
+                SEXTA. - El "Porteador" deberá recoger y entregar la carga
+                precisamente en los domicilios que señale el "Remitente",
+                ajustándose a los términos y condiciones convenidos. El
+                "Porteador" sólo está obligado a llevar la carga al domicilio del
+                consignatario para su entrega una sola vez. Si ésta no fuera
+                recibida, se dejará aviso de que la mercancía queda a disposición
+                del interesado en las bodegas que indique el "Porteador".
+            </p>
+            <p>
+                SEPTIMA. - Si la carga no fuere retirada dentro de los 30 días
+                siguientes a aquél en que hubiere sido puesta a disposición del
+                consignatario, el "Porteador" podrá solicitar la venta en pública
+                subasta con arreglo a lo que dispone el Código de Comercio.
+            </p>
+            <p>
+                OCTAVA. - El "Porteador" y el "Remitente" negociarán libremente
+                el precio del servicio, tomando en cuenta su tipo, característica de
+                los embarques, volumen, regularidad, clase de carga y sistema de
+                pago.
+            </p>
+            <p>
+                NOVENA. - Si el "Remitente" desea que el "Porteador" asuma la
+                responsabilidad por el valor de las mercancías o efectos que él
+                declare y que cubra toda clase de riesgos, inclusive los derivados
+                de caso fortuito o de fuerza mayor, las partes deberán convenir un
+                cargo adicional, equivalente
+            </p>
+        </div>
+        <div class="condiciones">
+            <p>
+                DECIMA. - Cuando el importe del flete no incluya el cargo
+                adicional, la responsabilidad del "Porteador" queda expresamente
+                limitada a la cantidad equivalente a 15 días del salario mínimo
+                vigente en el Distrito Federal por tonelada o cuando se trate de
+                embarques cuyo peso sea mayor de 200 kg. pero menor de 1000
+                kg; y a 4 días de salario mínimo por remesa cuando se trate de
+                embarques con peso hasta de 200 kg.
+            </p>
+            <p>
+                DECIMA PRIMERA. - El precio del transporte deberá pagarse
+                en origen, salvo convenio entre las partes de pago en destino.
+                Cuando el transporte se hubiere concertado "Flete por Cobrar", la
+                entrega de las mercancías o efectos se hará contra el pago del
+                flete y el "Porteador" tendrá derecho a retenerlos mientras no se
+                le cubra el precio convenido.
+            </p>
+            <p>
+                DECIMA SEGUNDA. - Si al momento de la entrega resultare
+                algún faltante o avería, el consignatario deberá hacerla constar en
+                ese acto en la carta de porte y formular su reclamación por escrito
+                al "Porteador", dentro de las 24 horas siguientes.
+            </p>
+            <p>
+                DECIMA TERCERA. - El "Porteador" queda eximido de la
+                obligación de recibir mercancías o efectos para su transporte, en
+                los siguientes casos:
+                a) Cuando se trate de carga que, por su naturaleza, peso,
+                volumen, embalaje, defectuoso o cualquier otra circunstancia no
+                pueda transportarse sin destruirse o sin causar daño a losdemás
+                artículos o al material rodante, salvo que la empresa de que se
+                trate tenga el equipo adecuado.
+                b) Las mercancías cuyo transporte haya sido prohibido por
+                disposiciones legales o reglamentarias. Cuando tales
+                disposiciones no prohíban precisamente el transporte de
+                determinadas mercancías, pero sí ordenen la presentación de
+                ciertos documentos para que puedan ser transportadas, el
+                "Remitente" estará obligado a entregar al "Porteador" los
+                documentos correspondientes.
+            </p>
+            <p>
+                DECIMA CUARTA. - Los casos no previstos en las presentes
+                condiciones y las quejas derivadas de su aplicación se someterán
+                por la vía administrativa a la Secretaría de Comunicaciones y
+                Transportes.
+            </p>
+            <p>
+                DECIMA QUINTA. - Para el caso de que el “Remitente” contrate
+                carro por entero, este aceptara la responsabilidad solidaria para
+                con el “Porteador” mediante la figura de la corresponsabilidadque
+                contempla el artículo 10 del Reglamento Sobre el peso,
+                dimensiones y capacidad de los vehículos del Autotransporte que
+                transitan en los camiones y puentes de Jurisdicción Federal, por
+                lo que el “Remitente” queda obligado a verificar que la carga y el
+                vehículo que la transporta, cumplan con el peso y dimensiones
+                máximas establecidas en la NOM-012-SCT-2- 2008. Para el caso
+                de incumplimiento e inobservancia a las disposiciones que la
+                regulan el peso y dimensiones, por parte del “Remitente”, este
+                será co- responsable de las infracciones y multas que la
+                Secretaria de Comunicaciones y Transporte y la Policía Federal
+                impongan al “Porteador”, por cargar las unidades con exceso de
+                peso.
+            </p>
+        </div>
+        <div class="condiciones">
+            <p>
+                DÉCIMA SEXTA. - Cuando el “Remitente” o “Destinatario
+                contrate los seguros de riesgo a que se refiera la presente carta
+                de porte, con otra persona física o moral, nacional o extranjera,
+                queda el “Porteador” por este hecho, desligado automáticamente
+                a cubrir cualquier tipo de riesgo, dado que no recibe por este
+                concepto algún tipo de prima expresa.
+            </p>
+            <p>
+                DÉCIMA SEPTIMA. - Los casos no previstos en las presentes
+                condiciones y las quejas derivadas de su aplicación se someten
+                por la vía administrativa a la Secretaría de Comunicaciones y
+                Transportes, sin embargo, el “Remitente” y/o el “Destinatario”
+                renuncian expresamente al fuero de su domicilio, a que se refiere
+                en el artículo 1093 del Código de Comercio, así como la aplicable
+                del Código Civil del Distrito Federal y de toda la República, en lo
+                aplicable y sometiéndose en forma expresa a la jurisdicción de las
+                autoridades judiciales establecidas en la ciudad de Monterrey,
+                N.L., para los efectos del cumplimiento, interpretación, sanción y
+                ejecución de la presente carta de porte, siguiendo la misma suerte
+                para el caso de las acciones, excepciones o citaciones que deben
+                seguir terceros extraños en juicio, ya sea por subrogación del
+                presente contrato o por cualquier otra índole. Quedando
+                establecido que el domicilio para el cumplimiento de las
+                obligaciones derivadas del presente contrato lo será el de AV.
+                EUGENIO GARZA SADA MAS PALOMAS #3820, DE LA CIUDAD
+                DE MONTERREY, N.L
+            </p>
+        </div>
+    </div>
+</body>
+</html>

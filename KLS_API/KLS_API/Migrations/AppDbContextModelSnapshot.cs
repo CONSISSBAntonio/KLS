@@ -1372,6 +1372,31 @@ namespace KLS_API.Migrations
                     b.ToTable("Facturacion");
                 });
 
+            modelBuilder.Entity("KLS_API.Models.Travels.Historial", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Registro")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<DateTime>("TimeCreated")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("TravelId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Usuario")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TravelId");
+
+                    b.ToTable("Historial");
+                });
+
             modelBuilder.Entity("KLS_API.Models.Travels.Mercancia", b =>
                 {
                     b.Property<int>("Id")
@@ -1701,6 +1726,15 @@ namespace KLS_API.Migrations
                 {
                     b.HasOne("KLS_API.Models.Travels.Travel", "Travel")
                         .WithMany("Facturas")
+                        .HasForeignKey("TravelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("KLS_API.Models.Travels.Historial", b =>
+                {
+                    b.HasOne("KLS_API.Models.Travels.Travel", "Travel")
+                        .WithMany()
                         .HasForeignKey("TravelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
