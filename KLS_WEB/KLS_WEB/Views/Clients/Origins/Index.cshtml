@@ -309,6 +309,7 @@
 
             $.get("/Catalogs/Geography/Colonies/getColonies", function (res) {
                 dataColonies = res;
+                console.log(res);
             }).fail(function (error) {
                 dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
             });

@@ -25,7 +25,7 @@ namespace KLS_API.Controllers.Catalogs
         {
             try
             {
-                return Ok(context.Cat_Colonia.ToList());
+                return Ok(context.Cat_Colonia.ToList().Take(25));
             }
             catch (Exception ex)
             {
@@ -47,7 +47,6 @@ namespace KLS_API.Controllers.Catalogs
                     total = conteo
                 };
                 return Ok(colonias);
-
             }
             catch (Exception ex)
             {
@@ -118,7 +117,7 @@ namespace KLS_API.Controllers.Catalogs
                                    colonia.estatus
                                }).ToList();
 
-                return Ok(colonias);
+                return Ok(colonias.Take(25));
             }
             catch (Exception ex)
             {

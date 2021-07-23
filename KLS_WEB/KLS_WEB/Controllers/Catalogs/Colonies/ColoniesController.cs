@@ -44,12 +44,20 @@ namespace KLS_WEB.Controllers.Catalogs.Colonies
         }
 
         [Route("getColonies")]
-        public async Task<JsonResult> Get(Paginacion paginacion)
+        public async Task<JsonResult> Get(Cat_Colonia colonia)
         {
-            colonia dataReport;
-            dataReport = await this.AppContext.Execute<colonia>(MethodType.GET, _UrlApi + "/prueba?Pagina=" + paginacion.Pagina + "&CantidadAMostrar=" + paginacion.CantidadAMostrar, null);
+            List<Cat_Colonia> dataReport;
+            dataReport = await this.AppContext.Execute<List<Cat_Colonia>>(MethodType.GET, _UrlApi, colonia);
             return Json(dataReport);
         }
+
+        //[Route("getColonies")]
+        //public async Task<JsonResult> Get(Paginacion paginacion)
+        //{
+        //    colonia dataReport;
+        //    dataReport = await this.AppContext.Execute<colonia>(MethodType.GET, _UrlApi + "/prueba?Pagina=" + paginacion.Pagina + "&CantidadAMostrar=" + paginacion.CantidadAMostrar, null);
+        //    return Json(dataReport);
+        //}
 
         [HttpPost]
         [Route("setColonies")]
@@ -81,7 +89,6 @@ namespace KLS_WEB.Controllers.Catalogs.Colonies
             if (!string.IsNullOrEmpty(param.search.value[0]))
             {
                 string keyword = param.search.value[0].ToLower();
-
                 colonias = colonias.Where(x => x.Nombre.ToLower().Contains(keyword) ||
                 x.Estado.ToLower().Contains(keyword) ||
                 x.Ciudad.ToLower().Contains(keyword) ||
