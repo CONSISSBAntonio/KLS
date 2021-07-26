@@ -5,6 +5,7 @@ using KLS_API.Models.Clients;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using KLS_API.Controllers.Clients;
+using KLS_API.Models.Demands;
 
 namespace KLS_API.Context
 {
@@ -61,5 +62,8 @@ namespace KLS_API.Context
         public DbSet<Unidad> Unidades { get; set; }
         public DbSet<Mercancia> Mercancias { get; set; }
         public DbSet<Historial> Historial { get; set; }
+
+        // Demandas
+        public DbSet<Demand> Demands { get; set; }
     }
 }
