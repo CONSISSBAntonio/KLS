@@ -30,47 +30,99 @@
 
 @section Scripts{
     <script>
-
-
-
         $(document).ready(function (event) {
-            loadTable();
+            DT();
         });
 
-        function loadTable() {
-            var stable = $('.table-viajes').DataTable();
-            stable.destroy();
-            $("#table-info").empty();
+            //function loadTable() {
+            //    var stable = $('.table-viajes').DataTable();
+            //    stable.destroy();
+            //    $("#table-info").empty();
 
-            $.get("/Travels/getTravels", response => {
-                response.map(({ id, cliente, origen, destino, salida, llegada, estatus, folio }) => {
-                    $("#table-info").append(`
-                        <tr>
-                            <td>${folio}</td>
-                            <td>${cliente}</td>
-                            <td>${origen}</td>
-                            <td>${destino}</td>
-                            <td class="text-center">${salida}</td>
-                            <td class="text-center">${llegada}</td>
-                            <td class="text-primary text-center"><b>${estatus}</b></td>
-                            <td class="text-center">
-                                <a href="/Travels/${id}">
-                                    <span class="material-icons">
-                                        open_in_new
-                                    </span>
-                                </a>
-                            </td>
-                        </tr>`);
-                });
-                dTable("table-viajes");
-                $('#table_length').html(`
-                            <a href="/Travels/0" class="btn btn-sm btn-outline-secondary float-right">
-                                <span class="material-icons">
-                                    add
-                                </span>
-                            </a>`).show();
-            }).fail(function (error, xhr, status) {
-                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+            //    $.get("/Travels/getTravels", response => {
+            //        response.map(({ id, cliente, origen, destino, salida, llegada, estatus, folio }) => {
+            //            $("#table-info").append(`
+            //                <tr>
+            //                    <td>${folio}</td>
+            //                    <td>${cliente}</td>
+            //                    <td>${origen}</td>
+            //                    <td>${destino}</td>
+            //                    <td class="text-center">${salida}</td>
+            //                    <td class="text-center">${llegada}</td>
+            //                    <td class="text-primary text-center"><b>${estatus}</b></td>
+            //                    <td class="text-center">
+            //                        <a href="/Travels/${id}">
+            //                            <span class="material-icons">
+            //                                open_in_new
+            //                            </span>
+            //                        </a>
+            //                    </td>
+            //                </tr>`);
+            //        });
+            //        dTable("table-viajes");
+            //        $('#table_length').html(`
+            //                    <a href="/Travels/0" class="btn btn-sm btn-outline-secondary float-right">
+            //                        <span class="material-icons">
+            //                            add
+            //                        </span>
+            //                    </a>`).show();
+            //    }).fail(function (error, xhr, status) {
+            //        dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+            //    });
+            //}
+
+        DT = () => {
+            Table = $('#table').DataTable({
+                destroy: true,
+                responsive: true,
+                autoWidth: true,
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    type: 'POST',
+                    url: '/Travels/getTravels'
+                },
+                columns: [
+                    { data: 'folio' },
+                    { data: 'cliente' },
+                    { data: 'origen' },
+                    { data: 'destino' },
+                    { data: 'salida' },
+                    { data: 'llegada' },
+                    { data: 'estatus' },
+                    {
+                        data: 'id',
+                        render: (Id, type, full, meta) => `
+                                    <a href="/Travels/${Id}">
+                                        <span class="material-icons">
+                                            open_in_new
+                                        </span>
+                                    </a>`
+                    }
+                ],
+                language: {
+                    "decimal": "",
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+                initComplete: () => {
+                    $('#table_length').html(`<a href="/Travels/0" class="btn btn-sm btn-outline-secondary float-right"><span class="material-icons">add</span></a>`).show();
+                }
             });
         }
     </script>

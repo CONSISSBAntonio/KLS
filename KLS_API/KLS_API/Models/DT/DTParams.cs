@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace KLS_WEB.Models.DT
+namespace KLS_API.Models.DT
 {
-    public class DataTablesParameters
+    public class DTParams
     {
         public int draw { get; set; }
         public int start { get; set; }

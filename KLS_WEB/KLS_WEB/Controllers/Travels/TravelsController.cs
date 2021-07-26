@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Rotativa;
 using Rotativa.AspNetCore;
 using Microsoft.AspNetCore.Http;
+using KLS_WEB.Models.DT;
 
 namespace KLS_WEB.Controllers.Travels
 {
@@ -114,11 +115,60 @@ namespace KLS_WEB.Controllers.Travels
             return Json(servicios);
         }
 
+        [HttpPost]
         [Route("getTravels")]
-        public async Task<JsonResult> Get()
+        public async Task<JsonResult> Get(DataTablesParameters param)
         {
-            List<TravelDT> dataReport = await this.AppContext.Execute<List<TravelDT>>(MethodType.GET, _UrlApi, null);
-            return Json(dataReport);
+            IEnumerable<TravelDT> dataReport = await AppContext.Execute<List<TravelDT>>(MethodType.GET, _UrlApi, null);
+
+            long total = dataReport.Count();
+
+            #region Búsqueda
+            if (!string.IsNullOrEmpty(param.search.value[0]))
+            {
+                string keyword = param.search.value[0].ToLower();
+
+                dataReport = dataReport.Where(x => x.Folio.ToLower().Contains(keyword) ||
+                x.Cliente.ToLower().Contains(keyword) ||
+                x.Origen.ToLower().Contains(keyword) ||
+                x.Destino.ToLower().Contains(keyword) ||
+                x.Salida.ToLower().Contains(keyword) ||
+                x.Llegada.ToLower().Contains(keyword) ||
+                x.Estatus.ToLower().Contains(keyword));
+            }
+
+            long totalFiltered = dataReport.Count();
+            #endregion
+
+            #region Ordenamiento
+            int columnId = param.order[0].column[0];
+
+            Func<TravelDT, string> orderFunction = (x => columnId == 0 ? x.Folio :
+            columnId == 1 ? x.Cliente :
+            columnId == 2 ? x.Origen :
+            columnId == 3 ? x.Destino :
+            columnId == 4 ? x.Salida :
+            columnId == 5 ? x.Llegada :
+            x.Estatus);
+
+            dataReport = param.order[0].dir[0] == "asc" ? dataReport.OrderBy(orderFunction) : dataReport.OrderByDescending(orderFunction);
+            #endregion
+
+            #region Paginado
+            dataReport.Skip(param.start).Take(param.length);
+            #endregion
+
+            #region DataTable
+            List<TravelDT> data = dataReport.ToList();
+            #endregion
+
+            return Json(new
+            {
+                aaData = data,
+                param.draw,
+                iTotalRecords = total,
+                iTotalDisplayRecords = totalFiltered
+            });
         }
 
         [Route("DeleteService/{id}")]

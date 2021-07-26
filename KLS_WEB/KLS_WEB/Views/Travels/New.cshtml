@@ -355,6 +355,7 @@
         loadUnits();
         initSelects();
         dSelect('tipoviaje');
+        $('[type=datetime-local]').map((k, e) => $(e).prop('min', new Date().toISOString().substring(0, 16)));
 
         $(".viaje").submit(function (event) {
             event.preventDefault();
