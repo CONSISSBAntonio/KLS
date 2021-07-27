@@ -34,43 +34,6 @@
             DT();
         });
 
-            //function loadTable() {
-            //    var stable = $('.table-viajes').DataTable();
-            //    stable.destroy();
-            //    $("#table-info").empty();
-
-            //    $.get("/Travels/getTravels", response => {
-            //        response.map(({ id, cliente, origen, destino, salida, llegada, estatus, folio }) => {
-            //            $("#table-info").append(`
-            //                <tr>
-            //                    <td>${folio}</td>
-            //                    <td>${cliente}</td>
-            //                    <td>${origen}</td>
-            //                    <td>${destino}</td>
-            //                    <td class="text-center">${salida}</td>
-            //                    <td class="text-center">${llegada}</td>
-            //                    <td class="text-primary text-center"><b>${estatus}</b></td>
-            //                    <td class="text-center">
-            //                        <a href="/Travels/${id}">
-            //                            <span class="material-icons">
-            //                                open_in_new
-            //                            </span>
-            //                        </a>
-            //                    </td>
-            //                </tr>`);
-            //        });
-            //        dTable("table-viajes");
-            //        $('#table_length').html(`
-            //                    <a href="/Travels/0" class="btn btn-sm btn-outline-secondary float-right">
-            //                        <span class="material-icons">
-            //                            add
-            //                        </span>
-            //                    </a>`).show();
-            //    }).fail(function (error, xhr, status) {
-            //        dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
-            //    });
-            //}
-
         DT = () => {
             Table = $('#table').DataTable({
                 destroy: true,

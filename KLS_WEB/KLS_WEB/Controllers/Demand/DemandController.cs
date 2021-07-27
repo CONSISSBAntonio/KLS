@@ -38,10 +38,25 @@ namespace KLS_WEB.Controllers.Demand
         }
 
         [HttpPost]
-        public async Task<JsonResult> DT(DataTablesParameters dtParams){
+        public async Task<JsonResult> DT(DataTablesParameters dtParams) {
             DTModel data = await AppContext.Execute<DTModel>(MethodType.POST, Path.Combine(_UrlApi, "DT"), dtParams);
 
             return Json(data);
         }
+
+        [HttpGet]
+        public async Task<JsonResult> GetDemand(string Id)
+        {
+            DemandDTO demand = await AppContext.Execute<DemandDTO>(MethodType.GET, Path.Combine(_UrlApi, "GetDemand", Id), null);
+            return Json(demand);
+        }
+
+        //[HttpPost]
+        //public async Task<JsonResult> Search(SearchModel search)
+        //{
+        //    List<DemandDTO> result = await AppContext.Execute<List<DemandDTO>>(MethodType.GET, Path.Combine(_UrlApi, "Search"), search);
+
+        //    return Json(result);
+        //}
     }
 }

@@ -70,46 +70,31 @@
                         <div class="col-8">
                             <label for="editcliente"
                                    class="form-label size-12 font-weight-bold float-left">CLIENTE</label>
-                            <select class="form-control form-control-sm cliente w-100" id="editcliente" name="clienteId">
+                            <select class="form-control form-control-sm cliente w-100" id="editcliente" name="clientid">
                                 <option value="0">SELECCIONA</option>
                             </select>
                         </div>
                         <div class="col-4">
                             <label for="editreferencia"
                                    class="form-label size-12 font-weight-bold float-left">REFERENCIA</label>
-                            <input type="text" class="form-control form-control-sm" id="editreferencia" name="referencia" disabled />
+                            <input type="text" class="form-control form-control-sm" id="editreferencia" name="folio" disabled />
                         </div>
                     </div>
                     <div class="row mt-3">
-                        <div class="col-3">
-                            <label for="edittipounidad" class="form-label size-12 font-weight-bold float-left">
-                                TIPO DE
-                                UNIDAD
-                            </label>
-                            <select class="form-control form-control-sm tipounidad" id="edittipounidad" name="tipounidadId">
+                        <div class="col-5">
+                            <label for="edittipounidad" class="form-label size-12 font-weight-bold float-left">TIPO DE UNIDAD</label>
+                            <select class="form-control form-control-sm tipounidad" id="edittipounidad" name="unitid">
                                 <option value="0">SELECCIONA</option>
                             </select>
                         </div>
-                        <div class="col-3">
-                            <label for="editfechasalida" class="form-label size-12 font-weight-bold float-left">
-                                FECHA DE
-                                SALIDA
-                            </label>
-                            <input type="date" class="form-control form-control-sm" id="editfechasalida"
-                                   name="fechasalida" />
-                        </div>
-                        <div class="col-3">
-                            <label for="edithorasalida" class="form-label size-12 font-weight-bold float-left">
-                                HORA DE
-                                SALIDA
-                            </label>
-                            <input type="time" class="form-control" id="edithorasalida" name="fechadisponibilidad">
+                        <div class="col-4">
+                            <label for="editfechasalida" class="form-label size-12 font-weight-bold float-left">FECHA DE SALIDA</label>
+                            <input type="datetime-local" class="form-control form-control-sm" id="editfechasalida" name="fechadisponibilidad" />
                         </div>
                         <div class="col-3">
                             <label for="editarribo"
                                    class="form-label size-12 font-weight-bold float-left">ARRIBO</label>
-                            <input type="datetime" class="form-control form-control-sm" id="editarribo"
-                                   name="rangoespera" />
+                            <input type="datetime" class="form-control form-control-sm" id="editarribo" name="arribo" />
                         </div>
                     </div>
                     <div class="row mt-1">
@@ -119,17 +104,13 @@
                                 <a class="btn btn-link text-primary" onclick="agregarCiudad(this);">AGREGAR</a>
                             </div>
                             <div>
-                                <select class="form-control form-control-sm text-uppercase" id="editorigen" name="origenId" style="width: 100%;">
+                                <select class="form-control form-control-sm text-uppercase" id="editorigen" name="origenid" style="width: 100%;">
                                 </select>
                             </div>
                         </div>
                         <div class="col-6 mt-3">
-                            <label for="editremitente" class="form-label size-12 font-weight-bold float-left">
-                                DIRECCIÓN
-                                REMITENTE
-                            </label>
-                            <input type="text" class="form-control form-control-sm" id="editremitente"
-                                   name="direccionremitente" />
+                            <label for="editremitente" class="form-label size-12 font-weight-bold float-left">DIRECCIÓN REMITENTE</label>
+                            <input type="text" class="form-control form-control-sm" id="editremitente" name="direccionremitente" />
                         </div>
                     </div>
                     <div class="row mt-1">
@@ -139,18 +120,13 @@
                                 <a class="btn btn-link text-primary" onclick="agregarCiudad(this);">AGREGAR</a>
                             </div>
                             <div>
-                                <select class="form-control form-control-sm text-uppercase" id="editdestino" name="destinoId" style="width: 100%;">
+                                <select class="form-control form-control-sm text-uppercase" id="editdestino" name="destinoid" style="width: 100%;">
                                 </select>
                             </div>
                         </div>
                         <div class="col-6 mt-3">
-                            <label for="editdestinatario"
-                                   class="form-label size-12 font-weight-bold float-left">
-                                DIRECCIÓN
-                                DESTINATARIO
-                            </label>
-                            <input type="text" class="form-control form-control-sm" id="editdestinatario"
-                                   name="direcciondestinatario" />
+                            <label for="editdestinatario" class="form-label size-12 font-weight-bold float-left">DIRECCIÓN DESTINATARIO</label>
+                            <input type="text" class="form-control form-control-sm" id="editdestinatario" name="direcciondestinatario" />
                         </div>
                     </div>
                     <div class="row mt-1">
@@ -164,22 +140,22 @@
                             <b class="float-left size-14">MERCANCIA</b>
                         </div>
                     </div>
-                    <div class="row mt-1">
+                    @*<div class="row mt-1">
                         <div class="col-6 mt-3">
                             <label for="tonelaje"
                                    class="form-label size-12 font-weight-bold float-left">TONELAJE</label>
                             <input type="text" class="form-control form-control-sm" id="tonelaje" name="tonelaje" />
                         </div>
-                    </div>
+                    </div>*@
                     <div class="row mt-1">
                         <div class="col-4 mt-3">
                             <div class="form-check d-flex align-items-center">
-                                <input class="form-check-input my-auto" type="checkbox" id="tipopresentacion" name="tipopresentacion">
+                                @*<input class="form-check-input my-auto" type="checkbox" id="tipopresentacion" name="tipopresentacion">*@
                                 <label class="form-check-label size-12" for="0">TIPO PRESENTACIÓN</label>
                             </div>
                         </div>
                         <div class="col-5 mt-3">
-                            <select class="form-control form-control-sm" id="tipopresentacionval" name="tipopresentacionval" style="width: 100%;">
+                            <select class="form-control form-control-sm" id="tipopresentacionval" name="tipopresentacion" style="width: 100%;">
                                 <option value="0">SELECCIONA</option>
                             </select>
                         </div>
@@ -187,12 +163,12 @@
                     <div class="row mt-1">
                         <div class="col-4 mt-3">
                             <div class="form-check d-flex align-items-center">
-                                <input class="form-check-input my-auto" type="checkbox" id="material" name="material">
+                                @*<input class="form-check-input my-auto" type="checkbox" id="material" name="material">*@
                                 <label class="form-check-label size-12" for="0">MATERIAL</label>
                             </div>
                         </div>
                         <div class="col-5 mt-3">
-                            <select class="form-control form-control-sm" id="materialval" name="materialval" style="width: 100%;">
+                            <select class="form-control form-control-sm" id="materialval" name="material" style="width: 100%;">
                                 <option value="0">SELECCIONA</option>
                             </select>
                         </div>
@@ -200,12 +176,12 @@
                     <div class="row mt-1">
                         <div class="col-4 mt-3">
                             <div class="form-check d-flex align-items-center">
-                                <input class="form-check-input my-auto" type="checkbox" id="valor" name="valor">
+                                @*<input class="form-check-input my-auto" type="checkbox" id="valor" name="valor">*@
                                 <label class="form-check-label size-12" for="0">VALOR</label>
                             </div>
                         </div>
                         <div class="col-5 mt-3">
-                            <select class="form-control form-control-sm" id="valorval" name="valorval" style="width: 100%;">
+                            <select class="form-control form-control-sm" id="valorval" name="valor" style="width: 100%;">
                                 <option value="0">SELECCIONA</option>
                             </select>
                         </div>
@@ -240,7 +216,8 @@
                     </div>
                     <div class="row mt-3">
                         <div class="col-3">
-                            <label for="addtipounidad" class="form-label size-12 font-weight-bold float-left">TIPO DE UNIDAD
+                            <label for="addtipounidad" class="form-label size-12 font-weight-bold float-left">
+                                TIPO DE UNIDAD
                             </label>
                             <select class="form-control form-control-sm tipounidad" id="addtipounidad" name="unitId" onchange="{ console.log(this.value); }" style="width: 100%;">
                                 <option value="0">SELECCIONA</option>
@@ -337,8 +314,7 @@
     </div>
 </div>
 
-<!--MODAL BÚSQUEDA-->
-<!-- Modal -->
+<!--MODAL BUSCAR DEMANDA-->
 <div class="modal fade" id="modalbusqueda" tabindex="-1" aria-labelledby="modalbusquedalabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -353,25 +329,19 @@
                     <div class="row">
                         <div class="col-4">
                             <label for="cliente" class="form-label size-12 font-weight-bold float-left">CLIENTE</label>
-                            <select class="form-control form-control-sm cliente" id="cliente" name="clienteId" style="width: 100%;">
+                            <select class="form-control form-control-sm cliente" id="cliente" name="clientid" style="width: 100%;">
                                 <option value="0">SELECCIONA</option>
                             </select>
                         </div>
                         <div class="col-4">
-                            <label for="tipounidad" class="form-label size-12 font-weight-bold float-left">
-                                TIPO
-                                UNIDAD
-                            </label>
-                            <select class="form-control form-control-sm tipounidad" id="tipounidad" name="tipounidadId" onchange="{ console.log(this.value); }" style="width: 100%;">
+                            <label for="tipounidad" class="form-label size-12 font-weight-bold float-left">TIPO UNIDAD</label>
+                            <select class="form-control form-control-sm tipounidad" id="tipounidad" name="unitid" onchange="{ console.log(this.value); }" style="width: 100%;">
                                 <option value="0">SELECCIONA</option>
                             </select>
                         </div>
                         <div class="col-4">
-                            <label for="fechasalida" class="form-label size-12 font-weight-bold float-left">
-                                FECHA
-                                SALIDA
-                            </label>
-                            <input type="date" class="form-control" id="fechasalida" name="fechasalida">
+                            <label for="fechasalida" class="form-label size-12 font-weight-bold float-left">FECHA SALIDA</label>
+                            <input type="datetime-local" class="form-control" id="fechasalida" name="fechasalida">
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -381,43 +351,39 @@
                         </div>
                         <div class="col-4">
                             <label for="estadoorigen" class="form-label size-12 font-weight-bold float-left">ESTADO ORIGEN</label>
-                            <select class="form-control form-control-sm estado" id="estadoorigen" name="estadoorigenId" onchange="{ getCities('ciudadorigen', this.value); }" style="width: 100%;">
+                            <select class="form-control form-control-sm estado" id="estadoorigen" name="estadoorigenid" onchange="{ getCities('ciudadorigen', this.value); }" style="width: 100%;">
                                 <option value="0">SELECCIONA</option>
                             </select>
                         </div>
                         <div class="col-4">
                             <label for="ciudadorigen" class="form-label size-12 font-weight-bold float-left">CIUDAD ORIGEN</label>
-                            <select class="form-control form-control-sm ciudad" id="ciudadorigen" name="ciudadorigenId" onchange="{ console.log(this.value); }" style="width: 100%;">
+                            <select class="form-control form-control-sm ciudad" id="ciudadorigen" name="ciudadorigenid" onchange="{ console.log(this.value); }" style="width: 100%;">
                                 <option value="0">SELECCIONA</option>
                             </select>
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-4">
-                            <label for="estadodestino" class="form-label size-12 font-weight-bold float-left">
-                                ESTADO
-                                DESTINO
-                            </label>
-                            <select class="form-control form-control-sm estado" id="estadodestino" name="estadodestinoId" onchange="{ getCities('ciudaddestino', this.value); }" style="width: 100%;">
+                            <label for="estadodestino" class="form-label size-12 font-weight-bold float-left">ESTADO DESTINO</label>
+                            <select class="form-control form-control-sm estado" id="estadodestino" name="estadodestinoid" onchange="{ getCities('ciudaddestino', this.value); }" style="width: 100%;">
                                 <option value="0">SELECCIONA</option>
                             </select>
                         </div>
                         <div class="col-4">
                             <label for="ciudaddestino" class="form-label size-12 font-weight-bold float-left">CIUDAD DESTINO</label>
-                            <select class="form-control form-control-sm ciudad" id="ciudaddestino" name="ciudaddestinoId" onchange="{ console.log(this.value); }" style="width: 100%;">
+                            <select class="form-control form-control-sm ciudad" id="ciudaddestino" name="ciudaddestinoid" onchange="{ console.log(this.value); }" style="width: 100%;">
                                 <option value="0">SELECCIONA</option>
                             </select>
                         </div>
                         <div class="col-4">
-                            <label for="tamanioempresa" class="form-label size-12 font-weight-bold float-left">
-                                TAMAÑO
-                                EMPRESA
-                            </label>
-                            <select class="form-control form-control-sm" id="tamanioempresa" name="TamanioEmpresa" onchange="{ console.log(this.value); }">
-                                <option value="0">SELECCIONA</option>
-                                <option value="chica">CHICA</option>
-                                <option value="mediana">MEDIANA</option>
-                                <option value="grande">GRANDE</option>
+                            <label for="tamanioempresa" class="form-label size-12 font-weight-bold float-left">TAMAÑO EMPRESA</label>
+                            <select class="form-control form-control-sm" id="tamanioempresa" name="tamañoempresa" onchange="{ console.log(this.value); }">
+                                <option value="0" selected>SELECCIONA</option>
+                                <option value="Pequeño">Pequeño</option>
+                                <option value="Mediano">Mediano</option>
+                                <option value="Grande">Grande</option>
+                                <option value="Logística">Logística</option>
+                                <option value="Hombre Camión">Hombre Camión</option>
                             </select>
                         </div>
                     </div>
@@ -442,6 +408,7 @@
             });
 
             $('#modalbusqueda').on('shown.bs.modal', event => {
+                $('#fechasalida').prop('min', '');
             });
 
             $('#modaldemanda').on('shown.bs.modal', event => {
@@ -556,7 +523,6 @@
             $(button).prop('disabled', true);
 
             const data = $(e).serialize();
-            console.log(data);
 
             setTimeout(() => $(button).prop('disabled', false), 1000);
         }
@@ -593,23 +559,31 @@
         };
 
         searchdemand = e => {
-            const button = $('#search');
+            //const button = $('#search');
+            //if (!validateForm('#busqueda')) {
+            //    dToast("error", "Todos los campos son obligatorios", "¡Atencion!");
+            //    return;
+            //}
 
-            if (!validateForm('#busqueda')) {
-                dToast("error", "Todos los campos son obligatorios", "¡Atencion!");
-                return;
-            }
+            const data = Object.fromEntries(new FormData(e));
+            DT(true, data);
+        }
 
-            const data = $(e).serialize();
-            $(button).prop('disabled', true);
-            $.post('/Demand/Search', data, response => {
-                $(button).prop('disabled', false);
-                console.log(response);
+        edit = Id => {
+            $('#modaleditardemanda').modal('show');
+            $.get('/Demand/GetDemand/', { Id: Id }, response => {
+                response && Object.entries(response).map(([k, v]) => {
+                    if (k.includes('fecha')) {
+                        v = new Date(v).toISOString().substring(0, 16);
+                    }
+
+                    $(`[name=${k.toLowerCase()}]`).val(v);
+                });
             });
         }
 
 
-        DT = () => {
+        DT = (customsearch = false, search) => {
             Table = $('#table').DataTable({
                 destroy: true,
                 responsive: true,
@@ -618,7 +592,11 @@
                 serverSide: true,
                 ajax: {
                     type: 'POST',
-                    url: '/Demand/DT'
+                    url: '/Demand/DT',
+                    data: data => {
+                        data.customsearch = customsearch,
+                        data.searchmodel = search
+                    }
                 },
                 columns: [
                     { data: 'folio' },
@@ -632,13 +610,23 @@
                         render: (arribo, type, full, meta) => arribo === "" && "-"
                     },
                     {
-                        data: 'Id',
+                        data: 'id',
                         render: (Id, type, full, meta) => `
-                                    <a href="/Travels/${Id}">
-                                        <span class="material-icons">
-                                            open_in_new
-                                        </span>
-                                    </a>`
+                        <a href="javascript:void(0);" onclick="{ edit(${Id}); }">
+                            <span class="material-icons">
+                                edit
+                            </span>
+                        </a>
+                        <a href="javascript:void(0);" onclick="{ create(${Id}); }">
+                            <span class="material-icons">
+                                local_shipping
+                            </span>
+                        </a>
+                        <a href="javascript:void(0);" onclick="{ select(${Id}); }">
+                            <span class="material-icons">
+                                search
+                            </span>
+                        </a>`
                     }
                 ],
                 language: {
@@ -662,8 +650,12 @@
                     }
                 },
                 columnDefs: [
-                    {className: 'text-center', targets: [6, 7]}
-                ]
+                    { className: 'text-center', targets: [6, 7] }
+                ],
+                initComplete: () => {
+                    $('#modalbusqueda').modal('hide');
+                    $('#table_length').html(`<a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary float-right" onclick="{ $('#modaldemanda').modal('show'); }"><span class="material-icons">add</span></a>`).show();
+                }
             });
         }
     </script>
