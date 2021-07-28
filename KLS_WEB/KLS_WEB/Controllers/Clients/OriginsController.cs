@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using KLS_WEB.Models;
@@ -51,6 +52,13 @@ namespace KLS_WEB.Controllers.Clients
             Cl_Has_Origen dataReport;
             dataReport = await this.AppContext.Execute<Cl_Has_Origen>(MethodType.PUT, _UrlApi, dataModel);
             return Json(dataReport);
+        }
+
+        [Route("[action]/{Id}")]
+        public async Task<JsonResult> GetOrigin(string Id)
+        {
+            Cl_Has_Origen origen = await AppContext.Execute<Cl_Has_Origen>(MethodType.GET, Path.Combine(_UrlApi, "GetOrigin", Id), null);
+            return Json(origen);
         }
     }
 }

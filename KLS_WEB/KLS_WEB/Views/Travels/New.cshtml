@@ -43,20 +43,26 @@
                     <div class="form-group col-6">
                         <label class="col-form-label col-form-label-sm">Cliente</label>
                         <div>
-                            <select class="form-control form-control-sm" id="cliente" name="cliente" style="width: 100%;">
+                            <select class="form-control form-control-sm" id="cliente" name="cliente" style="width: 100%;" onchange="{ getReferencia(this.value); }">
                             </select>
                         </div>
                     </div>
-                    <div class="form-group col-3">
+                    <div class="form-group col-2">
                         <label class="col-form-label col-form-label-sm">Fecha de salida</label>
                         <div>
                             <input type="datetime-local" class="form-control form-control-sm" id="fechasalida" name="fechasalida" required>
                         </div>
                     </div>
-                    <div class="form-group col-3">
+                    <div class="form-group col-2">
                         <label class="col-form-label col-form-label-sm">Fecha de llegada</label>
                         <div>
                             <input type="datetime-local" class="form-control form-control-sm" id="fechallegada" name="fechallegada" required>
+                        </div>
+                    </div>
+                    <div class="form-group col-2">
+                        <label class="col-form-label col-form-label-sm">Tiempo de anticipación</label>
+                        <div>
+                            <input type="text" class="form-control form-control-sm" id="tiempoanticipacion" name="tiempoanticipacion" required>
                         </div>
                     </div>
                 </div>
@@ -132,28 +138,7 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="form-group col-4">
-                        <label class="col-form-label col-form-label-sm">Orden de compra</label>
-                        <div>
-                            <input type="text" class="form-control form-control-sm" id="ordencompra" name="ordencompra"
-                                   required>
-                        </div>
-                    </div>
-                    <div class="form-group col-4">
-                        <label class="col-form-label col-form-label-sm">Referencia 2</label>
-                        <div>
-                            <input type="text" class="form-control form-control-sm" id="referencia2"
-                                   name="referencia2" required>
-                        </div>
-                    </div>
-                    <div class="form-group col-4">
-                        <label class="col-form-label col-form-label-sm">Referencia 3</label>
-                        <div>
-                            <input type="text" class="form-control form-control-sm" id="referencia3"
-                                   name="referencia3" required>
-                        </div>
-                    </div>
+                <div class="row referencias">
                 </div>
 
                 <div class="row mt-3">
@@ -318,7 +303,6 @@
     </div>
 </div>
 <!--Modal agregar ciudad-->
-
 <!-- modal confirm delete-->
 
 <div class="modal fade" id="popup" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -400,6 +384,23 @@
             }
         });
     });
+
+        getReferencia = ClientId => {
+            $.get(`/Clients/Others/getOtros/`, { Id_Cliente: ClientId }, ({
+                referencia1,
+                referencia2,
+                referencia3,
+                treferencia1,
+                treferencia2,
+                treferencia3
+            }) => {
+                let referencias = ``;
+                referencias += referencia1 ? `<div class="form-group col-4" ><label class="col-form-label col-form-label-sm">${treferencia1.toUpperCase()}</label><div><input type="text" class="form-control form-control-sm" id="referencia1" name="referencia1" required></div></div>` : '';
+                referencias += referencia2 ? `<div class="form-group col-4" ><label class="col-form-label col-form-label-sm">${treferencia2.toUpperCase()}</label><div><input type="text" class="form-control form-control-sm" id="referencia2" name="referencia2" required></div></div>` : '';
+                referencias += referencia3 ? `<div class="form-group col-4" ><label class="col-form-label col-form-label-sm">${treferencia3.toUpperCase()}</label><div><input type="text" class="form-control form-control-sm" id="referencia3" name="referencia3" required></div></div>` : '';
+                $('.referencias').html(referencias);
+            });
+        }
 
         validarSelect = () => {
             let isset = true;

@@ -64,5 +64,19 @@ namespace KLS_API.Controllers.Clients
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("[action]/{id}")]
+        public IActionResult GetOrigin(int id)
+        {
+            try
+            {
+                return Ok(context.Cl_Has_Origen.Find(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+                throw;
+            }
+        }
     }
 }

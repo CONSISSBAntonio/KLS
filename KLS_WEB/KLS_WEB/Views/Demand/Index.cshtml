@@ -26,9 +26,7 @@
     <div class="p-4">
         <div class="text-left mb-3 d-flex justify-content-between">
             <div class="poppins medium size-24 pl-2">DEMANDAS DISPONIBLES</div>
-            <button type="button" class="btn btn-primary" onclick="{ $('#modalbusqueda').modal('show'); }">
-                BUSCAR
-            </button>
+            <button type="button" class="btn btn-primary" onclick="$('#modalbusqueda').modal('show')">BUSCAR</button>
         </div>
 
         <div class="p-4 shadow bg-white">
@@ -54,37 +52,35 @@
 </div>
 
 <!--MODAL EDITAR DEMANDA-->
-<div class="modal fade" id="modaleditardemanda" tabindex="-1" aria-labelledby="modaleditardemandalabel"
-     aria-hidden="true">
+<div class="modal fade" id="modalAddEdit" tabindex="-1" aria-labelledby="modalAddEditlabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modaleditardemandalabel">EDITAR DEMANDA</h5>
+                <h5 class="modal-title" id="modalAddEditlabel">EDITAR DEMANDA</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form id="editDemand" onsubmit="{ event.preventDefault(); editDemand(this); }">
+                <form id="addEditDemand" onsubmit="">
+                    <input type="number" name="id" value="0" disabled hidden />
                     <div class="row">
                         <div class="col-8">
-                            <label for="editcliente"
-                                   class="form-label size-12 font-weight-bold float-left">CLIENTE</label>
-                            <select class="form-control form-control-sm cliente w-100" id="editcliente" name="clientid">
-                                <option value="0">SELECCIONA</option>
+                            <label for="editcliente" class="form-label size-12 font-weight-bold float-left">CLIENTE</label>
+                            <select class="form-control form-control-sm cliente" style="width: 100%;" id="addeditcliente" name="clientid" onchange="getClientParams(this.value)">
+                                <option value="0" selected disabled>SELECCIONA</option>
                             </select>
                         </div>
                         <div class="col-4">
-                            <label for="editreferencia"
-                                   class="form-label size-12 font-weight-bold float-left">REFERENCIA</label>
+                            <label for="editreferencia" class="form-label size-12 font-weight-bold float-left">REFERENCIA</label>
                             <input type="text" class="form-control form-control-sm" id="editreferencia" name="folio" disabled />
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-5">
                             <label for="edittipounidad" class="form-label size-12 font-weight-bold float-left">TIPO DE UNIDAD</label>
-                            <select class="form-control form-control-sm tipounidad" id="edittipounidad" name="unitid">
-                                <option value="0">SELECCIONA</option>
+                            <select class="form-control form-control-sm tipounidad" style="width: 100%;" id="addedittipounidad" name="unitid">
+                                <option value="0" selected disabled>SELECCIONA</option>
                             </select>
                         </div>
                         <div class="col-4">
@@ -101,213 +97,45 @@
                         <div class="col-6">
                             <div class="d-flex justify-content-between">
                                 <label class="col-form-label col-form-label-sm">ORIGEN</label>
-                                <a class="btn btn-link text-primary" onclick="agregarCiudad(this);">AGREGAR</a>
+                                <a class="btn btn-link text-primary" onclick="">AGREGAR</a>
                             </div>
                             <div>
-                                <select class="form-control form-control-sm text-uppercase" id="editorigen" name="origenid" style="width: 100%;">
+                                <select class="form-control form-control-sm text-uppercase" style="width: 100%;" id="editorigen" name="origenid" onchange="GetAddress(this.value, 'origen')">
+                                    <option value="0" selected disabled>SELECCIONA</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-6 mt-3">
                             <label for="editremitente" class="form-label size-12 font-weight-bold float-left">DIRECCIÓN REMITENTE</label>
-                            <input type="text" class="form-control form-control-sm" id="editremitente" name="direccionremitente" />
+                            <input type="text" class="form-control form-control-sm" id="editremitente" name="direccionremitente" disabled />
                         </div>
                     </div>
                     <div class="row mt-1">
                         <div class="col-6">
                             <div class="d-flex justify-content-between">
                                 <label class="col-form-label col-form-label-sm">DESTINO</label>
-                                <a class="btn btn-link text-primary" onclick="agregarCiudad(this);">AGREGAR</a>
+                                <a class="btn btn-link text-primary" onclick="">AGREGAR</a>
                             </div>
                             <div>
-                                <select class="form-control form-control-sm text-uppercase" id="editdestino" name="destinoid" style="width: 100%;">
+                                <select class="form-control form-control-sm text-uppercase" id="editdestino" name="destinoid" style="width: 100%;" onchange="GetAddress(this.value, 'destino')">
+                                    <option value="0" selected disabled>SELECCIONA</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-6 mt-3">
                             <label for="editdestinatario" class="form-label size-12 font-weight-bold float-left">DIRECCIÓN DESTINATARIO</label>
-                            <input type="text" class="form-control form-control-sm" id="editdestinatario" name="direcciondestinatario" />
+                            <input type="text" class="form-control form-control-sm" id="editdestinatario" name="direcciondestinatario" disabled />
                         </div>
                     </div>
                     <div class="row mt-1">
-                        <div class="col-6 mt-3">
+                        <div class="col-12 mt-3">
                             <label for="editruta" class="form-label size-12 font-weight-bold float-left">RUTA</label>
-                            <input type="text" class="form-control form-control-sm" id="editruta" name="ruta" />
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col">
-                            <b class="float-left size-14">MERCANCIA</b>
-                        </div>
-                    </div>
-                    @*<div class="row mt-1">
-                        <div class="col-6 mt-3">
-                            <label for="tonelaje"
-                                   class="form-label size-12 font-weight-bold float-left">TONELAJE</label>
-                            <input type="text" class="form-control form-control-sm" id="tonelaje" name="tonelaje" />
-                        </div>
-                    </div>*@
-                    <div class="row mt-1">
-                        <div class="col-4 mt-3">
-                            <div class="form-check d-flex align-items-center">
-                                @*<input class="form-check-input my-auto" type="checkbox" id="tipopresentacion" name="tipopresentacion">*@
-                                <label class="form-check-label size-12" for="0">TIPO PRESENTACIÓN</label>
-                            </div>
-                        </div>
-                        <div class="col-5 mt-3">
-                            <select class="form-control form-control-sm" id="tipopresentacionval" name="tipopresentacion" style="width: 100%;">
-                                <option value="0">SELECCIONA</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mt-1">
-                        <div class="col-4 mt-3">
-                            <div class="form-check d-flex align-items-center">
-                                @*<input class="form-check-input my-auto" type="checkbox" id="material" name="material">*@
-                                <label class="form-check-label size-12" for="0">MATERIAL</label>
-                            </div>
-                        </div>
-                        <div class="col-5 mt-3">
-                            <select class="form-control form-control-sm" id="materialval" name="material" style="width: 100%;">
-                                <option value="0">SELECCIONA</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mt-1">
-                        <div class="col-4 mt-3">
-                            <div class="form-check d-flex align-items-center">
-                                @*<input class="form-check-input my-auto" type="checkbox" id="valor" name="valor">*@
-                                <label class="form-check-label size-12" for="0">VALOR</label>
-                            </div>
-                        </div>
-                        <div class="col-5 mt-3">
-                            <select class="form-control form-control-sm" id="valorval" name="valor" style="width: 100%;">
-                                <option value="0">SELECCIONA</option>
+                            <select class="form-control form-control-sm" style="width: 100%;" id="rutaid" name="rutaid">
+                                <option value="0" selected disabled>SELECCIONA</option>
                             </select>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary mt-4 float-left w-25" id="editar">GUARDAR</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--MODAL NUEVA DEMANDA-->
-<div class="modal fade" id="modaldemanda" tabindex="-1" aria-labelledby="modaldemandalabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modaldemandalabel">AGREGAR DEMANDA</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="addDemand" onsubmit="{ event.preventDefault(); addDemand(this); }">
-                    <div class="row">
-                        <div class="col-12">
-                            <label for="addcliente"
-                                   class="form-label size-12 font-weight-bold float-left">CLIENTE</label>
-                            <select class="form-control form-control-sm cliente" id="addcliente" name="clientId" style="width: 100%;" onchange="{ getClientParams(this.value, 'origen, destino'); }">
-                                <option value="0">SELECCIONA</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-3">
-                            <label for="addtipounidad" class="form-label size-12 font-weight-bold float-left">
-                                TIPO DE UNIDAD
-                            </label>
-                            <select class="form-control form-control-sm tipounidad" id="addtipounidad" name="unitId" onchange="{ console.log(this.value); }" style="width: 100%;">
-                                <option value="0">SELECCIONA</option>
-                            </select>
-                        </div>
-                        <div class="col-3">
-                            <label for="addcantidad"
-                                   class="form-label size-12 font-weight-bold float-left">CANTIDAD</label>
-                            <input type="number" class="form-control form-control-sm" id="addcantidad" name="cantidad"
-                                   placeholder="MÍNIMO 1" />
-                        </div>
-                        <div class="col-3">
-                            <label for="addfechadisponibilidad"
-                                   class="form-label size-12 font-weight-bold float-left">FECHA DISPONIBILIDAD</label>
-                            <input type="datetime-local" class="form-control" id="addfechadisponibilidad"
-                                   name="fechadisponibilidad">
-                        </div>
-                        <div class="col-3">
-                            <label for="addrangoespera" class="form-label size-12 font-weight-bold float-left">RANGO DE ESPERA</label>
-                            <input type="number" class="form-control form-control-sm" id="addrangoespera"
-                                   name="rangoespera" />
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col">
-                            <b class="float-left size-14">ORIGEN</b>
-                        </div>
-                    </div>
-                    <div class="row mt-1">
-                        <div class="col-3">
-                            <label for="addnivelo" class="form-label size-12 font-weight-bold float-left">NIVEL</label>
-                            <select class="form-control form-control-sm" id="addnivelo" name="nivelorigen" onchange="{ setLevel(this.value, 'origen'); }" style="width: 100%;">
-                                <option value="0" selected disabled>SELECCIONA</option>
-                                <option value="region">REGIÓN</option>
-                                <option value="estado">ESTADO</option>
-                                <option value="ciudad">CIUDAD</option>
-                            </select>
-                        </div>
-                        <div class="col-3">
-                            <label for="addestadoo"
-                                   class="form-label size-12 font-weight-bold float-left">ESTADO</label>
-                            <select class="form-control form-control-sm estado" id="addestadoo" name="estadoIdOrigen" onchange="{ getCities('addciudadoId', this.value); }" style="width: 100%;">
-                                <option value="0" disabled>SELECCIONA</option>
-                            </select>
-                        </div>
-                        <div class="col-3">
-                            <label for="addciudadoId" class="form-label size-12 font-weight-bold float-left">CIUDAD</label>
-                            <select class="form-control form-control-sm" id="addciudadoId" name="ciudadIdOrigen" onchange="{ console.log(this.value); }" style="width: 100%;" disabled>
-                                <option value="0" selected disabled>SELECCIONA</option>
-                            </select>
-                        </div>
-                        <div class="col-3">
-                            <label for="addtoleranciao" class="form-label size-12 font-weight-bold float-left">TOLERANCIA</label>
-                            <input type="number" class="form-control form-control-sm" id="addtoleranciao" name="toleranciaorigen" />
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col">
-                            <b class="float-left size-14">DESTINO</b>
-                        </div>
-                    </div>
-                    <div class="row mt-1">
-                        <div class="col-3">
-                            <label for="addniveld" class="form-label size-12 font-weight-bold float-left">NIVEL</label>
-                            <select class="form-control form-control-sm" id="addniveld" name="niveldestino" onchange="{ setLevel(this.value, 'destino'); }" style="width: 100%;">
-                                <option value="0" selected disabled>SELECCIONA</option>
-                                <option value="region">REGIÓN</option>
-                                <option value="estado">ESTADO</option>
-                                <option value="ciudad">CIUDAD</option>
-                            </select>
-                        </div>
-                        <div class="col-3">
-                            <label for="addestadod"
-                                   class="form-label size-12 font-weight-bold float-left">ESTADO</label>
-                            <select class="form-control form-control-sm estado" id="addestadod" name="estadoIdDestino" onchange="{ getCities('addciudaddId', this.value); }" style="width: 100%;">
-                                <option value="0" disabled>SELECCIONA</option>
-                            </select>
-                        </div>
-                        <div class="col-3">
-                            <label for="addciudaddId" class="form-label size-12 font-weight-bold float-left">CIUDAD</label>
-                            <select class="form-control form-control-sm" id="addciudaddId" name="ciudadIdDestino" onchange="{ console.log(this.value); }" style="width: 100%;" disabled>
-                                <option value="0" selected disabled>SELECCIONA</option>
-                            </select>
-                        </div>
-                        <div class="col-3">
-                            <label for="addtoleranciad" class="form-label size-12 font-weight-bold float-left">TOLERANCIA</label>
-                            <input type="number" class="form-control form-control-sm" id="addtoleranciad" name="toleranciaDestino" />
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary mt-3 float-left" id="agregar">AGREGAR</button>
                 </form>
             </div>
         </div>
@@ -325,7 +153,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="busqueda" onsubmit="{ event.preventDefault(); searchdemand(this); }">
+                <form id="busqueda" onsubmit="event.preventDefault(), searchdemand(this)">
                     <div class="row">
                         <div class="col-4">
                             <label for="cliente" class="form-label size-12 font-weight-bold float-left">CLIENTE</label>
@@ -335,7 +163,7 @@
                         </div>
                         <div class="col-4">
                             <label for="tipounidad" class="form-label size-12 font-weight-bold float-left">TIPO UNIDAD</label>
-                            <select class="form-control form-control-sm tipounidad" id="tipounidad" name="unitid" onchange="{ console.log(this.value); }" style="width: 100%;">
+                            <select class="form-control form-control-sm tipounidad" id="tipounidad" name="unitid" onchange="" style="width: 100%;">
                                 <option value="0">SELECCIONA</option>
                             </select>
                         </div>
@@ -351,13 +179,13 @@
                         </div>
                         <div class="col-4">
                             <label for="estadoorigen" class="form-label size-12 font-weight-bold float-left">ESTADO ORIGEN</label>
-                            <select class="form-control form-control-sm estado" id="estadoorigen" name="estadoorigenid" onchange="{ getCities('ciudadorigen', this.value); }" style="width: 100%;">
+                            <select class="form-control form-control-sm estado" id="estadoorigen" name="estadoorigenid" onchange="getCities('ciudadorigen', this.value)" style="width: 100%;">
                                 <option value="0">SELECCIONA</option>
                             </select>
                         </div>
                         <div class="col-4">
                             <label for="ciudadorigen" class="form-label size-12 font-weight-bold float-left">CIUDAD ORIGEN</label>
-                            <select class="form-control form-control-sm ciudad" id="ciudadorigen" name="ciudadorigenid" onchange="{ console.log(this.value); }" style="width: 100%;">
+                            <select class="form-control form-control-sm ciudad" id="ciudadorigen" name="ciudadorigenid" style="width: 100%;">
                                 <option value="0">SELECCIONA</option>
                             </select>
                         </div>
@@ -365,19 +193,19 @@
                     <div class="row mt-3">
                         <div class="col-4">
                             <label for="estadodestino" class="form-label size-12 font-weight-bold float-left">ESTADO DESTINO</label>
-                            <select class="form-control form-control-sm estado" id="estadodestino" name="estadodestinoid" onchange="{ getCities('ciudaddestino', this.value); }" style="width: 100%;">
+                            <select class="form-control form-control-sm estado" id="estadodestino" name="estadodestinoid" onchange="getCities('ciudaddestino', this.value)" style="width: 100%;">
                                 <option value="0">SELECCIONA</option>
                             </select>
                         </div>
                         <div class="col-4">
                             <label for="ciudaddestino" class="form-label size-12 font-weight-bold float-left">CIUDAD DESTINO</label>
-                            <select class="form-control form-control-sm ciudad" id="ciudaddestino" name="ciudaddestinoid" onchange="{ console.log(this.value); }" style="width: 100%;">
+                            <select class="form-control form-control-sm ciudad" id="ciudaddestino" name="ciudaddestinoid" style="width: 100%;">
                                 <option value="0">SELECCIONA</option>
                             </select>
                         </div>
                         <div class="col-4">
                             <label for="tamanioempresa" class="form-label size-12 font-weight-bold float-left">TAMAÑO EMPRESA</label>
-                            <select class="form-control form-control-sm" id="tamanioempresa" name="tamañoempresa" onchange="{ console.log(this.value); }">
+                            <select class="form-control form-control-sm" id="tamanioempresa" name="tamañoempresa">
                                 <option value="0" selected>SELECCIONA</option>
                                 <option value="Pequeño">Pequeño</option>
                                 <option value="Mediano">Mediano</option>
@@ -402,68 +230,67 @@
             $('[type=datetime-local]').map((k, e) => $(e).prop('min', new Date().toISOString().substring(0, 16)));
             initSelects();
             DT();
-            //$('#modaleditardemanda').modal('show');
             $('#modaleditardemanda').on('shown.bs.modal', event => {
-
             });
-
             $('#modalbusqueda').on('shown.bs.modal', event => {
                 $('#fechasalida').prop('min', '');
             });
-
             $('#modaldemanda').on('shown.bs.modal', event => {
-            });
-
-
-            $.get("/Catalogs/Geography/City/getCity", response => {
-                $(`#editorigen, #editdestino`).empty();
-                $(`#editorigen, #editdestino`).append(`<option value="0">SELECCIONA</option>`);
-                response.map(({ id, id_estado, estatus, nombre }) => {
-                    estatus === 1 && $(`#editorigen, #editdestino`).append(`<option value="${id}">${nombre}</option>`);
-                });
-
-                dSelect(`editorigen`);
-                dSelect(`editdestino`);
-            }).fail(error => {
-                console.error(error);
-                dToast("error", "Error al obtener las ciudades", "Atencion!");
             });
         });
 
-        getClientParams = (ClientId, param) => {
-            param.replace(' ', '').split(',').map(p => {
-                switch (p) {
-                    case 'origen':
-                        $.get("/Clients/Origins/getOrigen/", { "Id_Cliente": ClientId }, response => {
-                        });
-                        break;
-                    case 'destino':
-                        $.get("/Clients/Destinations/getDestino/", { "Id_Cliente": ClientId }, response => {
-                        });
-                        break;
-                    default:
-                        break;
-                }
+        const GetAddress = (id, type) => {
+            type === 'origen' ? (
+                $.get(`/Clients/Origins/GetOrigin/${id}`, response => {
+                    if (!response) {
+                        return;
+                    }
+
+                    const { direccion } = response;
+                    console.log('dassdasda', direccion);
+                    direccion && $('[name=direccionremitente]').val(direccion);
+                })
+            ) : (
+                $.get(`/Clients/Destinations/GetDestination/${id}`, response => {
+                    if (!response) {
+                        return;
+                    }
+                    const { direccion } = response;
+                    $('[name=direcciondestinatario]').val(direccion);
+                })
+            );
+        }
+
+        const getClientParams = ClientId => {
+            $.get("/Clients/Origins/getOrigen/", { "Id_Cliente": ClientId }, response => {
+                console.log('origin', response);
+                $(`#editorigen`).empty();
+                $(`#editorigen`).append(`<option value="0" disabled selected>SELECCIONA</option>`);
+                response.length ? (response.map(({ id, estatus, nombre }) => {
+                    estatus === 1 && $(`#editorigen`).append(`<option value="${id}">${nombre}</option>`);
+                })) : (dToast("warning", "El cliente seleccionado no tiene orígenes.", "Atencion!"));
+
+                dSelect(`editorigen`);
+            }).fail(error => {
+                console.error(error);
+                dToast("error", "Error al obtener los origenes del cliente", "Atencion!");
+            });
+
+            $.get("/Clients/Destinations/getDestino/", { "Id_Cliente": ClientId }, response => {
+                $(`#editdestino`).empty();
+                $(`#editdestino`).append(`<option value="0" disabled selected>SELECCIONA</option>`);
+                response.length ? (response.map(({ id, estatus, nombre }) => {
+                    estatus === 1 && $(`#editdestino`).append(`<option value="${id}">${nombre}</option>`);
+                })) : (dToast("warning", "El cliente seleccionado no tiene destinos.", "Atencion!"));
+
+                dSelect(`editdestino`);
+            }).fail(error => {
+                console.error(error);
+                dToast("error", "Error al obtener los destinos del cliente", "Atencion!");
             });
         }
 
-        setLevel = (level, param) => {
-            const selector = param === 'origen' ? '#addciudadoId' : '#addciudaddId';
-            switch (level) {
-                case 'ciudad':
-                    $(selector).prop('disabled', false);
-                    break;
-                //case 'estado':
-                //    break;
-                //case 'ciudad':
-                //    break;
-                default:
-                    $(selector).val(0).prop('disabled', true);
-                    break;
-            }
-        }
-
-        getCities = (selector, idestado) => {
+        const getCities = (selector, idestado) => {
             $(`#${selector}`).empty();
             $.get("/Catalogs/Geography/City/getCity", response => {
                 $(`#${selector}`).empty();
@@ -477,15 +304,14 @@
                 console.error(error);
                 dToast("error", "Error al obtener las ciudades", "Atencion!");
             });
-
             dSelect(selector);
         }
 
-        initSelects = () => {
+        const initSelects = () => {
             $.get("/Clients/getClients", response => {
                 response.map(({ id, nombreCorto, estatus }) => estatus === 1 ? $('.cliente').append(`<option value="${id}">${nombreCorto}</option>`) : null);
                 dSelect('cliente');
-                dSelect('addcliente');
+                dSelect('addeditcliente');
             }).fail(error => {
                 console.error(error);
                 dToast("error", "Error al obtener clientes", "Atencion!");
@@ -494,7 +320,7 @@
             $.get("/Catalogs/TypesOfUnits/getUnidades", response => {
                 response.map(({ id, nombre, estatus }) => estatus === 1 && $(".tipounidad").append(`<option value="${id}">${nombre}</option>`));
                 dSelect('tipounidad');
-                dSelect('addtipounidad');
+                dSelect('addedittipounidad');
             }).fail(error => {
                 console.error(error);
                 dToast("error", "Error al obtener los tipos de unidad", "Atencion!");
@@ -510,9 +336,17 @@
                 console.error(error);
                 dToast("error", "Error al obtener los estados", "Atencion!");
             });
+
+            $.get("/Route/GetRoutes", res => {
+                res.map(({ id, fromTo }) => $('#rutaid').append(`<option value="${id}">${fromTo}</option>`));
+                dSelect('rutaid');
+            }).fail(error => {
+                console.error(error);
+                dToast("error", "Error al obtener las rutas", "Atencion!");
+            });
         };
 
-        editDemand = e => {
+        const editDemand = e => {
             const button = $('#editar');
 
             if (!validateForm('#editDemand')) {
@@ -527,7 +361,7 @@
             setTimeout(() => $(button).prop('disabled', false), 1000);
         }
 
-        addDemand = e => {
+        const addDemand = e => {
             const button = $('#agregar');
 
             if (!validateForm('#addDemand')) {
@@ -546,7 +380,7 @@
             });
         }
 
-        validateForm = (form) => {
+        const validateForm = (form) => {
             let isSet = true;
             $(`${form} select, ${form} input`).map((k, { value }) => {
                 if (!value || value == 0) {
@@ -558,32 +392,30 @@
             return isSet;
         };
 
-        searchdemand = e => {
-            //const button = $('#search');
-            //if (!validateForm('#busqueda')) {
-            //    dToast("error", "Todos los campos son obligatorios", "¡Atencion!");
-            //    return;
-            //}
-
+        const searchdemand = e => {
             const data = Object.fromEntries(new FormData(e));
             DT(true, data);
         }
 
-        edit = Id => {
-            $('#modaleditardemanda').modal('show');
-            $.get('/Demand/GetDemand/', { Id: Id }, response => {
-                response && Object.entries(response).map(([k, v]) => {
-                    if (k.includes('fecha')) {
-                        v = new Date(v).toISOString().substring(0, 16);
-                    }
-
-                    $(`[name=${k.toLowerCase()}]`).val(v);
-                });
-            });
+        const addEdit = Id => {
+            $('#modalAddEdit').modal('show');
+            let title = '';
+            Id > 0 ? (
+                $.get('/Demand/GetDemand/', { Id: Id }, response => {
+                    console.log('das', response);
+                    response && Object.entries(response).map(([k, v]) => {
+                        v = k.includes('fecha') ? new Date(v).toISOString().substring(0, 16) : v;
+                        $(`[name=${k.toLowerCase()}]`).val(v);
+                    });
+                    $('#addEditDemand select').map((k, e) => $(e).trigger('change'));
+                }), title = 'EDITAR DEMANDA'
+            ) : (
+                title = 'AGREGAR DEMANDA', $('#addEditDemand')[0].reset()
+            );
+            $('#modalAddEditlabel').text(title);
         }
 
-
-        DT = (customsearch = false, search) => {
+        const DT = (customsearch = false, search) => {
             Table = $('#table').DataTable({
                 destroy: true,
                 responsive: true,
@@ -595,7 +427,7 @@
                     url: '/Demand/DT',
                     data: data => {
                         data.customsearch = customsearch,
-                        data.searchmodel = search
+                            data.searchmodel = search
                     }
                 },
                 columns: [
@@ -612,21 +444,21 @@
                     {
                         data: 'id',
                         render: (Id, type, full, meta) => `
-                        <a href="javascript:void(0);" onclick="{ edit(${Id}); }">
-                            <span class="material-icons">
-                                edit
-                            </span>
-                        </a>
-                        <a href="javascript:void(0);" onclick="{ create(${Id}); }">
-                            <span class="material-icons">
-                                local_shipping
-                            </span>
-                        </a>
-                        <a href="javascript:void(0);" onclick="{ select(${Id}); }">
-                            <span class="material-icons">
-                                search
-                            </span>
-                        </a>`
+                                                                <a href="javascript:void(0);" onclick="addEdit(${Id});">
+                                                                    <span class="material-icons">
+                                                                        edit
+                                                                    </span>
+                                                                </a>
+                                                                <a href="javascript:void(0);" onclick="create(${Id});">
+                                                                    <span class="material-icons">
+                                                                        local_shipping
+                                                                    </span>
+                                                                </a>
+                                                                <a href="javascript:void(0);" onclick="select(${Id});">
+                                                                    <span class="material-icons">
+                                                                        search
+                                                                    </span>
+                                                                </a>`
                     }
                 ],
                 language: {
@@ -654,7 +486,7 @@
                 ],
                 initComplete: () => {
                     $('#modalbusqueda').modal('hide');
-                    $('#table_length').html(`<a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary float-right" onclick="{ $('#modaldemanda').modal('show'); }"><span class="material-icons">add</span></a>`).show();
+                    $('#table_length').html(`<a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary float-right" onclick="addEdit(0);"><span class="material-icons">add</span></a>`).show();
                 }
             });
         }

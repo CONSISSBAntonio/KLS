@@ -18,6 +18,7 @@ namespace KLS_API.Models.Travels
         public string TipoViaje { get; set; }
         public DateTime FechaSalida { get; set; }
         public DateTime FechaLlegada { get; set; }
+        public string TiempoAnticipacion { get; set; }
         public string DireccionRemitente { get; set; }
         public string DireccionDestinatario { get; set; }
         //Cálculos
@@ -30,7 +31,7 @@ namespace KLS_API.Models.Travels
         public DateTime StatusUpdated { get; set; }
 
         //Extras
-        public string OrdenCompra { get; set; }
+        public string ReferenciaUno{ get; set; }
         public string ReferenciaDos { get; set; }
         public string ReferenciaTres { get; set; }
         public string Shipper { get; set; }

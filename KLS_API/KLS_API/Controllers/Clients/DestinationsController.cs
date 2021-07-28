@@ -67,5 +67,19 @@ namespace KLS_API.Controllers.Clients
             }
         }
 
+        [HttpGet("[action]/{id}")]
+        public IActionResult GetDestination(int id)
+        {
+            try
+            {
+                return Ok(context.Cl_Has_Destinos.Find(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+                throw;
+            }
+        }
+
     }
 }

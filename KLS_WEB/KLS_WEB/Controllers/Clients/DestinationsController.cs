@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using KLS_WEB.Models;
@@ -50,6 +51,13 @@ namespace KLS_WEB.Controllers.Clients
             Cl_Has_Destinos dataReport;
             dataReport = await this.AppContext.Execute<Cl_Has_Destinos>(MethodType.PUT, _UrlApi, dataModel);
             return Json(dataReport);
+        }
+
+        [Route("[action]/{Id}")]
+        public async Task<JsonResult> GetDestination(string Id)
+        {
+            Cl_Has_Destinos destino = await AppContext.Execute<Cl_Has_Destinos>(MethodType.GET, Path.Combine(_UrlApi, "GetDestination", Id), null);
+            return Json(destino);
         }
 
     }

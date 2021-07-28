@@ -16,8 +16,9 @@ namespace KLS_WEB.Models.Travels
         public string Equipo { get; set; }
         public DateTime FechaLlegada { get; set; }
         public DateTime FechaSalida { get; set; }
-        public string OrdenCompra { get; set; }
+        public string TiempoAnticipacion { get; set; }
         public int Origen { get; set; }
+        public string Referencia1 { get; set; }
         public string Referencia2 { get; set; }
         public string Referencia3 { get; set; }
         public int Ruta { get; set; }
