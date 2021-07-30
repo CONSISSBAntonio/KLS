@@ -2,6 +2,7 @@
 using KLS_API.Models.Demands;
 using KLS_API.Models.DT;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace KLS_API.Controllers.Demands
             {
                 var lastDemand = _dbContext.Demands.OrderByDescending(x => x.Id).FirstOrDefault();
                 int id = lastDemand is null ? 1 : lastDemand.Id + 1;
-                demand.Folio = string.Concat("D", DateTime.Now.ToString("ddMM"), id.ToString("D4"));
+                demand.Folio = string.Concat("D", DateTime.Now.ToString("yyMM"), id.ToString("D4"));
                 demand.Status = "nueva";
                 demand.TimeCreated = DateTime.Now;
                 _dbContext.Demands.Add(demand);
@@ -40,9 +41,40 @@ namespace KLS_API.Controllers.Demands
             }
         }
 
+        [HttpPut]
+        public IActionResult PutDemand([FromBody] Demand demand)
+        {
+            try
+            {
+                Demand entry = _dbContext.Demands.Find(demand.Id);
+                if (entry != null)
+                {
+                    entry.ClientId = demand.ClientId;
+                    entry.UnitId = demand.UnitId;
+                    entry.OriginId = demand.OriginId;
+                    entry.DestinationId = demand.DestinationId;
+                    entry.RouteId = demand.RouteId;
+                    entry.FechaDisponibilidad = demand.FechaDisponibilidad;
+                    entry.Arribo = demand.Arribo;
+                    entry.TimeUpdated = DateTime.Now;
+                    _dbContext.SaveChanges();
+                }
+
+                return Ok(demand);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+                throw;
+            }
+        }
+
         class DTModel
         {
             public int Id { get; set; }
+            public int ClientId { get; set; }
+            public int OriginId { get; set; }
+            public int DestinationId { get; set; }
             public string Folio { get; set; }
             public string Cliente { get; set; }
             public string TipoUnidad { get; set; }
@@ -50,6 +82,7 @@ namespace KLS_API.Controllers.Demands
             public string Destino { get; set; }
             public string FechaDisponibilidad { get; set; }
             public string Arribo { get; set; }
+            public string Status { get; set; }
         }
 
         [HttpPost]
@@ -57,88 +90,48 @@ namespace KLS_API.Controllers.Demands
         {
             try
             {
-                IEnumerable<DTModel> demands = !dtParams.CustomSearch ? (from demand in _dbContext.Demands
-                                                                         where demand.Status == "nueva"
+                IEnumerable<DTModel> demands = !dtParams.CustomSearch ? (
+                    _dbContext.Demands.Where(x => x.Status == "nueva").Select(x => new DTModel
+                    {
+                        Id = x.Id,
+                        ClientId = x.ClientId,
+                        OriginId = x.OriginId,
+                        DestinationId = x.DestinationId,
+                        Folio = x.Folio,
+                        Cliente = x.Client.NombreCorto,
+                        TipoUnidad = x.Unit.nombre,
+                        Origen = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Origin.Id_Estado).nombre, "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Origin.Id_Ciudad).nombre),
+                        Destino = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Destination.Id_Estado).nombre, "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Destination.Id_Ciudad).nombre),
+                        FechaDisponibilidad = x.FechaDisponibilidad.ToString("dd/MM/yyyy. HH:mm tt"),
+                        Arribo = x.Arribo ?? "-",
+                        Status = x.Status
+                    }).ToList()
+                ) : (
+                _dbContext.Demands.Where(x => (x.Status == "nueva") && x.ClientId == dtParams.searchmodel.ClientId || x.UnitId == dtParams.searchmodel.UnitId ||
+                x.FechaDisponibilidad == dtParams.searchmodel.FechaSalida || x.Origin.Id_Estado == dtParams.searchmodel.EstadoOrigenId ||
+                x.Origin.Id_Ciudad == dtParams.searchmodel.CiudadOrigenId || x.Destination.Id_Estado == dtParams.searchmodel.EstadoDestinoId ||
+                x.Destination.Id_Ciudad == dtParams.searchmodel.CiudadDestinoId || x.Client.Tamanio == dtParams.searchmodel.TamañoEmpresa).Select(x => new DTModel
+                {
+                    Id = x.Id,
+                    ClientId = x.ClientId,
+                    OriginId = x.OriginId,
+                    DestinationId = x.DestinationId,
+                    Folio = x.Folio,
+                    Cliente = x.Client.NombreCorto,
+                    TipoUnidad = x.Unit.nombre,
+                    Origen = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Origin.Id_Estado).nombre, "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Origin.Id_Ciudad).nombre),
+                    Destino = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Destination.Id_Estado).nombre, "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Destination.Id_Ciudad).nombre),
+                    FechaDisponibilidad = x.FechaDisponibilidad.ToString("dd/MM/yyyy. HH:mm tt"),
+                    Arribo = x.Arribo ?? "-",
+                    Status = x.Status
+                }).ToList()
+                );
 
-                                                                         join client in _dbContext.Clientes on demand.ClientId equals client.id
-                                                                         into demandclient
-                                                                         from clientdata in demandclient.DefaultIfEmpty()
+                if (dtParams.searchmodel != null && dtParams.searchmodel.FiltroCliente != null)
+                {
+                    demands = demands.Where(x => dtParams.searchmodel.FiltroCliente.Contains(x.ClientId));
+                }
 
-                                                                         join unit in _dbContext.Cat_Tipos_Unidades on demand.UnitId equals unit.id
-                                                                         into demandunit
-                                                                         from unitdata in demandunit.DefaultIfEmpty()
-
-                                                                         join ciudadorigen in _dbContext.Cat_Ciudad on demand.CiudadIdOrigen equals ciudadorigen.id
-                                                                         into ciudadorigen
-                                                                         from ciudadorigendata in ciudadorigen.DefaultIfEmpty()
-
-                                                                         join ciudaddestino in _dbContext.Cat_Ciudad on demand.CiudadIdDestino equals ciudaddestino.id
-                                                                         into ciudaddestinodemand
-                                                                         from ciudaddestinodata in ciudaddestinodemand.DefaultIfEmpty()
-
-                                                                             //join origin in _dbContext.Cl_Has_Origen on demand.ClientId equals origin.Id_Cliente
-                                                                             //into demandorigin
-                                                                             //from origindata in demandorigin.DefaultIfEmpty()
-
-                                                                             //join destination in _dbContext.Cl_Has_Destinos on demand.des equals destination.Id_Cliente
-                                                                             //into demanddestination
-                                                                             //from destinationdata in demanddestination.DefaultIfEmpty()
-
-                                                                         select new DTModel
-                                                                         {
-                                                                             Id = demand.Id,
-                                                                             Folio = demand.Folio,
-                                                                             Cliente = clientdata.NombreCorto,
-                                                                             TipoUnidad = unitdata.nombre,
-                                                                             Origen = ciudadorigendata.nombre,
-                                                                             Destino = ciudaddestinodata.nombre,
-                                                                             FechaDisponibilidad = demand.FechaDisponibilidad.ToString("dd/MM/yyyy. HH:mm tt"),
-                                                                             Arribo = demand.Arribo == null ? "" : demand.Arribo
-                                                                         }).ToList() : (
-                                                from demand in _dbContext.Demands
-                                                
-
-                                                join client in _dbContext.Clientes on demand.ClientId equals client.id
-                                                into demandclient
-                                                from clientdata in demandclient.DefaultIfEmpty()
-
-                                                join unit in _dbContext.Cat_Tipos_Unidades on demand.UnitId equals unit.id
-                                                into demandunit
-                                                from unitdata in demandunit.DefaultIfEmpty()
-
-                                                join ciudadorigen in _dbContext.Cat_Ciudad on demand.CiudadIdOrigen equals ciudadorigen.id
-                                                into ciudadorigen
-                                                from ciudadorigendata in ciudadorigen.DefaultIfEmpty()
-
-                                                join ciudaddestino in _dbContext.Cat_Ciudad on demand.CiudadIdDestino equals ciudaddestino.id
-                                                into ciudaddestinodemand
-                                                from ciudaddestinodata in ciudaddestinodemand.DefaultIfEmpty()
-
-                                                where (demand.Status == "nueva") && demand.ClientId == dtParams.searchmodel.ClientId || demand.UnitId == dtParams.searchmodel.UnitId ||
-                                                demand.FechaDisponibilidad == dtParams.searchmodel.FechaSalida || demand.RangoEspera == dtParams.searchmodel.Rango ||
-                                                demand.EstadoIdOrigen == dtParams.searchmodel.EstadoOrigenId || demand.CiudadIdOrigen == dtParams.searchmodel.CiudadOrigenId ||
-                                                demand.EstadoIdDestino == dtParams.searchmodel.EstadoDestinoId || demand.CiudadIdDestino == dtParams.searchmodel.CiudadDestinoId ||
-                                                clientdata.Tamanio == dtParams.searchmodel.TamañoEmpresa
-
-                                                //join origin in _dbContext.Cl_Has_Origen on demand.ClientId equals origin.Id_Cliente
-                                                //into demandorigin
-                                                //from origindata in demandorigin.DefaultIfEmpty()
-
-                                                //join destination in _dbContext.Cl_Has_Destinos on demand.des equals destination.Id_Cliente
-                                                //into demanddestination
-                                                //from destinationdata in demanddestination.DefaultIfEmpty()
-
-                                                select new DTModel
-                                                {
-                                                    Id = demand.Id,
-                                                    Folio = demand.Folio,
-                                                    Cliente = clientdata.NombreCorto,
-                                                    TipoUnidad = unitdata.nombre,
-                                                    Origen = ciudadorigendata.nombre,
-                                                    Destino = ciudaddestinodata.nombre,
-                                                    FechaDisponibilidad = demand.FechaDisponibilidad.ToString("dd/MM/yyyy. HH:mm tt"),
-                                                    Arribo = demand.Arribo == null ? "" : demand.Arribo
-                                                }).ToList();
                 int total = demands.Count();
 
                 if (dtParams.search != null)
@@ -207,29 +200,29 @@ namespace KLS_API.Controllers.Demands
             public string TamañoEmpresa { get; set; }
         }
 
-        [HttpGet]
-        public IActionResult Search([FromBody] SearchModel search)
-        {
-            try
-            {
-                int total = _dbContext.Demands.Where(x => x.Status == "nueva").Count();
-                List<Demand> demands = _dbContext.Demands.Where(x => x.ClientId == search.ClientId || x.UnitId == search.UnitId ||
-                x.FechaDisponibilidad == search.FechaSalida || x.RangoEspera == search.Rango || x.EstadoIdOrigen == search.EstadoOrigenId ||
-                x.CiudadIdOrigen == search.CiudadOrigenId || x.EstadoIdDestino == search.EstadoDestinoId || x.CiudadIdDestino == search.CiudadDestinoId).ToList();
+        //[HttpGet]
+        //public IActionResult Search([FromBody] SearchModel search)
+        //{
+        //    try
+        //    {
+        //        int total = _dbContext.Demands.Where(x => x.Status == "nueva").Count();
+        //        List<Demand> demands = _dbContext.Demands.Where(x => x.ClientId == search.ClientId || x.UnitId == search.UnitId ||
+        //        x.FechaDisponibilidad == search.FechaSalida || x.RangoEspera == search.Rango || x.EstadoIdOrigen == search.EstadoOrigenId ||
+        //        x.CiudadIdOrigen == search.CiudadOrigenId || x.EstadoIdDestino == search.EstadoDestinoId || x.CiudadIdDestino == search.CiudadDestinoId).ToList();
 
-                return Ok(new
-                {
-                    aaData = demands,
-                    draw = 0,
-                    iTotalRecords = total,
-                    iTotalDisplayRecords = demands.Count()
-                });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-                throw;
-            }
-        }
+        //        return Ok(new
+        //        {
+        //            aaData = demands,
+        //            draw = 0,
+        //            iTotalRecords = total,
+        //            iTotalDisplayRecords = demands.Count()
+        //        });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex);
+        //        throw;
+        //    }
+        //}
     }
 }

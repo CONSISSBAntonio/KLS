@@ -9,6 +9,7 @@ using KLS_WEB.Services;
 using KLS_WEB.Models;
 using System.IO;
 using KLS_WEB.Models.DT;
+using KLS_WEB.Models.Travels;
 
 namespace KLS_WEB.Controllers.Demand
 {
@@ -30,9 +31,12 @@ namespace KLS_WEB.Controllers.Demand
         }
 
         [HttpPost]
-        public async Task<JsonResult> SetDemand(DemandDTO model)
+        public async Task<JsonResult> AddEditDemand(DemandDTO model)
         {
-            DemandDTO demand = await AppContext.Execute<DemandDTO>(MethodType.POST, Path.Combine(_UrlApi, "SetDemand"), model);
+            model.Id = model.Id == -1 ? 0 : model.Id;
+            string action = model.Id == 0 ? "SetDemand" : "PutDemand";
+            var verb = model.Id == 0 ? MethodType.POST : MethodType.PUT;
+            DemandDTO demand = await AppContext.Execute<DemandDTO>(verb, Path.Combine(_UrlApi, action), model);
 
             return Json(demand);
         }
@@ -51,12 +55,25 @@ namespace KLS_WEB.Controllers.Demand
             return Json(demand);
         }
 
-        //[HttpPost]
-        //public async Task<JsonResult> Search(SearchModel search)
-        //{
-        //    List<DemandDTO> result = await AppContext.Execute<List<DemandDTO>>(MethodType.GET, Path.Combine(_UrlApi, "Search"), search);
+        [Route("[controller]/[action]/{DemandId}")]
+        public async Task<IActionResult> SetTravel(string DemandId)
+        {
+            DemandDTO demand = await AppContext.Execute<DemandDTO>(MethodType.GET, Path.Combine(_UrlApi, "GetDemand", DemandId), null);
 
-        //    return Json(result);
-        //}
+            Travel lasttravel = await AppContext.Execute<Travel>(MethodType.GET, Path.Combine("Travels", "GetTravel", "0"), null);
+
+            Travel travel = new Travel
+            {
+                Id = lasttravel.Id,
+                ClienteId = demand.ClientId,
+                TipoUnidad = demand.UnitId,
+                Origen = demand.OriginId,
+                Destino = demand.DestinationId,
+                Ruta = demand.RouteId,
+                FechaSalida = demand.FechaDisponibilidad
+            };
+
+            return View("~/Views/Travels/New.cshtml", travel);
+        }
     }
 }

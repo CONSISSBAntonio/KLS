@@ -47,6 +47,7 @@ namespace KLS_WEB.Models.DT
             public int EstadoDestinoId { get; set; }
             public int CiudadDestinoId { get; set; }
             public string TamañoEmpresa { get; set; }
+            public int[] FiltroCliente { get; set; }
         }
     }
 }

@@ -6,6 +6,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20210723235742_demand.cs" />
+    <Compile Remove="Migrations\20210723235742_demand.Designer.cs" />
+    <Compile Remove="Migrations\20210727164702_ruta-update.cs" />
+    <Compile Remove="Migrations\20210727164702_ruta-update.Designer.cs" />
+    <Compile Remove="Migrations\20210728213754_demand.cs" />
+    <Compile Remove="Migrations\20210728213754_demand.Designer.cs" />
+    <Compile Remove="Migrations\20210728221940_demand.cs" />
+    <Compile Remove="Migrations\20210728221940_demand.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.10" />

@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210727164702_ruta-update")]
-    partial class rutaupdate
+    [Migration("20210728222312_demand")]
+    partial class demand
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1260,43 +1260,25 @@ namespace KLS_API.Migrations
                     b.Property<string>("Arribo")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<int>("Cantidad")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CiudadIdDestino")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CiudadIdOrigen")
-                        .HasColumnType("int");
-
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
 
-                    b.Property<int>("EstadoIdDestino")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EstadoIdOrigen")
+                    b.Property<int>("DestinationId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("FechaDisponibilidad")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime>("FechaLlegada")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Folio")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("NivelDestino")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("NivelOrigen")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<int>("RangoEspera")
+                    b.Property<int>("OriginId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RegionIdDestino")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RegionIdOrigen")
+                    b.Property<int>("RouteId")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
@@ -1308,16 +1290,23 @@ namespace KLS_API.Migrations
                     b.Property<DateTime>("TimeUpdated")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("ToleranciaDestino")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ToleranciaOrigen")
-                        .HasColumnType("int");
+                    b.Property<string>("TipoViaje")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<int>("UnitId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("DestinationId");
+
+                    b.HasIndex("OriginId");
+
+                    b.HasIndex("RouteId");
+
+                    b.HasIndex("UnitId");
 
                     b.ToTable("Demands");
                 });
@@ -1787,6 +1776,39 @@ namespace KLS_API.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("KLS_API.Models.Demands.Demand", b =>
+                {
+                    b.HasOne("KLS_API.Models.Clients.Clientes", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("KLS_API.Models.Clients.Cl_Has_Destinos", "Destination")
+                        .WithMany()
+                        .HasForeignKey("DestinationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("KLS_API.Models.Clients.Cl_Has_Origen", "Origin")
+                        .WithMany()
+                        .HasForeignKey("OriginId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("KLS_API.Models.Ruta", "Route")
+                        .WithMany()
+                        .HasForeignKey("RouteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("KLS_API.Models.Cat_Tipos_Unidades", "Unit")
+                        .WithMany()
+                        .HasForeignKey("UnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("KLS_API.Models.Region_Has_Estado", b =>

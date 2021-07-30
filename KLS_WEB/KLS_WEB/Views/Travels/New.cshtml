@@ -23,16 +23,15 @@
     <div class="p-4">
         <div class="d-flex justify-content-between mb-3">
             <div class="d-flex">
-                <a href="/Travels">
+                <a href="/@(!string.IsNullOrEmpty(Model.DireccionDestinatario) ? "Travels" : "Demand")">
                     <div class="material-icons icon-red">arrow_back</div>
                 </a>
                 <div class="text-uppercase poppins medium size-24 pl-2">Nuevo viaje</div>
 
             </div>
             <div>
-                @*Folio es el tipo de viaje + día del mes + numero de mes + consecutivo de 4 números*@
                 @{string id = Model is null ? "0001" : (++Model.Id).ToString("D4"); }
-                <h4 class="text-secondary" id="folio">VT@(string.Concat(DateTime.Now.ToString("ddMM"), id))</h4>
+                <h4 class="text-secondary" id="folio">VT@(string.Concat(DateTime.Now.ToString("yyMM"), id))</h4>
             </div>
         </div>
 
@@ -43,14 +42,15 @@
                     <div class="form-group col-6">
                         <label class="col-form-label col-form-label-sm">Cliente</label>
                         <div>
-                            <select class="form-control form-control-sm" id="cliente" name="cliente" style="width: 100%;" onchange="{ getReferencia(this.value); }">
+                            <select asp-for="ClienteId" class="form-control form-control-sm" id="cliente" name="cliente" style="width: 100%;" onchange="getClientParams(this.value)">
+                                <option value="0" selected disabled>SELECCIONA</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group col-2">
                         <label class="col-form-label col-form-label-sm">Fecha de salida</label>
                         <div>
-                            <input type="datetime-local" class="form-control form-control-sm" id="fechasalida" name="fechasalida" required>
+                            <input asp-for="FechaSalida" type="datetime-local" class="form-control form-control-sm" id="fechasalida" name="fechasalida" required>
                         </div>
                     </div>
                     <div class="form-group col-2">
@@ -74,15 +74,15 @@
                             <a class="btn btn-link text-primary" onclick="agregarCiudad(this);">Agregar</a>
                         </div>
                         <div>
-                            <select class="form-control form-control-sm text-uppercase" id="origen" name="origen" style="width: 100%;">
+                            <select class="form-control form-control-sm text-uppercase" id="origen" name="origen" style="width: 100%;" onchange="GetAddress(this.value, 'origen')">
+                                <option value="0" selected disabled>SELECCIONA</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group col-6">
                         <label class="col-form-label col-form-label-sm">Dirección Remitente</label>
                         <div>
-                            <input type="text" class="form-control form-control-sm" id="direccionremitente"
-                                   name="direccionremitente" required>
+                            <input type="text" class="form-control form-control-sm" id="direccionremitente" name="direccionremitente" required readonly>
                         </div>
                     </div>
                 </div>
@@ -94,15 +94,15 @@
                             <a class="btn btn-link text-primary" onclick="agregarCiudad(this);">Agregar</a>
                         </div>
                         <div>
-                            <select class="form-control form-control-sm" id="destino" name="destino" style="width: 100%;">
+                            <select class="form-control form-control-sm" id="destino" name="destino" style="width: 100%;" onchange="GetAddress(this.value, 'destino')">
+                                <option value="0" selected disabled>SELECCIONA</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group col-6">
                         <label class="col-form-label col-form-label-sm">Dirección Destinatario</label>
                         <div>
-                            <input type="text" class="form-control form-control-sm" id="direcciondestinatario"
-                                   name="direcciondestinatario" required>
+                            <input type="text" class="form-control form-control-sm" id="direcciondestinatario" name="direcciondestinatario" required readonly>
                         </div>
                     </div>
                 </div>
@@ -111,7 +111,7 @@
                     <div class="form-group col-6">
                         <label class="col-form-label col-form-label-sm">Ruta</label>
                         <div>
-                            <select class="form-control form-control-sm" id="ruta" name="ruta" style="width: 100%;">
+                            <select asp-for="Ruta" class="form-control form-control-sm" id="ruta" name="ruta" style="width: 100%;">
                             </select>
                         </div>
                     </div>
@@ -327,21 +327,26 @@
 
 @section Scripts{
     <script>
-    var dataCity = [];
-    var catPais = [];
-    var catEstado = [];
-    var catCiudad = [];
+        let dataCity = [];
+        let catPais = [];
+        let catEstado = [];
+        let catCiudad = [];
+        const ClientId = @Model.ClienteId ;
+        const OriginId = @Model.Origen ;
+        const DesitnationId = @Model.Destino ;
+        const RouteId = @Model.Ruta ;
+        const UnitId = @Model.TipoUnidad ;
+        const isDemand = @(string.IsNullOrEmpty(Model.DireccionDestinatario) ? "true" : "false");
 
-    $(window).ready(function () {
+    $(() => {
         loadState();
         loadCountry();
-        loadCity();
         loadUnits();
         initSelects();
         dSelect('tipoviaje');
         $('[type=datetime-local]').map((k, e) => $(e).prop('min', new Date().toISOString().substring(0, 16)));
 
-        $(".viaje").submit(function (event) {
+        $(".viaje").submit(event => {
             event.preventDefault();
             if (!existenServicios()) {
                 dToast("error", "LOS SERVICIOS SON OBLIGATORIOS", "Error");
@@ -367,13 +372,14 @@
             jsonData = { ...jsonData, ...details };
 
             const serviceExists = jsonData.servicios != '' && jsonData.unidad != '' && true;
-            console.log('post', jsonData);
+
             if (serviceExists) {
-                $.post("/Travels/setTravels", jsonData, function (res) {
+                $.post("/Travels/setTravels", jsonData, response =>  {
                     dToast("success", "Registro guardado exitosamente.", "Registrado");
                     $(".guardar").attr("disabled", false);
                     window.location.replace("@Url.Action("", "Travels")");
-                }).fail(function (error) {
+                }).fail(error => {
+                    console.error(error);
                     dToast("error", "Error al tratar de guardar el registro", "Error");
                     $(".guardar").attr("disabled", false);
                 });
@@ -385,7 +391,54 @@
         });
     });
 
-        getReferencia = ClientId => {
+        const GetAddress = (id, type) => {
+            type === 'origen' ? (
+                $.get(`/Clients/Origins/GetOrigin/${id}`, response => {
+                    if (!response) {
+                        return;
+                    }
+
+                    const { direccion } = response;
+                    direccion && $('#direccionremitente').val(direccion);
+                })
+            ) : (
+                $.get(`/Clients/Destinations/GetDestination/${id}`, response => {
+                    if (!response) {
+                        return;
+                    }
+                    const { direccion } = response;
+                    $('#direcciondestinatario').val(direccion);
+                })
+            );
+        }
+
+        const getClientParams = ClientId => {
+            $.get("/Clients/Origins/getOrigen/", { "Id_Cliente": ClientId }, response => {
+                $(`#origen`).empty();
+                $(`#origen`).append(`<option value="0" disabled selected>SELECCIONA</option>`);
+                response.length ? (response.map(({ id, estatus, nombre }) => {
+                    estatus === 1 && $(`#origen`).append(`<option value="${id}">${nombre}</option>`);
+                })) : (dToast("warning", "El cliente seleccionado no tiene orígenes.", "Atencion!"));
+
+                dSelect(`origen`);
+            }).fail(error => {
+                console.error(error);
+                dToast("error", "Error al obtener los origenes del cliente", "Atencion!");
+            });
+
+            $.get("/Clients/Destinations/getDestino/", { "Id_Cliente": ClientId }, response => {
+                $(`#destino`).empty();
+                $(`#destino`).append(`<option value="0" disabled selected>SELECCIONA</option>`);
+                response.length ? (response.map(({ id, estatus, nombre }) => {
+                    estatus === 1 && $(`#destino`).append(`<option value="${id}">${nombre}</option>`);
+                })) : (dToast("warning", "El cliente seleccionado no tiene destinos.", "Atencion!"));
+
+                dSelect(`destino`);
+            }).fail(error => {
+                console.error(error);
+                dToast("error", "Error al obtener los destinos del cliente", "Atencion!");
+            });
+
             $.get(`/Clients/Others/getOtros/`, { Id_Cliente: ClientId }, ({
                 referencia1,
                 referencia2,
@@ -402,7 +455,7 @@
             });
         }
 
-        validarSelect = () => {
+        const validarSelect = () => {
             let isset = true;
             $('.serviciosseleccionados select').map((k, { value }) => {
                 if (value == 0) {
@@ -413,7 +466,7 @@
             return isset;
         }
 
-        existenServicios = () => {
+        const existenServicios = () => {
             let isset = false;
             $('#frmServicios input').map((k, { checked }) => {
                 if (checked) {
@@ -424,7 +477,7 @@
             return isset;
         }
 
-        function SetFolio(tipoviaje) {
+        const SetFolio = tipoviaje => {
             switch (tipoviaje) {
                 case 'VTNOW':
                     tipoviaje = tipoviaje.replace('NOW', '');
@@ -451,41 +504,55 @@
             $('#folio').text($('#folio').text().replace(/[a-zA-Z_]+/g, tipoviaje));
         }
 
-        function initSelects() {
-            $.get("/Clients/getClients", res => {
-                res.map(({ id, nombreCorto, estatus }) => estatus === 1 ? $('#cliente').append(`<option value="${id}">${nombreCorto}</option>`) : null);
+        const initSelects = () => {
+            $.get("/Clients/getClients", response => {
+                response.map(({ id, nombreCorto, estatus }) => estatus === 1 ? $('#cliente').append(`<option value="${id}">${nombreCorto}</option>`) : null);
                 dSelect('cliente');
             });
-            $.get("/Route/GetRoutes", res => {
-                res.map(({ id, fromTo }) => $('#ruta').append(`<option value="${id}">${fromTo}</option>`));
+            $.get("/Route/GetRoutes", response => {
+                response.map(({ id, fromTo }) => $('#ruta').append(`<option value="${id}">${fromTo}</option>`));
                 dSelect('ruta');
             });
+
+            if (isDemand) {
+                setTimeout(() => {
+                    $('#cliente').val(ClientId).trigger('change');
+                    $('#ruta').val(RouteId).trigger('change');
+                    $('#tipounidad').val(RouteId).trigger('change');
+                }, 100);
+
+                setTimeout(() => {
+                    $('#origen').val(OriginId).trigger('change');
+                    $('#destino').val(DesitnationId).trigger('change');
+                }, 200);
+            }
         };
 
-    function agregarCiudad(element) {
+    const agregarCiudad = element => {
         $('#modalAgregarCiudad').modal('show');
     }
 
-    function closeModal(action) {
+    const closeModal = action => {
         $('#modalDiv').modal('hide');
         if (action == 'agregarciudad') {
-            var jsonData = convertJson($("#frmAgregarCiudad"));
-            $.post("/Catalogs/Geography/City/setCity", jsonData, function (res) {
+            let jsonData = convertJson($("#frmAgregarCiudad"));
+            $.post("/Catalogs/Geography/City/setCity", jsonData, response => {
                 loadCity();
                 $('#modalAgregarCiudad').modal('hide');
                 dToast("success", "Registro actualizado exitosamente.", "Registrado");
                 $(".guardar").attr("disabled", false);
                 $('#frmAgregarCiudad')[0].reset();
-            }).fail(function (error) {
+            }).fail(error => {
+                console.error(error);
                 dToast("error", "Error al tratar de guardar el registro", "Error");
                 $(".guardar").attr("disabled", false);
             });
         } else {
             const servicios = $('#frmServicios').serialize();
             if (servicios) {
-                $.post("@Url.Action("ReturnServicios", "Travels")", { servicios: servicios }, function (res) {
+                $.post("@Url.Action("ReturnServicios", "Travels")", { servicios: servicios }, response => {
                     $('.addServicios').hide();
-                    $('.serviciosseleccionados').html(res).show('slow', () => { $('.serviciosseleccionados').show(); });
+                    $('.serviciosseleccionados').html(response).show('slow', () => { $('.serviciosseleccionados').show(); });
                 });
             } else {
                 $(`.addServicios`).show('slow', () => { $('.addServicios').show(); });
@@ -495,22 +562,23 @@
         }
 
         //Cargar unidades
-        function loadUnits() {
-            $.get("/Catalogs/TypesOfUnits/getUnidades", function (res) {
+        const loadUnits = () => {
+            $.get("/Catalogs/TypesOfUnits/getUnidades", response => {
                 $("#tipounidad").empty();
-                $.each(res, function (item, key) {
+                $.each(response, function (item, key) {
                     key.estatus === 1 && $("#tipounidad").append(`<option value="${key.id}">${key.nombre}</option>`);
                 });
                 dSelect('tipounidad');
-            }).fail(function (error) {
+            }).fail(error => {
+                console.error(error);
                 dToast("error", "Error al obtener ciudades", "Atencion!");
             });
         }
 
     //Cargar ciudades
-    function loadCity() {
-        $.get("/Catalogs/Geography/City/getCity", function (res) {
-            res.map(data => {
+    const loadCity = () => {
+        $.get("/Catalogs/Geography/City/getCity", response => {
+            response.map(data => {
                 const { id, nombre, estatus } = data;
 
                 if (estatus === 1) {
@@ -520,15 +588,16 @@
             });
             dSelect('origen');
             dSelect('destino');
-        }).fail(function (error) {
+        }).fail(error => {
+            console.error(error);
             dToast("error", "Error al obtener tipos de unidad", "Atencion!");
         });
     }
 
     //Cargar paises
-    function loadCountry() {
-        $.get("/Catalogs/Geography/Country/getCountry", function (res) {
-            res.map(data => {
+    const loadCountry = () => {
+        $.get("/Catalogs/Geography/Country/getCountry", response => {
+            response.map(data => {
                 const { id, pais, estatus } = data;
                 if (estatus === 1) {
                     catPais = [...catPais, data];
@@ -536,30 +605,31 @@
                 }
             });
             dSelect('id_pais');
-        }).fail(function (error) {
+        }).fail(error => {
+            console.error(error);
             dToast("error", "Error al obtener paises", "Atencion!");
         });
     }
 
     //Cargar estados
-    function loadState() {
-        $.get("/Catalogs/Geography/State/getState", function (res) {
+    const loadState = () => {
+        $.get("/Catalogs/Geography/State/getState", response => {
             $("#id_estado").empty();
-            res.map(data => {
+            response.map(data => {
                 const { id, nombre, estatus } = data;
                 if (estatus === 1) {
                     $("#id_estado").append(`<option value="${id}">${nombre}</option>`);
                 }
             });
             dSelect('id_estado');
-        }).fail(function (error) {
-            dToast("error", "Error al tener esUrlados", "Atencion!");
+        }).fail(error => {
+            console.error(error);
+            dToast("error", "Error al obtener los estados", "Atencion!");
         });
     }
 
-    function selectServicios(element) {
-        const elemento = jQuery(element);
-        elemento.attr('disabled', true);
+    const selectServicios = element =>  {
+        $(element).attr('disabled', true);
         $("#modalDiv").modal("show");
     }
 

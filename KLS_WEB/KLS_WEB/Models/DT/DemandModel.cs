@@ -8,6 +8,9 @@ namespace KLS_WEB.Models.DT
     public class DemandModel
     {
         public int Id { get; set; }
+        public int ClientId { get; set; }
+        public int OriginId { get; set; }
+        public int DestinationId { get; set; }
         public string Folio { get; set; }
         public string Cliente { get; set; }
         public string TipoUnidad { get; set; }
