@@ -20,6 +20,9 @@ namespace KLS_WEB.Models.Travels
         public int IdRuta { get; set; }
         public int IdUnidad { get; set; }
         public string TipoViaje { get; set; }
+        public string EnlaceEspejo { get; set; }
+        public string UsuarioEspejo { get; set; }
+        public string PassEspejo { get; set; }
         public string ReferenciaUno { get; set; }
         public string ReferenciaDos { get; set; }
         public string ReferenciaTres { get; set; }

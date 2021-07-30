@@ -1,4 +1,6 @@
-﻿@{
+﻿@model KLS_WEB.Models.Travels.CartaPorteModel
+
+@{
     Layout = null;
 }
 
@@ -22,6 +24,7 @@
             word-break: break-all;
             border-collapse: collapse;
             font-size: 18px;
+            text-transform: uppercase;
         }
 
         td, th {
@@ -51,6 +54,10 @@
                 font-size: 14px;
                 line-height: 1;
             }
+
+        .header {
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
@@ -66,9 +73,9 @@
         </div>
         <div class="d-flex flex-column">
             <h5 class="text-center"><b>CARTA PORTE</b></h5>
-            <h5 class="m-0"><b>Folio Facturación: MTY-015694</b></h5>
-            <h5><b>Fecha: 29/06/2021</b></h5>
-            <h6><b>Lugar: MONTERREY</b></h6>
+            <h5 class="m-0"><b>Folio Facturación: @Model.FolioFacturacion</b></h5>
+            <h5><b>Fecha: @Model.Fecha</b></h5>
+            <h6><b>Lugar: @Model.Lugar</b></h6>
         </div>
     </div>
 
@@ -76,17 +83,17 @@
         <table>
             <tbody>
                 <tr>
-                    <td colspan="3"><b>Ruta: Guadalajara - Monterrey</b></td>
-                    <td colspan="3"><b>Ejecutivo KLS: SAIDY SALAZAR</b></td>
+                    <td colspan="3"><b>Ruta: @Model.Ruta</b></td>
+                    <td colspan="3"><b>Ejecutivo KLS: @Model.Ejecutivo</b></td>
                 </tr>
                 <tr>
                     <td colspan="3" class="text-center">
                         <h5><b>ORIGEN</b></h5><br />
-                        <p>Calz. Lázaro Cárdenas 975, Colón Industrial, 44940 Guadalajara, Jal</p>
+                        <p>@Model.Origen</p>
                     </td>
                     <td colspan="3" class="text-center">
                         <h5><b>DESTINO</b></h5><br />
-                        <p>Macrocentro Monterrey</p>
+                        <p>@Model.Destino</p>
                     </td>
                 </tr>
                 <tr>
@@ -106,47 +113,85 @@
                 <tr>
                     <td colspan="3">
                         <h5 class="text-center"><b>TRANSPORTISTA</b></h5><br />
-                        <b>Nombre:</b> KLS SA DE CV <br />
-                        <b>Dirección:</b> AV.EUGENIO GARZA SADA MAS PALOMAS #3820 <br /> <br />
-                        <b>Pedido: 92044507006 / 9204454992</b> <br />
-                        <h5 class="mt-5"><b>DATOS DE UNIDAD:</b></h5>
+                        @if (Model.Transportistas.Any())
+                        {
 
-                        T25 Placas: 276EY7 <br />
-                        R-0640 PLACAS: 80UC8Z <br />
-                        R-0440 PLACAS: 954UE2 <br />
-                        OP: ALDO GARCIA <br />
+                            foreach (var transportista in Model.Transportistas)
+                            {
+                                <b>Nombre:</b> @transportista.Nombre <br />
+                                <b>Dirección:</b> @transportista.Direccion <br /> <br />
+                                <b>Pedido: @transportista.Pedido</b> <br />
+                            }
+                        }
+
+                        <h5 class="mt-5"><b>DATOS DE UNIDAD:</b></h5>
+                        @if (Model.Unidades.Any())
+                        {
+                            foreach (var unidad in Model.Unidades)
+                            {
+
+                                <label>@unidad.Nombre Placas:</label>@unidad.Placas <br />
+                                <label>OP:</label>@unidad.Operador <br />
+                            }
+                        }
+
                     </td>
+
                     <td colspan="3">
-                        <b>CITA DE CARGA:</b> 29/06/2021 13:00 <br />
-                        <b>CITA DE DESCARGA:</b>
+
+                        <b>CITA DE CARGA:</b> @Model.CitaCarga <br />
+
+                        <b>CITA DE DESCARGA:</b> @Model.CitaDescarga
+
                     </td>
+
                 </tr>
+
                 <tr>
+
                     <td colspan="2"><b>Póliza de seguro:</b></td>
+
                     <td><b>Maniobras:</b></td>
+
                     <td colspan="3"><b>Subtotal: </b></td>
+
                 </tr>
+
                 <tr>
+
                     <td colspan="2"><b>Kilometraje:</b></td>
+
                     <td><b>Embalaje: </b></td>
+
                     <td colspan="3"><b>IVA 16%: </b></td>
+
                 </tr>
+
                 <tr>
+
                     <td colspan="2"><b>Flete: </b></td>
+
                     <td><b>Otros: </b></td>
+
                     <td colspan="3"><b>Total: </b></td>
+
                 </tr>
+
                 <tr>
+
                     <td colspan="6">
+
                         <h4 class="text-center"><b><u>Requisitos Especiales</u></b></h4> <br />
                         <h5><b>IMPORTANTE</b></h5> <br />
+
                         Si se presenta cualquier Incidencia de Robo, Accidente o Situación de riesgo se deberán de comunicar
                         de inmediato y con alta prioridad al centro de Monitoreo de KLS. <br />
                         <ul>
-                            <li><b>Teléfonos de contacto: </b>(044)81 1016-0540 / (044)81 1176-6530 / (044) 81 1250-7840</li>
+                            <li><b>Teléfonos de contacto: </b>(044) 81 1016-0540 / (044) 81 1176-6530 / (044) 81 1250-7840</li>
                             <li><b>Correo: </b> <u>klsmonitoreo@kls-logistics.com</u></li>
                         </ul> <br />
                         <h5><b>OTROS:</b></h5> <br /><br />
+                        @Model.OtrosRequisitos
                     </td>
                 </tr>
             </tbody>

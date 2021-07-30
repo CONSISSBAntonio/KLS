@@ -90,6 +90,18 @@
                 </div>
             </div>
             <div class="row">
+                <label for="fpreciominimo" class="col-sm-4 col-form-label col-form-label-sm">PRECIO MINÍMO</label>
+                <div class="col-sm-8">
+                    @Html.TextBoxFor(x => x.PrecioMinimo, new { @type = "number", @class = "form-control form-control-sm", @id = "fpreciominimo", @required = "", @onchange = "this.value = parseFloat(this.value).toFixed(2)" })
+                </div>
+            </div>
+            <div class="row">
+                <label for="fpreciomaximo" class="col-sm-4 col-form-label col-form-label-sm">PRECIO MÁXIMO</label>
+                <div class="col-sm-8">
+                    @Html.TextBoxFor(x => x.PrecioMaximo, new { @type = "number", @class = "form-control form-control-sm", @id = "fpreciomaximo", @required = "", @onchange = "this.value = parseFloat(this.value).toFixed(2)" })
+                </div>
+            </div>
+            <div class="row">
                 <label for="fseguridad" class="col-sm-4 col-form-label col-form-label-sm">Seguridad</label>
                 <div class="col-sm-8">
                     @Html.DropDownListFor(x => x.seguridad, new List<SelectListItem>

@@ -70,7 +70,8 @@ namespace KLS_WEB.Controllers.Demand
                 Origen = demand.OriginId,
                 Destino = demand.DestinationId,
                 Ruta = demand.RouteId,
-                FechaSalida = demand.FechaDisponibilidad
+                FechaSalida = demand.FechaDisponibilidad,
+                IsDemand = true
             };
 
             return View("~/Views/Travels/New.cshtml", travel);

@@ -25,6 +25,8 @@ namespace KLS_WEB.Models
         public string seguridad { get; set; }
         [Column(TypeName = "varchar(20)")]
         public string demanda { get; set; }
+        public decimal PrecioMinimo { get; set; }
+        public decimal PrecioMaximo { get; set; }
         public int estatus { get; set; }
 
         //Monitoreo

@@ -57,10 +57,11 @@ namespace KLS_WEB.Controllers.Travels
             return Json(historial);
         }
 
-        [Route("CartaPorte")]
-        public IActionResult CartaPorte()
+        [Route("[action]/{TravelId}")]
+        public async Task<IActionResult> CartaPorte(string TravelId)
         {
-            return new ViewAsPdf();
+            CartaPorteModel cartaPorte = await AppContext.Execute<CartaPorteModel>(MethodType.GET, Path.Combine(_UrlApi, "CartaPorte", TravelId), null);
+            return new ViewAsPdf(cartaPorte);
         }
 
         [Route("GetEstatus")]
@@ -97,7 +98,7 @@ namespace KLS_WEB.Controllers.Travels
             Travel travel = await AppContext.Execute<Travel>(MethodType.GET, Path.Combine(_UrlApi, "GetTravel", id.ToString()), null);
             TempData["TravelId"] = travel is null ? 0 : travel.Id;
             TempData.Keep();
-            return View(this._UrlView + (id == 0 ? "New.cshtml" : "Details.cshtml"), travel);
+            return View(this._UrlView + (id == 0 ? "New.cshtml" : "Details.cshtml"), travel == null ? new Travel() : travel);
         }
 
         [Route("setMercancia")]
@@ -206,6 +207,8 @@ namespace KLS_WEB.Controllers.Travels
                     IdRuta = dataModel.Ruta,
                     IdUnidad = dataModel.TipoUnidad,
                     TipoViaje = dataModel.TipoViaje,
+                    UsuarioEspejo = dataModel.UsuarioEspejo,
+                    PassEspejo = dataModel.PassEspejo,
                     ReferenciaUno = dataModel.Referencia1,
                     ReferenciaDos = dataModel.Referencia2,
                     ReferenciaTres = dataModel.Referencia3,

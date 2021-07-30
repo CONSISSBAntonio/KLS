@@ -30,6 +30,8 @@ namespace KLS_WEB.Models.Travels
         public decimal Preciototal { get; set; }
         public int TipoUnidad { get; set; }
         public string TipoViaje { get; set; }
+        public string UsuarioEspejo { get; set; }
+        public string PassEspejo { get; set; }
         public int Transportista { get; set; }
         public string Unidad { get; set; }
         public string Folio { get; set; }
@@ -48,6 +50,7 @@ namespace KLS_WEB.Models.Travels
         // ServicesId para details
         public string ServiciosIds { get; set; }
         public List<int> ServicesId { get; set; }
+        public bool IsDemand { get; set; }
 
     }
 }

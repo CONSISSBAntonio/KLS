@@ -31,6 +31,8 @@ namespace KLS_API.Models.Travels
         public DateTime StatusUpdated { get; set; }
 
         //Extras
+        public string UsuarioEspejo { get; set; }
+        public string PassEspejo { get; set; }
         public string ReferenciaUno{ get; set; }
         public string ReferenciaDos { get; set; }
         public string ReferenciaTres { get; set; }

@@ -71,7 +71,7 @@
                     <div class="form-group col-6">
                         <div class="d-flex justify-content-between">
                             <label class="col-form-label col-form-label-sm">Origen</label>
-                            <a class="btn btn-link text-primary" onclick="agregarCiudad(this);">Agregar</a>
+                            <a class="btn btn-link text-primary" onclick="showModal('AGREGAR','Agregar', 'origen')">Agregar</a>
                         </div>
                         <div>
                             <select class="form-control form-control-sm text-uppercase" id="origen" name="origen" style="width: 100%;" onchange="GetAddress(this.value, 'origen')">
@@ -91,7 +91,7 @@
                     <div class="form-group col-6">
                         <div class="d-flex justify-content-between">
                             <label class="col-form-label col-form-label-sm">Destino</label>
-                            <a class="btn btn-link text-primary" onclick="agregarCiudad(this);">Agregar</a>
+                            <a class="btn btn-link text-primary" onclick="showModal('AGREGAR','Agregar', 'destino')">Agregar</a>
                         </div>
                         <div>
                             <select class="form-control form-control-sm" id="destino" name="destino" style="width: 100%;" onchange="GetAddress(this.value, 'destino')">
@@ -134,6 +134,27 @@
                                 <option value="VA">AÉREO</option>
                                 <option value="VMM">MULTIMODAL</option>
                             </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-4">
+                        <label class="col-form-label col-form-label-sm">Enlace cuenta espejo</label>
+                        <div>
+                            <input type="text" class="form-control form-control-sm" id="enlaceespejo" name="enlaceespejo" required>
+                        </div>
+                    </div>
+                    <div class="form-group col-4">
+                        <label class="col-form-label col-form-label-sm">Usuario</label>
+                        <div>
+                            <input type="text" class="form-control form-control-sm" id="usuarioespejo" name="usuarioespejo" required>
+                        </div>
+                    </div>
+                    <div class="form-group col-4">
+                        <label class="col-form-label col-form-label-sm">Contraseña</label>
+                        <div>
+                            <input type="text" class="form-control form-control-sm" id="passespejo" name="passespejo" required>
                         </div>
                     </div>
                 </div>
@@ -243,54 +264,76 @@
         </div>
     </div>
 </div>
-<!--Modal global-->
-<!--Modal agregar ciudad-->
-<div class="modal fade" id="modalAgregarCiudad" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false"
-     aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+<!--Modal AGREGAR ORIGEN-DESTINO-->
+<div class="modal fade" id="modalOD" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"></h5>
+                <h5 class="modal-title" id="titulo-modal"></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body text-left">
-                <form id="frmAgregarCiudad" onsubmit="event.preventDefault(); closeModal('agregarciudad');">
+                <form id="frmOD" action="#" method="post">
                     <input type="hidden" name="id" id="idEditar" value="0" />
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <label class="">País</label><br />
-                                <select class="form-control" name="id_pais" id="id_pais" style="width:100%">
-                                </select>
+                                <label class="">Nombre</label>
+                                <input type="text" class="form-control" name="Nombre" id="Nombre" required />
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="">Estado</label><br />
-                            <select class="form-control" name="id_estado" id="id_estado" style="width:100%">
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="">ID SEPOMEX</label>
-                            <input type="text" class="form-control" name="id_sepomex" id="id_sepomex" required />
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
-                            <label class="">Ciudad/Municipio</label>
-                            <input type="text" class="form-control" name="nombre" id="nombre" value="" required />
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="">CP</label>
+                                <input type="number" class="form-control" name="Cp" id="Cp" required />
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <label class="">Estatus</label><br />
-                            <select class="form-control form-control-sm" name="estatus" id="estatus" style="width:100%">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="">Estado</label>
+                                <select class="form-control form-control-sm" name="Id_Estado" id="Id_Estado" onchange="setCiudad(this.value);">
+                                    <option value="0">Selecciona</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="">Ciudad</label>
+                                <select class="form-control form-control-sm" name="Id_Ciudad" id="Id_Ciudad" onchange="setColonias(this.value);">
+                                    <option value="0">Selecciona</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="">Colonia</label>
+                                <select class="form-control form-control-sm" name="Id_Colonia" id="Id_Colonia" onchange="setCp(this.value);">
+                                    <option value="0">Selecciona</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="">Dirección</label>
+                                <input type="text" class="form-control" name="Direccion" id="Direccion" required />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="">Estatus</label>
+                            <select class="form-control form-control-sm" name="Estatus" id="Estatus">
                                 <option value="1">Activo</option>
                                 <option value="2">Inactivo</option>
                             </select>
                         </div>
                     </div>
-                    <br />
-                    <button type="submit" class="btn btn-dark guardar" style="width:100%;">
+                    <button type="submit" class="btn btn-dark guardar" style="width:22%;" id="btnAccion">
                         Guardar
                     </button>
                 </form>
@@ -298,11 +341,12 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
+                @*<button type="button" class="btn btn-primary">Save changes</button>*@
             </div>
         </div>
     </div>
 </div>
-<!--Modal agregar ciudad-->
+<!--Modal AGREGAR ORIGEN-DESTINO-->
 <!-- modal confirm delete-->
 
 <div class="modal fade" id="popup" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -336,13 +380,18 @@
         const DesitnationId = @Model.Destino ;
         const RouteId = @Model.Ruta ;
         const UnitId = @Model.TipoUnidad ;
-        const isDemand = @(string.IsNullOrEmpty(Model.DireccionDestinatario) ? "true" : "false");
+        const isDemand = @(Model.IsDemand ? "true" : "false");
+
+        let dataOrigenes = [];
+        let dataState = [];
+        let dataColonies = [];
 
     $(() => {
         loadState();
         loadCountry();
         loadUnits();
         initSelects();
+        getCatalogos();
         dSelect('tipoviaje');
         $('[type=datetime-local]').map((k, e) => $(e).prop('min', new Date().toISOString().substring(0, 16)));
 
@@ -389,7 +438,113 @@
                 $(".guardar").attr("disabled", false);
             }
         });
+
+        $("#frmOD").submit(function (event) {
+            event.preventDefault();
+            const type = $(this).attr('rel') == 'destino' ? 'Destinations/setDestino' : 'Origins/setOrigen';
+            var jsonData = convertJson($("#frmOD"));
+            jsonData["Id_Cliente"] = $('#cliente').val();
+            if (parseInt($("#Id_Ciudad").val()) != 0 && parseInt($("#Id_Estado").val()) != 0 && parseInt($("#Id_Colonia").val()) != 0) {
+                $.post(`/Clients/${type}`, jsonData, function (res) {
+                    dToast("success", "Registro guardado exitosamente.", "Registrado");
+                    $(".guardar").attr("disabled", false);
+                    $('#frmOD').trigger("reset");
+                    $('#cliente').val(jsonData["Id_Cliente"]).trigger('change');
+                }).fail(function (error) {
+                    dToast("error", "Error al tratar de guardar el registro", "Error");
+                    $(".guardar").attr("disabled", false);
+                });
+            } else {
+                dToast("error", "Selecciona una opción", "Error");
+            }
+        });
+
+        //Buscar por CP
+        $('#Cp').keypress(function (e) {
+            var keycode = (e.keyCode ? e.keyCode : e.which);
+            if (keycode == '13') {
+                searcCP();
+                e.preventDefault();
+                return false;
+            }
+        });
     });
+
+        //Catalogos
+        function getCatalogos() {
+            $.get("/Catalogs/Geography/State/getState", function (res) {
+                dataState = res;
+                $("#Id_Estado").empty();
+                $("#Id_Estado").append(`<option value="0">Selecciona una opción</option>`);
+                $.each(dataState, function (item, key) {
+                    if (parseInt(key.estatus) == 1) {
+                        $("#Id_Estado").append(`<option value="${key.id}">${key.nombre}</option>`);
+                    };
+                });
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+            });
+
+            $.get("/Catalogs/Geography/City/getCity", function (res) {
+                dataCity = res;
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+            });
+
+            $.get("/Catalogs/Geography/Colonies/getColonies", function (res) {
+                dataColonies = res;
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+            });
+        }
+
+        function searcCP() {
+            var codigoP = $("#Cp").val();
+            $.each(dataColonies, function (item, key) {
+                if (parseInt(key.estatus) == 1 && parseInt(key.cp) == parseInt(codigoP)) {
+                    $('#Id_Estado option[value="' + key.id_estado + '"]').attr("selected", true);
+                    setCiudad(key.id_estado);
+                    $("#Id_Estado").change();
+                    $('#Id_Ciudad option[value="' + key.id_ciudad + '"]').attr("selected", true);
+                    $("#Id_Ciudad").change();
+                    setColonias(key.id_ciudad);
+                    $("#Id_Colonia").change();
+                };
+            });
+
+        }
+
+        function setCp(id) {
+            let indice = dataColonies.findIndex(service => service.id == id);
+            if (parseInt(id) != 0) {
+                if (parseInt(indice) >= 0) {
+                    $("#Cp").val(dataColonies[indice].cp);
+                } else {
+                    $("#Cp").val("");
+                    dToast("info", "No se encontro ninguna colonia", "Atención");
+                }
+            }
+        }
+
+        function setColonias(id) {
+            $("#Id_Colonia").empty();
+            $("#Id_Colonia").append(`<option value="0">Selecciona una opción</option>`);
+            $.each(dataColonies, function (item, key) {
+                if (parseInt(key.estatus) == 1 && parseInt(id) == parseInt(key.id_ciudad)) {
+                    $("#Id_Colonia").append(`<option value="${key.id}">${key.nombre}</option>`);
+                };
+            });
+        }
+
+        function setCiudad(id) {
+            $("#Id_Ciudad").empty();
+            $("#Id_Ciudad").append(`<option value="0">Selecciona una opción</option>`);
+            $.each(dataCity, function (item, key) {
+                if (parseInt(key.estatus) == 1 && parseInt(id) == parseInt(key.id_estado)) {
+                    $("#Id_Ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
+                };
+            });
+        }
 
         const GetAddress = (id, type) => {
             type === 'origen' ? (
@@ -528,9 +683,14 @@
             }
         };
 
-    const agregarCiudad = element => {
-        $('#modalAgregarCiudad').modal('show');
-    }
+        function showModal(titulo = "Title", accion, type) {
+            $('#frmOD').trigger("reset").attr('rel', type);
+            $(".guardar").html(accion);
+            $("#titulo-modal").empty("");
+            $("#titulo-modal").html(titulo);
+            $("#idEditar").val(idEditar);
+            $("#modalOD").modal("show");
+        }
 
     const closeModal = action => {
         $('#modalDiv').modal('hide');

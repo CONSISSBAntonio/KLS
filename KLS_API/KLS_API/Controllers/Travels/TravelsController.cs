@@ -309,5 +309,43 @@ namespace KLS_API.Controllers.Travels
                 return BadRequest(ex);
             }
         }
+
+        [HttpGet("[action]/{TravelId}")]
+        public IActionResult CartaPorte(int TravelId) {
+            try
+            {
+                CartaPorteModel cartaPorte = _dbContext.Servicios.Where(x => x.TravelId == TravelId).Select(x => new CartaPorteModel
+                {
+                    FolioFacturacion = "MTY015694",
+                    Fecha = DateTime.Now.ToString("d"),
+                    Lugar = "Monterrey",
+                    Ruta = _dbContext.Cat_Estado.FirstOrDefault(y => y.id == _dbContext.Cl_Has_Origen.FirstOrDefault( y => y.Id == x.Travel.IdOrigen).Id_Estado).nombre,
+                    Ejecutivo = "SAIDY SALAZAR",
+                    Origen = _dbContext.Cat_Estado.FirstOrDefault(y => y.id ==_dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == x.Travel.IdOrigen).Id_Estado).nombre,
+                    Destino = _dbContext.Cat_Estado.FirstOrDefault(y => y.id ==_dbContext.Cl_Has_Destinos.FirstOrDefault(y => y.Id == x.Travel.IdDestino).Id_Estado).nombre,
+                    Transportistas = _dbContext.Transportista.Where(y => y.id == x.IdTransportista).Select(y => new CartaPorteModel.TransportistaModel
+                    {
+                        Nombre = _dbContext.Transportista.FirstOrDefault(y => y.id == x.IdTransportista).NombreComercial,
+                        Direccion = _dbContext.Transportista.FirstOrDefault(y => y.id == x.IdTransportista).DireccionOficinas,
+                        Pedido = "92044507006 / 9204454992"
+                    }).ToList(),
+                    Unidades = _dbContext.Unidades.Where(y => y.ServicesId == x.Id).Select(y => new CartaPorteModel.UnidadModel
+                    {
+                        Nombre = _dbContext.Tr_Has_Inventario.FirstOrDefault(z => z.Id == y.IdUnidad).Marca,
+                        Placas = _dbContext.Tr_Has_Inventario.FirstOrDefault(z => z.Id == y.IdUnidad).Placa,
+                        Operador = _dbContext.Tr_Has_Operadores.FirstOrDefault(z => z.Id == y.IdUnidad).nombre
+                    }).ToList(),
+                    CitaCarga = DateTime.Now,
+                    CitaDescarga = DateTime.Now
+                }).FirstOrDefault();
+
+                return Ok(cartaPorte);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+                throw;
+            }
+        }
     }
 }
