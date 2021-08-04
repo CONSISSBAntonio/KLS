@@ -608,14 +608,19 @@
                 dToast("error", "Error al obtener los destinos del cliente", "Atencion!");
             });
 
-            $.get(`/Clients/Others/getOtros/`, { Id_Cliente: ClientId }, ({
-                referencia1,
-                referencia2,
-                referencia3,
-                treferencia1,
-                treferencia2,
-                treferencia3
-            }) => {
+            $.get(`/Clients/Others/getOtros/`, { Id_Cliente: ClientId }, response => {
+                if (!response) {
+                    return;
+                }
+
+                const {
+                    referencia1,
+                    referencia2,
+                    referencia3,
+                    treferencia1,
+                    treferencia2,
+                    treferencia3
+                } = response;
                 let referencias = ``;
                 referencias += referencia1 ? `<div class="form-group col-4" ><label class="col-form-label col-form-label-sm">${treferencia1.toUpperCase()}</label><div><input type="text" class="form-control form-control-sm" id="referencia1" name="referencia1" required></div></div>` : '';
                 referencias += referencia2 ? `<div class="form-group col-4" ><label class="col-form-label col-form-label-sm">${treferencia2.toUpperCase()}</label><div><input type="text" class="form-control form-control-sm" id="referencia2" name="referencia2" required></div></div>` : '';
@@ -687,14 +692,14 @@
             if (isDemand) {
                 setTimeout(() => {
                     $('#cliente').val(ClientId).trigger('change');
-                    $('#ruta').val(RouteId).trigger('change');
                     $('#tipounidad').val(RouteId).trigger('change');
-                }, 100);
+                }, 400);
 
                 setTimeout(() => {
                     $('#origen').val(OriginId).trigger('change');
                     $('#destino').val(DesitnationId).trigger('change');
-                }, 200);
+                    $('#ruta').val(RouteId).trigger('change');
+                }, 800);
             }
         };
 
@@ -742,7 +747,8 @@
                     minimo && maximo && $('.priceinfo').text(`$${parseFloat(minimo).toFixed(2)} - $${parseFloat(maximo).toFixed(2)}`), $('[name=terrestrenacionalprecio]').val(parseFloat(maximo).toFixed(2));
                 })
             ) : (
-                dToast("warning", "No hay una ruta seleccionada", "¡Atencion!")
+                //dToast("warning", "No hay una ruta seleccionada", "¡Atencion!")
+                console.log(31)
                 )
         }
 

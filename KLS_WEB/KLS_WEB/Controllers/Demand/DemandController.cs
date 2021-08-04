@@ -64,7 +64,7 @@ namespace KLS_WEB.Controllers.Demand
 
             Travel travel = new Travel
             {
-                Id = lasttravel.Id,
+                Id = lasttravel == null ? 1 : lasttravel.Id,
                 ClienteId = demand.ClientId,
                 TipoUnidad = demand.UnitId,
                 Origen = demand.OriginId,
