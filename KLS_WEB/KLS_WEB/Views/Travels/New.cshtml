@@ -74,7 +74,7 @@
                             <a class="btn btn-link text-primary" onclick="showModal('AGREGAR','Agregar', 'origen')">Agregar</a>
                         </div>
                         <div>
-                            <select class="form-control form-control-sm text-uppercase" id="origen" name="origen" style="width: 100%;" onchange="GetAddress(this.value, 'origen')">
+                            <select class="form-control form-control-sm text-uppercase" id="origen" name="origen" style="width: 100%;" onchange="GetAddress(this.value, 'origen'), getRoute()">
                                 <option value="0" selected disabled>SELECCIONA</option>
                             </select>
                         </div>
@@ -94,7 +94,7 @@
                             <a class="btn btn-link text-primary" onclick="showModal('AGREGAR','Agregar', 'destino')">Agregar</a>
                         </div>
                         <div>
-                            <select class="form-control form-control-sm" id="destino" name="destino" style="width: 100%;" onchange="GetAddress(this.value, 'destino')">
+                            <select class="form-control form-control-sm" id="destino" name="destino" style="width: 100%;" onchange="GetAddress(this.value, 'destino'), getRoute()">
                                 <option value="0" selected disabled>SELECCIONA</option>
                             </select>
                         </div>
@@ -111,7 +111,8 @@
                     <div class="form-group col-6">
                         <label class="col-form-label col-form-label-sm">Ruta</label>
                         <div>
-                            <select asp-for="Ruta" class="form-control form-control-sm" id="ruta" name="ruta" style="width: 100%;">
+                            <select asp-for="Ruta" class="form-control form-control-sm" id="ruta" name="ruta" style="width: 100%;" onchange="GetRoutePrice(this.value)">
+                                <option value="0" selected disabled>SELECCIONA</option>
                             </select>
                         </div>
                     </div>
@@ -475,7 +476,7 @@
             $.get("/Catalogs/Geography/State/getState", function (res) {
                 dataState = res;
                 $("#Id_Estado").empty();
-                $("#Id_Estado").append(`<option value="0">Selecciona una opción</option>`);
+                $("#Id_Estado").append(`<option value="0" selected disabled>Selecciona una opción</option>`);
                 $.each(dataState, function (item, key) {
                     if (parseInt(key.estatus) == 1) {
                         $("#Id_Estado").append(`<option value="${key.id}">${key.nombre}</option>`);
@@ -528,7 +529,7 @@
 
         function setColonias(id) {
             $("#Id_Colonia").empty();
-            $("#Id_Colonia").append(`<option value="0">Selecciona una opción</option>`);
+            $("#Id_Colonia").append(`<option value="0" selected disabled>Selecciona una opción</option>`);
             $.each(dataColonies, function (item, key) {
                 if (parseInt(key.estatus) == 1 && parseInt(id) == parseInt(key.id_ciudad)) {
                     $("#Id_Colonia").append(`<option value="${key.id}">${key.nombre}</option>`);
@@ -538,13 +539,25 @@
 
         function setCiudad(id) {
             $("#Id_Ciudad").empty();
-            $("#Id_Ciudad").append(`<option value="0">Selecciona una opción</option>`);
+            $("#Id_Ciudad").append(`<option value="0" selected disabled>Selecciona una opción</option>`);
             $.each(dataCity, function (item, key) {
                 if (parseInt(key.estatus) == 1 && parseInt(id) == parseInt(key.id_estado)) {
                     $("#Id_Ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
                 };
             });
         }
+
+        function getRoute() {
+            const origenid = $('#origen').val();
+            const destinoid = $('#destino').val();
+            origenid != null && destinoid != null && (
+                $("#ruta").empty().append(`<option value="0" selected disabled>Selecciona una opción</option>`),
+                $.post('/Travels/GetRuta', { origenid: origenid, destinoid: destinoid }, response => {
+                    response && response.length > 0 ? response.map(({ id, od }) => $('#ruta').append(`<option value="${id}">${od}</option>`)
+                    ) : ($("#ruta").empty().append(`<option value="0" selected disabled>No se encontraron rutas</option>`));
+                })
+            )
+            dSelect('ruta');}
 
         const GetAddress = (id, type) => {
             type === 'origen' ? (
@@ -664,11 +677,12 @@
                 response.map(({ id, nombreCorto, estatus }) => estatus === 1 ? $('#cliente').append(`<option value="${id}">${nombreCorto}</option>`) : null);
                 dSelect('cliente');
             });
-            $.get("/Route/GetRoutes", response => {
-                response.map(({ id, fromTo }) => $('#ruta').append(`<option value="${id}">${fromTo}</option>`));
-                dSelect('ruta');
-            });
+            //$.get("/Route/GetRoutes", response => {
+            //    response.map(({ id, fromTo }) => $('#ruta').append(`<option value="${id}">${fromTo}</option>`));
+            //    dSelect('ruta');
+            //});
 
+            !isDemand && $('#fechasalida').val('');
             if (isDemand) {
                 setTimeout(() => {
                     $('#cliente').val(ClientId).trigger('change');
@@ -712,13 +726,23 @@
             if (servicios) {
                 $.post("@Url.Action("ReturnServicios", "Travels")", { servicios: servicios }, response => {
                     $('.addServicios').hide();
-                    $('.serviciosseleccionados').html(response).show('slow', () => { $('.serviciosseleccionados').show(); });
+                    $('.serviciosseleccionados').html(response).show('slow', () => { $('.serviciosseleccionados').show(), GetRoutePrice($('#ruta').val()); });
                 });
             } else {
                 $(`.addServicios`).show('slow', () => { $('.addServicios').show(); });
                 $('.serviciosseleccionados').empty().hide();
             }
         }
+        }
+
+        const GetRoutePrice = RouteId => {
+            RouteId ? (
+                $.get('/Travels/GetRoutePrice', { RouteId: RouteId }, ({ minimo, maximo }) => {
+                    minimo && maximo && $('.priceinfo').text(`$${parseFloat(minimo).toFixed(2)} - $${parseFloat(maximo).toFixed(2)}`), $('[name=terrestrenacionalprecio]').val(parseFloat(maximo).toFixed(2));
+                })
+            ) : (
+                dToast("warning", "No hay una ruta seleccionada", "¡Atencion!")
+                )
         }
 
         //Cargar unidades

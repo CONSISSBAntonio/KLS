@@ -1,6 +1,7 @@
 ﻿using KLS_API.Models;
 using KLS_WEB.Models;
 using KLS_WEB.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -56,7 +57,7 @@ namespace KLS_WEB.Views.Catalogs.City
         [Route("putRoute")]
         public async Task<JsonResult> Put(Route dataModel)
         {
-            dataModel.actualizadopor = User.Identity.Name;
+            dataModel.actualizadopor = HttpContext.Session.GetString("UserFN");
             dataModel.ultimocambio = DateTime.Now;
             await this.AppContext.Execute<Route>(MethodType.PUT, _UrlApi, dataModel);
             return Json(dataModel);

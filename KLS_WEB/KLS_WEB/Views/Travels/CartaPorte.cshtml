@@ -101,7 +101,7 @@
                 </tr>
                 <tr>
                     <td><b>Cantidad:</b></td>
-                    <td><b>Embalaje</b></td>
+                    <td><b>Embalaje:</b></td>
                     <td><b>Descripción:</b></td>
                     <td><b>Peso Kg:</b></td>
                     <td><b>Volumen m2:</b></td>
@@ -120,7 +120,13 @@
                             {
                                 <b>Nombre:</b> @transportista.Nombre <br />
                                 <b>Dirección:</b> @transportista.Direccion <br /> <br />
-                                <b>Pedido: @transportista.Pedido</b> <br />
+                                <b>Pedido: @foreach (var referencia in Model.Pedido)
+                                {
+                                    if (referencia != null)
+                                    {
+                                        @string.Concat(referencia, " / ")
+                                    }
+                                }</b> <br />
                             }
                         }
 
@@ -130,8 +136,8 @@
                             foreach (var unidad in Model.Unidades)
                             {
 
-                                <label>@unidad.Nombre Placas:</label>@unidad.Placas <br />
-                                <label>OP:</label>@unidad.Operador <br />
+                                <label>@unidad.Nombre Placas: </label> @unidad.Placas <br />
+                                <label>OP: </label> @unidad.Operador <br />
                             }
                         }
 

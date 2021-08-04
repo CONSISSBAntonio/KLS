@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using KLS_API.Models;
 
 namespace KLS_API.Controllers.Travels
 {
@@ -311,24 +312,36 @@ namespace KLS_API.Controllers.Travels
         }
 
         [HttpGet("[action]/{TravelId}")]
-        public IActionResult CartaPorte(int TravelId) {
+        public IActionResult CartaPorte(int TravelId)
+        {
             try
             {
                 CartaPorteModel cartaPorte = _dbContext.Servicios.Where(x => x.TravelId == TravelId).Select(x => new CartaPorteModel
                 {
-                    FolioFacturacion = "MTY015694",
+                    FolioFacturacion = x.Travel.Folio,
                     Fecha = DateTime.Now.ToString("d"),
                     Lugar = "Monterrey",
-                    Ruta = _dbContext.Cat_Estado.FirstOrDefault(y => y.id == _dbContext.Cl_Has_Origen.FirstOrDefault( y => y.Id == x.Travel.IdOrigen).Id_Estado).nombre,
-                    Ejecutivo = "SAIDY SALAZAR",
-                    Origen = _dbContext.Cat_Estado.FirstOrDefault(y => y.id ==_dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == x.Travel.IdOrigen).Id_Estado).nombre,
-                    Destino = _dbContext.Cat_Estado.FirstOrDefault(y => y.id ==_dbContext.Cl_Has_Destinos.FirstOrDefault(y => y.Id == x.Travel.IdDestino).Id_Estado).nombre,
+                    Ruta = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == _dbContext.Ruta.FirstOrDefault(y => y.id == x.Travel.IdRuta).id_estadoorigen).nombre, ", ",
+                    _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == _dbContext.Ruta.FirstOrDefault(y => y.id == x.Travel.IdRuta).id_ciudadorigen).nombre, " - ",
+                    _dbContext.Cat_Estado.FirstOrDefault(y => y.id == _dbContext.Ruta.FirstOrDefault(y => y.id == x.Travel.IdRuta).id_estadodestino).nombre, ", ",
+                    _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == _dbContext.Ruta.FirstOrDefault(y => y.id == x.Travel.IdRuta).id_ciudaddestino).nombre),
+                    Ejecutivo = _dbContext.Clientes.FirstOrDefault(y => y.id == x.Travel.IdCliente).Ejecutivo,
+                    Origen = string.Concat(
+                        _dbContext.Cl_Has_Origen.Where(y => y.Id == x.Travel.IdOrigen).Select(y => string.Concat(y.Direccion, ", ", y.Cp, ", ",
+                        _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == x.Travel.IdOrigen).Id_Ciudad).nombre, ", ",
+                        _dbContext.Cat_Estado.FirstOrDefault(y => y.id == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == x.Travel.IdOrigen).Id_Estado).nombre))
+                    ),
+                    Destino = string.Concat(
+                        _dbContext.Cl_Has_Destinos.Where(y => y.Id == x.Travel.IdDestino).Select(y => string.Concat(y.Direccion, ", ", y.Cp, ", ",
+                        _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == _dbContext.Cl_Has_Destinos.FirstOrDefault(y => y.Id == x.Travel.IdDestino).Id_Ciudad).nombre, ", ",
+                        _dbContext.Cat_Estado.FirstOrDefault(y => y.id == _dbContext.Cl_Has_Destinos.FirstOrDefault(y => y.Id == x.Travel.IdDestino).Id_Estado).nombre))
+                    ),
                     Transportistas = _dbContext.Transportista.Where(y => y.id == x.IdTransportista).Select(y => new CartaPorteModel.TransportistaModel
                     {
                         Nombre = _dbContext.Transportista.FirstOrDefault(y => y.id == x.IdTransportista).NombreComercial,
-                        Direccion = _dbContext.Transportista.FirstOrDefault(y => y.id == x.IdTransportista).DireccionOficinas,
-                        Pedido = "92044507006 / 9204454992"
+                        Direccion = _dbContext.Transportista.FirstOrDefault(y => y.id == x.IdTransportista).DireccionOficinas
                     }).ToList(),
+                    Pedido = new string[] { x.Travel.ReferenciaUno, x.Travel.ReferenciaDos, x.Travel.ReferenciaTres },
                     Unidades = _dbContext.Unidades.Where(y => y.ServicesId == x.Id).Select(y => new CartaPorteModel.UnidadModel
                     {
                         Nombre = _dbContext.Tr_Has_Inventario.FirstOrDefault(z => z.Id == y.IdUnidad).Marca,
@@ -340,6 +353,59 @@ namespace KLS_API.Controllers.Travels
                 }).FirstOrDefault();
 
                 return Ok(cartaPorte);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+                throw;
+            }
+        }
+
+        public class SearchRuta
+        {
+            public int Id { get; set; }
+            public string OD { get; set; }
+            public int OrigenId { get; set; }
+            public int DestinoId { get; set; }
+        }
+
+        [HttpPost("[action]")]
+        public IActionResult GetRuta([FromBody] SearchRuta search)
+        {
+            try
+            {
+                List<SearchRuta> routes = _dbContext.Ruta.Where(x => x.id_ciudadorigen == _dbContext.Cl_Has_Origen.Find(search.OrigenId).Id_Ciudad && x.id_ciudaddestino == _dbContext.Cl_Has_Destinos.Find(search.DestinoId).Id_Ciudad).Select(x => new SearchRuta
+                {
+                    Id = x.id,
+                    OD = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.id_estadoorigen).nombre, ", ", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.id_ciudadorigen).nombre, " - ", _dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.id_estadodestino).nombre, ", ", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.id_ciudaddestino).nombre)
+                })
+                .ToList();
+                return Ok(routes);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+                throw;
+            }
+        }
+
+        public class RoutePrice
+        {
+            public decimal Minimo { get; set; }
+            public decimal Maximo { get; set; }
+        }
+
+        [HttpGet("[action]/{RouteId}")]
+        public IActionResult GetRoutePrice(int RouteId)
+        {
+            try
+            {
+                return Ok(_dbContext.Ruta.Where(x => x.id == RouteId).Select(x => new RoutePrice
+                {
+                    Minimo = x.PrecioMinimo,
+                    Maximo = x.PrecioMaximo
+                }).FirstOrDefault());
             }
             catch (Exception ex)
             {

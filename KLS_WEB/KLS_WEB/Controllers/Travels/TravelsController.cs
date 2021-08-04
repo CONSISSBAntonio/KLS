@@ -30,6 +30,22 @@ namespace KLS_WEB.Controllers.Travels
             this.AppContext = _AppContext;
         }
 
+        public class SearchRuta
+        {
+            public int Id { get; set; }
+            public string OD { get; set; }
+            public int OrigenId { get; set; }
+            public int DestinoId { get; set; }
+        }
+
+        [Route("[action]")]
+        public async Task<JsonResult> GetRuta(SearchRuta search)
+        {
+            List<SearchRuta> route = await AppContext.Execute<List<SearchRuta>>(MethodType.POST, Path.Combine(_UrlApi, "GetRuta"), search);
+            return Json(route);
+        }
+
+
         [Route("SetHistorial")]
         public void SetHistorial(string accion)
         {
@@ -302,6 +318,20 @@ namespace KLS_WEB.Controllers.Travels
         public PartialViewResult ReturnServicios(Travel travel)
         {
             return PartialView(string.Concat(_UrlView, "_Servicios.cshtml"), travel);
+        }
+
+
+        public class RoutePrice
+        {
+            public decimal Minimo { get; set; }
+            public decimal Maximo { get; set; }
+        }
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<JsonResult> GetRoutePrice(string RouteId)
+        {
+            RoutePrice price = await AppContext.Execute<RoutePrice>(MethodType.GET, Path.Combine(_UrlApi, "GetRoutePrice", RouteId), null);
+            return Json(price);
         }
 
     }

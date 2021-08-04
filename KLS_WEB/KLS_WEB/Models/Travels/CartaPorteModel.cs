@@ -36,12 +36,12 @@ namespace KLS_WEB.Models.Travels
         public string Otros { get; set; }
         public decimal Total { get; set; }
         public string OtrosRequisitos { get; set; }
+        public string[] Pedido { get; set; }
 
         public class TransportistaModel
         {
             public string Nombre { get; set; }
             public string Direccion { get; set; }
-            public string Pedido { get; set; }
         }
         public class UnidadModel
         {
