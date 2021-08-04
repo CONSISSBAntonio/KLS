@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210804135737_datete")]
-    partial class datete
+    [Migration("20210804141427_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1429,6 +1429,12 @@ namespace KLS_API.Migrations
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    b.Property<decimal>("PrecioMaximo")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal>("PrecioMinimo")
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("actualizadopor")
                         .HasColumnType("varchar(100)");

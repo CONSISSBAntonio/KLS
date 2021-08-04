@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace KLS_API.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -374,7 +374,8 @@ namespace KLS_API.Migrations
                     Id_Ciudad = table.Column<int>(nullable: false),
                     Id_Colonia = table.Column<int>(nullable: false),
                     Direccion = table.Column<string>(type: "varchar(120)", nullable: true),
-                    Estatus = table.Column<int>(nullable: false)
+                    Estatus = table.Column<int>(nullable: false),
+                    HoraAtencion = table.Column<string>(type: "varchar(20)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -412,7 +413,8 @@ namespace KLS_API.Migrations
                     Id_Ciudad = table.Column<int>(nullable: false),
                     Id_Colonia = table.Column<int>(nullable: false),
                     Direccion = table.Column<string>(type: "varchar(120)", nullable: true),
-                    Estatus = table.Column<int>(nullable: false)
+                    Estatus = table.Column<int>(nullable: false),
+                    HoraAtencion = table.Column<string>(type: "varchar(20)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -526,6 +528,36 @@ namespace KLS_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Oferta",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Transportista = table.Column<int>(nullable: false),
+                    Tipo_De_Unidad = table.Column<int>(nullable: false),
+                    Cantidad = table.Column<int>(nullable: false),
+                    Fecha_Disponibilidad = table.Column<DateTime>(nullable: false),
+                    Rango_De_Espera = table.Column<int>(nullable: false),
+                    Nivel_Origen = table.Column<string>(type: "varchar(20)", nullable: false),
+                    Region_Origen = table.Column<int>(nullable: false),
+                    Estado_Origen = table.Column<int>(nullable: false),
+                    ciudad_Origen = table.Column<int>(nullable: false),
+                    Tolerancia_Origen = table.Column<int>(nullable: false),
+                    Nivel_Destino = table.Column<int>(nullable: false),
+                    Region_Destino = table.Column<int>(nullable: false),
+                    estado_Destino = table.Column<int>(nullable: false),
+                    ciudad_Destino = table.Column<int>(nullable: false),
+                    Tolerancia_Destino = table.Column<int>(nullable: false),
+                    status = table.Column<int>(nullable: false),
+                    ToleranciaOrigen = table.Column<int>(nullable: false),
+                    ToleranciaDestino = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Oferta", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Ruta",
                 columns: table => new
                 {
@@ -537,8 +569,11 @@ namespace KLS_API.Migrations
                     id_ciudaddestino = table.Column<int>(nullable: false),
                     totalkilometros = table.Column<int>(nullable: false),
                     eficiencia = table.Column<int>(nullable: false),
+                    tiemporuta = table.Column<int>(nullable: false),
                     seguridad = table.Column<string>(type: "varchar(20)", nullable: true),
                     demanda = table.Column<string>(type: "varchar(20)", nullable: true),
+                    PrecioMinimo = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
+                    PrecioMaximo = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
                     estatus = table.Column<int>(nullable: false),
                     frecvalidacion = table.Column<int>(nullable: false),
                     restriccioncirc = table.Column<string>(type: "varchar(100)", nullable: true),
@@ -696,7 +731,7 @@ namespace KLS_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tr_Has_Rutas",
+                name: "Tr_Has_Ruta",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -708,7 +743,7 @@ namespace KLS_API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tr_Has_Rutas", x => x.Id);
+                    table.PrimaryKey("PK_Tr_Has_Ruta", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -759,12 +794,17 @@ namespace KLS_API.Migrations
                     TipoViaje = table.Column<string>(nullable: true),
                     FechaSalida = table.Column<DateTime>(nullable: false),
                     FechaLlegada = table.Column<DateTime>(nullable: false),
+                    TiempoAnticipacion = table.Column<string>(nullable: true),
                     DireccionRemitente = table.Column<string>(nullable: true),
                     DireccionDestinatario = table.Column<string>(nullable: true),
                     CostoTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     PrecioClienteTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Estatus = table.Column<string>(nullable: true),
-                    OrdenCompra = table.Column<string>(nullable: true),
+                    SubEstatus = table.Column<string>(nullable: true),
+                    StatusUpdated = table.Column<DateTime>(nullable: false),
+                    UsuarioEspejo = table.Column<string>(nullable: true),
+                    PassEspejo = table.Column<string>(nullable: true),
+                    ReferenciaUno = table.Column<string>(nullable: true),
                     ReferenciaDos = table.Column<string>(nullable: true),
                     ReferenciaTres = table.Column<string>(nullable: true),
                     Shipper = table.Column<string>(nullable: true),
@@ -904,6 +944,82 @@ namespace KLS_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Demands",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ClientId = table.Column<int>(nullable: false),
+                    UnitId = table.Column<int>(nullable: false),
+                    OriginId = table.Column<int>(nullable: false),
+                    DestinationId = table.Column<int>(nullable: false),
+                    RouteId = table.Column<int>(nullable: false),
+                    Folio = table.Column<string>(nullable: true),
+                    FechaDisponibilidad = table.Column<DateTime>(nullable: false),
+                    FechaLlegada = table.Column<DateTime>(nullable: false),
+                    Arribo = table.Column<string>(nullable: true),
+                    TipoViaje = table.Column<string>(nullable: true),
+                    Status = table.Column<string>(nullable: true),
+                    TimeCreated = table.Column<DateTime>(nullable: false),
+                    TimeUpdated = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Demands", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Demands_Clientes_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clientes",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Demands_Cl_Has_Destinos_DestinationId",
+                        column: x => x.DestinationId,
+                        principalTable: "Cl_Has_Destinos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Demands_Cl_Has_Origen_OriginId",
+                        column: x => x.OriginId,
+                        principalTable: "Cl_Has_Origen",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Demands_Ruta_RouteId",
+                        column: x => x.RouteId,
+                        principalTable: "Ruta",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Demands_Cat_Tipos_Unidades_UnitId",
+                        column: x => x.UnitId,
+                        principalTable: "Cat_Tipos_Unidades",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ruta_has_inventario",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Id_Tr_Has_Rutas = table.Column<int>(nullable: false),
+                    Id_Inventario = table.Column<int>(nullable: false),
+                    Tr_Has_RutaId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ruta_has_inventario", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ruta_has_inventario_Tr_Has_Ruta_Tr_Has_RutaId",
+                        column: x => x.Tr_Has_RutaId,
+                        principalTable: "Tr_Has_Ruta",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Facturacion",
                 columns: table => new
                 {
@@ -920,6 +1036,28 @@ namespace KLS_API.Migrations
                     table.PrimaryKey("PK_Facturacion", x => x.id);
                     table.ForeignKey(
                         name: "FK_Facturacion_Viajes_TravelId",
+                        column: x => x.TravelId,
+                        principalTable: "Viajes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Historial",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    TravelId = table.Column<int>(nullable: false),
+                    Registro = table.Column<string>(nullable: true),
+                    Usuario = table.Column<string>(nullable: true),
+                    TimeCreated = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Historial", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Historial_Viajes_TravelId",
                         column: x => x.TravelId,
                         principalTable: "Viajes",
                         principalColumn: "Id",
@@ -1041,8 +1179,38 @@ namespace KLS_API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Demands_ClientId",
+                table: "Demands",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Demands_DestinationId",
+                table: "Demands",
+                column: "DestinationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Demands_OriginId",
+                table: "Demands",
+                column: "OriginId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Demands_RouteId",
+                table: "Demands",
+                column: "RouteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Demands_UnitId",
+                table: "Demands",
+                column: "UnitId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Facturacion_TravelId",
                 table: "Facturacion",
+                column: "TravelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Historial_TravelId",
+                table: "Historial",
                 column: "TravelId");
 
             migrationBuilder.CreateIndex(
@@ -1054,6 +1222,11 @@ namespace KLS_API.Migrations
                 name: "IX_Region_Has_Estado_Cat_RegionId",
                 table: "Region_Has_Estado",
                 column: "Cat_RegionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ruta_has_inventario_Tr_Has_RutaId",
+                table: "ruta_has_inventario",
+                column: "Tr_Has_RutaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Servicios_TravelId",
@@ -1114,9 +1287,6 @@ namespace KLS_API.Migrations
                 name: "Cat_Terrestres_Internacionales");
 
             migrationBuilder.DropTable(
-                name: "Cat_Tipos_Unidades");
-
-            migrationBuilder.DropTable(
                 name: "Cl_Has_Biblioteca");
 
             migrationBuilder.DropTable(
@@ -1132,13 +1302,7 @@ namespace KLS_API.Migrations
                 name: "Cl_Has_Contactos");
 
             migrationBuilder.DropTable(
-                name: "Cl_Has_Destinos");
-
-            migrationBuilder.DropTable(
                 name: "Cl_Has_Evidencia");
-
-            migrationBuilder.DropTable(
-                name: "Cl_Has_Origen");
 
             migrationBuilder.DropTable(
                 name: "Cl_Has_Otros");
@@ -1150,22 +1314,28 @@ namespace KLS_API.Migrations
                 name: "Cl_Has_Routes");
 
             migrationBuilder.DropTable(
-                name: "Clientes");
+                name: "Demands");
 
             migrationBuilder.DropTable(
                 name: "Facturacion");
 
             migrationBuilder.DropTable(
+                name: "Historial");
+
+            migrationBuilder.DropTable(
                 name: "Mercancias");
+
+            migrationBuilder.DropTable(
+                name: "Oferta");
 
             migrationBuilder.DropTable(
                 name: "Region_Has_Estado");
 
             migrationBuilder.DropTable(
-                name: "Ruta");
+                name: "Ruta_Has_Checkpoint");
 
             migrationBuilder.DropTable(
-                name: "Ruta_Has_Checkpoint");
+                name: "ruta_has_inventario");
 
             migrationBuilder.DropTable(
                 name: "Tr_Has_Biblioteca");
@@ -1186,9 +1356,6 @@ namespace KLS_API.Migrations
                 name: "Tr_Has_Operadores");
 
             migrationBuilder.DropTable(
-                name: "Tr_Has_Rutas");
-
-            migrationBuilder.DropTable(
                 name: "Transportista");
 
             migrationBuilder.DropTable(
@@ -1201,7 +1368,25 @@ namespace KLS_API.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
+                name: "Clientes");
+
+            migrationBuilder.DropTable(
+                name: "Cl_Has_Destinos");
+
+            migrationBuilder.DropTable(
+                name: "Cl_Has_Origen");
+
+            migrationBuilder.DropTable(
+                name: "Ruta");
+
+            migrationBuilder.DropTable(
+                name: "Cat_Tipos_Unidades");
+
+            migrationBuilder.DropTable(
                 name: "Cat_Region");
+
+            migrationBuilder.DropTable(
+                name: "Tr_Has_Ruta");
 
             migrationBuilder.DropTable(
                 name: "Servicios");
