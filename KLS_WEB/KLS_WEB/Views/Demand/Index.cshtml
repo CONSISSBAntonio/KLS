@@ -641,7 +641,7 @@
         $('#modalAddEdit').modal('show');
         let title = '';
         $('#addeditcliente').val(clientid).trigger('change');
-        $('#rutaid').empty();
+        $('#rutaid').empty().append(`<option value="0" selected disabled>SELECCIONA UNA OPCIÓN</option>`);
         Id > 0 ? (
             $.get('/Demand/GetDemand/', { Id: Id }, response => {
                 const { clientId, routeId } = response;
@@ -655,11 +655,11 @@
                     $('#editdestino').val(destinationid).trigger('change');
                     $('#addedittipounidad').trigger('change');
                     $('#rutaid').val(routeId).trigger('change');
-                }, 800);
+                }, 500);
             }),
             title = 'EDITAR DEMANDA'
         ) : (
-            title = 'AGREGAR DEMANDA', $('#addEditDemand')[0].reset()
+            title = 'AGREGAR DEMANDA', $('#addEditDemand')[0].reset(), $('#addedittipounidad').val(0).trigger('change')
         );
         $('#modalAddEditlabel').text(title);
     }
