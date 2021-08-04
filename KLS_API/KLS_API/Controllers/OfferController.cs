@@ -80,6 +80,7 @@ namespace KLS_API.Controllers
                                  idtipounidad = tipounidad.id,
                                  fechadisponibilidad = oferta.Fecha_Disponibilidad,
                                  transportista = transportista.NivelServicio,
+                                 idtransportista = transportista.id,
                                  estatus = oferta.status
                              }).ToList().AsQueryable();
 
@@ -106,6 +107,10 @@ namespace KLS_API.Controllers
                 if(busqueda.transportista != 0)
                 {
                     queryable = queryable.Where(x => x.transportista == busqueda.transportista);
+                }
+                if(busqueda.fechadisponibilidad != "" && busqueda.fechadisponibilidad != null)
+                {
+                    queryable = queryable.Where(x => x.fechadisponibilidad.Contains(busqueda.fechadisponibilidad.ToString()));
                 }
 
                 return Ok(queryable);

@@ -278,6 +278,8 @@
                             "ciudad_Destino": item[itemT[13]],
                             "Tolerancia_Destino": item[itemT[14]],
                             "status": item[itemT[15]],
+                            "ToleranciaOrigen": item[itemT[16]],
+                            "ToleranciaDestino": item[itemT[17]]
                         },
                     );
                     let d = new Date(item[itemT[3]]);
@@ -357,22 +359,22 @@
             var tipounidad = $("#tipounidad").val();
             var nivelservicio = $("#Tamanio").val();
             
-            $.get("Offer/busqueda", {"transportista":nivelservicio, "idestadoorigen": esorigen, "idestadodestino": esdestino, "idciudadorigen": ciorigen, "idciudaddestino": cidestino, "idtipounidad": tipounidad}, function (res) {
+            $.get("Offer/busqueda", {"fechadisp":fechadisp,"transportista":nivelservicio, "idestadoorigen": esorigen, "idestadodestino": esdestino, "idciudadorigen": ciorigen, "idciudaddestino": cidestino, "idtipounidad": tipounidad}, function (res) {
                 console.log(res);
                 $.each(res, (item, key) => {
                     let d = new Date(key.fechadisponibilidad);
-                    let fecha = d.getMonth() + "-" + d.getDay() + "-" + d.getFullYear() + "  " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+                    let fecha = d.getDay()+ "-" + d.getMonth()  + "-" + d.getFullYear() + "  " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
                     console.log(fecha);
                     $("#table-ofertas-info").append(`
                         <tr class="text-uppercase">
-                            <td> --- </td>
+                            <td>${key.idtransportista}</td>
                             <td>${key.tipounidad}</td>
                             <td>${key.estadoorigen} ${key.ciudadorigen}</td>
                             <td>${key.estadodestino} ${key.ciudaddestino}</td>
-                            <td>${key.fechadisponibilidad}</td>
+                            <td>${fecha}</td>
                             <td>(<span class="timeago" datetime="${fecha}"></span>)</td>
                             <td style="color:`+ color(key.estatus) +`">`+ estado(key.estatus) +`</td>
-                            <td class="text-center"><a href="#">--</a></td>
+                            <td class="text-center"><a href="#">--</a></td>2
                         </tr>`);
                     timeago.render(document.querySelectorAll('.timeago'), 'es-MX');
                 });
