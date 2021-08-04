@@ -74,6 +74,7 @@ namespace KLS_API.Controllers.Demands
             public int Id { get; set; }
             public int ClientId { get; set; }
             public int OriginId { get; set; }
+            public int UnitId { get; set; }
             public int DestinationId { get; set; }
             public string Folio { get; set; }
             public string Cliente { get; set; }
@@ -99,6 +100,7 @@ namespace KLS_API.Controllers.Demands
                         DestinationId = x.DestinationId,
                         Folio = x.Folio,
                         Cliente = x.Client.NombreCorto,
+                        UnitId = x.Unit.id,
                         TipoUnidad = x.Unit.nombre,
                         Origen = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Origin.Id_Estado).nombre, "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Origin.Id_Ciudad).nombre),
                         Destino = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Destination.Id_Estado).nombre, "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Destination.Id_Ciudad).nombre),
@@ -187,32 +189,51 @@ namespace KLS_API.Controllers.Demands
             }
         }
 
-        //public class CarrierDT
-        //{
-        //    public int Id { get; set; }
-        //    public int CarrierId { get; set; }
-        //    public string Carrier { get; set; }
-        //    public int UnitId { get; set; }
-        //    public string Unit { get; set; }
-        //    public string Origin { get; set; }
-        //    public string Destination { get; set; }
-        //    public string FechaDisponibilidad { get; set; }
-        //    public DateTime Expira { get; set; }
-        //    public decimal Costo { get; set; }
-        //}
+        public class CarrierDT
+        {
+            public int Id { get; set; }
+            public int CarrierId { get; set; }
+            public string Carrier { get; set; }
+            public int UnitId { get; set; }
+            public string Unit { get; set; }
+            public string Origin { get; set; }
+            public string Destination { get; set; }
+            public string FechaDisponibilidad { get; set; }
+            public DateTime Expira { get; set; }
+            public decimal Costo { get; set; }
+        }
 
-        //[HttpGet]
-        //public IActionResult GetCarrier([FromQuery] int OriginId, int DestinationId)
-        //{
-        //    try
-        //    {
-        //        List<CarrierDT> carriers = _dbContext.Transportista.Where(x => x.id)
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex);
-        //        throw;
-        //    }
-        //}
+        [HttpGet]
+        public IActionResult GetCarrier([FromQuery] int OriginId, int UnidadId)
+        {
+            try
+            {
+                List<CarrierDT> carriers = _dbContext.Oferta.Where(x => x.Estado_Origen == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == OriginId).Id_Estado
+                && x.Tipo_De_Unidad == UnidadId).Select(x => new CarrierDT
+                {
+                    Id = x.Id,
+                    CarrierId = x.Transportista,
+                    Carrier = _dbContext.Transportista.FirstOrDefault(y => y.id == x.Transportista).NombreComercial,
+                    UnitId = x.Tipo_De_Unidad,
+                    Unit = _dbContext.Cat_Tipos_Unidades.FirstOrDefault(y => y.id == x.Tipo_De_Unidad).nombre,
+                    Origin = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Estado_Origen).nombre, "-",
+                    _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.ciudad_Origen).nombre, " (",
+                    x.Tolerancia_Origen, ")"),
+                    Destination = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.estado_Destino).nombre, "-",
+                    _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.ciudad_Destino).nombre, " (",
+                    x.Tolerancia_Destino, ")"),
+                    FechaDisponibilidad = x.Fecha_Disponibilidad.ToString("g"),
+                    Expira = DateTime.Now,
+                    Costo = _dbContext.Tr_Has_Rutas.FirstOrDefault(y => y.Id_Transportista == x.Transportista).Costo
+                }).ToList();
+
+                return Ok(carriers);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+                throw;
+            }
+        }
     }
 }

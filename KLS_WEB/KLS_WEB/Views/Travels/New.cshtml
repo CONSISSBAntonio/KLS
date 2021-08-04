@@ -547,7 +547,7 @@
             });
         }
 
-        function getRoute() {
+        const getRoute = () => {
             const origenid = $('#origen').val();
             const destinoid = $('#destino').val();
             origenid != null && destinoid != null && (
@@ -557,7 +557,8 @@
                     ) : ($("#ruta").empty().append(`<option value="0" selected disabled>No se encontraron rutas</option>`));
                 })
             )
-            dSelect('ruta');}
+            dSelect('ruta');
+        }
 
         const GetAddress = (id, type) => {
             type === 'origen' ? (

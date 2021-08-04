@@ -76,5 +76,25 @@ namespace KLS_WEB.Controllers.Demand
 
             return View("~/Views/Travels/New.cshtml", travel);
         }
+        public class CarrierDT
+        {
+            public int Id { get; set; }
+            public int CarrierId { get; set; }
+            public string Carrier { get; set; }
+            public int UnitId { get; set; }
+            public string Unit { get; set; }
+            public string Origin { get; set; }
+            public string Destination { get; set; }
+            public string FechaDisponibilidad { get; set; }
+            public DateTime Expira { get; set; }
+            public decimal Costo { get; set; }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetCarrier(string OriginId, string UnitId)
+        {
+            List<CarrierDT> carriers = await AppContext.Execute<List<CarrierDT>>(MethodType.GET, string.Concat(_UrlApi, "/GetCarrier?OriginId=", OriginId, "&UnidadId=", UnitId), null);
+            return Json(carriers);
+        }
     }
 }
