@@ -20,6 +20,10 @@ namespace KLS_API.Models
         public string seguridad { get; set; }
         [Column(TypeName = "varchar(20)")]
         public string demanda { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal PrecioMinimo { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal PrecioMaximo { get; set; }
         public int estatus { get; set; }
 
         //Monitoreo

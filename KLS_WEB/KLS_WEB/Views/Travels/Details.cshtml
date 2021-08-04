@@ -60,7 +60,7 @@
             <div class="text-uppercase poppins medium size-24 pl-2">Viaje @Model.Folio</div>
         </div>
         <div class="col-7 d-flex justify-content-center align-items-center">
-            <div class="card w-75 h-100 d-flex flex-row justify-content-around" onclick="{ $('#modalEstatus').modal('show'); }" style="cursor: pointer;">
+            <div class="card w-75 h-100 d-flex flex-row justify-content-around" onclick="$('#modalEstatus').modal('show')" style="cursor: pointer;">
                 <div class="d-flex justify-content-start w-50">
                     <span class="dot my-auto mr-3 ml-3"></span>
                     <h6 class="my-auto justify-content-start" id="estatuslabel"></h6>
@@ -78,7 +78,7 @@
         <div class="col-5" style="margin-top: 1.3rem;">
             <div class="card p-3">
 
-                <form onsubmit="event.preventDefault();">
+                <form onsubmit="">
                     <div class="form-group row">
                         <label class="col-5 col-form-label col-form-label-sm">Folio de viaje</label>
                         <div class="col-7">
@@ -165,7 +165,7 @@
         <div class="col-7">
             <div class="catalog-list">
 
-                <a href="javascript:void(0);" class="catalog" id="servicios" onclick="{ showPanel(this.id); getServicios(); }">
+                <a href="javascript:void(0);" class="catalog" id="servicios" onclick="">
                     <div class="content">
                         <span class="material-icons">
                             people
@@ -173,7 +173,7 @@
                         <div class="name font-barlow">Servicios</div>
                     </div>
                 </a>
-                <a href="javascript:void(0);" class="catalog" id="requisitos" onclick="{ showPanel(this.id); getRequisitos(); }">
+                <a href="javascript:void(0);" class="catalog" id="requisitos" onclick="">
                     <div class="content" id="requisitos">
                         <span class="material-icons">
                             inventory_2
@@ -181,7 +181,7 @@
                         <div class="name font-barlow">Requisitos</div>
                     </div>
                 </a>
-                <a href="javascript:void(0);" class="catalog" id="mercancia" onclick="{ showPanel(this.id); getMercancia(); getMercanciaD(); }">
+                <a href="javascript:void(0);" class="catalog" id="mercancia" onclick="">
                     <div class="content">
                         <span class="material-icons">
                             store
@@ -190,7 +190,7 @@
                     </div>
                 </a>
 
-                <a href="javascript:void(0);" class="catalog" id="facturacion" onclick="{ showPanel(this.id); }">
+                <a href="javascript:void(0);" class="catalog" id="facturacion" onclick="">
                     <div class="content">
                         <span class="material-icons">
                             receipt_long
@@ -199,7 +199,7 @@
                     </div>
                 </a>
 
-                <a href="javascript:void(0);" class="catalog" id="documentos" onclick="{ showPanel(this.id); getEvidencia(); }">
+                <a href="javascript:void(0);" class="catalog" id="documentos" onclick="">
                     <div class="content">
                         <span class="material-icons">
                             folder
@@ -207,7 +207,7 @@
                         <div class="name font-barlow">Documentos</div>
                     </div>
                 </a>
-                <a href="javascript:void(0);" class="catalog" id="historial" onclick="{ showPanel(this.id); loadTableHistorial(); }">
+                <a href="javascript:void(0);" class="catalog" id="historial" onclick="">
                     <div class="content">
                         <span class="material-icons">
                             manage_search
@@ -233,7 +233,7 @@
         <div class="col-6 facturacion d-none">
             <div class="text-left d-flex justify-content-between mb-3">
                 <h4>FACTURACIÓN</h4>
-                <div style="padding-left:20%;" onclick="selectFactura(this);">
+                <div style="padding-left:20%;" onclick="">
                     <a class="btn btn-sm bg-white" style="font-size:1.8rem;width:3.5rem" href="javascript:void(0);">
                         <span class="material-icons">
                             add
@@ -264,7 +264,7 @@
                 <div class="col-6 d-flex flex-column justify-content-between">
                     <div class="card mb-3 p-3">
                         <p class="text-left font-weight-bold">DESCRIPCIÓN</p>
-                        <form class="row g-3 text-left" onsubmit="{ event.preventDefault(); postMercancia(this); }">
+                        <form class="row g-3 text-left" onsubmit="">
                             <div class="col-3">
                                 <label for="falto" class="form-label">Alto</label>
                                 <input type="number" class="form-control" id="falto" name="alto">
@@ -291,7 +291,7 @@
                         </form>
                     </div>
                     <div class="card">
-                        <form onsubmit="event.preventDefault();" class="text-left mt-3 pr-4">
+                        <form onsubmit="" class="text-left mt-3 pr-4">
                             <div class="form-group row">
                                 <div class="col-1">
                                     <input type="checkbox" class="custome-check form-control form-control-sm" disabled>
@@ -654,7 +654,7 @@
         <div class="col-12 historial d-none">
             <div class="text-left d-flex justify-content-between mb-3">
                 <h4>HISTORIAL</h4>
-                <div style="padding-left:20%;" onclick="selectServicios(this);">
+                <div style="padding-left:20%;" onclick="">
                 </div>
             </div>
 
@@ -676,7 +676,7 @@
         <div class="col-12 documentos d-none">
             <div class="p-4">
                 <h4>DOCUMENTOS</h4>
-                <button class="btn btn-dark px-5" style="border-radius:0px">Generar carta porte</button>
+                <button class="btn btn-dark px-5" style="border-radius:0px" onclick="">Generar carta porte</button>
                 <div class="row">
                     <div class="col-6 mt-3">
                         <div class="text-left d-flex justify-content-between">
@@ -726,19 +726,19 @@
                                     </div>
                                 </div>
                                 @*<div class="col-6">
-                                    <div class="d-flex">
-                                        <h6>TIEMPO DE ENTREGA</h6>
-                                    </div>
-                                    <div class="d-flex flex-column mt-2 fisicatiempo">
-                                        <div class="d-flex align-items-center">
-                                            <label class="size-12">Vencida</label>
+                                        <div class="d-flex">
+                                            <h6>TIEMPO DE ENTREGA</h6>
                                         </div>
-                                        <div class="d-flex align-items-center">
-                                            <label class="size-12">3d 2hrs</label>
+                                        <div class="d-flex flex-column mt-2 fisicatiempo">
+                                            <div class="d-flex align-items-center">
+                                                <label class="size-12">Vencida</label>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <label class="size-12">3d 2hrs</label>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                </div>*@
+                                    </div>*@
                             </div>
                         </div>
                     </div>
@@ -752,17 +752,17 @@
                 <div class="form-group col-12 d-flex justify-content-between">
                     <h6 class="font-weight-bold">SERVICIOS</h6>
                     <div>
-                        <button class="btn btn-outline-light btn-sm" onclick="updateServicios(this);">
+                        <button class="btn btn-outline-light btn-sm" onclick="">
                             <i class="material-icons text-primary">save</i>
                         </button>
-                        <a class="btn btn-outline-secondary btn-sm" onclick="selectServicios(this);">
+                        <a class="btn btn-outline-secondary btn-sm" onclick="">
                             <i class="material-icons">add</i>
                         </a>
                     </div>
                 </div>
                 <div class="form-group col-12 addServicios">
                     <div class="border rounded d-flex justify-content-center align-items-center font-weight-bolder"
-                         onclick="selectServicios(this);"
+                         onclick=""
                          style="border: 5px dashed #585858 !important; height: 7rem; opacity: 0.2; cursor: pointer;">
                         <h3>AGREGA SERVICIOS</h3>
                     </div>
@@ -800,7 +800,7 @@
                     </div>
                     <br />
                     <a href="javascript:void(0);" class="btn btn-dark guardar" style="width:100%"
-                       onclick="UploadFile()">
+                       onclick="">
                         Agregar
                     </a>
                 </form>
@@ -836,7 +836,7 @@
                     <div class="row">
                         <div class="col-6 text-left">
                             <b class="size-12">ESTATUS</b>
-                            <select class="form-control form-control-sm" name="estatus" id="estatus" style="width:100%" onchange="{ listSubestatus(this.value); }">
+                            <select class="form-control form-control-sm" name="estatus" id="estatus" style="width:100%" onchange="">
                                 <option value="0" selected disabled>SELECIONA</option>
                                 <option value="confirmado">CONFIRMADO</option>
                                 <option value="entransito">EN TRÁNSITO</option>
@@ -853,7 +853,7 @@
                         </div>
                     </div>
                     <br />
-                    <a href="javascript:void(0);" class="btn btn-dark guardar" style="width:100%" onclick="updateStatus(this);">
+                    <a href="javascript:void(0);" class="btn btn-dark guardar" style="width:100%" onclick="">
                         GUARDAR
                     </a>
                 </form>
@@ -874,7 +874,7 @@
                 </button>
             </div>
             <div class="modal-body text-left">
-                <form id="frmServicios" class="viaje" onsubmit="event.preventDefault();">
+                <form id="frmServicios" class="viaje" onsubmit="">
                     <div class="form-check d-flex align-items-center">
                         <input class="form-check-input my-auto" type="checkbox" id="0" name="terrestrenacional">
                         <label class="form-check-label" for="0">Terrestre nacional</label>
@@ -912,7 +912,7 @@
                         </div>*@
                 </form>
                 <br />
-                <button onclick="{ closeModal(); }" class="btn btn-dark" style="width:100%;">
+                <button onclick="" class="btn btn-dark" style="width:100%;">
                     Agregar
                 </button>
 
@@ -952,6 +952,21 @@
             getEvidencia();
         });
 
+        const GenerateCartaPorte = e => {
+            $(e).prop('disabled', true).removeClass('btn-dark').addClass('btn-secondary').html('Generando...');
+            fetch(`/Travels/CartaPorte/${TravelId}`)
+                .then(response => response.blob())
+                .then(blob => {
+                    const folio = '/**********/';
+                    $(e).prop('disabled', false).removeClass('btn-secondary').addClass('btn-dark').html('Generar carta porte');
+                    const data = window.URL.createObjectURL(blob);
+                    const anchor = document.createElement('a');
+                    anchor.href = data;
+                    anchor.download = `${folio} - CartaPorte.pdf`;
+                    anchor.click();
+                })
+        }
+
         getEvidencia = () => {
             $.get("/Clients/Others/getEvidencia/", { "Id_Cliente": @Model.ClienteId}, response => {
                 let nombrehtml = ``
@@ -966,12 +981,12 @@
                         <td>${tiempo_Entrega}</td>
                         <td>${estatus === 1 ? 'PENDIENTE' : 'ENTREGADA'}</td>
                         <td class="text-center">
-                            <a href="javascript:void(0);" onclick="uploadEvidencia(${id}, ${TravelId}, this);">
+                            <a href="javascript:void(0);" onclick="evidence(${id}, ${TravelId}, 'upload', this);">
                                 <span class="material-icons">
                                     file_upload
                                 </span>
                             </a>
-                            <a href="javascript:void(0);" onclick="downloadEvidencia(${id}, ${TravelId}, this);">
+                            <a href="javascript:void(0);" onclick="evidence(${id}, ${TravelId}, 'download', this);">
                                 <span class="material-icons">
                                     file_download
                                 </span>

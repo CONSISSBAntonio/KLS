@@ -187,36 +187,26 @@ namespace KLS_API.Controllers.Demands
             }
         }
 
-        public class SearchModel
-        {
-            public int ClientId { get; set; }
-            public int UnitId { get; set; }
-            public DateTime FechaSalida { get; set; }
-            public int Rango { get; set; }
-            public int EstadoOrigenId { get; set; }
-            public int CiudadOrigenId { get; set; }
-            public int EstadoDestinoId { get; set; }
-            public int CiudadDestinoId { get; set; }
-            public string TamañoEmpresa { get; set; }
-        }
+        //public class CarrierDT
+        //{
+        //    public int Id { get; set; }
+        //    public int CarrierId { get; set; }
+        //    public string Carrier { get; set; }
+        //    public int UnitId { get; set; }
+        //    public string Unit { get; set; }
+        //    public string Origin { get; set; }
+        //    public string Destination { get; set; }
+        //    public string FechaDisponibilidad { get; set; }
+        //    public DateTime Expira { get; set; }
+        //    public decimal Costo { get; set; }
+        //}
 
         //[HttpGet]
-        //public IActionResult Search([FromBody] SearchModel search)
+        //public IActionResult GetCarrier([FromQuery] int OriginId, int DestinationId)
         //{
         //    try
         //    {
-        //        int total = _dbContext.Demands.Where(x => x.Status == "nueva").Count();
-        //        List<Demand> demands = _dbContext.Demands.Where(x => x.ClientId == search.ClientId || x.UnitId == search.UnitId ||
-        //        x.FechaDisponibilidad == search.FechaSalida || x.RangoEspera == search.Rango || x.EstadoIdOrigen == search.EstadoOrigenId ||
-        //        x.CiudadIdOrigen == search.CiudadOrigenId || x.EstadoIdDestino == search.EstadoDestinoId || x.CiudadIdDestino == search.CiudadDestinoId).ToList();
-
-        //        return Ok(new
-        //        {
-        //            aaData = demands,
-        //            draw = 0,
-        //            iTotalRecords = total,
-        //            iTotalDisplayRecords = demands.Count()
-        //        });
+        //        List<CarrierDT> carriers = _dbContext.Transportista.Where(x => x.id)
         //    }
         //    catch (Exception ex)
         //    {

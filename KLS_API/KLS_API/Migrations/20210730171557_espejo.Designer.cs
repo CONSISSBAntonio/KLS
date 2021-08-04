@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210730171557_espejo")]
+    partial class espejo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1333,12 +1335,6 @@ namespace KLS_API.Migrations
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    b.Property<decimal>("PrecioMaximo")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<decimal>("PrecioMinimo")
-                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("actualizadopor")
                         .HasColumnType("varchar(100)");

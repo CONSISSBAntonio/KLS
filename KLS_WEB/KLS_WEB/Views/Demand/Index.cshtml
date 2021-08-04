@@ -20,6 +20,9 @@
     .select2-results__options {
         font-size: small;
     }
+    .modal-lg{
+        max-width: 80rem;
+    }
 </style>
 
 <div class="data-content">
@@ -30,7 +33,7 @@
         </div>
 
         <div class="p-4 shadow bg-white">
-            <div class="col-3 mb-3">
+            <div class="col-3 mb-3 filtro d-none">
                 <label for="editcliente" class="form-label size-12 font-weight-bold float-left">CLIENTE</label>
                 <select class="form-control form-control-sm cliente" style="width: 100%;" id="filtro" name="filtro[]" multiple="multiple" onchange="filter(this)">
                     <option value="0" disabled>SELECCIONA</option>
@@ -223,6 +226,41 @@
                     </div>
                     <button type="submit" class="btn btn-primary mt-3 float-left" id="search">BUSCAR</button>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--MODAL CREAR TRANSPORTISTA-->
+<div class="modal fade" id="modaltransportista" tabindex="-1" aria-labelledby="modaltransportistalabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modaltransportistalabel">SELECCIONA TRANSPORTISTA</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-2">
+                    <label for="rango" class="form-label size-12 font-weight-bold float-left">RADIO TOLERANCIA (KM)</label>
+                    <input type="number" class="form-control form-control-sm" id="radio" name="radio" />
+                </div>
+                <table class="table table-striped table-bordered display table-hover table-carrier text-uppercase" width="100%">
+                    <thead>
+                        <tr>
+                            <th>TRANSPORTISTA</th>
+                            <th>TIPO DE UNIDAD</th>
+                            <th>ORIGEN</th>
+                            <th>DESTINO</th>
+                            <th>FECHA DISPONIBILIDAD</th>
+                            <th>EXPIRA EN</th>
+                            <th>COSTO</th>
+                            <th>ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-info"></tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -633,6 +671,13 @@
             $("#modalDiv").modal("show");
         }
 
+        const selectCarrier = (DemandId, ClientId, OriginId, DestinationId) => {
+            $('#modaltransportista').modal('show');
+            dTable('table-carrier');
+            $('#modaltransportista .dataTables_wrapper').children().eq(0).remove();
+            $('#modaltransportista .dataTables_wrapper').children().eq(1).remove();
+        }
+
         const DT = (customsearch = false, search) => {
             Table = $('#table').DataTable({
                 destroy: true,
@@ -670,7 +715,7 @@
                                                 local_shipping
                                             </span>
                                         </a>
-                                        <a href="javascript:void(0);" onclick="select(${id}, ${clientId}, ${originId}, ${destinationId});">
+                                        <a href="javascript:void(0);" onclick="selectCarrier(${id}, ${clientId}, ${originId}, ${destinationId});">
                                             <span class="material-icons">
                                                 search
                                             </span>
@@ -705,6 +750,7 @@
                     $('#modalbusqueda').modal('hide');
                     $('#table_length').html(`<a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary float-right" onclick="addEdit(0, 0, 0, 0);"><span class="material-icons">add</span></a>`).show();
                     $('[aria-controls="table"]').prop('placeholder', 'BUSCAR');
+                    setTimeout(() => $('.filtro').removeClass('d-none'), 150);
                 }
             });
         }
