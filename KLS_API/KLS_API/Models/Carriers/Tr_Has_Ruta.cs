@@ -16,5 +16,6 @@ namespace KLS_API.Models.Carriers
         [Column(TypeName = "decimal(14,2)")]
         public decimal Costo { get; set; }
         public int Estatus { get; set; }
+        public List<ruta_has_inventario> ruta_has_inventario { get; set; }
     }
 }

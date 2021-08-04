@@ -34,11 +34,41 @@ namespace KLS_API.Controllers.Catalogs
         }
 
         [HttpGet("prueba")]
-        public ActionResult prueba([FromQuery] Paginacion paginacion)
+        public ActionResult prueba([FromBody] Paginacion paginacion)
         {
             try
             {
-                var queryable = context.Cat_Colonia.AsQueryable();
+                IQueryable<object> queryable = null;
+
+                if (paginacion.Buscar != null && paginacion.Buscar != "")
+                {
+                    //queryable = context.Cat_Colonia.Where(x => x.nombre.ToLower().Contains(paginacion.Buscar)).ToList().AsQueryable();
+                    queryable = (from colonia in context.Cat_Colonia
+                                    where colonia.estatus == 1
+                                    join estado in context.Cat_Estado on colonia.id_estado equals estado.id
+                                    //where estado.nombre.ToLower().Contains(paginacion.Buscar)
+                                    join ciudad in context.Cat_Ciudad on colonia.id_ciudad equals ciudad.id
+                                 //where ciudad.nombre.ToLower().Contains(paginacion.Buscar)
+                                 where colonia.nombre.ToLower().Contains(paginacion.Buscar)
+                                 || colonia.cp.ToString().Contains(paginacion.Buscar)
+                                 || estado.nombre.ToLower().Contains(paginacion.Buscar)
+                                 || ciudad.nombre.ToLower().Contains(paginacion.Buscar)
+                                 select new
+                                    {
+                                        colonia.id,
+                                        id_estado = estado.id,
+                                        id_ciudad = ciudad.id,
+                                        cp = colonia.cp,
+                                        nombre = colonia.nombre,
+                                        estatus = colonia.estatus
+                                    }).ToList().AsQueryable();
+                }
+                else {
+                    queryable = context.Cat_Colonia.AsQueryable();
+                }
+                
+
+
                 HttpContext.InsertarParametrosPaginacionEnRespuesta(queryable, paginacion.CantidadAMostrar);
                 double conteo = queryable.Count();
 
@@ -117,7 +147,7 @@ namespace KLS_API.Controllers.Catalogs
                                    colonia.estatus
                                }).ToList();
 
-                return Ok(colonias.Take(25));
+                return Ok(colonias);
             }
             catch (Exception ex)
             {

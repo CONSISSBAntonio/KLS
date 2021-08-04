@@ -85,7 +85,7 @@ namespace KLS_WEB.Controllers.Carriers.CarriersInventory
                 nombreUnidad = string.Format("{0}{1:yyyyMMdd_HHmm_ss}.{2}", Path.GetFileNameWithoutExtension(file.FileName), DateTime.Now, Path.GetExtension(file.FileName));
                 unidadPath = Path.Combine(ruta, nombreUnidad);
                 await SaveFile(file, unidadPath);
-                jsonData.FotoPoliza = nombreUnidad;
+                jsonData.FotoUnidad = nombreUnidad;
             }
 
             if (file1 != null)
@@ -127,7 +127,7 @@ namespace KLS_WEB.Controllers.Carriers.CarriersInventory
                 nombrePoliza = string.Format("{0}{1:yyyyMMdd_HHmm_ss}.{2}", "", DateTime.Now, Path.GetExtension(file1.FileName));
                 polizaPath = Path.Combine(ruta, nombrePoliza);
                 await SaveFile(file1, polizaPath);
-                jsonData.FotoUnidad = nombrePoliza;
+                jsonData.FotoPoliza = nombrePoliza;
             }
 
             Tr_Has_Inventario dataReport;

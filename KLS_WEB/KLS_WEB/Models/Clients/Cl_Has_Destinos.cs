@@ -21,5 +21,7 @@ namespace KLS_WEB.Models.Clients
         [Column(TypeName = "varchar(120)")]
         public string Direccion { get; set; }
         public int Estatus { get; set; }
+        [Column(TypeName = "varchar(20)")]
+        public string HoraAtencion { get; set; }
     }
 }

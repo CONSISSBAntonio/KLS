@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210730202955_origin-hour")]
+    partial class originhour
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -347,7 +349,7 @@ namespace KLS_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tr_Has_Ruta");
+                    b.ToTable("Tr_Has_Rutas");
                 });
 
             modelBuilder.Entity("KLS_API.Models.Carriers.Transportista", b =>
@@ -422,28 +424,6 @@ namespace KLS_API.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Transportista");
-                });
-
-            modelBuilder.Entity("KLS_API.Models.Carriers.ruta_has_inventario", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id_Inventario")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id_Tr_Has_Rutas")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Tr_Has_RutaId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Tr_Has_RutaId");
-
-                    b.ToTable("ruta_has_inventario");
                 });
 
             modelBuilder.Entity("KLS_API.Models.Cat_Aerolinea", b =>
@@ -969,9 +949,6 @@ namespace KLS_API.Migrations
                     b.Property<int>("Estatus")
                         .HasColumnType("int");
 
-                    b.Property<string>("HoraAtencion")
-                        .HasColumnType("varchar(20)");
-
                     b.Property<int>("Id_Ciudad")
                         .HasColumnType("int");
 
@@ -1337,66 +1314,6 @@ namespace KLS_API.Migrations
                     b.ToTable("Demands");
                 });
 
-            modelBuilder.Entity("KLS_API.Models.Oferta.Oferta", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("Cantidad")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Estado_Origen")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Fecha_Disponibilidad")
-                        .HasColumnType("varchar(25)");
-
-                    b.Property<int>("Nivel_Destino")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Nivel_Origen")
-                        .IsRequired()
-                        .HasColumnType("varchar(20)");
-
-                    b.Property<int>("Rango_De_Espera")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Region_Destino")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Region_Origen")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Tipo_De_Unidad")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Tolerancia_Destino")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Tolerancia_Origen")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Transportista")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ciudad_Destino")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ciudad_Origen")
-                        .HasColumnType("int");
-
-                    b.Property<int>("estado_Destino")
-                        .HasColumnType("int");
-
-                    b.Property<int>("status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Oferta");
-                });
-
             modelBuilder.Entity("KLS_API.Models.Region_Has_Estado", b =>
                 {
                     b.Property<int>("id")
@@ -1421,12 +1338,6 @@ namespace KLS_API.Migrations
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    b.Property<decimal>("PrecioMaximo")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<decimal>("PrecioMinimo")
-                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("actualizadopor")
                         .HasColumnType("varchar(100)");
@@ -1688,9 +1599,6 @@ namespace KLS_API.Migrations
                     b.Property<string>("Intercom")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("PassEspejo")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
                     b.Property<decimal>("PrecioClienteTotal")
                         .HasColumnType("decimal(18,2)");
 
@@ -1716,9 +1624,6 @@ namespace KLS_API.Migrations
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("TipoViaje")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("UsuarioEspejo")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
@@ -1874,13 +1779,6 @@ namespace KLS_API.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("KLS_API.Models.Carriers.ruta_has_inventario", b =>
-                {
-                    b.HasOne("KLS_API.Models.Carriers.Tr_Has_Ruta", null)
-                        .WithMany("ruta_has_inventario")
-                        .HasForeignKey("Tr_Has_RutaId");
                 });
 
             modelBuilder.Entity("KLS_API.Models.Demands.Demand", b =>

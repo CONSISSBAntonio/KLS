@@ -13,7 +13,7 @@ namespace KLS_API.Controllers.Carriers.Routes
 {
     [Route("Carriers/Routes")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class RoutesController : Controller
     {
         private readonly AppDbContext context;
@@ -28,6 +28,20 @@ namespace KLS_API.Controllers.Carriers.Routes
             try
             {
                 var asd = context.Tr_Has_Rutas.Where(f => f.Id_Transportista == tr_rutas.Id_Transportista).ToList();
+                return Ok(asd);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Route("getRuta")]
+        public ActionResult getRuta([FromBody] RouteTran tr_rutas)
+        {
+            try
+            {
+                var asd = context.Ruta.Where(f => f.id_ciudadorigen == tr_rutas.id_ciudadorigen || f.id_estadoorigen == tr_rutas.id_estadoorigen || f.id_ciudaddestino == tr_rutas.id_ciudaddestino || f.id_estadodestino == tr_rutas.id_estadodestino).ToList();
                 return Ok(asd);
             }
             catch (Exception ex)

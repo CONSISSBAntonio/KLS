@@ -14,6 +14,8 @@
     <Compile Remove="Migrations\20210728213754_demand.Designer.cs" />
     <Compile Remove="Migrations\20210728221940_demand.cs" />
     <Compile Remove="Migrations\20210728221940_demand.Designer.cs" />
+    <Compile Remove="Migrations\20210803204000_relRutasId.cs" />
+    <Compile Remove="Migrations\20210803204000_relRutasId.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using KLS_API.Controllers.Clients;
 using KLS_API.Models.Demands;
+using KLS_API.Models.Oferta;
 
 namespace KLS_API.Context
 {
@@ -40,6 +41,7 @@ namespace KLS_API.Context
         public DbSet<Tr_Has_Ruta> Tr_Has_Rutas { get; set; }
         public DbSet<Tr_Has_Inventario> Tr_Has_Inventario { get; set; }
         public DbSet<Tr_Has_Operadores> Tr_Has_Operadores { get; set; }
+        public DbSet<Tr_Has_Ruta> Tr_Has_Ruta { get; set; }
         
         //Clientes
         public DbSet<Clientes> Clientes { get; set; }
@@ -65,5 +67,6 @@ namespace KLS_API.Context
 
         // Demandas
         public DbSet<Demand> Demands { get; set; }
+        public DbSet<Oferta> Oferta { get; set; }
     }
 }

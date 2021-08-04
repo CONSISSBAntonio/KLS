@@ -36,9 +36,7 @@
                         <div class="form-group row">
                             <label class="col-4 col-form-label col-form-label-sm">Ciudad Origen</label>
                             <div class="col-sm-8">
-                                <select class="form-control form-control-sm" id="Id_Ciudad_Origen" name="Id_Ciudad_Origen" style="width:100%;">
-   
-                                </select>
+                                <select class="form-control form-control-sm" id="Id_Ciudad_Origen" name="Id_Ciudad_Origen" style="width:100%;"></select>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -149,12 +147,10 @@
             getCiudad();
             getEstado();
             //loadTable();
-
             $("#frmRegister").submit(function (event) {
                 event.preventDefault();
                 var jsonData = convertJson($("#frmRegister"));
                 jsonData["Id_Transportista"] = @id;
-                console.log(jsonData);
                 if (parseInt(@idRuta) == 0) {
                     $.post("/Carriers/Routes/setRoutes/", jsonData, function (res) {
                         $('#frmRegister').trigger("reset");
@@ -181,9 +177,7 @@
                 $.get("/Carriers/Routes/getRoutes/", { "Id":@idRuta}, function (res) {
                     dataRoutes = res;
                     if (res != null) {
-
                         $("#span-icon").append("edit");
-
                         $("#idEditar").val(res.id);
                         $("#Demanda").val(res.demanda);
                         $("#Eficiencia").val(res.eficiencia);
@@ -217,8 +211,10 @@
                     $("#Id_Estado_Origen").append(`<option value="${key.id}">${key.nombre}</option>`);
                     $("#Id_Estado_Destino").append(`<option value="${key.id}">${key.nombre}</option>`);
                 });
-                $("#Id_Estado_Origen").select2();
-                $("#Id_Estado_Destino").select2();
+                //$("#Id_Estado_Origen").select2();
+                //$("#Id_Estado_Destino").select2();
+                dSelect('Id_Estado_Origen');
+                dSelect('Id_Estado_Destino');
             }).fail(function (error) {
                 dToast("error", "Error al obtener paises", "Atencion!");
             });
@@ -233,8 +229,10 @@
                     $("#Id_Ciudad_Origen").append(`<option value="${key.id}">${key.nombre}</option>`);
                     $("#Id_Ciudad_Destino").append(`<option value="${key.id}">${key.nombre}</option>`);
                 });
-                $("#Id_Ciudad_Origen").select2();
-                $("#Id_Ciudad_Destino").select2();
+                //$("#Id_Ciudad_Origen").select2();
+                //$("#Id_Ciudad_Destino").select2();
+                dSelect('Id_Ciudad_Origen');
+                dSelect('Id_Ciudad_Destino');
                 loadTable();
             }).fail(function (error) {
                 dToast("error", "Error al obtener paises", "Atencion!");

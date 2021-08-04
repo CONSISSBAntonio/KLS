@@ -137,10 +137,9 @@
 
         $(window).ready(function () {
             loadCity();
-            $("#Estado").select2();
-            $("#Ciudad").select2();
-            $("#Id_Ruta").select2();
-
+            dSelect('Estado');
+            dSelect('Ciudad');
+            dSelect('Id_Ruta');
             $("#frmRegister").submit(function (event) {
                 event.preventDefault();
                 var jsonData = convertJson($("#frmRegister"));
@@ -191,7 +190,8 @@
                         $("#Id_Ruta_Origen").append(`<option value="${key.id}">Estado origen: ${catEstado[indice_eo].nombre}--Ciudad Origen:${catCiudad[indice_co].nombre}</option>`);
                     }
                 });
-                $("#Id_Ruta_Origen").select2();
+                //$("#Id_Ruta_Origen").select2();
+                dSelect('Id_Ruta_Origen');
                 //getRuta();
                 loadTable();
             });
@@ -252,7 +252,8 @@
                     //}
                 }
             });
-            $("#Id_Ruta").select2();
+            //$("#Id_Ruta").select2();
+            dSelect('Id_Ruta');
         }
 
         function selectCiudad() {
@@ -264,7 +265,8 @@
                     $("#Ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
                 }
             });
-            $("#Ciudad").select2();
+            //$("#Ciudad").select2();
+            dSelect('Ciudad');
         }
 
         function showModal(titulo = "Title", accion, idEditar = 0) {
@@ -316,7 +318,8 @@
                 $.each(res, function (item, key) {
                     $("#Estado").append(`<option value="${key.id}">${key.nombre}</option>`);
                 });
-                $("#Estado").select2();
+                //$("#Estado").select2();
+                dSelect('Estado');
                 getRutas();
             }).fail(function (error) {
                 dToast("error", "Error al obtener paises", "Atencion!");
