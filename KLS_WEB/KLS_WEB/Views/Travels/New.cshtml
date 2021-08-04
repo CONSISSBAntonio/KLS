@@ -693,13 +693,13 @@
                 setTimeout(() => {
                     $('#cliente').val(ClientId).trigger('change');
                     $('#tipounidad').val(RouteId).trigger('change');
-                }, 400);
+                    setTimeout(() => {
+                        $('#origen').val(OriginId).trigger('change');
+                        $('#destino').val(DesitnationId).trigger('change');
+                        $('#ruta').val(RouteId).trigger('change');
+                    }, 600);
+                }, 600);
 
-                setTimeout(() => {
-                    $('#origen').val(OriginId).trigger('change');
-                    $('#destino').val(DesitnationId).trigger('change');
-                    $('#ruta').val(RouteId).trigger('change');
-                }, 800);
             }
         };
 
