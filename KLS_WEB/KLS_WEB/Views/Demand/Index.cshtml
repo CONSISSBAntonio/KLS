@@ -353,445 +353,448 @@
 @section scripts{
     <script>
         let dataOrigenes = [];
-            let dataState =[];
-            let dataCity =[];
-            let dataColonies =[];
-            $(() => {
-        $('[type=date]').map((k, e) => $(e).prop('min', new Date().toISOString().split('T')[0]));
-        $('[type=datetime-local]').map((k, e) => $(e).prop('min', new Date().toISOString().substring(0, 16)));
-        $('#fechasalida').prop('min', '');
-        DT();
-        initSelects();
-        getCatalogos();
-        $("#frmRegister").submit(function (event) {
-            event.preventDefault();
-            const type = $(this).attr('rel') == 'destino' ? 'Destinations/setDestino' : 'Origins/setOrigen';
-            var jsonData = convertJson($("#frmRegister"));
-            jsonData["Id_Cliente"] = $('#addeditcliente').val();
-            if (parseInt($("#Id_Ciudad").val()) != 0 && parseInt($("#Id_Estado").val()) != 0 && parseInt($("#Id_Colonia").val()) != 0) {
-                $.post(`/Clients/${type}`, jsonData, function (res) {
-                    dToast("success", "Registro guardado exitosamente.", "Registrado");
-                    $(".guardar").attr("disabled", false);
-                    $('#frmRegister').trigger("reset");
-                    $('#addeditcliente').val(jsonData["Id_Cliente"]).trigger('change');
-                }).fail(function (error) {
-                    dToast("error", "Error al tratar de guardar el registro", "Error");
-                    $(".guardar").attr("disabled", false);
+        let dataState = [];
+        let dataCity = [];
+        let dataColonies = [];
+        $(() => {
+            $('[type=date]').map((k, e) => $(e).prop('min', new Date().toISOString().split('T')[0]));
+            $('[type=datetime-local]').map((k, e) => $(e).prop('min', new Date().toISOString().substring(0, 16)));
+            $('#fechasalida').prop('min', '');
+            DT();
+            initSelects();
+            getCatalogos();
+            $("#frmRegister").submit(function (event) {
+                event.preventDefault();
+                const type = $(this).attr('rel') == 'destino' ? 'Destinations/setDestino' : 'Origins/setOrigen';
+                var jsonData = convertJson($("#frmRegister"));
+                jsonData["Id_Cliente"] = $('#addeditcliente').val();
+                if (parseInt($("#Id_Ciudad").val()) != 0 && parseInt($("#Id_Estado").val()) != 0 && parseInt($("#Id_Colonia").val()) != 0) {
+                    $.post(`/Clients/${type}`, jsonData, function (res) {
+                        dToast("success", "Registro guardado exitosamente.", "Registrado");
+                        $(".guardar").attr("disabled", false);
+                        $('#frmRegister').trigger("reset");
+                        $('#addeditcliente').val(jsonData["Id_Cliente"]).trigger('change');
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de guardar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                } else {
+                    dToast("error", "Selecciona una opción", "Error");
+                }
+            });
+
+            //Buscar por CP
+            $('#Cp').keypress(function (e) {
+                var keycode = (e.keyCode ? e.keyCode : e.which);
+                if (keycode == '13') {
+                    searcCP();
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        });
+
+        //Catalogos
+        function getCatalogos() {
+            $.get("/Catalogs/Geography/State/getState", function (res) {
+                dataState = res;
+                $("#Id_Estado").empty();
+                $("#Id_Estado").append(`<option value="0">Selecciona una opción</option>`);
+                $.each(dataState, function (item, key) {
+                    if (parseInt(key.estatus) == 1) {
+                        $("#Id_Estado").append(`<option value="${key.id}">${key.nombre}</option>`);
+                    };
                 });
-            } else {
-                dToast("error", "Selecciona una opción", "Error");
-            }
-        });
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+            });
 
-        //Buscar por CP
-        $('#Cp').keypress(function (e) {
-            var keycode = (e.keyCode ? e.keyCode : e.which);
-            if (keycode == '13') {
-                searcCP();
-                e.preventDefault();
-                return false;
-            }
-        });
-    });
+            $.get("/Catalogs/Geography/City/getCity", function (res) {
+                dataCity = res;
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+            });
 
-    //Catalogos
-    function getCatalogos() {
-        $.get("/Catalogs/Geography/State/getState", function (res) {
-            dataState = res;
-            $("#Id_Estado").empty();
-            $("#Id_Estado").append(`<option value="0">Selecciona una opción</option>`);
-            $.each(dataState, function (item, key) {
-                if (parseInt(key.estatus) == 1) {
-                    $("#Id_Estado").append(`<option value="${key.id}">${key.nombre}</option>`);
+            $.get("/Catalogs/Geography/Colonies/getColonies", function (res) {
+                dataColonies = res;
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+            });
+        }
+
+        function searcCP() {
+            var codigoP = $("#Cp").val();
+            $.each(dataColonies, function (item, key) {
+                if (parseInt(key.estatus) == 1 && parseInt(key.cp) == parseInt(codigoP)) {
+                    $('#Id_Estado option[value="' + key.id_estado + '"]').attr("selected", true);
+                    setCiudad(key.id_estado);
+                    $("#Id_Estado").change();
+                    $('#Id_Ciudad option[value="' + key.id_ciudad + '"]').attr("selected", true);
+                    $("#Id_Ciudad").change();
+                    setColonias(key.id_ciudad);
+                    $("#Id_Colonia").change();
                 };
             });
-        }).fail(function (error) {
-            dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
-        });
 
-        $.get("/Catalogs/Geography/City/getCity", function (res) {
-            dataCity = res;
-        }).fail(function (error) {
-            dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
-        });
+        }
 
-        $.get("/Catalogs/Geography/Colonies/getColonies", function (res) {
-            dataColonies = res;
-        }).fail(function (error) {
-            dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
-        });
-    }
-
-    function searcCP() {
-        var codigoP = $("#Cp").val();
-        $.each(dataColonies, function (item, key) {
-            if (parseInt(key.estatus) == 1 && parseInt(key.cp) == parseInt(codigoP)) {
-                $('#Id_Estado option[value="' + key.id_estado + '"]').attr("selected", true);
-                setCiudad(key.id_estado);
-                $("#Id_Estado").change();
-                $('#Id_Ciudad option[value="' + key.id_ciudad + '"]').attr("selected", true);
-                $("#Id_Ciudad").change();
-                setColonias(key.id_ciudad);
-                $("#Id_Colonia").change();
-            };
-        });
-
-    }
-
-    function setCp(id) {
-        let indice = dataColonies.findIndex(service => service.id == id);
-        if (parseInt(id) != 0) {
-            if (parseInt(indice) >= 0) {
-                $("#Cp").val(dataColonies[indice].cp);
-            } else {
-                $("#Cp").val("");
-                dToast("info", "No se encontro ninguna colonia", "Atención");
+        function setCp(id) {
+            let indice = dataColonies.findIndex(service => service.id == id);
+            if (parseInt(id) != 0) {
+                if (parseInt(indice) >= 0) {
+                    $("#Cp").val(dataColonies[indice].cp);
+                } else {
+                    $("#Cp").val("");
+                    dToast("info", "No se encontro ninguna colonia", "Atención");
+                }
             }
         }
-    }
 
-    function setColonias(id) {
-        $("#Id_Colonia").empty();
-        $("#Id_Colonia").append(`<option value="0">Selecciona una opción</option>`);
-        $.each(dataColonies, function (item, key) {
-            if (parseInt(key.estatus) == 1 && parseInt(id) == parseInt(key.id_ciudad)) {
-                $("#Id_Colonia").append(`<option value="${key.id}">${key.nombre}</option>`);
-            };
-        });
-    }
+        function setColonias(id) {
+            $("#Id_Colonia").empty();
+            $("#Id_Colonia").append(`<option value="0">Selecciona una opción</option>`);
+            $.each(dataColonies, function (item, key) {
+                if (parseInt(key.estatus) == 1 && parseInt(id) == parseInt(key.id_ciudad)) {
+                    $("#Id_Colonia").append(`<option value="${key.id}">${key.nombre}</option>`);
+                };
+            });
+        }
 
-    function setCiudad(id) {
-        $("#Id_Ciudad").empty();
-        $("#Id_Ciudad").append(`<option value="0">Selecciona una opción</option>`);
-        $.each(dataCity, function (item, key) {
-            if (parseInt(key.estatus) == 1 && parseInt(id) == parseInt(key.id_estado)) {
-                $("#Id_Ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
-            };
-        });
-    }
+        function setCiudad(id) {
+            $("#Id_Ciudad").empty();
+            $("#Id_Ciudad").append(`<option value="0">Selecciona una opción</option>`);
+            $.each(dataCity, function (item, key) {
+                if (parseInt(key.estatus) == 1 && parseInt(id) == parseInt(key.id_estado)) {
+                    $("#Id_Ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
+                };
+            });
+        }
 
-    const GetAddress = (id, type) => {
-        type === 'origen' ? (
-            $.get(`/Clients/Origins/GetOrigin/${id}`, response => {
-                if (!response) {
-                    return;
-                }
+        const GetAddress = (id, type) => {
+            type === 'origen' ? (
+                $.get(`/Clients/Origins/GetOrigin/${id}`, response => {
+                    if (!response) {
+                        return;
+                    }
 
-                const { direccion } = response;
-                direccion && $('#remitentedireccion').val(direccion);
-            })
-        ) : (
-            $.get(`/Clients/Destinations/GetDestination/${id}`, response => {
-                if (!response) {
-                    return;
-                }
-                const { direccion } = response;
-                $('#destinatariodireccion').val(direccion);
-            })
-        );
-    }
+                    const { direccion } = response;
+                    direccion && $('#remitentedireccion').val(direccion);
+                })
+            ) : (
+                $.get(`/Clients/Destinations/GetDestination/${id}`, response => {
+                    if (!response) {
+                        return;
+                    }
+                    const { direccion } = response;
+                    $('#destinatariodireccion').val(direccion);
+                })
+            );
+        }
 
-    const getClientParams = ClientId => {
-        $.get("/Clients/Origins/getOrigen/", { "Id_Cliente": ClientId }, response => {
-            $(`#editorigen`).empty();
-            $(`#editorigen`).append(`<option value="0" disabled selected>SELECCIONA</option>`);
-            response.length || ClientId == 0 ? (response.map(({ id, estatus, nombre }) => {
-                estatus === 1 && $(`#editorigen`).append(`<option value="${id}">${nombre}</option>`);
-            })) : (dToast("warning", "El cliente seleccionado no tiene orígenes.", "Atencion!"));
+        const getClientParams = ClientId => {
+            $.get("/Clients/Origins/getOrigen/", { "Id_Cliente": ClientId }, response => {
+                $(`#editorigen`).empty();
+                $(`#editorigen`).append(`<option value="0" disabled selected>SELECCIONA</option>`);
+                response.length || ClientId == 0 ? (response.map(({ id, estatus, nombre }) => {
+                    estatus === 1 && $(`#editorigen`).append(`<option value="${id}">${nombre}</option>`);
+                })) : (dToast("warning", "El cliente seleccionado no tiene orígenes.", "Atencion!"));
 
-            dSelect(`editorigen`);
-        }).fail(error => {
-            console.error(error);
-            dToast("error", "Error al obtener los origenes del cliente", "Atencion!");
-        });
+                dSelect(`editorigen`);
+            }).fail(error => {
+                console.error(error);
+                dToast("error", "Error al obtener los origenes del cliente", "Atencion!");
+            });
 
-        $.get("/Clients/Destinations/getDestino/", { "Id_Cliente": ClientId }, response => {
-            $(`#editdestino`).empty();
-            $(`#editdestino`).append(`<option value="0" disabled selected>SELECCIONA</option>`);
-            response.length || ClientId == 0 ? (response.map(({ id, estatus, nombre }) => {
-                estatus === 1 && $(`#editdestino`).append(`<option value="${id}">${nombre}</option>`);
-            })) : (dToast("warning", "El cliente seleccionado no tiene destinos.", "Atencion!"));
+            $.get("/Clients/Destinations/getDestino/", { "Id_Cliente": ClientId }, response => {
+                $(`#editdestino`).empty();
+                $(`#editdestino`).append(`<option value="0" disabled selected>SELECCIONA</option>`);
+                response.length || ClientId == 0 ? (response.map(({ id, estatus, nombre }) => {
+                    estatus === 1 && $(`#editdestino`).append(`<option value="${id}">${nombre}</option>`);
+                })) : (dToast("warning", "El cliente seleccionado no tiene destinos.", "Atencion!"));
 
-            dSelect(`editdestino`);
-        }).fail(error => {
-            console.error(error);
-            dToast("error", "Error al obtener los destinos del cliente", "Atencion!");
-        });
-    }
+                dSelect(`editdestino`);
+            }).fail(error => {
+                console.error(error);
+                dToast("error", "Error al obtener los destinos del cliente", "Atencion!");
+            });
+        }
 
-    const getCities = (selector, idestado) => {
-        $(`#${selector}`).empty();
-        $.get("/Catalogs/Geography/City/getCity", response => {
+        const getCities = (selector, idestado) => {
             $(`#${selector}`).empty();
-            $(`#${selector}`).append('<option value="0">SELECCIONA</option>');
-            response.map(({ id, id_estado, estatus, nombre }) => {
-                if (id_estado == idestado && estatus === 1) {
-                    $(`#${selector}`).append(`<option value="${id}">${nombre}</option>`);
+            $.get("/Catalogs/Geography/City/getCity", response => {
+                $(`#${selector}`).empty();
+                $(`#${selector}`).append('<option value="0">SELECCIONA</option>');
+                response.map(({ id, id_estado, estatus, nombre }) => {
+                    if (id_estado == idestado && estatus === 1) {
+                        $(`#${selector}`).append(`<option value="${id}">${nombre}</option>`);
+                    }
+                });
+            }).fail(error => {
+                console.error(error);
+                dToast("error", "Error al obtener las ciudades", "Atencion!");
+            });
+            dSelect(selector);
+        }
+
+        const initSelects = () => {
+            $.get("/Clients/getClients", response => {
+                response.map(({ id, nombreCorto, estatus }) => estatus === 1 ? $('.cliente').append(`<option value="${id}">${nombreCorto}</option>`) : null);
+                dSelect('cliente');
+                dSelect('addeditcliente');
+                dSelect('filtro');
+            }).fail(error => {
+                console.error(error);
+                dToast("error", "Error al obtener clientes", "Atencion!");
+            });
+
+            $.get("/Catalogs/TypesOfUnits/getUnidades", response => {
+                response.map(({ id, nombre, estatus }) => estatus === 1 && $(".tipounidad").append(`<option value="${id}">${nombre}</option>`));
+                dSelect('tipounidad');
+                dSelect('addedittipounidad');
+            }).fail(error => {
+                console.error(error);
+                dToast("error", "Error al obtener los tipos de unidad", "Atencion!");
+            });
+
+            $.get("/Catalogs/Geography/State/getState", response => {
+                response.map(({ id, nombre, estatus }) => estatus === 1 && $(".estado").append(`<option value="${id}">${nombre}</option>`));
+                dSelect('addestadoo');
+                dSelect('addestadod');
+                dSelect('estadoorigen');
+                dSelect('estadodestino');
+            }).fail(error => {
+                console.error(error);
+                dToast("error", "Error al obtener los estados", "Atencion!");
+            });
+        };
+
+        const getRoute = () => {
+            const origenid = $('#editorigen').val();
+            const destinoid = $('#editdestino').val();
+            origenid != null && destinoid != null && (
+                $("#rutaid").empty().append(`<option value="0" selected disabled>Selecciona una opción</option>`),
+                $.post('/Travels/GetRuta', { origenid: origenid, destinoid: destinoid }, response => {
+                    response && response.length > 0 ? response.map(({ id, od }) => $('#rutaid').append(`<option value="${id}">${od}</option>`)
+                    ) : ($("#rutaid").empty().append(`<option value="0" selected disabled>No se encontraron rutas</option>`));
+                })
+            )
+            dSelect('rutaid');
+        }
+
+        const addEditDemand = e => {
+            const button = $('#agregar');
+
+            if (!validateForm('#addEditDemand')) {
+                dToast("error", "Todos los campos son obligatorios", "¡Atencion!");
+                return;
+            }
+
+            $(button).prop('disabled', true);
+
+            const data = $(e).serialize();
+
+            $.post(`/Demand/AddEditDemand`, data, response => {
+                $(button).prop('disabled', false);
+                $('#modalAddEdit').modal('hide');
+                dToast("success", "Registro guardado exitosamente.", "Registrado");
+                DT();
+            });
+        }
+
+        const validateForm = form => {
+            let isSet = true;
+            $(`${form} select, ${form} input`).map((k, { value }) => {
+                value = value.trim();
+                if (!value || value == 0) {
+                    isSet = false;
+                    return;
                 }
             });
-        }).fail(error => {
-            console.error(error);
-            dToast("error", "Error al obtener las ciudades", "Atencion!");
-        });
-        dSelect(selector);
-    }
 
-    const initSelects = () => {
-        $.get("/Clients/getClients", response => {
-            response.map(({ id, nombreCorto, estatus }) => estatus === 1 ? $('.cliente').append(`<option value="${id}">${nombreCorto}</option>`) : null);
-            dSelect('cliente');
-            dSelect('addeditcliente');
-            dSelect('filtro');
-        }).fail(error => {
-            console.error(error);
-            dToast("error", "Error al obtener clientes", "Atencion!");
-        });
+            return isSet;
+        };
 
-        $.get("/Catalogs/TypesOfUnits/getUnidades", response => {
-            response.map(({ id, nombre, estatus }) => estatus === 1 && $(".tipounidad").append(`<option value="${id}">${nombre}</option>`));
-            dSelect('tipounidad');
-            dSelect('addedittipounidad');
-        }).fail(error => {
-            console.error(error);
-            dToast("error", "Error al obtener los tipos de unidad", "Atencion!");
-        });
-
-        $.get("/Catalogs/Geography/State/getState", response => {
-            response.map(({ id, nombre, estatus }) => estatus === 1 && $(".estado").append(`<option value="${id}">${nombre}</option>`));
-            dSelect('addestadoo');
-            dSelect('addestadod');
-            dSelect('estadoorigen');
-            dSelect('estadodestino');
-        }).fail(error => {
-            console.error(error);
-            dToast("error", "Error al obtener los estados", "Atencion!");
-        });
-    };
-
-    const getRoute = () => {
-        const origenid = $('#editorigen').val();
-        const destinoid = $('#editdestino').val();
-        origenid != null && destinoid != null && (
-            $("#rutaid").empty().append(`<option value="0" selected disabled>Selecciona una opción</option>`),
-            $.post('/Travels/GetRuta', { origenid: origenid, destinoid: destinoid }, response => {
-                response && response.length > 0 ? response.map(({ id, od }) => $('#rutaid').append(`<option value="${id}">${od}</option>`)
-                ) : ($("#rutaid").empty().append(`<option value="0" selected disabled>No se encontraron rutas</option>`));
-            })
-        )
-        dSelect('rutaid');
-    }
-
-    const addEditDemand = e => {
-        const button = $('#agregar');
-
-        if (!validateForm('#addEditDemand')) {
-            dToast("error", "Todos los campos son obligatorios", "¡Atencion!");
-            return;
-        }
-
-        $(button).prop('disabled', true);
-
-        const data = $(e).serialize();
-
-        $.post(`/Demand/AddEditDemand`, data, response => {
-            $(button).prop('disabled', false);
-            $('#modalAddEdit').modal('hide');
-            dToast("success", "Registro guardado exitosamente.", "Registrado");
-            DT();
-        });
-    }
-
-    const validateForm = form => {
-        let isSet = true;
-        $(`${form} select, ${form} input`).map((k, { value }) => {
-            value = value.trim();
-            if (!value || value == 0) {
-                isSet = false;
-                return;
-            }
-        });
-
-        return isSet;
-    };
-
-    const validateSearch = () => {
-        let isSet = false;
-        $(`#busqueda select, #busqueda input`).map((k, { value }) => {
-            value = value.trim();
-            if (value != '' && value != 0) {
-                isSet = true;
-                return;
-            }
-        });
-
-        return isSet;
-    };
-
-    const searchdemand = e => {
-        if (!validateSearch()) {
-            dToast("error", "debes seleccionar al menos un parámetro de búsqueda", "¡Atencion!");
-            return;
-        }
-
-        const data = Object.fromEntries(new FormData(e));
-        DT(true, data);
-    }
-
-    const addEdit = (Id, clientid, originid, destinationid) => {
-        $('#modalAddEdit').modal('show');
-        let title = '';
-        $('#addeditcliente').val(clientid).trigger('change');
-        $('#rutaid').empty().append(`<option value="0" selected disabled>SELECCIONA UNA OPCIÓN</option>`);
-        Id > 0 ? (
-            $.get('/Demand/GetDemand/', { Id: Id }, response => {
-                const { clientId, routeId } = response;
-                response && Object.entries(response).map(([k, v]) => {
-                    console.log(k, v);
-                    v = k.includes('fechadisponibilidad') ? new Date(v).toISOString().substring(0, 16) : v;
-                    $(`[name=${k.toLowerCase()}]`).val(v);
-                });
-                setTimeout(() => {
-                    $('#editorigen').val(originid).trigger('change');
-                    $('#editdestino').val(destinationid).trigger('change');
-                    $('#addedittipounidad').trigger('change');
-                    $('#rutaid').val(routeId).trigger('change');
-                }, 500);
-            }),
-            title = 'EDITAR DEMANDA'
-        ) : (
-            title = 'AGREGAR DEMANDA', $('#addEditDemand')[0].reset(), $('#addedittipounidad').val(0).trigger('change')
-        );
-        $('#modalAddEditlabel').text(title);
-    }
-
-    const filter = e => {
-        const x = $(e).val();
-        DT(false, { FiltroCliente: x });
-    }
-
-    function showModal(titulo = "Title", accion, type) {
-        $('#frmRegister').trigger("reset").attr('rel', type);
-        $(".guardar").html(accion);
-        $("#titulo-modal").empty("");
-        $("#titulo-modal").html(titulo);
-        $("#idEditar").val(idEditar);
-        $("#modalDiv").modal("show");
-    }
-
-    const selectCarrier = (DemandId, ClientId, UnitId, OriginId, DestinationId) => {
-        $('#modaltransportista').modal('show');
-        $.post('/Demand/GetCarrier', { OriginId: OriginId, UnitId: UnitId }, response => {
-            response && response.map(({
-                id,
-                carrierId,
-                unitId,
-                carrier,
-                costo,
-                destination,
-                expira,
-                fechaDisponibilidad,
-                origin,
-                unit
-            }) => {
-                $(".carrierinfo").append(`
-                        <tr class="text-uppercase">
-                        <td>${carrier}</td>
-                        <td>${unit}</td>
-                        <td>${origin}</td>
-                        <td>${destination}</td>
-                        <td>${fechaDisponibilidad}</td>
-                        <td>${expira} </td>
-                        <td>${costo} </td>
-                        <td class="text-center">
-                            <button type="button" class="btn btn-sm" onclick="AddEdit(${id});" style="background-color: #ffffff00;">
-                                <span class="material-icons details">
-                                    search
-                                </span>
-                            </button>
-                        </td>
-                        </tr>`);
-            })
-        })
-        dTable('table-carrier');
-        $('#modaltransportista .dataTables_wrapper').children().eq(0).remove();
-        $('#modaltransportista .dataTables_wrapper').children().eq(1).remove();
-    }
-
-    const DT = (customsearch = false, search) => {
-        Table = $('#table').DataTable({
-            destroy: true,
-            responsive: true,
-            autoWidth: true,
-            processing: true,
-            serverSide: true,
-            ajax: {
-                type: 'POST',
-                url: '/Demand/DT',
-                data: data => {
-                    data.customsearch = customsearch,
-                        data.searchmodel = search
+        const validateSearch = () => {
+            let isSet = false;
+            $(`#busqueda select, #busqueda input`).map((k, { value }) => {
+                value = value.trim();
+                if (value != '' && value != 0) {
+                    isSet = true;
+                    return;
                 }
-            },
-            columns: [
-                { data: 'folio' },
-                { data: 'cliente' },
-                { data: 'tipoUnidad' },
-                { data: 'origen' },
-                { data: 'destino' },
-                { data: 'fechaDisponibilidad' },
-                { data: 'arribo' },
-                {
-                    render: (data, type, row) => {
-                        const { id, clientId, originId, destinationId, unitId } = row;
-                        return `
-                                        <a href="javascript:void(0);" onclick="addEdit(${id}, ${clientId}, ${originId}, ${destinationId});">
-                                            <span class="material-icons">
-                                                edit
-                                            </span>
-                                        </a>
-                                        <a href="/Demand/SetTravel/${id}" onclick="create(${id});">
-                                            <span class="material-icons">
-                                                local_shipping
-                                            </span>
-                                        </a>
-                                        <a href="javascript:void(0);" onclick="selectCarrier(${id}, ${clientId}, ${unitId}, ${originId}, ${destinationId});">
-                                            <span class="material-icons">
-                                                search
-                                            </span>
-                                        </a>`
+            });
+
+            return isSet;
+        };
+
+        const searchdemand = e => {
+            if (!validateSearch()) {
+                dToast("error", "debes seleccionar al menos un parámetro de búsqueda", "¡Atencion!");
+                return;
+            }
+
+            const data = Object.fromEntries(new FormData(e));
+            DT(true, data);
+        }
+
+        const addEdit = (Id, clientid, originid, destinationid) => {
+            $('#modalAddEdit').modal('show');
+            let title = '';
+            $('#addeditcliente').val(clientid).trigger('change');
+            $('#rutaid').empty().append(`<option value="0" selected disabled>SELECCIONA UNA OPCIÓN</option>`);
+            Id > 0 ? (
+                $.get('/Demand/GetDemand/', { Id: Id }, response => {
+                    const { clientId, routeId } = response;
+                    response && Object.entries(response).map(([k, v]) => {
+                        console.log(k, v);
+                        v = k.includes('fechadisponibilidad') ? new Date(v).toISOString().substring(0, 16) : v;
+                        $(`[name=${k.toLowerCase()}]`).val(v);
+                    });
+                    setTimeout(() => {
+                        $('#editorigen').val(originid).trigger('change');
+                        $('#editdestino').val(destinationid).trigger('change');
+                        $('#addedittipounidad').trigger('change');
+                        $('#rutaid').val(routeId).trigger('change');
+                    }, 500);
+                }),
+                title = 'EDITAR DEMANDA'
+            ) : (
+                title = 'AGREGAR DEMANDA', $('#addEditDemand')[0].reset(), $('#addedittipounidad').val(0).trigger('change')
+            );
+            $('#modalAddEditlabel').text(title);
+        }
+
+        const filter = e => {
+            const x = $(e).val();
+            DT(false, { FiltroCliente: x });
+        }
+
+        function showModal(titulo = "Title", accion, type) {
+            $('#frmRegister').trigger("reset").attr('rel', type);
+            $(".guardar").html(accion);
+            $("#titulo-modal").empty("");
+            $("#titulo-modal").html(titulo);
+            $("#idEditar").val(idEditar);
+            $("#modalDiv").modal("show");
+        }
+
+        const selectCarrier = (DemandId, ClientId, UnitId, OriginId, DestinationId) => {
+            $('#modaltransportista').modal('show');
+            $.post('/Demand/GetCarrier', { OriginId: OriginId, UnitId: UnitId }, response => {
+                response && response.map(({
+                    id,
+                    carrierId,
+                    unitId,
+                    carrier,
+                    costo,
+                    destination,
+                    expira,
+                    fechaDisponibilidad,
+                    origin,
+                    unit
+                }) => {
+                    $(".carrierinfo").append(`
+                            <tr class="text-uppercase">
+                            <td>${carrier}</td>
+                            <td>${unit}</td>
+                            <td>${origin}</td>
+                            <td>${destination}</td>
+                            <td>${fechaDisponibilidad}</td>
+                            <td>${expira} </td>
+                            <td>${costo} </td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-sm" onclick="AddEdit(${id});" style="background-color: #ffffff00;">
+                                    <span class="material-icons details">
+                                        search
+                                    </span>
+                                </button>
+                            </td>
+                            </tr>`);
+                })
+            })
+            setTimeout(() => {
+
+                dTable('table-carrier')
+                $('#modaltransportista .dataTables_wrapper').children().eq(0).remove();
+                $('#modaltransportista .dataTables_wrapper').children().eq(1).remove();
+            }, 500);
+        }
+
+        const DT = (customsearch = false, search) => {
+            Table = $('#table').DataTable({
+                destroy: true,
+                responsive: true,
+                autoWidth: true,
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    type: 'POST',
+                    url: '/Demand/DT',
+                    data: data => {
+                        data.customsearch = customsearch,
+                            data.searchmodel = search
                     }
+                },
+                columns: [
+                    { data: 'folio' },
+                    { data: 'cliente' },
+                    { data: 'tipoUnidad' },
+                    { data: 'origen' },
+                    { data: 'destino' },
+                    { data: 'fechaDisponibilidad' },
+                    { data: 'arribo' },
+                    {
+                        render: (data, type, row) => {
+                            const { id, clientId, originId, destinationId, unitId } = row;
+                            return `
+                                            <a href="javascript:void(0);" onclick="addEdit(${id}, ${clientId}, ${originId}, ${destinationId});">
+                                                <span class="material-icons">
+                                                    edit
+                                                </span>
+                                            </a>
+                                            <a href="/Demand/SetTravel/${id}" onclick="create(${id});">
+                                                <span class="material-icons">
+                                                    local_shipping
+                                                </span>
+                                            </a>
+                                            <a href="javascript:void(0);" onclick="selectCarrier(${id}, ${clientId}, ${unitId}, ${originId}, ${destinationId});">
+                                                <span class="material-icons">
+                                                    search
+                                                </span>
+                                            </a>`
+                        }
+                    }
+                ],
+                language: {
+                    "decimal": "",
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+                columnDefs: [
+                    { className: 'text-center', targets: [5, 6, 7] }
+                ],
+                initComplete: () => {
+                    $('#modalbusqueda').modal('hide');
+                    $('#table_length').html(`<a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary float-right" onclick="addEdit(0, 0, 0, 0);"><span class="material-icons">add</span></a>`).show();
+                    $('[aria-controls="table"]').prop('placeholder', 'BUSCAR');
+                    setTimeout(() => $('.filtro').removeClass('d-none'), 150);
                 }
-            ],
-            language: {
-                "decimal": "",
-                "emptyTable": "No hay información",
-                "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-                "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
-                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
-                "infoPostFix": "",
-                "thousands": ",",
-                "lengthMenu": "Mostrar _MENU_ Entradas",
-                "loadingRecords": "Cargando...",
-                "processing": "Procesando...",
-                "search": "",
-                "zeroRecords": "Sin resultados encontrados",
-                "paginate": {
-                    "first": "Primero",
-                    "last": "Ultimo",
-                    "next": "Siguiente",
-                    "previous": "Anterior"
-                }
-            },
-            columnDefs: [
-                { className: 'text-center', targets: [5, 6, 7] }
-            ],
-            initComplete: () => {
-                $('#modalbusqueda').modal('hide');
-                $('#table_length').html(`<a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary float-right" onclick="addEdit(0, 0, 0, 0);"><span class="material-icons">add</span></a>`).show();
-                $('[aria-controls="table"]').prop('placeholder', 'BUSCAR');
-                setTimeout(() => $('.filtro').removeClass('d-none'), 150);
-            }
-        });
-    }
+            });
+        }
     </script>
 }
