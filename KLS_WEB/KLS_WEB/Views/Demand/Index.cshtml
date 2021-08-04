@@ -641,11 +641,12 @@
         $('#modalAddEdit').modal('show');
         let title = '';
         $('#addeditcliente').val(clientid).trigger('change');
+        $('#rutaid').empty();
         Id > 0 ? (
             $.get('/Demand/GetDemand/', { Id: Id }, response => {
-                console.log(response);
-                const { clientId } = response;
+                const { clientId, routeId } = response;
                 response && Object.entries(response).map(([k, v]) => {
+                    console.log(k, v);
                     v = k.includes('fechadisponibilidad') ? new Date(v).toISOString().substring(0, 16) : v;
                     $(`[name=${k.toLowerCase()}]`).val(v);
                 });
@@ -653,8 +654,8 @@
                     $('#editorigen').val(originid).trigger('change');
                     $('#editdestino').val(destinationid).trigger('change');
                     $('#addedittipounidad').trigger('change');
-                    $('#rutaid').trigger('change');
-                }, 200);
+                    $('#rutaid').val(routeId).trigger('change');
+                }, 400);
             }),
             title = 'EDITAR DEMANDA'
         ) : (
