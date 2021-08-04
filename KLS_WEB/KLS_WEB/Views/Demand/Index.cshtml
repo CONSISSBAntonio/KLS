@@ -260,7 +260,7 @@
                             <th>ACCIONES</th>
                         </tr>
                     </thead>
-                    <tbody id="table-info"></tbody>
+                    <tbody class="carrierinfo"></tbody>
                 </table>
             </div>
         </div>
@@ -352,7 +352,7 @@
 
 @section scripts{
     <script>
-        let dataOrigenes =[];
+        let dataOrigenes = [];
             let dataState =[];
             let dataCity =[];
             let dataColonies =[];
@@ -693,7 +693,7 @@
                 origin,
                 unit
             }) => {
-                $("#table-info").append(`
+                $(".carrierinfo").append(`
                         <tr class="text-uppercase">
                         <td>${carrier}</td>
                         <td>${unit}</td>
