@@ -165,7 +165,7 @@
         <div class="col-7">
             <div class="catalog-list">
 
-                <a href="javascript:void(0);" class="catalog" id="servicios" onclick="">
+                <a href="javascript:void(0);" class="catalog" id="servicios" onclick="showPanel(this.id), getServicios()">
                     <div class="content">
                         <span class="material-icons">
                             people
@@ -173,7 +173,7 @@
                         <div class="name font-barlow">Servicios</div>
                     </div>
                 </a>
-                <a href="javascript:void(0);" class="catalog" id="requisitos" onclick="">
+                <a href="javascript:void(0);" class="catalog" id="requisitos" onclick="showPanel(this.id), getRequisitos()">
                     <div class="content" id="requisitos">
                         <span class="material-icons">
                             inventory_2
@@ -181,7 +181,7 @@
                         <div class="name font-barlow">Requisitos</div>
                     </div>
                 </a>
-                <a href="javascript:void(0);" class="catalog" id="mercancia" onclick="">
+                <a href="javascript:void(0);" class="catalog" id="mercancia" onclick="showPanel(this.id); getMercancia(), getMercanciaD()">
                     <div class="content">
                         <span class="material-icons">
                             store
@@ -190,7 +190,7 @@
                     </div>
                 </a>
 
-                <a href="javascript:void(0);" class="catalog" id="facturacion" onclick="">
+                <a href="javascript:void(0);" class="catalog" id="facturacion" onclick="showPanel(this.id)">
                     <div class="content">
                         <span class="material-icons">
                             receipt_long
@@ -199,7 +199,7 @@
                     </div>
                 </a>
 
-                <a href="javascript:void(0);" class="catalog" id="documentos" onclick="">
+                <a href="javascript:void(0);" class="catalog" id="documentos" onclick="showPanel(this.id), getEvidencia()">
                     <div class="content">
                         <span class="material-icons">
                             folder
@@ -207,7 +207,7 @@
                         <div class="name font-barlow">Documentos</div>
                     </div>
                 </a>
-                <a href="javascript:void(0);" class="catalog" id="historial" onclick="">
+                <a href="javascript:void(0);" class="catalog" id="historial" onclick="showPanel(this.id), loadTableHistorial()">
                     <div class="content">
                         <span class="material-icons">
                             manage_search

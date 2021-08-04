@@ -37,7 +37,6 @@
 
 @section Scripts {
     <script>
-
         var dataCity = [];
         var dataCheckpoint = [];
         var catCiudad = [];
@@ -93,6 +92,7 @@
             $.get("Route/getRoute", function (res) {
                 dataCity = res;
                 $.each(res, (item, key) => {
+                    console.log('asd', key);
                     const IdGenerado = `${String(key.id_ciudadorigen).padStart(4, '0')}${String(key.id_ciudaddestino).padStart(4, '0')}`;
                     let indice_co = catCiudad.findIndex(service => service.id === key.id_ciudadorigen);
                     let indice_cd = catCiudad.findIndex(service => service.id === key.id_ciudaddestino);
