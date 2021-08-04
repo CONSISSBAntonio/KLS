@@ -571,11 +571,9 @@
     const getRoute = () => {
         const origenid = $('#editorigen').val();
         const destinoid = $('#editdestino').val();
-        console.log('origin', origenid, 'destino:', destinoid);
         origenid != null && destinoid != null && (
             $("#rutaid").empty().append(`<option value="0" selected disabled>Selecciona una opción</option>`),
             $.post('/Travels/GetRuta', { origenid: origenid, destinoid: destinoid }, response => {
-                console.log('data:', response, 'len:', response.length);
                 response && response.length > 0 ? response.map(({ id, od }) => $('#rutaid').append(`<option value="${id}">${od}</option>`)
                 ) : ($("#rutaid").empty().append(`<option value="0" selected disabled>No se encontraron rutas</option>`));
             })
@@ -645,6 +643,7 @@
         $('#addeditcliente').val(clientid).trigger('change');
         Id > 0 ? (
             $.get('/Demand/GetDemand/', { Id: Id }, response => {
+                console.log(response);
                 const { clientId } = response;
                 response && Object.entries(response).map(([k, v]) => {
                     v = k.includes('fechadisponibilidad') ? new Date(v).toISOString().substring(0, 16) : v;
