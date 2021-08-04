@@ -19,6 +19,26 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/4.0.2/timeago.full.min.js" integrity="sha512-wb3lqal2VtYhmlPAr232VP+Zus676CFAEYdywxIUSxG6F/X9WhN6SpREkWUdwBvMpd6gCKuKTGHhdum6m1wOvQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     @RenderSection("Styles", required: false)
+    <style>
+        .spinner-tbl {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border-left-color: #9E9E9E;
+        animation: spin 1s ease infinite;
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+    </style>
 </head>
 <body>
     <div id="app" translate="no">
@@ -201,9 +221,6 @@
             var $containerWidth = $(window).width();
             var $containerHeight = $(window).height();
 
-            console.log($containerWidth);
-            console.log($containerHeight);
-
             if ($containerWidth <= 1284) {
                 $(".left-bar").removeClass("expand");
             }
@@ -292,15 +309,17 @@
             $('#' + select).select2({
                 language: {
                     noResults: function () {
-                        return "No hay resultado";
+                        return "No se encontraron resultados";
                     },
                     searching: function () {
                         return "Buscando..";
                     }
-                }
-            });
+                }, dropdownCssClass: "letraSelect"
+            } );
         }
 
+        //funcion de cargar paginado
+       
     </script>
 </body>
 </html>

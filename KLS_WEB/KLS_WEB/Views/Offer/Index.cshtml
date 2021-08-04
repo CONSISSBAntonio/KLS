@@ -12,13 +12,59 @@
             </div>
 
             <div class="ml-auto p-2 pb-2">
+                <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#modalBuscar">
+                    Buscar
+                </a>
                 <a class="btn btn-sm btn-secondary" href="#">
                     <span class="material-icons">
                         add
                     </span>
                 </a>
+                <a class="btn btn-sm btn-secondary" href="#" data-toggle="modal" data-target="#exampleModal">
+                    <span class="material-icons">
+                        file_upload
+                    </span>
+                </a>
             </div>
         </div>
+
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Archivo</label>
+                                <input type="file" onchange="importf(this)" class="form-control" accept=".xlsx" id="archivoXlsx" />
+                            </div>
+                        </div>
+                        <br /><br />
+                        <div id="div-tabla" style="display:none;">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table table-md table-hover table-data" id="table-data">
+                                        <thead id="h-table"></thead>
+                                        <tbody id="b-table"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="eGuardar();">Guardar ofertas</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <div class="p-4 shadow bg-white">
             <ul class="nav nav-pills" id="pills-tab" role="tablist">
@@ -79,7 +125,83 @@
     </div>
 </div>
 
+<div class="modal fade" id="modalBuscar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Buscar rutas</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>Tipo de unidad</label>
+                        <select class="form-control form-control-sm" id="tipounidad">
+                            <option value="0">Selecciona una opción</option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <label>Fecha de salida</label>
+                        <input type="date" name="name" value="" class="form-control" />
+                    </div>
+                    <div class="col-3">
+                        <label>Hora de salida</label>
+                        <input type="time" name="name" value="" class="form-control" />
+                    </div>
+                    <div class="col-3">
+                        <label>Nivel de servicio</label>
+                        <select class="form-control form-control-sm" id="Tamanio" name="Tamanio">
+                            <option value="0">Selecciona una opción</option>
+                            <option value="1">Pequeño</option>
+                            <option value="2">Mediano</option>
+                            <option value="3">Grande</option>
+                            <option value="4">Logística</option>
+                            <option value="5">Hombre Camión</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>Estado Origen</label>
+                        <select class="form-control form-control-sm" id="esorigen">
+                            <option value="0">Selecciona una opción</option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <label>Ciudad Origen</label>
+                        <select class="form-control form-control-sm" id="ciorigen">
+                            <option value="0">Selecciona una opción</option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <label>Estado Destino</label>
+                        <select class="form-control form-control-sm" id="esdestino">
+                            <option value="0">Selecciona una opción</option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <label>Ciudad Destino</label>
+                        <select class="form-control form-control-sm" id="cidestino">
+                            <option value="0">Selecciona una opción</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="Ofertas();">Buscar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts{
+    <script src="@Url.Content("~/js/sheetjs/xlsx.full.min.js")"></script>
+    <script src="@Url.Content("~/js/jquery.unobtrusive-ajax.js")"></script>
     <script>
 
         //Cargar datos de las rutas
@@ -88,18 +210,207 @@
         var catCiudad = [];
         var catEstado = [];
 
+        var wb;
+        var rABS = false;
+        var jsonEnv = [];
+
+        //Excel
+        function importf(obj) {
+            //notifyLoading(true);
+            if (!obj.files) {
+                notifyLoading(false);
+                $("#div-tabla").hide();
+                $("#bGuardar").attr("disabled", true);
+                return;
+            }
+            //notifyLoading(false);
+
+            $("#div-tabla").show()
+            $("#bGuardar").attr("disabled", false);
+
+            var f = obj.files[0];
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var data = e.target.result;
+                if (rABS) {
+                    wb = XLSX.read(btoa(fixdata(data)), {
+                        type: 'base64'
+                    });
+                } else {
+                    wb = XLSX.read(data, {
+                        type: 'binary'
+                    });
+                }
+                //var dataXLSX = JSON.stringify(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]));
+                dataXLSX = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { raw: false });
+
+                $("#h-table").empty();
+                $("#h-table").append(`
+                <tr>
+                    <th>Transportista</th>
+                    <th>Tipo_de_unidad</th>
+                    <th>cantidad</th>
+                    <th>fecha_disponibilidad</th>
+                    <th>Rango_de_espera</th>
+                </tr>
+            `);
+
+                var table = $('#table-data').DataTable();
+                table.destroy();
+                $("#b-table").empty();
+                $.each(dataXLSX, function (data, item) {
+                    var itemT = Object.keys(item);
+                    jsonEnv.push(
+                        {
+                            "Transportista": item[itemT[0]],
+                            "Tipo_De_Unidad": item[itemT[1]],
+                            "Cantidad": item[itemT[2]],
+                            "Fecha_Disponibilidad": item[itemT[3]],
+                            "Rango_De_Espera": item[itemT[4]],
+                            "Nivel_Origen": item[itemT[5]],
+                            "Region_Origen": item[itemT[6]],
+                            "Estado_Origen": item[itemT[7]],
+                            "ciudad_Origen": item[itemT[8]],
+                            "Tolerancia_Origen": item[itemT[9]],
+                            "Nivel_Destino": item[itemT[10]],
+                            "Region_Destino": item[itemT[11]],
+                            "estado_Destino": item[itemT[12]],
+                            "ciudad_Destino": item[itemT[13]],
+                            "Tolerancia_Destino": item[itemT[14]],
+                            "status": item[itemT[15]],
+                        },
+                    );
+                    let d = new Date(item[itemT[3]]);
+                    let fecha = d.getDay() + " " + d.getMonth() + " " + d.getFullYear() + "  " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+                    $("#b-table").append(`
+                <tr>
+                    <td>${item[itemT[0]]}</td>
+                    <td>${item[itemT[1]]}</td>
+                    <td>${item[itemT[2]]}</td>
+                    <td>${fecha}</td>
+                    <td>${item[itemT[4]]}</td>
+                </tr>
+                `);
+                });
+                //$('#table-data').DataTable();
+                dTable("table-data");
+            };
+            if (rABS) {
+                reader.readAsArrayBuffer(f);
+            } else {
+                reader.readAsBinaryString(f);
+            }
+        }
+        function fixdata(data) {
+            var o = "",
+                l = 0,
+                w = 10240;
+            for (; l < data.byteLength / w; ++l) o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w, l * w + w)));
+
+            o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w)));
+            return o;
+        }
+        function eGuardar() {
+            //notifyLoading(true);
+            if (Object.keys(jsonEnv).length > 0) {
+                $.post("/Offer/setRouteMult", { "catCarga": jsonEnv }, function (res) {
+                    console.log(res);
+                    Ofertas();
+                }).fail(function (error) {
+                    console.log("error", "Error al insertar");
+                });
+            } else {
+                //notifyLoading(false);
+                console.log("error", "No se encontraron registros para insertar.");
+            }
+            jsonEnv = [];
+            $("#b-table").empty();
+            $("#div-tabla").hide('fast');
+            $("#archivoXlsx").val("");
+        }
+        //Excel
+
+        function estado(estado) {
+            if (estado = 1) {
+                return "Disponible"
+            }
+            if (estado = 2) { return "Separado"}
+            if (estado = 3) { return "Confirmado"}
+            if (estado = 4) { return "Expirado"}
+        }
+
+        function color(estado) {
+            if (estado = 1) {
+                return "blue"
+            }
+            if (estado = 2) { return "gray"}
+            if (estado = 3) { return "gray"}
+            if (estado = 4) { return "red"}
+        }
+
+        function Ofertas() {
+            $("#table-ofertas-info").empty();
+            var esorigen = $("#esorigen").val();
+            var esdestino = $("#esdestino").val();
+            var ciorigen = $("#ciorigen").val();
+            var cidestino = $("#cidestino").val();
+            var tipounidad = $("#tipounidad").val();
+            var nivelservicio = $("#Tamanio").val();
+            
+            $.get("Offer/busqueda", {"transportista":nivelservicio, "idestadoorigen": esorigen, "idestadodestino": esdestino, "idciudadorigen": ciorigen, "idciudaddestino": cidestino, "idtipounidad": tipounidad}, function (res) {
+                console.log(res);
+                $.each(res, (item, key) => {
+                    let d = new Date(key.fechadisponibilidad);
+                    let fecha = d.getMonth() + "-" + d.getDay() + "-" + d.getFullYear() + "  " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+                    console.log(fecha);
+                    $("#table-ofertas-info").append(`
+                        <tr class="text-uppercase">
+                            <td> --- </td>
+                            <td>${key.tipounidad}</td>
+                            <td>${key.estadoorigen} ${key.ciudadorigen}</td>
+                            <td>${key.estadodestino} ${key.ciudaddestino}</td>
+                            <td>${key.fechadisponibilidad}</td>
+                            <td>(<span class="timeago" datetime="${fecha}"></span>)</td>
+                            <td style="color:`+ color(key.estatus) +`">`+ estado(key.estatus) +`</td>
+                            <td class="text-center"><a href="#">--</a></td>
+                        </tr>`);
+                    timeago.render(document.querySelectorAll('.timeago'), 'es-MX');
+                });
+                
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+            });
+        }
+
+
         $(document).ready(function () {
             loadCity();
             loadState();
+            Ofertas();
+            cargarUnidades();
         });
+
+
+        //cargar tipo de unidades
+        function cargarUnidades() {
+            $.get("/Catalogs/TypesOfUnits/getUnidades", function (res) {
+                $.each(res, function (item, key) {
+                    $("#tipounidad").append(`<option value="${key.id}">${key.nombre}</option>`);
+                });
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+            });
+        }
 
         function loadCity() {
             $.get("/Catalogs/Geography/City/getCity", function (res) {
                 res.map(data => {
-                    const { estatus } = data;
+                    const { estatus,id,nombre } = data;
 
                     if (estatus === 1) {
                         catCiudad = [...catCiudad, data];
+                        $("#ciorigen").append(`<option value="${id}">${nombre}</option>`);
+                        $("#cidestino").append(`<option value="${id}">${nombre}</option>`);
                     }
                 });
 
@@ -112,70 +423,78 @@
         function loadState() {
             $.get("/Catalogs/Geography/State/getState", function (res) {
                 catEstado = res;
-                loadTable();
+                res.map(data => {
+                    const { estatus, id, nombre } = data;
+
+                    if (estatus === 1) {
+                        catCiudad = [...catCiudad, data];
+                        $("#esorigen").append(`<option value="${id}">${nombre}</option>`);
+                        $("#esdestino").append(`<option value="${id}">${nombre}</option>`);
+                    }
+                });
             }).fail(function (error) {
                 dToast("error", "Error al obtener paises", "Atencion!");
             });
         }
 
-        function loadTable() {
-            var stable = $('.table').DataTable();
-            stable.destroy();
-            $("#table-info").empty();
-            $.get("Route/getRoute", function (res) {
-                dataRutas = res;
-                console.log(res);
-                $.each(res, (item, key) => {
-                    const IdGenerado = `${String(key.id_ciudadorigen).padStart(4, '0')}${String(key.id_ciudaddestino).padStart(4, '0')}`;
-                    let indice_co = catCiudad.findIndex(service => service.id === key.id_ciudadorigen);
-                    let indice_cd = catCiudad.findIndex(service => service.id === key.id_ciudaddestino);
-                    let indice_eo = catEstado.findIndex(service => service.id === key.id_estadoorigen);
-                    let indice_ed = catEstado.findIndex(service => service.id === key.id_estadodestino);
-                    const color = nCon(key.seguridad) == 'Alto' ? 'success' : nCon(key.seguridad) == 'Medio' ? 'warning' : 'danger';
-                    const status = nCon(key.estatus) == 1 ? 'Activo' : 'Inactivo';
-                    $("#table-info").append(`
-                        <tr class="text-uppercase">
-                            <td></td>
-                            <td>${IdGenerado}</td>
-                            <td>${catEstado[indice_eo].nombre} - ${catCiudad[indice_co].nombre}</td>
-                            <td>${catEstado[indice_ed].nombre} - ${catCiudad[indice_cd].nombre}</td>
-                            <td>${nCon(key.totalkilometros)} km</td>
-                            <td class="text-center">${status}</td>
-                        </tr>`);
-                });
-                dataTbl("table");
+        //function loadTable() {
+        //    var stable = $('.table').DataTable();
+        //    stable.destroy();
+        //    $("#table-info").empty();
+        //    $.get("Route/getRoute", function (res) {
+        //        dataRutas = res;
+        //        console.log(res);
+        //        $.each(res, (item, key) => {
+        //            const IdGenerado = `${String(key.id_ciudadorigen).padStart(4, '0')}${String(key.id_ciudaddestino).padStart(4, '0')}`;
+        //            let indice_co = catCiudad.findIndex(service => service.id === key.id_ciudadorigen);
+        //            let indice_cd = catCiudad.findIndex(service => service.id === key.id_ciudaddestino);
+        //            let indice_eo = catEstado.findIndex(service => service.id === key.id_estadoorigen);
+        //            let indice_ed = catEstado.findIndex(service => service.id === key.id_estadodestino);
+        //            const color = nCon(key.seguridad) == 'Alto' ? 'success' : nCon(key.seguridad) == 'Medio' ? 'warning' : 'danger';
+        //            const status = nCon(key.estatus) == 1 ? 'Activo' : 'Inactivo';
+        //            $("#table-info").append(`
+        //                <tr class="text-uppercase">
+        //                    <td></td>
+        //                    <td>${IdGenerado}</td>
+        //                    <td>${catEstado[indice_eo].nombre} - ${catCiudad[indice_co].nombre}</td>
+        //                    <td>${catEstado[indice_ed].nombre} - ${catCiudad[indice_cd].nombre}</td>
+        //                    <td>${nCon(key.totalkilometros)} km</td>
+        //                    <td class="text-center">${status}</td>
+        //                </tr>`);
+        //        });
+        //        dataTbl("table");
 
-            }).fail(function (error) {
-                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
-            });
-        }
+        //    }).fail(function (error) {
+        //        dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+        //    });
+        //}
 
-        function dataTbl(tabla) {
-            $('#' + tabla).dataTable(
-                {
-                    searching: false, paging: true, info: false,
-                    language: {
-                        "decimal": "",
-                        "emptyTable": "No hay información",
-                        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-                        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
-                        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
-                        "infoPostFix": "",
-                        "thousands": ",",
-                        "lengthMenu": "Mostrar _MENU_ Entradas",
-                        "loadingRecords": "Cargando...",
-                        "processing": "Procesando...",
-                        "search": "Buscar",
-                        "zeroRecords": "Sin resultados encontrados",
-                        "paginate": {
-                            "first": "Primero",
-                            "last": "Ultimo",
-                            "next": "Siguiente",
-                            "previous": "Anterior"
-                        }
-                    }
-                }
-            );
-        }
+        //function dataTbl(tabla) {
+        //    $('#' + tabla).dataTable(
+        //        {
+        //            searching: false, paging: true, info: false,
+        //            language: {
+        //                "decimal": "",
+        //                "emptyTable": "No hay información",
+        //                "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+        //                "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+        //                "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        //                "infoPostFix": "",
+        //                "thousands": ",",
+        //                "lengthMenu": "Mostrar _MENU_ Entradas",
+        //                "loadingRecords": "Cargando...",
+        //                "processing": "Procesando...",
+        //                "search": "Buscar",
+        //                "zeroRecords": "Sin resultados encontrados",
+        //                "paginate": {
+        //                    "first": "Primero",
+        //                    "last": "Ultimo",
+        //                    "next": "Siguiente",
+        //                    "previous": "Anterior"
+        //                }
+        //            }
+        //        }
+        //    );
+        //}
     </script>
 } 

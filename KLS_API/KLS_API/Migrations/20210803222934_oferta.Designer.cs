@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210803222934_oferta")]
+    partial class oferta
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1389,9 +1391,6 @@ namespace KLS_API.Migrations
                     b.Property<int>("estado_Destino")
                         .HasColumnType("int");
 
-                    b.Property<int>("status")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("Oferta");
@@ -1682,9 +1681,6 @@ namespace KLS_API.Migrations
                     b.Property<string>("Intercom")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("PassEspejo")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
                     b.Property<decimal>("PrecioClienteTotal")
                         .HasColumnType("decimal(18,2)");
 
@@ -1710,9 +1706,6 @@ namespace KLS_API.Migrations
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("TipoViaje")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("UsuarioEspejo")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");

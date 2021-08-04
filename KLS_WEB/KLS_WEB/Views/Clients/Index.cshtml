@@ -51,7 +51,6 @@
            var stable = $('.table-viajes').DataTable();
            stable.destroy();
            $("#table-info").empty();
-
            $.get("Clients/getClients", function (res) {
                console.log(res);
                $.each(res, function (item, key) {

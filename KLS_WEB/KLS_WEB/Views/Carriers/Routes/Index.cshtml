@@ -57,21 +57,27 @@
                 <form id="frmRegister" action="#" method="post">
                     <input type="hidden" name="id" id="idEditar" />
                     <div class="row">
-                        @*<div class="col-md-12">
-                            <label class="">Ruta origen</label>
-                            <select class="form-control form-control-md" id="Id_Ruta_Origen" name="Id_Ruta_Origen" style="width:100%;font-size:6px;" onchange="selectRuta();">
-                                <option value="0">Selecciona una option</option>
-                            </select>
-                        </div>*@
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label class="">Estado origen</label>
-                            <select class="form-control form-control-md" id="Estado" style="width:100%;font-size:6px;" onchange="selectCiudad();">
+                            <select class="form-control form-control-md" id="EstadoOrigen" style="width:100%;font-size:6px;" onchange="cCiudadOrigen();">
                                 <option value="0">Selecciona una opción</option>
                             </select>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label class="">Ciudad origen</label>
-                            <select class="form-control form-control-md" id="Ciudad" style="width:100%;font-size:6px;" onchange="selectRuta();">
+                            <select class="form-control form-control-md" id="CiudadOrigen" style="width:100%;font-size:6px;" onchange="getRutas();">
+                                <option value="0">Selecciona una opción</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="">Estado destino</label>
+                            <select class="form-control form-control-md" id="EstadoDestino" style="width:100%;font-size:6px;" onchange="cCiudadDestino();">
+                                <option value="0">Selecciona una opción</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="">Ciudad destino</label>
+                            <select class="form-control form-control-md" id="CiudadDestino" style="width:100%;font-size:6px;" onchange="getRutas();">
                                 <option value="0">Selecciona una opción</option>
                             </select>
                         </div>
@@ -99,9 +105,33 @@
                         </div>
                     </div>
                     <br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="">Inventario</label>
+                            <table id="table-inventario" class="table table-striped table-bordered display table-hover" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Marca</th>
+                                        <th>Modelo</th>
+                                        <th>Año</th>
+                                        <th># Serie</th>
+                                        <th>Placa</th>
+                                        <th>Color</th>
+                                        <th>Precio</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="info-inventario"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <br />
                     <button type="submit" class="btn btn-dark guardar" style="width:31%;" id="btnAccion">
                         Guardar
                     </button>
+                    
+                    <a href="#" class="btn btn-dark" style="width:31%;" onclick="guardarInventarios();">
+                        Guardar inventario
+                    </a>
                 </form>
 
             </div>
@@ -119,17 +149,25 @@
         var catCiudad = [];
         var catEstado = [];
         var catRutas = [];
+        var dataInventory = [];
+        var catUnidad = [];
 
         $(window).ready(function () {
-            loadCity();
-            $("#Estado").select2();
-            $("#Ciudad").select2();
-            $("#Id_Ruta").select2();
+            init();
             $("#frmRegister").submit(function (event) {
                 event.preventDefault();
                 var jsonData = convertJson($("#frmRegister"));
                 jsonData["Id_Transportista"] = @id;
                 var idruta = $("#Id_Ruta").val();
+
+                var jsonInv = [];
+                $.each(dataInventory, function (item, key) {
+                    jsonInv.push({ "idRuta": 2, "idInventario": $("#inv-" + key.id).val()});
+                });
+
+                jsonData["ruta_has_inventario"] = jsonInv;
+                console.log(jsonData);
+
                 if (parseInt(idruta) != 0) {
                     if (parseInt($("#idEditar").val()) != 0) {
                         $.post("/Carriers/Routes/putRoutes", jsonData, function (res) {
@@ -159,87 +197,118 @@
                 }
 
             });
-
         });
 
-        function getRutas() {
-            $.get("/Carriers/Routes/getRoutes", function (res) {
-                catRutas = res;
-                $("#Id_Ruta_Origen").empty();
-                $("#Id_Ruta_Origen").append(`<option value="0">Selecciona una opción</option>`);
-                $.each(res, function (item, key) {
+        function init() {
+            dSelect("EstadoOrigen");
+            dSelect("CiudadOrigen");
+            dSelect("EstadoDestino");
+            dSelect("CiudadDestino");
+            dSelect("Id_Ruta");
+            cargarCiudad();
+            loadTipo();
+        }
 
-                    if (parseInt(key.estatus) == 1)
-                    {
+        function loadTipo() {
+            $.get("../../Catalogs/TypesOfUnits/getUnidades", function (res) {
+                catUnidad = res;
+                $.each(res, function (item, key) {
+                    if (parseInt(key.estatus) != 2) {
+                        $("#TipoUnidad").append(`<option value="${key.id}">${key.nombre}</option>`)
+                    }
+                });
+                getInventario();
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+            });
+        }
+
+        function cargarEstados() {
+            $.get("/Catalogs/Geography/State/getState", function (res) {
+                catEstado = res;
+                cargarRutas();
+                $.each(res, function (item, key) {
+                    $("#EstadoOrigen").append(`<option value="${key.id}">${key.nombre}</option>`);
+                    $("#EstadoDestino").append(`<option value="${key.id}">${key.nombre}</option>`);
+                });
+            }).fail(function (error) {
+                dToast("error", "Error al obtener paises", "Atencion!");
+            });
+        }
+
+        function cargarCiudad() {
+            $.get("/Catalogs/Geography/City/getCity", function (res) {
+                catCiudad = res;
+                cargarEstados();
+            }).fail(function (error) {
+                dToast("error", "Error al obtener paises", "Atencion!");
+            });
+        }
+
+        function getRutas() {
+            var eorigen = parseInt($("#EstadoOrigen").val());
+            var corigen = parseInt($("#CiudadOrigen").val());
+            var edestino = parseInt($("#EstadoDestino").val());
+            var cdestino = parseInt($("#CiudadDestino").val());
+
+            var jsondata = { 'id_estadoorigen': eorigen, 'id_ciudadorigen': corigen, 'id_estadodestino': edestino, 'id_ciudaddestino': cdestino };
+            $.get("/Carriers/Routes/getRuta",jsondata, function (res) {
+                $("#Id_Ruta").empty();
+                $("#Id_Ruta").append(`<option value="0">Selecciona una opción</option>`);
+                $.each(res, function (item, key) {
+                    if (parseInt(key.estatus) == 1) {
+                        const IdGenerado = `${String(key.id_ciudadorigen).padStart(4, '0')}${String(key.id_ciudaddestino).padStart(4, '0')}`;
                         let indice_co = catCiudad.findIndex(service => service.id === key.id_ciudadorigen);
                         let indice_cd = catCiudad.findIndex(service => service.id === key.id_ciudaddestino);
                         let indice_eo = catEstado.findIndex(service => service.id === key.id_estadoorigen);
                         let indice_ed = catEstado.findIndex(service => service.id === key.id_estadodestino);
-                        $("#Id_Ruta_Origen").append(`<option value="${key.id}">Estado origen: ${catEstado[indice_eo].nombre}--Ciudad Origen:${catCiudad[indice_co].nombre}</option>`);
+                        $("#Id_Ruta").append(`<option value="${key.id}">Id: ${IdGenerado} -- Estado origen: ${catEstado[indice_eo].nombre} -- Ciudad Origen:${catCiudad[indice_co].nombre}</option>`);
                     }
                 });
-                $("#Id_Ruta_Origen").select2();
-                getRuta();
+                //getRuta();
             });
         }
 
-        function selectRuta() {
-            $("#Id_Ruta").empty();
-            $("#Id_Ruta").append(`<option value="0">Selecciona una opción</option>`);
-            //var idRut = $("#Id_Ruta_Origen").val();
-
-            var idEstado = parseInt($("#Estado").val());
-            var idCiudad = parseInt($("#Ciudad").val());
-
-            $.each(catRutas, function (item, key) {
-                if (parseInt(key.estatus) == 1)
-                {
-                    //let indice = catRutas.findIndex(service => service.id == idRut);
-                    //if (indice >= 0) {
-                    if (idEstado == key.id_estadoorigen && idCiudad == key.id_ciudadorigen) {
-                        let indice_cd = catCiudad.findIndex(service => service.id === key.id_ciudadorigen);
-                        let indice_ed = catEstado.findIndex(service => service.id === key.id_estadoorigen);
-                        $("#Id_Ruta").append(`<option value="${key.id}">Estado destino: ${catEstado[indice_ed].nombre}--Ciudad destino:${catCiudad[indice_cd].nombre}</option>`);
-                    }
-                    //}
+        function cCiudadOrigen() {
+            var idEstado = $("#EstadoOrigen").val();
+            $("#CiudadOrigen").empty();
+            $("#CiudadOrigen").append(`<option value="0">Selecciona una opción</option>`);
+            $.each(catCiudad, function (item, key) {
+                if (parseInt(key.id_estado) == parseInt(idEstado)) {
+                    $("#CiudadOrigen").append(`<option value="${key.id}">${key.nombre}</option>`);
                 }
             });
-            $("#Id_Ruta").select2();
+            getRutas();
         }
 
-        //Cargar estados
-        function loadState() {
-            $.get("/Catalogs/Geography/State/getState", function (res) {
-                catEstado = res;
+        function cCiudadDestino() {
+            var idEstado = $("#EstadoDestino").val();
+            $("#CiudadDestino").empty();
+            $("#CiudadDestino").append(`<option value="0">Selecciona una opción</option>`);
+            $.each(catCiudad, function (item, key) {
+                if (parseInt(key.id_estado) == parseInt(idEstado)) {
+                    $("#CiudadDestino").append(`<option value="${key.id}">${key.nombre}</option>`);
+                }
+            });
+            getRutas();
+        }
 
-                $.each(res, function (item, key) {
-                    $("#Estado").append(`<option value="${key.id}">${key.nombre}</option>`);
-                });
-                $("#Estado").select2();
-                getRutas();
-            }).fail(function (error) {
-                dToast("error", "Error al obtener paises", "Atencion!");
+        function cargarRutas() {
+            $.get("/Carriers/Routes/getRoutes", function (res) {
+                catRutas = res;
+                getRuta();
             });
         }
 
         function selectCiudad() {
             var idEstado = $("#Estado").val();
-            $("#Ciudad").empty();
-            $("#Ciudad").append(`<option value="0">Selecciona una opción</option>`);
+            $("#CiudadOrigen").append(`<option value="0">Selecciona una opción</option>`);
+            $("#CiudadDestino").append(`<option value="0">Selecciona una opción</option>`);
             $.each(catCiudad, function (item, key) {
                 if (parseInt(key.id_estado) == parseInt(idEstado)) {
-                    $("#Ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
+                    $("#CiudadOrigen").append(`<option value="${key.id}">${key.nombre}</option>`);
+                    $("#CiudadDestino").append(`<option value="${key.id}">${key.nombre}</option>`);
                 }
-            });
-            $("#Ciudad").select2();
-        }
-
-        function loadCity() {
-            $.get("/Catalogs/Geography/City/getCity", function (res) {
-                catCiudad = res;
-                loadState();
-            }).fail(function (error) {
-                dToast("error", "Error al obtener paises", "Atencion!");
             });
         }
 
@@ -247,12 +316,9 @@
             var stable = $('.table-viajes').DataTable();
             stable.destroy();
             $("#table-info").empty();
-            $.get("/Carriers/Routes/getRuta", { "Id_Transportista":@id}, function (res) {
+            $.get("/Carriers/Routes/getRutas", { "Id_Transportista":@id}, function (res) {
                 DataAirlines = res;
-                //console.log(res);
-
                 $.each(res, function (item, key) {
-                    //console.log(key);
                     let rutaI = catRutas.findIndex(service => parseInt(service.id) === parseInt(key.id_Ruta));
                     if (rutaI >= 0) {
                         const IdGenerado = `${String(catRutas[rutaI].id_ciudadorigen).padStart(4, '0')}${String(catRutas[rutaI].id_ciudaddestino).padStart(4, '0')}`;
@@ -277,7 +343,7 @@
                                     </a>
                                 </td>
                             </tr>`);
-                    
+
                     }
                 });
                 dTable("table-viajes");
@@ -300,8 +366,7 @@
                 try {
                     let indice = DataAirlines.findIndex(service => service.id === idEditar);
                     let rutaI = catRutas.findIndex(service => parseInt(service.id) === parseInt(DataAirlines[indice].id_Ruta));
-                    console.log(catRutas);
-                    console.log(DataAirlines[indice]);
+
                     $("#Costo").val(DataAirlines[indice].costo);
                     $('#Estado option[value="' + catRutas[rutaI].id_estadoorigen + '"]').attr("selected", true);
                     $("#Estado").change();
@@ -321,6 +386,37 @@
             } else {
                 $("#modalDiv").modal("show");
             }
+        }
+
+        function getInventario() {
+            $("#info-inventario").empty();
+            $.get("/Carriers/Inventory/getInventory/", { "IdTransportista":@id}, function (res) {
+                dataInventory = res;
+                $.each(dataInventory, function (item, key) {
+                    console.log(key);
+                    let indice = catUnidad.findIndex(service => service.id === key.tipoUnidad);
+                    $("#info-inventario").append(
+                        `<tr>
+                            <td>${nCon(key.marca)}</td>
+                            <td>${nCon(key.modelo)}</td>
+                            <td>${nCon(key.anio)}</td>
+                            <td>${nCon(key.noSerie)}</td>
+                            <td>${nCon(key.placa)}</td>
+                            <td>${nCon(key.color)}</td>
+                            <td><input type="number" class="form-control" value="${nCon(key.id)}" id="inv-${nCon(key.id)}"></td>
+                        </tr>`
+                    );
+                });
+            });
+        }
+
+        function guardarInventarios() {
+            var jsonInv = [];
+            $.each(dataInventory, function (item, key) {
+                jsonInv.push({ "Id_Ruta_Tr": $("#inv-" + key.id).val() });
+                /*console.log($("#inv-"+ key.id).val());*/
+            });
+            console.log(jsonInv);
         }
 
     </script>

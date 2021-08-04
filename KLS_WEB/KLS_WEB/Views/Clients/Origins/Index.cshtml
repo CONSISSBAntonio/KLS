@@ -105,6 +105,12 @@
                             </div>
                         </div>
                         <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="">Hora de atención</label>
+                                <input type="time" class="form-control" name="HoraAtencion" id="HoraAtencion" required />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <label class="">Estatus</label>
                             <select class="form-control form-control-sm" name="Estatus" id="Estatus">
                                 <option value="1">Activo</option>
@@ -159,7 +165,6 @@
                     $("#Id_Colonia").change();
                 };
             });
-
         }
 
         function setCp(id) {
@@ -202,7 +207,6 @@
                 jsonData["Id_Cliente"] = @id;
                 console.log(jsonData);
                 if (parseInt($("#Id_Ciudad").val()) != 0 && parseInt($("#Id_Estado").val()) != 0 && parseInt($("#Id_Colonia").val()) != 0) {
-
                     if (parseInt($("#idEditar").val()) != 0) {
                         $.post("/Clients/Origins/putOrigen", jsonData, function (res) {
                             console.log(res);
@@ -228,7 +232,6 @@
                     dToast("error", "Selecciona una opción", "Error");
                 }
             });
-
         });
 
         function showModal(titulo = "Title", accion, idEditar = 0) {
@@ -243,6 +246,7 @@
                     $("#Nombre").val(dataOrigenes[indice].nombre);
                     $("#Cp").val(dataOrigenes[indice].cp);
                     $("#Direccion").val(dataOrigenes[indice].direccion);
+                    $("#HoraAtencion").val(dataOrigenes[indice].horaAtencion);
                     $('#Id_Estado option[value="' + dataOrigenes[indice].id_Estado + '"]').attr("selected", true);
                     $('#Id_Ciudad option[value="' + dataOrigenes[indice].id_Ciudad + '"]').attr("selected", true);
                     $('#Id_Colonia option[value="' + dataOrigenes[indice].id_Colonia + '"]').attr("selected", true);

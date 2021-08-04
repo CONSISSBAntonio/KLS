@@ -38,15 +38,22 @@ namespace KLS_WEB.Controllers.Carriers.CarriersRoutes
             dataReport = await this.AppContext.Execute<List<Route>>(MethodType.GET,"Route", dataModel);
             return Json(dataReport);
         }
-        
+
         [Route("getRuta")]
-        public async Task<JsonResult> getRuta(Tr_Has_Rutas dataModel)
+        public async Task<JsonResult> getRuta(RouteTran dataModel)
         {
-            List<Tr_Has_Rutas> dataReport;
-            dataReport = await this.AppContext.Execute<List<Tr_Has_Rutas>>(MethodType.GET,_UrlApi, dataModel);
+            List<Ruta> dataReport;
+            dataReport = await this.AppContext.Execute<List<Ruta>>(MethodType.GET, _UrlApi+"/getRuta", dataModel);
             return Json(dataReport);
         }
 
+        [Route("getRutas")]
+        public async Task<JsonResult> getRuta(Tr_Has_Rutas dataModel)
+        {
+            List<Tr_Has_Rutas> dataReport;
+            dataReport = await this.AppContext.Execute<List<Tr_Has_Rutas>>(MethodType.GET, _UrlApi, dataModel);
+            return Json(dataReport);
+        }
 
         [Route("setRoutes")]
         public async Task<JsonResult> Post(Tr_Has_Rutas dataModel)

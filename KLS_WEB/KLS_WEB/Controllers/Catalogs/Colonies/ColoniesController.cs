@@ -51,13 +51,13 @@ namespace KLS_WEB.Controllers.Catalogs.Colonies
             return Json(dataReport);
         }
 
-        //[Route("getColonies")]
-        //public async Task<JsonResult> Get(Paginacion paginacion)
-        //{
-        //    colonia dataReport;
-        //    dataReport = await this.AppContext.Execute<colonia>(MethodType.GET, _UrlApi + "/prueba?Pagina=" + paginacion.Pagina + "&CantidadAMostrar=" + paginacion.CantidadAMostrar, null);
-        //    return Json(dataReport);
-        //}
+        [Route("getColoniesF")]
+        public async Task<JsonResult> Get(Paginacion paginacion)
+        {
+            colonia dataReport;
+            dataReport = await this.AppContext.Execute<colonia>(MethodType.GET, _UrlApi + "/prueba?Pagina=" + paginacion.Pagina + "&CantidadAMostrar=" + paginacion.CantidadAMostrar, paginacion);
+            return Json(dataReport);
+        }
 
         [HttpPost]
         [Route("setColonies")]
