@@ -382,7 +382,7 @@
         const RouteId = @Model.Ruta ;
         const UnitId = @Model.TipoUnidad ;
         const isDemand = @(Model.IsDemand ? "true" : "false");
-
+        const CarrierId = @Model.Transportista ;
         let dataOrigenes = [];
         let dataState = [];
         let dataColonies = [];
@@ -395,6 +395,7 @@
         getCatalogos();
         dSelect('tipoviaje');
         $('[type=datetime-local]').map((k, e) => $(e).prop('min', new Date().toISOString().substring(0, 16)));
+        isDemand && SetServicesFromDemand();
 
         $(".viaje").submit(event => {
             event.preventDefault();
@@ -697,7 +698,11 @@
                         $('#origen').val(OriginId).trigger('change');
                         $('#destino').val(DesitnationId).trigger('change');
                         $('#ruta').val(RouteId).trigger('change');
-                    }, 600);
+                        GetRoutePrice(RouteId);
+                        $('#transportista').val(CarrierId).trigger('change');
+                        $('#addEquipo').click();
+                        setTimeout(() =>  $('[name=unidadterrestrenacional]').val(UnitId).trigger('change'), 1000);
+                    }, 800);
                 }, 600);
 
             }
@@ -742,14 +747,11 @@
         }
 
         const GetRoutePrice = RouteId => {
-            RouteId ? (
+            RouteId && (
                 $.get('/Travels/GetRoutePrice', { RouteId: RouteId }, ({ minimo, maximo }) => {
                     minimo && maximo && $('.priceinfo').text(`$${parseFloat(minimo).toFixed(2)} - $${parseFloat(maximo).toFixed(2)}`), $('[name=terrestrenacionalprecio]').val(parseFloat(maximo).toFixed(2));
                 })
-            ) : (
-                //dToast("warning", "No hay una ruta seleccionada", "¡Atencion!")
-                console.log(31)
-                )
+            )
         }
 
         //Cargar unidades
@@ -822,7 +824,16 @@
     const selectServicios = element =>  {
         $(element).attr('disabled', true);
         $("#modalDiv").modal("show");
-    }
+        }
+
+
+        const SetServicesFromDemand = () => {
+            const servicios = 'terrestrenacional=on';
+            $.post("@Url.Action("ReturnServicios", "Travels")", { servicios: servicios }, response => {
+                $('.addServicios').hide();
+                $('.serviciosseleccionados').html(response).show('slow', () => { $('.serviciosseleccionados').show(), GetRoutePrice($('#ruta').val()); });
+            });
+        }
 
     </script>
 }

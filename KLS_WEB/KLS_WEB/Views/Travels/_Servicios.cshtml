@@ -274,7 +274,7 @@
             $.get("/Carriers/Operators/getOperators", { Id_Transportista: idtransportista }, res => {
                 res.find(x => x.estatus === 1) && getOperador(res.find(x => x.estatus === 1).id);
                 $('#chofer').empty();
-                $('#chofer').append(`<option value="0">SELECCIONA UN CHOFER</option>`)
+                $('#chofer').append(`<option value="0" selected disabled>SELECCIONA UN CHOFER</option>`)
                 res.length > 0 ? res.map(({ id, nombre, estatus }) => estatus === 1 ? $('#chofer').append(`<option value="${id}">${nombre}</option>`) : null) : $('#chofer').append(`<option value="0">SIN OPERADORES ACTIVOS</option>`);
                 dSelect('chofer');
             });
@@ -282,7 +282,7 @@
 
         $.get("/Carriers/getCarriers", res => {
             res.find(x => x.estatus === 1) && getOperadores(res.find(x => x.estatus === 1).id);
-            $('#transportista').append(`<option value="0">SELECCIONA UNA TRANSPORTISTA</option>`);
+            $('#transportista').append(`<option value="0" selected disabled>SELECCIONA UNA TRANSPORTISTA</option>`);
             res.map(({ id, nombreComercial, estatus }) => estatus === 1 ? $('#transportista').append(`<option value="${id}">${nombreComercial}</option>`) : null);
             dSelect('transportista');
         });

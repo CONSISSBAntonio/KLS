@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -83,6 +84,7 @@ namespace KLS_API.Controllers.Demands
             public string Destino { get; set; }
             public string FechaDisponibilidad { get; set; }
             public string Arribo { get; set; }
+            public int OfertasCount { get; set; }
             public string Status { get; set; }
         }
 
@@ -102,10 +104,11 @@ namespace KLS_API.Controllers.Demands
                         Cliente = x.Client.NombreCorto,
                         UnitId = x.Unit.id,
                         TipoUnidad = x.Unit.nombre,
-                        Origen = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Origin.Id_Estado).nombre, "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Origin.Id_Ciudad).nombre),
-                        Destino = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Destination.Id_Estado).nombre, "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Destination.Id_Ciudad).nombre),
+                        Origen = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Origin.Id_Estado).nombre.Trim(), "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Origin.Id_Ciudad).nombre.Trim()),
+                        Destino = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Destination.Id_Estado).nombre.Trim(), "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Destination.Id_Ciudad).nombre.Trim()),
                         FechaDisponibilidad = x.FechaDisponibilidad.ToString("dd/MM/yyyy. HH:mm tt"),
                         Arribo = x.Arribo ?? "-",
+                        OfertasCount = _dbContext.Oferta.Where(y => y.ciudad_Destino == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == x.OriginId).Id_Ciudad && y.Tipo_De_Unidad == x.UnitId).Count(),
                         Status = x.Status
                     }).ToList()
                 ) : (
@@ -121,10 +124,11 @@ namespace KLS_API.Controllers.Demands
                     Folio = x.Folio,
                     Cliente = x.Client.NombreCorto,
                     TipoUnidad = x.Unit.nombre,
-                    Origen = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Origin.Id_Estado).nombre, "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Origin.Id_Ciudad).nombre),
-                    Destino = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Destination.Id_Estado).nombre, "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Destination.Id_Ciudad).nombre),
+                    Origen = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Origin.Id_Estado).nombre.Trim(), "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Origin.Id_Ciudad).nombre.Trim()),
+                    Destino = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Destination.Id_Estado).nombre.Trim(), "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Destination.Id_Ciudad).nombre.Trim()),
                     FechaDisponibilidad = x.FechaDisponibilidad.ToString("dd/MM/yyyy. HH:mm tt"),
                     Arribo = x.Arribo ?? "-",
+                    OfertasCount = _dbContext.Oferta.Where(y => y.ciudad_Destino == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == x.OriginId).Id_Ciudad && y.Tipo_De_Unidad == x.UnitId).Count(),
                     Status = x.Status
                 }).ToList()
                 );
@@ -200,7 +204,7 @@ namespace KLS_API.Controllers.Demands
             public string Destination { get; set; }
             public string FechaDisponibilidad { get; set; }
             public DateTime Expira { get; set; }
-            public decimal Costo { get; set; }
+            public string Costo { get; set; }
         }
 
         [HttpGet]
@@ -208,7 +212,9 @@ namespace KLS_API.Controllers.Demands
         {
             try
             {
-                List<CarrierDT> carriers = _dbContext.Oferta.Where(x => x.Estado_Origen == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == OriginId).Id_Estado
+                string specifier = "C";
+                CultureInfo culture = CultureInfo.CreateSpecificCulture("es-MX");
+                List<CarrierDT> carriers = _dbContext.Oferta.Where(x => x.ciudad_Destino == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == OriginId).Id_Ciudad
                 && x.Tipo_De_Unidad == UnidadId).Select(x => new CarrierDT
                 {
                     Id = x.Id,
@@ -216,15 +222,15 @@ namespace KLS_API.Controllers.Demands
                     Carrier = _dbContext.Transportista.FirstOrDefault(y => y.id == x.Transportista).NombreComercial,
                     UnitId = x.Tipo_De_Unidad,
                     Unit = _dbContext.Cat_Tipos_Unidades.FirstOrDefault(y => y.id == x.Tipo_De_Unidad).nombre,
-                    Origin = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Estado_Origen).nombre, "-",
-                    _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.ciudad_Origen).nombre, " (",
-                    x.Tolerancia_Origen, ")"),
-                    Destination = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.estado_Destino).nombre, "-",
-                    _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.ciudad_Destino).nombre, " (",
-                    x.Tolerancia_Destino, ")"),
+                    Origin = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Estado_Origen).nombre.Trim(), "-",
+                    _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.ciudad_Origen).nombre.Trim(), " (",
+                    x.Tolerancia_Origen, " km)"),
+                    Destination = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.estado_Destino).nombre.Trim(), "-",
+                    _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.ciudad_Destino).nombre.Trim(), " (",
+                    x.Tolerancia_Destino, " km)"),
                     FechaDisponibilidad = x.Fecha_Disponibilidad.ToString("g"),
                     Expira = DateTime.Now,
-                    Costo = _dbContext.Tr_Has_Rutas.FirstOrDefault(y => y.Id_Transportista == x.Transportista).Costo
+                    Costo = _dbContext.Tr_Has_Rutas.FirstOrDefault(y => y.Id_Transportista == x.Transportista).Costo.ToString(specifier, culture)
                 }).ToList();
 
                 return Ok(carriers);

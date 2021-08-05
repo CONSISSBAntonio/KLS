@@ -245,7 +245,7 @@
             <div class="modal-body">
                 <div class="col-2">
                     <label for="rango" class="form-label size-12 font-weight-bold float-left">RADIO TOLERANCIA (KM)</label>
-                    <input type="number" class="form-control form-control-sm" id="radio" name="radio" />
+                    <input type="number" class="form-control form-control-sm" id="radio" name="radio" onkeyup="DTCarrier.column(3).search($('#radio').val()).draw()" />
                 </div>
                 <table class="table table-striped table-bordered display table-hover table-carrier text-uppercase" width="100%">
                     <thead>
@@ -494,7 +494,6 @@
         const getClientParams = ClientId => {
             $.get("/Clients/Origins/getOrigen/", { "Id_Cliente": ClientId }, response => {
                 $(`#editorigen`).empty().append(`<option value="0" disabled selected>SELECCIONA</option>`);
-                console.log(response.length, ClientId);
                 response.length || ClientId == 0 ? (response.map(({ id, estatus, nombre }) => {
                     estatus === 1 && $(`#editorigen`).append(`<option value="${id}">${nombre}</option>`);
                 })) : (dToast("warning", "El cliente seleccionado no tiene orígenes.", "Atencion!"));
@@ -645,7 +644,6 @@
                 $.get('/Demand/GetDemand/', { Id: Id }, response => {
                     const { clientId, routeId } = response;
                     response && Object.entries(response).map(([k, v]) => {
-                        console.log(k, v);
                         v = k.includes('fechadisponibilidad') ? new Date(v).toISOString().substring(0, 16) : v;
                         $(`[name=${k.toLowerCase()}]`).val(v);
                     });
@@ -679,6 +677,7 @@
 
         const selectCarrier = (DemandId, ClientId, UnitId, OriginId, DestinationId) => {
             $('#modaltransportista').modal('show');
+            $('.carrierinfo').empty();
             $.post('/Demand/GetCarrier', { OriginId: OriginId, UnitId: UnitId }, response => {
                 response && response.map(({
                     id,
@@ -693,30 +692,81 @@
                     unit
                 }) => {
                     $(".carrierinfo").append(`
-                            <tr class="text-uppercase">
-                            <td>${carrier}</td>
-                            <td>${unit}</td>
-                            <td>${origin}</td>
-                            <td>${destination}</td>
-                            <td>${fechaDisponibilidad}</td>
-                            <td>${expira} </td>
-                            <td>${costo} </td>
-                            <td class="text-center">
-                                <button type="button" class="btn btn-sm" onclick="AddEdit(${id});" style="background-color: #ffffff00;">
-                                    <span class="material-icons details">
-                                        search
-                                    </span>
-                                </button>
-                            </td>
-                            </tr>`);
+                                    <tr class="text-uppercase">
+                                    <td>${carrier}</td>
+                                    <td>${unit}</td>
+                                    <td>${origin}</td>
+                                    <td>${destination}</td>
+                                    <td>${fechaDisponibilidad}</td>
+                                    <td>${expira} </td>
+                                    <td>${costo} </td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-sm" onclick="AddEdit(${id});" style="background-color: #ffffff00;">
+                                            <span class="material-icons details">
+                                                search
+                                            </span>
+                                        </button>
+                                    </td>
+                                    </tr>`);
                 })
             })
             setTimeout(() => {
-
                 dTable('table-carrier')
                 $('#modaltransportista .dataTables_wrapper').children().eq(0).remove();
                 $('#modaltransportista .dataTables_wrapper').children().eq(1).remove();
             }, 500);
+        }
+
+        const fullTravel = (CarrierId, DemandId) => {
+            $.post('/Demand/SetFullTravel', { CarrierId: CarrierId, DemandId: DemandId }, response => {
+                console.log(response);
+            })
+        }
+
+        const DTC = (UnitId, OriginId, DemandId) => {
+            $('#modaltransportista').modal('show');
+            DTCarrier = $('.table-carrier').DataTable({
+                destroy: true,
+                responsive: true,
+                autoWidth: true,
+                dom: 'Btp',
+                ajax: {
+                    type: 'POST',
+                    url: '/Demand/GetCarrier',
+                    dataSrc: '',
+                    data: data => {
+                        data.UnitId = UnitId,
+                            data.OriginId = OriginId
+                    }
+                },
+                columns: [
+                    { data: 'carrier' },
+                    { data: 'unit' },
+                    { data: 'origin' },
+                    { data: 'destination' },
+                    { data: 'fechaDisponibilidad' },
+                    { data: 'expira' },
+                    { data: 'costo' },
+                    {
+                        render: (data, type, row) => {
+                            const { carrierId } = row;
+                            return `<a href="/Demand/SetFullTravel?DemandId=${DemandId}&CarrierId=${carrierId}">
+                                        <span class="material-icons details">
+                                            local_shipping
+                                        </span>
+                                    </a>`
+                        }
+                    }
+                ],
+                language: {
+                    url: '/json/dt-es.json'
+                },
+                columnDefs: [
+                    { className: 'text-center', targets: [6, 7] }
+                ],
+                initComplete: () => {
+                }
+            })
         }
 
         const DT = (customsearch = false, search) => {
@@ -744,48 +794,31 @@
                     { data: 'arribo' },
                     {
                         render: (data, type, row) => {
-                            const { id, clientId, originId, destinationId, unitId } = row;
+                            const { id, clientId, originId, destinationId, unitId, ofertasCount } = row;
                             return `
-                                            <a href="javascript:void(0);" onclick="addEdit(${id}, ${clientId}, ${originId}, ${destinationId});">
-                                                <span class="material-icons">
-                                                    edit
-                                                </span>
-                                            </a>
-                                            <a href="/Demand/SetTravel/${id}" onclick="create(${id});">
-                                                <span class="material-icons">
-                                                    local_shipping
-                                                </span>
-                                            </a>
-                                            <a href="javascript:void(0);" onclick="selectCarrier(${id}, ${clientId}, ${unitId}, ${originId}, ${destinationId});">
-                                                <span class="material-icons">
-                                                    search
-                                                </span>
-                                            </a>`
+                                <a href="javascript:void(0);" onclick="addEdit(${id}, ${clientId}, ${originId}, ${destinationId});">
+                                    <span class="material-icons">
+                                        edit
+                                    </span>
+                                </a>
+                                <a href="/Demand/SetTravel/${id}" onclick="create(${id});">
+                                    <span class="material-icons">
+                                        local_shipping
+                                    </span>
+                                </a>
+                                <a href="javascript:void(0);" onclick="DTC(${unitId}, ${originId}, ${id});">
+                                    <span class="material-icons">
+                                        search
+                                    </span>  ${ofertasCount > 0 ? `<span class="text-danger">${ofertasCount}</span>` : ``}
+                                </a>`
                         }
                     }
                 ],
                 language: {
-                    "decimal": "",
-                    "emptyTable": "No hay información",
-                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-                    "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
-                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
-                    "infoPostFix": "",
-                    "thousands": ",",
-                    "lengthMenu": "Mostrar _MENU_ Entradas",
-                    "loadingRecords": "Cargando...",
-                    "processing": "Procesando...",
-                    "search": "",
-                    "zeroRecords": "Sin resultados encontrados",
-                    "paginate": {
-                        "first": "Primero",
-                        "last": "Ultimo",
-                        "next": "Siguiente",
-                        "previous": "Anterior"
-                    }
+                    url: '/json/dt-es.json'
                 },
                 columnDefs: [
-                    { className: 'text-center', targets: [5, 6, 7] }
+                    { className: 'd-flex justify-content-around', targets: [7] }
                 ],
                 initComplete: () => {
                     $('#modalbusqueda').modal('hide');
