@@ -26,12 +26,23 @@ namespace KLS_WEB.Views.Catalogs.City
         {
             return View(this._UrlView + "Index.cshtml");
         }
+        public class DTModel
+        {
+            public int Id { get; set; }
+            public string Folio { get; set; }
+            public string EstadoOrigen { get; set; }
+            public string CiudadOrigen { get; set; }
+            public string EstadoDestino { get; set; }
+            public string CiudadDestino { get; set; }
+            public int KM { get; set; }
+            public string Seguridad { get; set; }
+            public string Estatus { get; set; }
+        }
 
         [Route("getRoute")]
-        public async Task<JsonResult> Get(Route dataModel)
+        public async Task<JsonResult> Get()
         {
-            List<Route> dataReport;
-            dataReport = await this.AppContext.Execute<List<Route>>(MethodType.GET, _UrlApi, dataModel);
+            List<DTModel> dataReport = await AppContext.Execute<List<DTModel>>(MethodType.GET, _UrlApi, null);
             return Json(dataReport);
         }
 

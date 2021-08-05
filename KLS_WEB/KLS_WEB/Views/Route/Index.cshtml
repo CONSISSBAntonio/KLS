@@ -29,7 +29,7 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody id="table-info"></tbody>
+            <tbody></tbody>
         </table>
     </div>
 </div>
@@ -85,49 +85,52 @@
             });
         }
 
-        function loadTable() {
-            var stable = $('.table-rutas').DataTable();
-            stable.destroy();
-            $("#table-info").empty();
-            $.get("Route/getRoute", function (res) {
-                dataCity = res;
-                $.each(res, (item, key) => {
-                    const IdGenerado = `${String(key.id_ciudadorigen).padStart(4, '0')}${String(key.id_ciudaddestino).padStart(4, '0')}`;
-                    let indice_co = catCiudad.findIndex(service => service.id === key.id_ciudadorigen);
-                    let indice_cd = catCiudad.findIndex(service => service.id === key.id_ciudaddestino);
-                    let indice_eo = catEstado.findIndex(service => service.id === key.id_estadoorigen);
-                    let indice_ed = catEstado.findIndex(service => service.id === key.id_estadodestino);
-                    const color = nCon(key.seguridad) == 'Alto' ? 'success' : nCon(key.seguridad) == 'Medio' ? 'warning' : 'danger';
-                    const status = nCon(key.estatus) == 1 ? 'Activo' : 'Inactivo';
-                    $("#table-info").append(`
-                                            <tr class="text-uppercase">
-                                            <td>${IdGenerado}</td>
-                                            <td>${catEstado[indice_eo].nombre}</td>
-                                            <td>${catCiudad[indice_co].nombre}</td>
-                                            <td>${catEstado[indice_ed].nombre}</td>
-                                            <td>${catCiudad[indice_cd].nombre}</td>
-                                            <td>${nCon(key.totalkilometros)} km</td>
-                                            <td class="font-weight-bold text-${color}">${nCon(key.seguridad)}</td>
-                                            <td class="text-center">${status}</td>
-                                            <td class="text-center">
-                                                <button type="button" class="btn btn-sm" onclick="AddEdit(${nCon(key.id)}, '${IdGenerado}', this);" style="background-color: #ffffff00;">
-                                                    <span class="material-icons details">
-                                                        search
-                                                    </span>
-                                                </button>
-                                            </td>
-                                            </tr>`);
-                });
-                dTable("table-rutas");
-                $('#table_length').html(`
-                                <button onclick="AddEdit();" class="btn btn-sm btn-outline-secondary float-right">
-                                    <span class="material-icons">
-                                        add
-                                    </span>
-                                </button>`).show();
-            }).fail(function (error) {
-                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
-            });
+        const loadTable = () => {
+            DT = $('#table').DataTable({
+                destroy: true,
+                responsive: true,
+                autoWidth: true,
+                //dom: 'Btp',
+                ajax: {
+                    url: '/Route/GetRoute',
+                    dataSrc: ''
+                },
+                columns: [
+                    { data: 'folio' },
+                    { data: 'estadoOrigen' },
+                    { data: 'ciudadOrigen' },
+                    { data: 'estadoDestino' },
+                    { data: 'ciudadDestino' },
+                    { data: 'km' },
+                    {
+                        data: 'seguridad',
+                        render: (seguridad, type, full, meta) => {
+                            const color = seguridad == 'Alto' ? 'success' : seguridad == 'Medio' ? 'warning' : 'danger';
+                            return `<span class="font-weight-bold text-${color}">${seguridad}</span>`;
+                        }
+                    },
+                    { data: 'estatus' },
+                    {
+                        render: (data, type, row) => {
+                            const { id, folio } = row;
+                            return `<button type="button" class="btn btn-sm" onclick="AddEdit(${id}, '${folio}', this);" style="background-color: #ffffff00;">
+                                        <span class="material-icons details">
+                                            search
+                                        </span>
+                                    </button>`
+                        }
+                    }
+                ],
+                language: {
+                    url: '/json/dt-es.json'
+                },
+                columnDefs: [
+                    { className: 'text-center', targets: [5, 6, 7, 8] }
+                ],
+                initComplete: () => {
+                }
+            })
         }
+
     </script>
 } 
