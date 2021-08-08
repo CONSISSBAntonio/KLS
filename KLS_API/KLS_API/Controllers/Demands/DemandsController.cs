@@ -1,4 +1,6 @@
 ﻿using KLS_API.Context;
+using KLS_API.Models;
+using KLS_API.Models.Clients;
 using KLS_API.Models.Demands;
 using KLS_API.Models.DT;
 using Microsoft.AspNetCore.Mvc;
@@ -106,7 +108,7 @@ namespace KLS_API.Controllers.Demands
                         TipoUnidad = x.Unit.nombre,
                         Origen = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Origin.Id_Estado).nombre.Trim(), "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Origin.Id_Ciudad).nombre.Trim()),
                         Destino = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Destination.Id_Estado).nombre.Trim(), "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Destination.Id_Ciudad).nombre.Trim()),
-                        FechaDisponibilidad = x.FechaDisponibilidad.ToString("dd/MM/yyyy. HH:mm tt"),
+                        FechaDisponibilidad = x.FechaDisponibilidad.ToString("dd/MM/yyyy. hh:mm tt"),
                         Arribo = x.Arribo ?? "-",
                         OfertasCount = _dbContext.Oferta.Where(y => y.ciudad_Destino == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == x.OriginId).Id_Ciudad && y.Tipo_De_Unidad == x.UnitId).Count(),
                         Status = x.Status
@@ -126,7 +128,7 @@ namespace KLS_API.Controllers.Demands
                     TipoUnidad = x.Unit.nombre,
                     Origen = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Origin.Id_Estado).nombre.Trim(), "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Origin.Id_Ciudad).nombre.Trim()),
                     Destino = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Destination.Id_Estado).nombre.Trim(), "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Destination.Id_Ciudad).nombre.Trim()),
-                    FechaDisponibilidad = x.FechaDisponibilidad.ToString("dd/MM/yyyy. HH:mm tt"),
+                    FechaDisponibilidad = x.FechaDisponibilidad.ToString("dd/MM/yyyy. hh:mm tt"),
                     Arribo = x.Arribo ?? "-",
                     OfertasCount = _dbContext.Oferta.Where(y => y.ciudad_Destino == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == x.OriginId).Id_Ciudad && y.Tipo_De_Unidad == x.UnitId).Count(),
                     Status = x.Status
@@ -234,6 +236,104 @@ namespace KLS_API.Controllers.Demands
                 }).ToList();
 
                 return Ok(carriers);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+                throw;
+            }
+        }
+        public class DemandsCSV
+        {
+            public string Cliente { get; set; }
+            public string TipoUnidad { get; set; }
+            public string Origen { get; set; }
+            public string Destino { get; set; }
+            public DateTime FechaSalida { get; set; }
+            public string Arribo { get; set; }
+        }
+
+        public class CSVReport
+        {
+            public List<DemandsCSV> Added { get; set; }
+            public List<DemandsCSV> NoClient { get; set; }
+            public List<DemandsCSV> NoUnit { get; set; }
+            public List<DemandsCSV> NoOrigin { get; set; }
+            public List<DemandsCSV> NoDestination { get; set; }
+            public List<DemandsCSV> NoRoute { get; set; }
+        }
+
+        [HttpPost]
+        public IActionResult DemandCSV([FromBody] List<DemandsCSV> demands)
+        {
+            try
+            {
+                CSVReport report = new CSVReport
+                {
+                    Added = new List<DemandsCSV>(),
+                    NoClient = new List<DemandsCSV>(),
+                    NoUnit = new List<DemandsCSV>(),
+                    NoOrigin = new List<DemandsCSV>(),
+                    NoDestination = new List<DemandsCSV>(),
+                    NoRoute = new List<DemandsCSV>()
+                };
+
+                foreach (DemandsCSV demand in demands)
+                {
+                    Clientes client = _dbContext.Clientes.FirstOrDefault(x => x.NombreComercial.Replace(" ", "").ToLower() == demand.Cliente.Replace(" ", "").ToLower() || x.NombreCorto.Replace(" ", "").ToLower() == demand.Cliente.Replace(" ", "").ToLower());
+
+                    if (client != null)
+                    {
+
+                        Cat_Tipos_Unidades unit = _dbContext.Cat_Tipos_Unidades.FirstOrDefault(x => x.nombre.Replace(" ", "").ToLower() == demand.TipoUnidad.Replace(" ", "").ToLower());
+                        Cl_Has_Origen origin = _dbContext.Cl_Has_Origen.FirstOrDefault(x => x.Id_Cliente == client.id && x.Nombre.Replace(" ", "").ToLower() == demand.Origen.Replace(" ", "").ToLower());
+                        Cl_Has_Destinos destination = _dbContext.Cl_Has_Destinos.FirstOrDefault(x => x.Id_Cliente == client.id && x.Nombre.Replace(" ", "").ToLower() == demand.Destino.Replace(" ", "").ToLower());
+
+                        if (unit == null || origin == null || destination == null)
+                        {
+                            if (unit == null)
+                                report.NoUnit.Add(demand);
+                            if (origin == null)
+                                report.NoOrigin.Add(demand);
+                            if (destination == null)
+                                report.NoDestination.Add(demand);
+                            continue;
+                        }
+
+                        Ruta route = _dbContext.Ruta.FirstOrDefault(x => x.id_ciudadorigen == _dbContext.Cl_Has_Origen.Find(origin.Id).Id_Ciudad && x.id_ciudaddestino == _dbContext.Cl_Has_Destinos.Find(destination.Id).Id_Ciudad);
+
+                        if (route == null)
+                        {
+                            report.NoRoute.Add(demand);
+                            continue;
+                        }
+
+                        Demand lastDemand = _dbContext.Demands.OrderByDescending(x => x.Id).FirstOrDefault();
+                        int lastdemandid = lastDemand is null ? 1 : lastDemand.Id + 1;
+                        Demand demandDTO = new Demand
+                        {
+                            ClientId = client.id,
+                            UnitId = unit.id,
+                            OriginId = origin.Id,
+                            DestinationId = destination.Id,
+                            RouteId = route.id,
+                            Folio = string.Concat("D", DateTime.Now.ToString("yyMM"), lastdemandid.ToString("D4")),
+                            FechaDisponibilidad = demand.FechaSalida,
+                            Arribo = demand.Arribo,
+                            Status = "nueva",
+                            TimeCreated = DateTime.Now
+                        };
+
+                        _dbContext.Demands.Add(demandDTO);
+                        report.Added.Add(demand);
+                        _dbContext.SaveChanges();
+                    }
+                    else
+                    {
+                        report.NoClient.Add(demand);
+                    }
+                }
+                return Ok(report);
             }
             catch (Exception ex)
             {

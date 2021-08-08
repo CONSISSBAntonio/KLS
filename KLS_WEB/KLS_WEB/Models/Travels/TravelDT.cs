@@ -15,8 +15,8 @@ namespace KLS_WEB.Models.Travels
         public string Destino { get; set; }
         public DateTime FechaSalida { get; set; }
         public DateTime FechaLlegada { get; set; }
-        public string Salida => FechaSalida.ToString("dd/MM/yyyy. HH:mm tt");
-        public string Llegada => FechaLlegada.ToString("dd/MM/yyyy. HH:mm tt");
+        public string Salida => FechaSalida.ToString("dd/MM/yyyy. hh:mm tt");
+        public string Llegada => FechaLlegada.ToString("dd/MM/yyyy. hh:mm tt");
         public string Estatus { get; set; }
     }
 }

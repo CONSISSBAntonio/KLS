@@ -43,8 +43,8 @@ namespace KLS_WEB.Models.Travels
         public string NombreCliente { get; set; }
         public string NombreRuta { get; set; }
         public string TipoUnidadNombre { get; set; }
-        public string Salida => FechaSalida.ToString("dd/MM/yyyy. HH:mm tt");
-        public string Llegada => FechaLlegada.ToString("dd/MM/yyyy. HH:mm tt");
+        public string Salida => FechaSalida.ToString("dd/MM/yyyy. hh:mm tt");
+        public string Llegada => FechaLlegada.ToString("dd/MM/yyyy. hh:mm tt");
         public int ClienteId { get; set; }
 
         // ServicesId para details

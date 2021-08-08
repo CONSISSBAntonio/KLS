@@ -349,6 +349,32 @@
     </div>
 </div>
 <!--Modal AGREGAR ORIGEN-DESTINO-->
+<!--MODAL CARGA MASIVA-->
+<div class="modal fade" id="modalcargamasiva" tabindex="-1" aria-labelledby="modalcargamasivalabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalcargamasivalabel">SELECCIONA UN ARVHIVO EXCEL CSV PARA REALIZAR LA CARGA MASIVA</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="mb-3" onsubmit="event.preventDefault(), upload(this)">
+                    <div class="mb-3">
+                        <input class="form-control" type="file" id="formFile" name="csv" accept=".csv">
+                    </div>
+                    <button id="sendcsv" type="submit" class="btn btn-dark">ENVIAR</button>
+                </form>
+
+                <button class="btn btn-outline-info btn-sm d-flex align-items-center mx-auto" onclick="DownloadLayout(this)"><i class="material-icons">download</i><span>DESCARGAR PLANTILLA DE EJEMPLO</span></button>
+            </div>
+            <div class="modal-footer d-flex">
+                <p class="text-info size-12">Es importante que el archivo CSV tenga codificación UTF-8 para el correcto tratamiento de acentos y caracteres especiales</p>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section scripts{
     <script>
@@ -468,6 +494,50 @@
                     $("#Id_Ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
                 };
             });
+        }
+
+        const DownloadLayout = e => {
+            $(e).prop('disabled', true);
+
+            fetch('/Demand/DownloadLayout')
+                .then(response => {
+                    const filename = response.headers.get('Content-Disposition').split('filename=')[1].split(';')[0];
+                    response.blob().then(blob => {
+                        const x = window.URL.createObjectURL(blob);
+                        const anchor = document.createElement('a');
+                        anchor.href = x;
+                        anchor.download = filename;
+                        anchor.click();
+                        $(e).prop('disabled', false);
+                    })
+                })
+                .catch(error => dToast("error", "Ocurrió un error al procesar la solicitud", "Error"))
+        }
+
+        const upload = e => {
+            const data = new FormData(e);
+            const params = {
+                method: 'POST',
+                body: data
+            }
+
+            $('#sendcsv').prop('disabled', true).removeClass('btn-dark').addClass('btn-secondary').html('PROCESANDO...');
+            fetch('/Demand/CSV', params)
+                .then(response => {
+                    const filename = response.headers.get('Content-Disposition').split('filename=')[1].split(';')[0];
+                    response.blob().then(blob => {
+                        const x = window.URL.createObjectURL(blob);
+                        const anchor = document.createElement('a');
+                        anchor.href = x;
+                        anchor.download = filename;
+                        anchor.click();
+                        Table.draw();
+                        $('#sendcsv').prop('disabled', false).removeClass('btn-secondary').addClass('btn-dark').html('ENVIAR');
+                        $('#modalcargamasiva').modal('hide');
+                        dToast("success", "Carga realizada, revisa el reporte generado para verificar las operaciones realizadas", "Realizado");
+                    })
+                })
+                .catch(error => dToast("error", "Ocurrió un error al procesar la solicitud", "Error"))
         }
 
         const GetAddress = (id, type) => {
@@ -692,22 +762,22 @@
                     unit
                 }) => {
                     $(".carrierinfo").append(`
-                                    <tr class="text-uppercase">
-                                    <td>${carrier}</td>
-                                    <td>${unit}</td>
-                                    <td>${origin}</td>
-                                    <td>${destination}</td>
-                                    <td>${fechaDisponibilidad}</td>
-                                    <td>${expira} </td>
-                                    <td>${costo} </td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-sm" onclick="AddEdit(${id});" style="background-color: #ffffff00;">
-                                            <span class="material-icons details">
-                                                search
-                                            </span>
-                                        </button>
-                                    </td>
-                                    </tr>`);
+                                                        <tr class="text-uppercase">
+                                                        <td>${carrier}</td>
+                                                        <td>${unit}</td>
+                                                        <td>${origin}</td>
+                                                        <td>${destination}</td>
+                                                        <td>${fechaDisponibilidad}</td>
+                                                        <td>${expira} </td>
+                                                        <td>${costo} </td>
+                                                        <td class="text-center">
+                                                            <button type="button" class="btn btn-sm" onclick="AddEdit(${id});" style="background-color: #ffffff00;">
+                                                                <span class="material-icons details">
+                                                                    search
+                                                                </span>
+                                                            </button>
+                                                        </td>
+                                                        </tr>`);
                 })
             })
             setTimeout(() => {
@@ -751,10 +821,10 @@
                         render: (data, type, row) => {
                             const { carrierId } = row;
                             return `<a href="/Demand/SetFullTravel?DemandId=${DemandId}&CarrierId=${carrierId}">
-                                        <span class="material-icons details">
-                                            local_shipping
-                                        </span>
-                                    </a>`
+                                                            <span class="material-icons details">
+                                                                local_shipping
+                                                            </span>
+                                                        </a>`
                         }
                     }
                 ],
@@ -796,21 +866,21 @@
                         render: (data, type, row) => {
                             const { id, clientId, originId, destinationId, unitId, ofertasCount } = row;
                             return `
-                                <a href="javascript:void(0);" onclick="addEdit(${id}, ${clientId}, ${originId}, ${destinationId});">
-                                    <span class="material-icons">
-                                        edit
-                                    </span>
-                                </a>
-                                <a href="/Demand/SetTravel/${id}" onclick="create(${id});">
-                                    <span class="material-icons">
-                                        local_shipping
-                                    </span>
-                                </a>
-                                <a href="javascript:void(0);" onclick="DTC(${unitId}, ${originId}, ${id});">
-                                    <span class="material-icons">
-                                        search
-                                    </span>  ${ofertasCount > 0 ? `<span class="text-danger">${ofertasCount}</span>` : ``}
-                                </a>`
+                                                    <a href="javascript:void(0);" onclick="addEdit(${id}, ${clientId}, ${originId}, ${destinationId});">
+                                                        <span class="material-icons">
+                                                            edit
+                                                        </span>
+                                                    </a>
+                                                    <a href="/Demand/SetTravel/${id}" onclick="create(${id});">
+                                                        <span class="material-icons">
+                                                            local_shipping
+                                                        </span>
+                                                    </a>
+                                                    <a href="javascript:void(0);" onclick="DTC(${unitId}, ${originId}, ${id});">
+                                                        <span class="material-icons">
+                                                            search
+                                                        </span>  ${ofertasCount > 0 ? `<span class="text-danger">${ofertasCount}</span>` : ``}
+                                                    </a>`
                         }
                     }
                 ],
@@ -822,7 +892,8 @@
                 ],
                 initComplete: () => {
                     $('#modalbusqueda').modal('hide');
-                    $('#table_length').html(`<a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary float-right" onclick="addEdit(0, 0, 0, 0);"><span class="material-icons">add</span></a>`).show();
+                    $('#table_length').html(`<a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary float-right" onclick="addEdit(0, 0, 0, 0)" style="height: 52px;width: 52px;"><span class="material-icons" style="padding-top: 9px;">add</span></a>
+                        <a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary float-right d-flex flex-column" onclick="$('#modalcargamasiva').modal('show')" style="margin-right: .3rem;text-decoration: unset !important;"><span class="material-icons">upload</span><span style="font-size: 10px; margin-top: .2rem;">importar</importar></a>`).show();
                     $('[aria-controls="table"]').prop('placeholder', 'BUSCAR');
                     setTimeout(() => $('.filtro').removeClass('d-none'), 150);
                 }
