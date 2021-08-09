@@ -25,7 +25,7 @@ namespace KLS_API.Controllers.Catalogs
         {
             try
             {
-                return Ok(context.Cat_Colonia.ToList().Take(25));
+                return Ok(context.Cat_Colonia.ToList().Take(20000));
             }
             catch (Exception ex)
             {

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace KLS_API.Models
+namespace KLS_WEB.Models
 {
     public class Cat_Colonia
     {
