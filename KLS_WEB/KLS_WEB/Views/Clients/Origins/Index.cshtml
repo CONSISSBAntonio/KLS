@@ -37,7 +37,11 @@
                         <th>ACCIONES</th>
                     </tr>
                 </thead>
-                <tbody id="table-info"></tbody>
+                <tbody id="table-info">
+                    <tr>
+                        <td colspan="7">Cargando...</td>
+                    </tr>
+                </tbody>
             </table>
         </div>
 
@@ -75,7 +79,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="">Estado</label>
-                                <select class="form-control form-control-sm" name="Id_Estado" id="Id_Estado" onchange="setCiudad(this.value);">
+                                <select class="form-control form-control-sm" style="width:100%;" name="Id_Estado" id="Id_Estado" onchange="setCiudad(this.value);">
                                     <option value="0">Selecciona</option>
                                 </select>
                             </div>
@@ -83,7 +87,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="">Ciudad</label>
-                                <select class="form-control form-control-sm" name="Id_Ciudad" id="Id_Ciudad" onchange="setColonias(this.value);">
+                                <select class="form-control form-control-sm" style="width:100%;" name="Id_Ciudad" id="Id_Ciudad" onchange="setColonias(this.value);">
                                     <option value="0">Selecciona</option>
                                 </select>
                             </div>
@@ -91,7 +95,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="">Colonia</label>
-                                <select class="form-control form-control-sm" name="Id_Colonia" id="Id_Colonia" onchange="setCp(this.value);">
+                                <select class="form-control form-control-sm" style="width:100%;" name="Id_Colonia" id="Id_Colonia" onchange="setCp(this.value);">
                                     <option value="0">Selecciona</option>
                                 </select>
                             </div>
@@ -143,28 +147,46 @@
 
 
         //Buscar por CP
-        $('#Cp').keypress(function (e) {
-            var keycode = (e.keyCode ? e.keyCode : e.which);
-            if (keycode == '13') {
-                searcCP();
-                e.preventDefault();
-                return false;
-            }
-        });
+        //$('#Cp').keypress(function (e) {
+        //    var keycode = (e.keyCode ? e.keyCode : e.which);
+        //    if (keycode == '13') {
+        //        searcCP();
+        //        e.preventDefault();
+        //        return false;
+        //    }
+        //});
 
         function searcCP() {
-            var codigoP = $("#Cp").val();
-            $.each(dataColonies, function (item, key) {
-                if (parseInt(key.estatus) == 1 && parseInt(key.cp) == parseInt(codigoP)) {
-                    $('#Id_Estado option[value="' + key.id_estado + '"]').attr("selected", true);
-                    setCiudad(key.id_estado);
-                    $("#Id_Estado").change();
-                    $('#Id_Ciudad option[value="' + key.id_ciudad + '"]').attr("selected", true);
-                    $("#Id_Ciudad").change();
-                    setColonias(key.id_ciudad);
-                    $("#Id_Colonia").change();
-                };
-            });
+            //var codigoP = $("#Cp").val();
+            //$.get("/Clients/Origins/getCp/" + codigoP, function (res) {
+            //    dataColonies = res;
+            //    $.each(res, function (item, key) {
+            //        if (parseInt(key.estatus) == 1) {
+            //            //console.log(key);
+            //            $("#Id_Colonia").append(`<option value="${key.id_estado}">${key.nombre}</option>`);
+            //        };
+            //    });
+
+            //    $('#Id_Estado').val(res[0].id_estado);
+            //    $('#Id_Estado').trigger('change');
+
+            //    setTimeout(function () {
+            //        console.log(res[0].id_ciudad);
+            //        $('#Id_Ciudad').val(res[0].id_ciudad);
+            //        $('#Id_Ciudad').trigger('change');
+            //    }, 3000);
+            //});
+            //$.each(dataColonies, function (item, key) {
+            //    if (parseInt(key.estatus) == 1 && parseInt(key.cp) == parseInt(codigoP)) {
+            //        $('#Id_Estado option[value="' + key.id_estado + '"]').attr("selected", true);
+            //        setCiudad(key.id_estado);
+            //        $("#Id_Estado").change();
+            //        $('#Id_Ciudad option[value="' + key.id_ciudad + '"]').attr("selected", true);
+            //        $("#Id_Ciudad").change();
+            //        setColonias(key.id_ciudad);
+            //        $("#Id_Colonia").change();
+            //    };
+            //});
         }
 
         function setCp(id) {
@@ -182,25 +204,29 @@
         function setColonias(id) {
             $("#Id_Colonia").empty();
             $("#Id_Colonia").append(`<option value="0">Selecciona una opción</option>`);
-            $.each(dataColonies, function (item, key) {
-                if (parseInt(key.estatus) == 1 && parseInt(id) == parseInt(key.id_ciudad)) {
-                    $("#Id_Colonia").append(`<option value="${key.id}">${key.nombre}</option>`);
-                };
+            $.get("/Clients/Origins/getColonias/" + id, function (res) {
+                dataColonies = res;
+                $.each(res, function (item, key) {
+                    if (parseInt(key.estatus) == 1) {
+                        $("#Id_Colonia").append(`<option value="${key.id}">${key.nombre}</option>`);
+                    };
+                });
             });
         }
-
         function setCiudad(id) {
             $("#Id_Ciudad").empty();
             $("#Id_Ciudad").append(`<option value="0">Selecciona una opción</option>`);
             $.each(dataCity, function (item, key) {
-                if (parseInt(key.estatus) == 1 && parseInt(id) == parseInt(key.id_estado)) {
+                if (parseInt(id) == parseInt(key.id_estado)) {
                     $("#Id_Ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
                 };
             });
         }
-
         $(window).ready(function () {
             getCatalogos();
+            loadTable();
+            dSelect('Id_Ciudad');
+            dSelect('Id_Colonia');
             $("#frmRegister").submit(function (event) {
                 event.preventDefault();
                 var jsonData = convertJson($("#frmRegister"));
@@ -209,7 +235,6 @@
                 if (parseInt($("#Id_Ciudad").val()) != 0 && parseInt($("#Id_Estado").val()) != 0 && parseInt($("#Id_Colonia").val()) != 0) {
                     if (parseInt($("#idEditar").val()) != 0) {
                         $.post("/Clients/Origins/putOrigen", jsonData, function (res) {
-                            console.log(res);
                             loadTable();
                             dToast("success", "Registro actualizado exitosamente.", "Actualizado");
                             $(".guardar").attr("disabled", false);
@@ -233,7 +258,6 @@
                 }
             });
         });
-
         function showModal(titulo = "Title", accion, idEditar = 0) {
             $('#frmRegister').trigger("reset");
             $(".guardar").html(accion);
@@ -259,22 +283,21 @@
                 $("#modalDiv").modal("show");
             }
         }
-
         function loadTable() {
+            $("#table-info").empty();
             var stable = $('.table-viajes').DataTable();
             stable.destroy();
-            $("#table-info").empty();
-            $.get("/Clients/Origins/getOrigen/", { "Id_Cliente":@id}, function (res) {
+            
+            $.get("/Clients/Origins/getOrigen", { "Id_Cliente":@id}, function (res) {
                 dataOrigenes = res;
+                console.log(res);
                 $.each(res, function (item, key) {
-                    let ciudad = dataCity.findIndex(service => parseInt(service.id) == parseInt(key.id_Ciudad));
-                    let estado = dataState.findIndex(service => parseInt(service.id) == parseInt(key.id_Estado));
                     $("#table-info").append(`
                         <tr>
                             <td>${nCon(key.nombre)}</td>
                             <td>${nCon(key.cp)}</td>
-                            <td>${dataState[estado].nombre}</td>
-                            <td>${dataCity[ciudad].nombre}</td>
+                            <td>${key.estado}</td>
+                            <td>${key.ciudad}</td>
                             <td>${nCon(key.direccion)}</td>
                             <td>`+ statusTable(key.estatus) + `</td>
                             <td>
@@ -289,7 +312,6 @@
                 dTable("table-viajes");
             });
         }
-
         //Catalogos
         function getCatalogos() {
             $.get("/Catalogs/Geography/State/getState", function (res) {
@@ -301,6 +323,7 @@
                         $("#Id_Estado").append(`<option value="${key.id}">${key.nombre}</option>`);
                     };
                 });
+                dSelect('Id_Estado');
             }).fail(function (error) {
                 dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
             });
@@ -310,14 +333,6 @@
             }).fail(function (error) {
                 dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
             });
-
-            $.get("/Catalogs/Geography/Colonies/getColonies", function (res) {
-                dataColonies = res;
-                console.log(res);
-            }).fail(function (error) {
-                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
-            });
-            loadTable();
         }
 
 

@@ -57,7 +57,7 @@
                 <form id="frmRegister" action="#" method="post">
                     <input type="hidden" name="id" id="idEditar" value="0" />
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label class="">Nombre</label>
                                 <input type="text" class="form-control" name="Nombre" id="Nombre" required />
@@ -74,7 +74,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="">Estado</label>
-                                <select class="form-control form-control-sm" name="Id_Estado" id="Id_Estado" onchange="setCiudad(this.value);">
+                                <select class="form-control form-control-sm" name="Id_Estado" id="Id_Estado" style="width:100%;" onchange="setCiudad(this.value);">
                                     <option value="0">Selecciona</option>
                                 </select>
                             </div>
@@ -82,7 +82,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="">Ciudad</label>
-                                <select class="form-control form-control-sm" name="Id_Ciudad" id="Id_Ciudad" onchange="setColonias(this.value);">
+                                <select class="form-control form-control-sm" name="Id_Ciudad" id="Id_Ciudad" style="width:100%;" onchange="setColonias(this.value);">
                                     <option value="0">Selecciona</option>
                                 </select>
                             </div>
@@ -90,7 +90,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="">Colonia</label>
-                                <select class="form-control form-control-sm" name="Id_Colonia" id="Id_Colonia"  onchange="setCp(this.value);">
+                                <select class="form-control form-control-sm" name="Id_Colonia" id="Id_Colonia" style="width:100%;"  onchange="setCp(this.value);">
                                     <option value="0">Selecciona</option>
                                 </select>
                             </div>
@@ -140,14 +140,14 @@
         var dataCity = [];
         var dataColonies = [];
 
-        $('#Cp').keypress(function (e) {
-            var keycode = (e.keyCode ? e.keyCode : e.which);
-            if (keycode == '13') {
-                searcCP();
-                e.preventDefault();
-                return false;
-            }
-        });
+        //$('#Cp').keypress(function (e) {
+        //    var keycode = (e.keyCode ? e.keyCode : e.which);
+        //    if (keycode == '13') {
+        //        searcCP();
+        //        e.preventDefault();
+        //        return false;
+        //    }
+        //});
 
         function searcCP() {
             var codigoP = $("#Cp").val();
@@ -180,10 +180,13 @@
         function setColonias(id) {
             $("#Id_Colonia").empty();
             $("#Id_Colonia").append(`<option value="0">Selecciona una opción</option>`);
-            $.each(dataColonies, function (item, key) {
-                if (parseInt(key.estatus) == 1 && parseInt(id) == parseInt(key.id_ciudad)) {
-                    $("#Id_Colonia").append(`<option value="${key.id}">${key.nombre}</option>`);
-                };
+            $.get("/Clients/Origins/getColonias/" + id, function (res) {
+                dataColonies = res;
+                $.each(res, function (item, key) {
+                    if (parseInt(key.estatus) == 1) {
+                        $("#Id_Colonia").append(`<option value="${key.id}">${key.nombre}</option>`);
+                    };
+                });
             });
         }
 
@@ -200,13 +203,15 @@
 
         $(window).ready(function () {
             getCatalogos();
+            loadTable();
+            dSelect('Id_Ciudad');
+            dSelect('Id_Colonia');
             $("#frmRegister").submit(function (event) {
                 event.preventDefault();
                 var jsonData = convertJson($("#frmRegister"));
                 jsonData["Id_Cliente"] = @id;
                 console.log(jsonData);
                 
-
                 if (parseInt($("#Id_Ciudad").val()) != 0 && parseInt($("#Id_Estado").val()) != 0 && parseInt($("#Id_Colonia").val()) != 0) {
                     if (parseInt($("#idEditar").val()) != 0) {
                         $.post("/Clients/Destinations/putDestino", jsonData, function (res) {
@@ -232,9 +237,6 @@
                 } else {
                     dToast("error", "Selecciona una opción", "Error");
                 }
-                   
-
-
             });
 
         });
@@ -273,17 +275,16 @@
             var stable = $('.table-viajes').DataTable();
             stable.destroy();
             $("#table-info").empty();
-            $.get("/Clients/Destinations/getDestino/", { "Id_Cliente":@id}, function (res) {
+            $.get("/Clients/Destinations/getDestino", { "Id_Cliente":@id}, function (res) {
                 dataOrigenes = res;
+                console.log(res);
                 $.each(res, function (item, key) {
-                    let ciudad = dataCity.findIndex(service => parseInt(service.id) == parseInt(key.id_Ciudad));
-                    let estado = dataState.findIndex(service => parseInt(service.id) == parseInt(key.id_Estado));
                     $("#table-info").append(`
                         <tr>
                             <td>${nCon(key.nombre)}</td>
                             <td>${nCon(key.cp)}</td>
-                            <td>${dataState[estado].nombre}</td>
-                            <td>${dataCity[ciudad].nombre}</td>
+                            <td>${key.estado}</td>
+                            <td>${key.ciudad}</td>
                             <td>${nCon(key.direccion)}</td>
                             <td>`+ statusTable(key.estatus) + `</td>
                             <td>
@@ -310,30 +311,13 @@
                         $("#Id_Estado").append(`<option value="${key.id}">${key.nombre}</option>`);
                     };
                 });
+                dSelect('Id_Estado');
             }).fail(function (error) {
                 dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
             });
 
             $.get("/Catalogs/Geography/City/getCity", function (res) {
                 dataCity = res;
-                //$("#Id_Ciudad").empty();
-                //$.each(dataCity, function (item, key) {
-                //    if (parseInt(key.estatus) == 1) {
-                //        $("#Id_Ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
-                //    };
-                //});
-            }).fail(function (error) {
-                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
-            });
-
-            $.get("/Catalogs/Geography/Colonies/getColonies", function (res) {
-                dataColonies = res;
-                //$("#Id_Colonia").empty();
-                //$.each(dataColonies, function (item, key) {
-                //    if (parseInt(key.estatus) == 1) {
-                //        $("#Id_Colonia").append(`<option value="${key.id}">${key.nombre}</option>`);
-                //    };
-                //});
             }).fail(function (error) {
                 dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
             });

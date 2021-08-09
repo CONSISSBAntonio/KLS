@@ -173,9 +173,14 @@
     <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     @RenderSection("Scripts", required: false)
-    <script>
+<script>
         var hideMenuLeft = true;
         $(document).ready(function () {
+            var value = '@HttpContextAccessor.HttpContext.Session.GetString("Nombre")';
+            if (value == "") {
+                $.post("Login/Logout", function () {});
+            }
+
             updateContainer();
             $(window).resize(function () {
                 updateContainer();
@@ -319,7 +324,7 @@
         }
 
         //funcion de cargar paginado
-       
-    </script>
+
+</script>
 </body>
 </html>

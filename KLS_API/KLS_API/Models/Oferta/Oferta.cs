@@ -28,7 +28,5 @@ namespace KLS_API.Models.Oferta
         public int ciudad_Destino { get; set; }
         public int Tolerancia_Destino { get; set; }
         public int status { get; set; }
-        public int ToleranciaOrigen { get; set; }
-        public int ToleranciaDestino { get; set; }
     }
 }

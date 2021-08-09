@@ -28,14 +28,12 @@ namespace KLS_WEB.Models
         public decimal PrecioMinimo { get; set; }
         public decimal PrecioMaximo { get; set; }
         public int estatus { get; set; }
-
         //Monitoreo
         public int frecvalidacion { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string restriccioncirc { get; set; }
         [Column(TypeName = "text")]
         public string observaciones { get; set; }
-
         //Actualizaciones
         [Column(TypeName = "varchar(100)")]
         public string actualizadopor { get; set; }

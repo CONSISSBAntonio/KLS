@@ -1,6 +1,7 @@
 ﻿using KLS_API.Models;
 using KLS_WEB.Models;
 using KLS_WEB.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace KLS_WEB.Views.Catalogs.City
 {
+    [Authorize]
     [Route("Route")]
     public class RouteController : Controller
     {

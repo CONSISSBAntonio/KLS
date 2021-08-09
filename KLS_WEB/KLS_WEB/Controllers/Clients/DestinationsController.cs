@@ -32,9 +32,20 @@ namespace KLS_WEB.Controllers.Clients
         [Route("getDestino")]
         public async Task<JsonResult> Get(Cl_Has_Destinos dataModel)
         {
-            List<Cl_Has_Destinos> dataReport;
-            dataReport = await this.AppContext.Execute<List<Cl_Has_Destinos>>(MethodType.GET, _UrlApi, dataModel);
+            List<dest> dataReport;
+            dataReport = await this.AppContext.Execute<List<dest>>(MethodType.GET, _UrlApi, dataModel);
             return Json(dataReport);
+        }
+
+        public class dest
+        {
+            public string nombre { get; set; }
+            public string cp { get; set; }
+            public string estado { get; set; }
+            public string ciudad { get; set; }
+            public string direccion { get; set; }
+            public string estatus { get; set; }
+            public int id { get; set; }
         }
 
         [Route("setDestino")]

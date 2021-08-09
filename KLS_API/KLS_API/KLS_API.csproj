@@ -16,6 +16,8 @@
     <Compile Remove="Migrations\20210728221940_demand.Designer.cs" />
     <Compile Remove="Migrations\20210803204000_relRutasId.cs" />
     <Compile Remove="Migrations\20210803204000_relRutasId.Designer.cs" />
+    <Compile Remove="Migrations\20210804143315_destinos.cs" />
+    <Compile Remove="Migrations\20210804143315_destinos.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,10 +29,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
