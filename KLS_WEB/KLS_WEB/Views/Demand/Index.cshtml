@@ -168,13 +168,13 @@
                         <div class="col-4">
                             <label for="cliente" class="form-label size-12 font-weight-bold float-left">CLIENTE</label>
                             <select class="form-control form-control-sm cliente" id="cliente" name="clientid" style="width: 100%;">
-                                <option value="0">SELECCIONA</option>
+                                <option value="0" selected disabled>SELECCIONA</option>
                             </select>
                         </div>
                         <div class="col-4">
                             <label for="tipounidad" class="form-label size-12 font-weight-bold float-left">TIPO UNIDAD</label>
                             <select class="form-control form-control-sm tipounidad" id="tipounidad" name="unitid" onchange="" style="width: 100%;">
-                                <option value="0">SELECCIONA</option>
+                                <option value="0" selected disabled>SELECCIONA</option>
                             </select>
                         </div>
                         <div class="col-4">
@@ -190,13 +190,13 @@
                         <div class="col-4">
                             <label for="estadoorigen" class="form-label size-12 font-weight-bold float-left">ESTADO ORIGEN</label>
                             <select class="form-control form-control-sm estado" id="estadoorigen" name="estadoorigenid" onchange="getCities('ciudadorigen', this.value)" style="width: 100%;">
-                                <option value="0">SELECCIONA</option>
+                                <option value="0" selected disabled>SELECCIONA</option>
                             </select>
                         </div>
                         <div class="col-4">
                             <label for="ciudadorigen" class="form-label size-12 font-weight-bold float-left">CIUDAD ORIGEN</label>
                             <select class="form-control form-control-sm ciudad" id="ciudadorigen" name="ciudadorigenid" style="width: 100%;">
-                                <option value="0">SELECCIONA</option>
+                                <option value="0" selected disabled>SELECCIONA</option>
                             </select>
                         </div>
                     </div>
@@ -204,19 +204,19 @@
                         <div class="col-4">
                             <label for="estadodestino" class="form-label size-12 font-weight-bold float-left">ESTADO DESTINO</label>
                             <select class="form-control form-control-sm estado" id="estadodestino" name="estadodestinoid" onchange="getCities('ciudaddestino', this.value)" style="width: 100%;">
-                                <option value="0">SELECCIONA</option>
+                                <option value="0" selected disabled>SELECCIONA</option>
                             </select>
                         </div>
                         <div class="col-4">
                             <label for="ciudaddestino" class="form-label size-12 font-weight-bold float-left">CIUDAD DESTINO</label>
                             <select class="form-control form-control-sm ciudad" id="ciudaddestino" name="ciudaddestinoid" style="width: 100%;">
-                                <option value="0">SELECCIONA</option>
+                                <option value="0" selected disabled>SELECCIONA</option>
                             </select>
                         </div>
                         <div class="col-4">
                             <label for="tamanioempresa" class="form-label size-12 font-weight-bold float-left">TAMAÑO EMPRESA</label>
                             <select class="form-control form-control-sm" id="tamanioempresa" name="tamañoempresa">
-                                <option value="0" selected>SELECCIONA</option>
+                                <option value="0" selected disabled>SELECCIONA</option>
                                 <option value="Pequeño">Pequeño</option>
                                 <option value="Mediano">Mediano</option>
                                 <option value="Grande">Grande</option>
@@ -299,7 +299,7 @@
                             <div class="form-group">
                                 <label class="">Estado</label>
                                 <select class="form-control form-control-sm" name="Id_Estado" id="Id_Estado" onchange="setCiudad(this.value);">
-                                    <option value="0">Selecciona</option>
+                                    <option value="0" disabled selected>Selecciona</option>
                                 </select>
                             </div>
                         </div>
@@ -307,7 +307,7 @@
                             <div class="form-group">
                                 <label class="">Ciudad</label>
                                 <select class="form-control form-control-sm" name="Id_Ciudad" id="Id_Ciudad" onchange="setColonias(this.value);">
-                                    <option value="0">Selecciona</option>
+                                    <option value="0" disabled selected>Selecciona</option>
                                 </select>
                             </div>
                         </div>
@@ -315,7 +315,7 @@
                             <div class="form-group">
                                 <label class="">Colonia</label>
                                 <select class="form-control form-control-sm" name="Id_Colonia" id="Id_Colonia" onchange="setCp(this.value);">
-                                    <option value="0">Selecciona</option>
+                                    <option value="0" disabled selected>Selecciona</option>
                                 </select>
                             </div>
                         </div>
@@ -351,7 +351,7 @@
 <!--Modal AGREGAR ORIGEN-DESTINO-->
 <!--MODAL CARGA MASIVA-->
 <div class="modal fade" id="modalcargamasiva" tabindex="-1" aria-labelledby="modalcargamasivalabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalcargamasivalabel">SELECCIONA UN ARVHIVO EXCEL CSV PARA REALIZAR LA CARGA MASIVA</h5>
@@ -362,21 +362,36 @@
             <div class="modal-body">
                 <form class="mb-3" onsubmit="event.preventDefault(), upload(this)">
                     <div class="mb-3">
-                        <input class="form-control" type="file" id="formFile" name="csv" accept=".csv">
+                        <input class="form-control" type="file" id="formFile" name="csv" accept=".csv" onchange="importf(this)">
                     </div>
                     <button id="sendcsv" type="submit" class="btn btn-dark">ENVIAR</button>
                 </form>
 
                 <button class="btn btn-outline-info btn-sm d-flex align-items-center mx-auto" onclick="DownloadLayout(this)"><i class="material-icons">download</i><span>DESCARGAR PLANTILLA DE EJEMPLO</span></button>
             </div>
-            <div class="modal-footer d-flex">
+            <div class="modal-footer d-flex flex-column">
                 <p class="text-info size-12">Es importante que el archivo CSV tenga codificación UTF-8 para el correcto tratamiento de acentos y caracteres especiales</p>
+                <table class="table table-striped table-bordered display table-hover table-csv text-uppercase" width="100%">
+                    <thead>
+                        <tr>
+                            <th>CLIENTE</th>
+                            <th>TIPO DE UNIDAD</th>
+                            <th>ORIGEN</th>
+                            <th>DESTINO</th>
+                            <th>FECHA SALIDA</th>
+                            <th>ARRIBO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="csv-info"></tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
 
 @section scripts{
+    <script src="@Url.Content("~/js/sheetjs/xlsx.full.min.js")"></script>
+    <script src="@Url.Content("~/js/jquery.unobtrusive-ajax.js")"></script>
     <script>
         let dataOrigenes = [];
         let dataState = [];
@@ -425,7 +440,7 @@
             $.get("/Catalogs/Geography/State/getState", function (res) {
                 dataState = res;
                 $("#Id_Estado").empty();
-                $("#Id_Estado").append(`<option value="0">Selecciona una opción</option>`);
+                $("#Id_Estado").append(`<option value="0" disabled selected>Selecciona una opción</option>`);
                 $.each(dataState, function (item, key) {
                     if (parseInt(key.estatus) == 1) {
                         $("#Id_Estado").append(`<option value="${key.id}">${key.nombre}</option>`);
@@ -478,7 +493,7 @@
 
         function setColonias(id) {
             $("#Id_Colonia").empty();
-            $("#Id_Colonia").append(`<option value="0">Selecciona una opción</option>`);
+            $("#Id_Colonia").append(`<option value="0" disabled selected>Selecciona una opción</option>`);
             $.each(dataColonies, function (item, key) {
                 if (parseInt(key.estatus) == 1 && parseInt(id) == parseInt(key.id_ciudad)) {
                     $("#Id_Colonia").append(`<option value="${key.id}">${key.nombre}</option>`);
@@ -488,7 +503,7 @@
 
         function setCiudad(id) {
             $("#Id_Ciudad").empty();
-            $("#Id_Ciudad").append(`<option value="0">Selecciona una opción</option>`);
+            $("#Id_Ciudad").append(`<option value="0" disabled selected>Selecciona una opción</option>`);
             $.each(dataCity, function (item, key) {
                 if (parseInt(key.estatus) == 1 && parseInt(id) == parseInt(key.id_estado)) {
                     $("#Id_Ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
@@ -591,7 +606,7 @@
             $(`#${selector}`).empty();
             $.get("/Catalogs/Geography/City/getCity", response => {
                 $(`#${selector}`).empty();
-                $(`#${selector}`).append('<option value="0">SELECCIONA</option>');
+                $(`#${selector}`).append('<option value="0" disabled selected>SELECCIONA</option>');
                 response.map(({ id, id_estado, estatus, nombre }) => {
                     if (id_estado == idestado && estatus === 1) {
                         $(`#${selector}`).append(`<option value="${id}">${nombre}</option>`);
@@ -642,7 +657,7 @@
             origenid != null && destinoid != null && (
                 $("#rutaid").empty().append(`<option value="0" selected disabled>Selecciona una opción</option>`),
                 $.post('/Travels/GetRuta', { origenid: origenid, destinoid: destinoid }, response => {
-                    response && response.length > 0 ? response.map(({ id, od }) => $('#rutaid').append(`<option value="${id}">${od}</option>`)
+                    response && response.length > 0 ? response.map(({ id, od }) => $('#rutaid').append(`<option value="${id}" selected>${od}</option>`)
                     ) : ($("#rutaid").empty().append(`<option value="0" selected disabled>No se encontraron rutas</option>`));
                 })
             )
@@ -762,22 +777,22 @@
                     unit
                 }) => {
                     $(".carrierinfo").append(`
-                                                        <tr class="text-uppercase">
-                                                        <td>${carrier}</td>
-                                                        <td>${unit}</td>
-                                                        <td>${origin}</td>
-                                                        <td>${destination}</td>
-                                                        <td>${fechaDisponibilidad}</td>
-                                                        <td>${expira} </td>
-                                                        <td>${costo} </td>
-                                                        <td class="text-center">
-                                                            <button type="button" class="btn btn-sm" onclick="AddEdit(${id});" style="background-color: #ffffff00;">
-                                                                <span class="material-icons details">
-                                                                    search
-                                                                </span>
-                                                            </button>
-                                                        </td>
-                                                        </tr>`);
+                    <tr class="text-uppercase">
+                    <td>${carrier}</td>
+                    <td>${unit}</td>
+                    <td>${origin}</td>
+                    <td>${destination}</td>
+                    <td>${fechaDisponibilidad}</td>
+                    <td>${expira} </td>
+                    <td>${costo} </td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm" onclick="AddEdit(${id});" style="background-color: #ffffff00;">
+                            <span class="material-icons details">
+                                search
+                            </span>
+                        </button>
+                    </td>
+                    </tr>`);
                 })
             })
             setTimeout(() => {
@@ -821,10 +836,10 @@
                         render: (data, type, row) => {
                             const { carrierId } = row;
                             return `<a href="/Demand/SetFullTravel?DemandId=${DemandId}&CarrierId=${carrierId}">
-                                                            <span class="material-icons details">
-                                                                local_shipping
-                                                            </span>
-                                                        </a>`
+                                <span class="material-icons details">
+                                    local_shipping
+                                </span>
+                            </a>`
                         }
                     }
                 ],
@@ -866,21 +881,21 @@
                         render: (data, type, row) => {
                             const { id, clientId, originId, destinationId, unitId, ofertasCount } = row;
                             return `
-                                                    <a href="javascript:void(0);" onclick="addEdit(${id}, ${clientId}, ${originId}, ${destinationId});">
-                                                        <span class="material-icons">
-                                                            edit
-                                                        </span>
-                                                    </a>
-                                                    <a href="/Demand/SetTravel/${id}" onclick="create(${id});">
-                                                        <span class="material-icons">
-                                                            local_shipping
-                                                        </span>
-                                                    </a>
-                                                    <a href="javascript:void(0);" onclick="DTC(${unitId}, ${originId}, ${id});">
-                                                        <span class="material-icons">
-                                                            search
-                                                        </span>  ${ofertasCount > 0 ? `<span class="text-danger">${ofertasCount}</span>` : ``}
-                                                    </a>`
+                            <a href="javascript:void(0);" onclick="addEdit(${id}, ${clientId}, ${originId}, ${destinationId});">
+                                <span class="material-icons">
+                                    edit
+                                </span>
+                            </a>
+                            <a href="/Demand/SetTravel/${id}" onclick="create(${id});">
+                                <span class="material-icons">
+                                    local_shipping
+                                </span>
+                            </a>
+                            <a href="javascript:void(0);" onclick="DTC(${unitId}, ${originId}, ${id});">
+                                <span class="material-icons">
+                                    search
+                                </span>  ${ofertasCount > 0 ? `<span class="text-danger">${ofertasCount}</span>` : ``}
+                            </a>`
                         }
                     }
                 ],
@@ -893,11 +908,84 @@
                 initComplete: () => {
                     $('#modalbusqueda').modal('hide');
                     $('#table_length').html(`<a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary float-right" onclick="addEdit(0, 0, 0, 0)" style="height: 52px;width: 52px;"><span class="material-icons" style="padding-top: 9px;">add</span></a>
-                        <a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary float-right d-flex flex-column" onclick="$('#modalcargamasiva').modal('show')" style="margin-right: .3rem;text-decoration: unset !important;"><span class="material-icons">upload</span><span style="font-size: 10px; margin-top: .2rem;">importar</importar></a>`).show();
+                            <a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary float-right d-flex flex-column" onclick="$('#modalcargamasiva').modal('show')" style="margin-right: .3rem;text-decoration: unset !important;"><span class="material-icons">upload</span><span style="font-size: 10px; margin-top: .2rem;">importar</importar></a>`).show();
                     $('[aria-controls="table"]').prop('placeholder', 'BUSCAR');
                     setTimeout(() => $('.filtro').removeClass('d-none'), 150);
                 }
             });
         }
+
+        var wb;
+        var rABS = false;
+        var jsonEnv = [];
+
+        //Excel
+        function importf(obj) {
+            if (!obj.files) {
+                notifyLoading(false);
+                return;
+            }
+
+            var f = obj.files[0];
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var data = e.target.result;
+                if (rABS) {
+                    wb = XLSX.read(btoa(fixdata(data)), {
+                        type: 'base64'
+                    });
+                } else {
+                    wb = XLSX.read(data, {
+                        type: 'binary'
+                    });
+                }
+
+                const dataXLSX = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { raw: false });
+                $.each(dataXLSX, function (k, v) {
+                    if (!v) {
+                        return;
+                    }
+                    const { cliente, tipounidad, origen, destino, fechasalida, arribo } = v;
+                    $('#csv-info').append(`
+                    <tr>
+                        <td>${cliente}</td>
+                        <td>${tipounidad}</td>
+                        <td>${origen}</td>
+                        <td>${destino}</td>
+                        <td>${fechasalida}</td>
+                        <td>${arribo}</td>
+                    </tr>`);
+                });
+
+                $('.table-csv').DataTable({
+                    dom: 'Btp',
+                    destroy: true,
+                    responsive: true,
+                    autoWidth: true,
+                    language: {
+                        url: '/json/dt-es.json'
+                    },
+                    initComplete: () => {
+                        $('.table-csv').parent().addClass('col-12');
+                    }
+                });
+            };
+
+            if (rABS) {
+                reader.readAsArrayBuffer(f);
+            } else {
+                reader.readAsBinaryString(f);
+            }
+        }
+        function fixdata(data) {
+            var o = "",
+                l = 0,
+                w = 10240;
+            for (; l < data.byteLength / w; ++l) o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w, l * w + w)));
+
+            o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w)));
+            return o;
+        }
+        //Excel
     </script>
 }
