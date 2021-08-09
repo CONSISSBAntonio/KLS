@@ -19,6 +19,7 @@ namespace KLS_WEB.Models
         public int id_estadodestino { get; set; }
         public int id_ciudaddestino { get; set; }
         public int totalkilometros { get; set; }
+        public string Folio { get; set; }
         public int eficiencia { get; set; }
         public int tiemporuta { get; set; }
         [Column(TypeName = "varchar(20)")]

@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210805213623_route-folio")]
+    partial class routefolio
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1369,6 +1371,12 @@ namespace KLS_API.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Tipo_De_Unidad")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ToleranciaDestino")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ToleranciaOrigen")
                         .HasColumnType("int");
 
                     b.Property<int>("Tolerancia_Destino")

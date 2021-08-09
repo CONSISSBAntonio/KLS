@@ -957,7 +957,7 @@
             fetch(`/Travels/CartaPorte/${TravelId}`)
                 .then(response => response.blob())
                 .then(blob => {
-                    const folio = '/**********/';
+                    const folio = '@Model.Folio';
                     $(e).prop('disabled', false).removeClass('btn-secondary').addClass('btn-dark').html('Generar carta porte');
                     const data = window.URL.createObjectURL(blob);
                     const anchor = document.createElement('a');

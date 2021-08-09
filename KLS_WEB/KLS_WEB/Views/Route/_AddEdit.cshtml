@@ -303,9 +303,13 @@
                 if (rutaid != 0) {
                     if (action === 'edit') {
                         const idorigen = $('#festadoorigen').val();
-                        const iddestino= $('#festadodestino').val();
+                        const iddestino = $('#festadodestino').val();
+                        const ciudadorigen = @Model.id_ciudadorigen ;
+                        const ciudaddestino = @Model.id_ciudaddestino ;
                         getCities('origen', idorigen);
                         getCities('destino', iddestino);
+                        $('#fciudadorigen').val(ciudadorigen).trigger('change');
+                        $('#fciudaddestino').val(ciudaddestino).trigger('change');
                         botonse.removeClass('btn-outline-secondary').addClass('btn-outline-info').html(`<i class="material-icons">save</i>`);
                         $('.frmRegister :input').prop("disabled", false);
                         $(this).attr('rel', 'post');

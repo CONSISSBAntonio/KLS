@@ -245,7 +245,7 @@
             <div class="modal-body">
                 <div class="col-2">
                     <label for="rango" class="form-label size-12 font-weight-bold float-left">RADIO TOLERANCIA (KM)</label>
-                    <input type="number" class="form-control form-control-sm" id="radio" name="radio" />
+                    <input type="number" class="form-control form-control-sm" id="radio" name="radio" onkeyup="DTCarrier.column(3).search($('#radio').val()).draw()" />
                 </div>
                 <table class="table table-striped table-bordered display table-hover table-carrier text-uppercase" width="100%">
                     <thead>
@@ -349,6 +349,32 @@
     </div>
 </div>
 <!--Modal AGREGAR ORIGEN-DESTINO-->
+<!--MODAL CARGA MASIVA-->
+<div class="modal fade" id="modalcargamasiva" tabindex="-1" aria-labelledby="modalcargamasivalabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalcargamasivalabel">SELECCIONA UN ARVHIVO EXCEL CSV PARA REALIZAR LA CARGA MASIVA</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="mb-3" onsubmit="event.preventDefault(), upload(this)">
+                    <div class="mb-3">
+                        <input class="form-control" type="file" id="formFile" name="csv" accept=".csv">
+                    </div>
+                    <button id="sendcsv" type="submit" class="btn btn-dark">ENVIAR</button>
+                </form>
+
+                <button class="btn btn-outline-info btn-sm d-flex align-items-center mx-auto" onclick="DownloadLayout(this)"><i class="material-icons">download</i><span>DESCARGAR PLANTILLA DE EJEMPLO</span></button>
+            </div>
+            <div class="modal-footer d-flex">
+                <p class="text-info size-12">Es importante que el archivo CSV tenga codificación UTF-8 para el correcto tratamiento de acentos y caracteres especiales</p>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section scripts{
     <script>
@@ -470,6 +496,50 @@
             });
         }
 
+        const DownloadLayout = e => {
+            $(e).prop('disabled', true);
+
+            fetch('/Demand/DownloadLayout')
+                .then(response => {
+                    const filename = response.headers.get('Content-Disposition').split('filename=')[1].split(';')[0];
+                    response.blob().then(blob => {
+                        const x = window.URL.createObjectURL(blob);
+                        const anchor = document.createElement('a');
+                        anchor.href = x;
+                        anchor.download = filename;
+                        anchor.click();
+                        $(e).prop('disabled', false);
+                    })
+                })
+                .catch(error => dToast("error", "Ocurrió un error al procesar la solicitud", "Error"))
+        }
+
+        const upload = e => {
+            const data = new FormData(e);
+            const params = {
+                method: 'POST',
+                body: data
+            }
+
+            $('#sendcsv').prop('disabled', true).removeClass('btn-dark').addClass('btn-secondary').html('PROCESANDO...');
+            fetch('/Demand/CSV', params)
+                .then(response => {
+                    const filename = response.headers.get('Content-Disposition').split('filename=')[1].split(';')[0];
+                    response.blob().then(blob => {
+                        const x = window.URL.createObjectURL(blob);
+                        const anchor = document.createElement('a');
+                        anchor.href = x;
+                        anchor.download = filename;
+                        anchor.click();
+                        Table.draw();
+                        $('#sendcsv').prop('disabled', false).removeClass('btn-secondary').addClass('btn-dark').html('ENVIAR');
+                        $('#modalcargamasiva').modal('hide');
+                        dToast("success", "Carga realizada, revisa el reporte generado para verificar las operaciones realizadas", "Realizado");
+                    })
+                })
+                .catch(error => dToast("error", "Ocurrió un error al procesar la solicitud", "Error"))
+        }
+
         const GetAddress = (id, type) => {
             type === 'origen' ? (
                 $.get(`/Clients/Origins/GetOrigin/${id}`, response => {
@@ -493,26 +563,24 @@
 
         const getClientParams = ClientId => {
             $.get("/Clients/Origins/getOrigen/", { "Id_Cliente": ClientId }, response => {
-                $(`#editorigen`).empty();
-                $(`#editorigen`).append(`<option value="0" disabled selected>SELECCIONA</option>`);
+                $(`#editorigen`).empty().append(`<option value="0" disabled selected>SELECCIONA</option>`);
                 response.length || ClientId == 0 ? (response.map(({ id, estatus, nombre }) => {
                     estatus === 1 && $(`#editorigen`).append(`<option value="${id}">${nombre}</option>`);
                 })) : (dToast("warning", "El cliente seleccionado no tiene orígenes.", "Atencion!"));
 
-                dSelect(`editorigen`);
+                //dSelect(`editorigen`);
             }).fail(error => {
                 console.error(error);
                 dToast("error", "Error al obtener los origenes del cliente", "Atencion!");
             });
 
             $.get("/Clients/Destinations/getDestino/", { "Id_Cliente": ClientId }, response => {
-                $(`#editdestino`).empty();
-                $(`#editdestino`).append(`<option value="0" disabled selected>SELECCIONA</option>`);
+                $(`#editdestino`).empty().append(`<option value="0" disabled selected>SELECCIONA</option>`);
                 response.length || ClientId == 0 ? (response.map(({ id, estatus, nombre }) => {
                     estatus === 1 && $(`#editdestino`).append(`<option value="${id}">${nombre}</option>`);
                 })) : (dToast("warning", "El cliente seleccionado no tiene destinos.", "Atencion!"));
 
-                dSelect(`editdestino`);
+                //dSelect(`editdestino`);
             }).fail(error => {
                 console.error(error);
                 dToast("error", "Error al obtener los destinos del cliente", "Atencion!");
@@ -646,7 +714,6 @@
                 $.get('/Demand/GetDemand/', { Id: Id }, response => {
                     const { clientId, routeId } = response;
                     response && Object.entries(response).map(([k, v]) => {
-                        console.log(k, v);
                         v = k.includes('fechadisponibilidad') ? new Date(v).toISOString().substring(0, 16) : v;
                         $(`[name=${k.toLowerCase()}]`).val(v);
                     });
@@ -680,6 +747,7 @@
 
         const selectCarrier = (DemandId, ClientId, UnitId, OriginId, DestinationId) => {
             $('#modaltransportista').modal('show');
+            $('.carrierinfo').empty();
             $.post('/Demand/GetCarrier', { OriginId: OriginId, UnitId: UnitId }, response => {
                 response && response.map(({
                     id,
@@ -694,30 +762,81 @@
                     unit
                 }) => {
                     $(".carrierinfo").append(`
-                            <tr class="text-uppercase">
-                            <td>${carrier}</td>
-                            <td>${unit}</td>
-                            <td>${origin}</td>
-                            <td>${destination}</td>
-                            <td>${fechaDisponibilidad}</td>
-                            <td>${expira} </td>
-                            <td>${costo} </td>
-                            <td class="text-center">
-                                <button type="button" class="btn btn-sm" onclick="AddEdit(${id});" style="background-color: #ffffff00;">
-                                    <span class="material-icons details">
-                                        search
-                                    </span>
-                                </button>
-                            </td>
-                            </tr>`);
+                                                        <tr class="text-uppercase">
+                                                        <td>${carrier}</td>
+                                                        <td>${unit}</td>
+                                                        <td>${origin}</td>
+                                                        <td>${destination}</td>
+                                                        <td>${fechaDisponibilidad}</td>
+                                                        <td>${expira} </td>
+                                                        <td>${costo} </td>
+                                                        <td class="text-center">
+                                                            <button type="button" class="btn btn-sm" onclick="AddEdit(${id});" style="background-color: #ffffff00;">
+                                                                <span class="material-icons details">
+                                                                    search
+                                                                </span>
+                                                            </button>
+                                                        </td>
+                                                        </tr>`);
                 })
             })
             setTimeout(() => {
-
                 dTable('table-carrier')
                 $('#modaltransportista .dataTables_wrapper').children().eq(0).remove();
                 $('#modaltransportista .dataTables_wrapper').children().eq(1).remove();
             }, 500);
+        }
+
+        const fullTravel = (CarrierId, DemandId) => {
+            $.post('/Demand/SetFullTravel', { CarrierId: CarrierId, DemandId: DemandId }, response => {
+                console.log(response);
+            })
+        }
+
+        const DTC = (UnitId, OriginId, DemandId) => {
+            $('#modaltransportista').modal('show');
+            DTCarrier = $('.table-carrier').DataTable({
+                destroy: true,
+                responsive: true,
+                autoWidth: true,
+                dom: 'Btp',
+                ajax: {
+                    type: 'POST',
+                    url: '/Demand/GetCarrier',
+                    dataSrc: '',
+                    data: data => {
+                        data.UnitId = UnitId,
+                            data.OriginId = OriginId
+                    }
+                },
+                columns: [
+                    { data: 'carrier' },
+                    { data: 'unit' },
+                    { data: 'origin' },
+                    { data: 'destination' },
+                    { data: 'fechaDisponibilidad' },
+                    { data: 'expira' },
+                    { data: 'costo' },
+                    {
+                        render: (data, type, row) => {
+                            const { carrierId } = row;
+                            return `<a href="/Demand/SetFullTravel?DemandId=${DemandId}&CarrierId=${carrierId}">
+                                                            <span class="material-icons details">
+                                                                local_shipping
+                                                            </span>
+                                                        </a>`
+                        }
+                    }
+                ],
+                language: {
+                    url: '/json/dt-es.json'
+                },
+                columnDefs: [
+                    { className: 'text-center', targets: [6, 7] }
+                ],
+                initComplete: () => {
+                }
+            })
         }
 
         const DT = (customsearch = false, search) => {
@@ -745,52 +864,36 @@
                     { data: 'arribo' },
                     {
                         render: (data, type, row) => {
-                            const { id, clientId, originId, destinationId, unitId } = row;
+                            const { id, clientId, originId, destinationId, unitId, ofertasCount } = row;
                             return `
-                                            <a href="javascript:void(0);" onclick="addEdit(${id}, ${clientId}, ${originId}, ${destinationId});">
-                                                <span class="material-icons">
-                                                    edit
-                                                </span>
-                                            </a>
-                                            <a href="/Demand/SetTravel/${id}" onclick="create(${id});">
-                                                <span class="material-icons">
-                                                    local_shipping
-                                                </span>
-                                            </a>
-                                            <a href="javascript:void(0);" onclick="selectCarrier(${id}, ${clientId}, ${unitId}, ${originId}, ${destinationId});">
-                                                <span class="material-icons">
-                                                    search
-                                                </span>
-                                            </a>`
+                                                    <a href="javascript:void(0);" onclick="addEdit(${id}, ${clientId}, ${originId}, ${destinationId});">
+                                                        <span class="material-icons">
+                                                            edit
+                                                        </span>
+                                                    </a>
+                                                    <a href="/Demand/SetTravel/${id}" onclick="create(${id});">
+                                                        <span class="material-icons">
+                                                            local_shipping
+                                                        </span>
+                                                    </a>
+                                                    <a href="javascript:void(0);" onclick="DTC(${unitId}, ${originId}, ${id});">
+                                                        <span class="material-icons">
+                                                            search
+                                                        </span>  ${ofertasCount > 0 ? `<span class="text-danger">${ofertasCount}</span>` : ``}
+                                                    </a>`
                         }
                     }
                 ],
                 language: {
-                    "decimal": "",
-                    "emptyTable": "No hay información",
-                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-                    "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
-                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
-                    "infoPostFix": "",
-                    "thousands": ",",
-                    "lengthMenu": "Mostrar _MENU_ Entradas",
-                    "loadingRecords": "Cargando...",
-                    "processing": "Procesando...",
-                    "search": "",
-                    "zeroRecords": "Sin resultados encontrados",
-                    "paginate": {
-                        "first": "Primero",
-                        "last": "Ultimo",
-                        "next": "Siguiente",
-                        "previous": "Anterior"
-                    }
+                    url: '/json/dt-es.json'
                 },
                 columnDefs: [
-                    { className: 'text-center', targets: [5, 6, 7] }
+                    { className: 'd-flex justify-content-around', targets: [7] }
                 ],
                 initComplete: () => {
                     $('#modalbusqueda').modal('hide');
-                    $('#table_length').html(`<a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary float-right" onclick="addEdit(0, 0, 0, 0);"><span class="material-icons">add</span></a>`).show();
+                    $('#table_length').html(`<a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary float-right" onclick="addEdit(0, 0, 0, 0)" style="height: 52px;width: 52px;"><span class="material-icons" style="padding-top: 9px;">add</span></a>
+                        <a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary float-right d-flex flex-column" onclick="$('#modalcargamasiva').modal('show')" style="margin-right: .3rem;text-decoration: unset !important;"><span class="material-icons">upload</span><span style="font-size: 10px; margin-top: .2rem;">importar</importar></a>`).show();
                     $('[aria-controls="table"]').prop('placeholder', 'BUSCAR');
                     setTimeout(() => $('.filtro').removeClass('d-none'), 150);
                 }

@@ -47,19 +47,6 @@ namespace KLS_API.Controllers.Route
             }
         }
 
-        [HttpGet]
-        public ActionResult Get()
-        {
-            try
-            {
-                return Ok(_context.Ruta.ToList());
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
         [HttpGet("[action]")]
         public IActionResult SelectRoute()
         {
@@ -82,6 +69,7 @@ namespace KLS_API.Controllers.Route
         {
             try
             {
+                ruta.Folio = string.Concat(ruta.id_ciudadorigen.ToString("D4"), ruta.id_ciudaddestino.ToString("D4"));
                 _context.Ruta.Add(ruta);
                 _context.SaveChanges();
                 return Ok(ruta);
@@ -103,6 +91,46 @@ namespace KLS_API.Controllers.Route
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+
+        public class DTModel
+        {
+            public int Id { get; set; }
+            public string Folio { get; set; }
+            public string EstadoOrigen { get; set; }
+            public string CiudadOrigen { get; set; }
+            public string EstadoDestino { get; set; }
+            public string CiudadDestino { get; set; }
+            public int KM { get; set; }
+            public string Seguridad { get; set; }
+            public string Estatus { get; set; }
+        }
+
+        [HttpGet]
+        public ActionResult DT()
+        {
+            try
+            {
+                List<DTModel> rutas = _context.Ruta.Where(x => x.estatus == 1).Select(x => new DTModel
+                {
+                    Id = x.id,
+                    Folio = x.Folio,
+                    EstadoOrigen = _context.Cat_Estado.FirstOrDefault(y => y.id == x.id_estadoorigen).nombre.ToUpper(),
+                    CiudadOrigen = _context.Cat_Ciudad.FirstOrDefault(y => y.id == x.id_ciudadorigen).nombre.ToUpper(),
+                    EstadoDestino = _context.Cat_Estado.FirstOrDefault(y => y.id == x.id_estadodestino).nombre.ToUpper(),
+                    CiudadDestino = _context.Cat_Ciudad.FirstOrDefault(y => y.id == x.id_ciudaddestino).nombre.ToUpper(),
+                    KM = x.totalkilometros,
+                    Seguridad = x.seguridad,
+                    Estatus = x.estatus == 1 ? "ACTIVO" : "INACTIVO",
+                }).ToList();
+
+                return Ok(rutas);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+                throw;
             }
         }
     }

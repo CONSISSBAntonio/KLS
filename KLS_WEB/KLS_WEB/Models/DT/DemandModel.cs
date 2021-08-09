@@ -19,5 +19,6 @@ namespace KLS_WEB.Models.DT
         public string Destino { get; set; }
         public string FechaDisponibilidad { get; set; }
         public string Arribo { get; set; }
+        public int OfertasCount { get; set; }
     }
 }
