@@ -68,5 +68,8 @@ namespace KLS_API.Context
         // Demandas
         public DbSet<Demand> Demands { get; set; }
         public DbSet<Oferta> Oferta { get; set; }
+
+        //Ofertas
+        public DbSet<Separar> Separar { get; set; }
     }
 }

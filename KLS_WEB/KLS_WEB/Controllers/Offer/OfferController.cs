@@ -85,9 +85,47 @@ namespace KLS_WEB.Controllers.Offer
             public string tipounidad { get; set; }
             public DateTime fechadisponibilidad { get; set; }
             public int transportista { get; set; }
-            public int estatus { get; set; }
+            public int status { get; set; }
             public int idtransportista { get; set; }
             public string nombreTran { get; set; }
+            public string nivelOrigen { get; set; }
+            public string nivelDestino { get; set; }
+            public int idregionOrigen { get; set; }
+            public int idregionDestino { get; set; }
+            public int idoferta { get; set; }
+        }
+
+        [Route("DownloadLayout")]
+        public FileResult DownloadLayout()
+        {
+            return File("Resources/LayoutOferta/CargaExcel.xlsx", "application/octet-stream", "CargaExcel.csv");
+        }
+
+        [HttpPost]
+        [Route("setSeparar")]
+        public async Task<JsonResult> setSeparar(Separar dataModel)
+        {
+            Separar dataReport;
+            dataReport = await this.AppContext.Execute<Separar>(MethodType.POST, _UrlApi+"/Separar", dataModel);
+            return Json(dataReport);
+        }
+        
+        [HttpGet]
+        [Route("getSeparar")]
+        public async Task<JsonResult> getSeparar(Separar dataModel)
+        {
+            Separar dataReport;
+            dataReport = await this.AppContext.Execute<Separar>(MethodType.GET, _UrlApi+"/getSeparar", dataModel);
+            return Json(dataReport);
+        }
+
+        [HttpPost]
+        [Route("putSeparar")]
+        public async Task<JsonResult> putSeparar(Separar dataModel)
+        {
+            Separar dataReport;
+            dataReport = await this.AppContext.Execute<Separar>(MethodType.PUT, _UrlApi+ "/putSeparar", dataModel);
+            return Json(dataReport);
         }
 
         [Route("[action]")]

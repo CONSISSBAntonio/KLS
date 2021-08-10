@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210810145641_updateOffer")]
+    partial class updateOffer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1353,7 +1355,7 @@ namespace KLS_API.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Nivel_Destino")
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Nivel_Origen")
                         .HasColumnType("varchar(20)");
@@ -1394,26 +1396,6 @@ namespace KLS_API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Oferta");
-                });
-
-            modelBuilder.Entity("KLS_API.Models.Oferta.Separar", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("id_oferta")
-                        .HasColumnType("int");
-
-                    b.Property<string>("notasCargo")
-                        .HasColumnType("varchar(250)");
-
-                    b.Property<string>("rutaTentativa")
-                        .HasColumnType("varchar(120)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("Separar");
                 });
 
             modelBuilder.Entity("KLS_API.Models.Region_Has_Estado", b =>

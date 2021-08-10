@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210810154536_ModelSeparar")]
+    partial class ModelSeparar
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1406,6 +1408,7 @@ namespace KLS_API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("notasCargo")
+                        .IsRequired()
                         .HasColumnType("varchar(250)");
 
                     b.Property<string>("rutaTentativa")
