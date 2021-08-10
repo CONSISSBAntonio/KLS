@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using KLS_API.Models;
 using KLS_WEB.Models;
 using KLS_WEB.Models.Oferta;
+using KLS_WEB.Models.Travels;
 using KLS_WEB.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -124,6 +126,25 @@ namespace KLS_WEB.Controllers.Offer
             Separar dataReport;
             dataReport = await this.AppContext.Execute<Separar>(MethodType.PUT, _UrlApi+ "/putSeparar", dataModel);
             return Json(dataReport);
+        }
+
+        [Route("[action]")]
+        public async Task<IActionResult> SetFullTravel(string OfferId)
+        {
+            Oferta demand = await AppContext.Execute<Oferta>(MethodType.GET, Path.Combine(_UrlApi, "GetOffer", OfferId), null);
+
+            Travel lasttravel = await AppContext.Execute<Travel>(MethodType.GET, Path.Combine("Travels", "GetTravel", "0"), null);
+
+            Travel travel = new Travel
+            {
+                Id = lasttravel == null ? 1 : lasttravel.Id,
+                TipoUnidad = demand.Tipo_De_Unidad,
+                FechaSalida = demand.Fecha_Disponibilidad,
+                Transportista = demand.Transportista,
+                IsDemand = true
+            };
+
+            return View("~/Views/Travels/New.cshtml", travel);
         }
     }
 }

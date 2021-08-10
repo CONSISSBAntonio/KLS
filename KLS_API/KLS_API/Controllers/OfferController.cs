@@ -316,6 +316,18 @@ namespace KLS_API.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+        [HttpGet]
+        [Route("[action]/{Id}")]
+        public IActionResult GetOffer(int Id)
+        {
+            try
+            {
+                return Ok(context.Oferta.Find(Id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+                throw;
             }
         }
     }
