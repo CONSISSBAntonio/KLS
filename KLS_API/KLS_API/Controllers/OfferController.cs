@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace KLS_API.Controllers
 {
@@ -58,25 +59,16 @@ namespace KLS_API.Controllers
             try
             {
                 var queryable = (from oferta in context.Oferta
-                                 join estadoorigen in context.Cat_Estado on oferta.Estado_Origen equals estadoorigen.id
-                                 join ciudadorigen in context.Cat_Ciudad on oferta.ciudad_Origen equals ciudadorigen.id
-                                 join regionorigen in context.Cat_Region on oferta.Region_Origen equals regionorigen.id
-                                 join estadodestino in context.Cat_Estado on oferta.estado_Destino equals estadodestino.id
-                                 join ciudaddestino in context.Cat_Ciudad on oferta.ciudad_Destino equals ciudaddestino.id
-                                 join regiondestino in context.Cat_Region on oferta.Region_Origen equals regiondestino.id
+                                 where oferta.status != 3
                                  join tipounidad in context.Cat_Tipos_Unidades on oferta.Tipo_De_Unidad equals tipounidad.id
                                  join transportista in context.Transportista on oferta.Transportista equals transportista.id
                                  orderby oferta.Fecha_Disponibilidad
                                  select new ofertas
                                  {
-                                     estadoorigen = estadoorigen.nombre,
-                                     idestadoorigen = estadoorigen.id,
-                                     idestadodestino = estadodestino.id,
-                                     idciudadorigen = ciudadorigen.id,
-                                     idciudaddestino = ciudaddestino.id,
-                                     ciudadorigen = ciudadorigen.nombre,
-                                     ciudaddestino = ciudaddestino.nombre,
-                                     estadodestino = estadodestino.nombre,
+                                     idestadoorigen = oferta.Estado_Origen,
+                                     idestadodestino = oferta.estado_Destino,
+                                     idciudadorigen = oferta.ciudad_Origen,
+                                     idciudaddestino = oferta.ciudad_Destino,
                                      tipounidad = tipounidad.nombre,
                                      idtipounidad = tipounidad.id,
                                      fechadisponibilidad = oferta.Fecha_Disponibilidad,
@@ -84,7 +76,12 @@ namespace KLS_API.Controllers
                                      idtransportista = transportista.id,
                                      status = oferta.status,
                                      nombreTran = transportista.NombreComercial,
-                                     seltransportista = transportista.id
+                                     seltransportista = transportista.id,
+                                     nivelOrigen = oferta.Nivel_Origen,
+                                     nivelDestino = oferta.Nivel_Destino,
+                                     idregionOrigen = oferta.Region_Origen,
+                                     idregionDestino = oferta.Region_Destino,
+                                     idoferta = oferta.Id,
                                  }).ToList().AsQueryable();
 
                 if (busqueda.idestadoorigen != 0)
@@ -115,9 +112,10 @@ namespace KLS_API.Controllers
                 {
                     queryable = queryable.Where(x => x.seltransportista == busqueda.seltransportista);
                 }
-                //if(busqueda.fechadisponibilidad.ToString() != "" && busqueda.fechadisponibilidad != null)
+                //DateTime temp;
+                //if (DateTime.TryParse(busqueda.fechadisponibilidad.Date.ToString(),out temp)==true)
                 //{
-                //    queryable = queryable.Where(x => x.fechadisponibilidad.ToString().Contains(busqueda.fechadisponibilidad.ToString()));
+                //    queryable = queryable.Where(x => x.fechadisponibilidad.Date.ToString().Contains(busqueda.fechadisponibilidad.Date.ToString()));
                 //}
 
                 return Ok(queryable);
@@ -177,7 +175,7 @@ namespace KLS_API.Controllers
                         Region_Destino = item.Region_Destino,
                         estado_Destino = item.estado_Destino,
                         ciudad_Destino = item.ciudad_Destino,
-                        status = item.status,
+                        status = item.status
                     };
                     context.Oferta.Add(dato_);
                     context.SaveChanges();
@@ -189,38 +187,6 @@ namespace KLS_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-        //[HttpGet]
-        //[Route("setCarga")]
-        //public ActionResult setCarga([FromBody] Carga cModel)
-        //{
-        //    foreach (var item in cModel.catCarga)
-        //    {
-        //        var dato_ = new Oferta
-        //        {
-        //            Transportista = item.Transportista,
-        //            Tipo_De_Unidad = item.Tipo_De_Unidad,
-        //            Cantidad = item.Cantidad,
-        //            Fecha_Disponibilidad = DateTime.Now,
-        //            Rango_De_Espera = item.Rango_De_Espera,
-        //            Nivel_Origen = item.Nivel_Origen,
-        //            Region_Origen = item.Region_Origen,
-        //            Estado_Origen = item.Estado_Origen,
-        //            ciudad_Origen = item.ciudad_Origen,
-        //            Tolerancia_Origen = item.Tolerancia_Origen,
-        //            Tolerancia_Destino = item.Tolerancia_Destino,
-        //            Nivel_Destino = item.Nivel_Destino,
-        //            Region_Destino = item.Region_Destino,
-        //            estado_Destino = item.estado_Destino,
-        //            ciudad_Destino = item.ciudad_Destino,
-        //            status = item.status,
-        //        };
-        //        context.Oferta.Add(dato_);
-        //        context.SaveChanges();
-        //    }
-        //    return Ok();
-        //}
-
 
         public class ofertas
         {
@@ -240,6 +206,11 @@ namespace KLS_API.Controllers
             public int status { get; set; }
             public int idtransportista { get; set; }
             public string nombreTran { get; set; }
+            public string nivelOrigen { get; set; }
+            public string nivelDestino { get; set; }
+            public int idregionOrigen { get; set; }
+            public int idregionDestino { get; set; }
+            public int idoferta { get; set; }
         }
 
         //Function de obtener listado de todas las rutas del transportista
@@ -249,6 +220,7 @@ namespace KLS_API.Controllers
         {
             try
             {
+                
                 IQueryable<object> queryable = null;
                 queryable = (from tr_r in context.Tr_Has_Ruta
                              join ruta in context.Ruta on tr_r.Id_Ruta equals ruta.id
@@ -271,6 +243,7 @@ namespace KLS_API.Controllers
                                  costo = tr_r.Costo,
                                  estatus = tr_r.Estatus
                              }).ToList().AsQueryable();
+
                 return Ok(queryable);
             }
             catch (Exception ex)
@@ -293,6 +266,58 @@ namespace KLS_API.Controllers
             public int estatus { get; set; }
         }
 
+        //Separar
+        [HttpPost]
+        [Route("Separar")]
+        public ActionResult Separar([FromBody] Separar separar)
+        {
+            try
+            {
+                var dato_ = new Oferta { Id = separar.id_oferta, status = 2 };
+                context.Attach(dato_);
+                context.Entry(dato_).Property("status").IsModified = true;
+                context.SaveChanges();
+
+                context.Separar.Add(separar);
+                context.SaveChanges();
+                return Ok(separar);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        
+        [HttpGet]
+        [Route("getSeparar")]
+        public ActionResult getSeparar([FromBody] Separar separar)
+        {
+            try
+            {
+                var getseparar = context.Separar.FirstOrDefault(f => f.id_oferta == separar.id_oferta);
+                return Ok(getseparar);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        
+        [HttpPut]
+        [Route("putSeparar")]
+        public ActionResult putSeparar([FromBody] Separar separar)
+        {
+            try
+            {
+                context.Entry(separar).State = EntityState.Modified;
+                context.SaveChanges();
+                return Ok(separar);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
 

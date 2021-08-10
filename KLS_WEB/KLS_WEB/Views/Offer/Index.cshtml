@@ -11,56 +11,10 @@
                 </div>
             </div>
 
-            <div class="ml-auto p-2 pb-2">
-                <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#modalBuscar">
+            <div class="ml-auto p-2 pb-2 pr-4">
+                <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#modalBuscar" style="width:90px;">
                     Buscar
                 </a>
-                <a class="btn btn-sm btn-secondary" href="#" data-toggle="modal" data-target="#modalAgregar">
-                    <span class="material-icons">
-                        add
-                    </span>
-                </a>
-                <a class="btn btn-sm btn-secondary" href="#" data-toggle="modal" data-target="#exampleModal">
-                    <span class="material-icons">
-                        file_upload
-                    </span>
-                </a>
-            </div>
-        </div>
-
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label>Archivo</label>
-                                <input type="file" onchange="importf(this)" class="form-control" accept=".xlsx" id="archivoXlsx" />
-                            </div>
-                        </div>
-                        <br /><br />
-                        <div id="div-tabla" style="display:none;">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <table class="table table-md table-hover table-data" id="table-data">
-                                        <thead id="h-table"></thead>
-                                        <tbody id="b-table"></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-primary" onclick="eGuardar();">Guardar ofertas</button>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -81,6 +35,18 @@
                 <li class="nav-item pl-lg-5">
                     <!--<a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">-->@*Contact*@<!--</a>-->
                     <input type="text" class="form-control" style="background-color:#EDECEC" placeholder="Buscar" id="txtSearch" />
+                </li>
+                <li class="nav-item" style="padding-left:44%;">
+                    <a class="btn btn-sm btn-outline-secondary" href="#" data-toggle="modal" data-target="#exampleModal">
+                        <span class="material-icons">
+                            file_upload
+                        </span>
+                    </a>
+                    <a class="btn btn-sm btn-outline-secondary" href="#" data-toggle="modal" data-target="#modalAgregar">
+                        <span class="material-icons">
+                            add
+                        </span>
+                    </a>
                 </li>
             </ul>
             <div class="tab-content" id="pills-tabContent">
@@ -119,7 +85,48 @@
             </div>
 
         </div>
+    </div>
+</div>
 
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Importar excel</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>Selecciona un archivo</label>
+                        <input type="file" onchange="importf(this)" class="form-control" accept=".xlsx" id="archivoXlsx" />
+                    </div>
+                </div>
+                <br />
+                <div id="div-tabla" style="display:none;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-md table-hover table-data" id="table-data">
+                                <thead id="h-table"></thead>
+                                <tbody id="b-table"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary d-flex align-items-center mx-auto" onclick="eGuardar();" id="btnGuardar">Guardar ofertas</button>
+                <br />
+                <button class="btn btn-outline-info btn-sm d-flex align-items-center mx-auto" onclick="DownloadLayout(this)">
+                    <i class="material-icons">download</i>
+                    <span>DESCARGAR PLANTILLA DE EJEMPLO</span>
+                </button>
+            </div>
+            @*<div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="eGuardar();" id="btnGuardar">Guardar ofertas</button>
+            </div>*@
+        </div>
     </div>
 </div>
 
@@ -136,7 +143,7 @@
                 <div class="row">
                     <div class="col-md-3">
                         <label>Tipo de unidad</label>
-                        <select class="form-control form-control-sm" id="tipounidad">
+                        <select class="form-control form-control-sm" id="tipounidad" name="">
                             <option value="0">Selecciona una opción</option>
                         </select>
                     </div>
@@ -146,7 +153,7 @@
                     </div>
                     <div class="col-3">
                         <label>Hora de salida</label>
-                        <input type="time"  value="" class="form-control" />
+                        <input type="time"  value="" class="form-control" id="HoraSalida"/>
                     </div>
                     <div class="col-3">
                         <label>Nivel de servicio</label>
@@ -164,25 +171,25 @@
                 <div class="row">
                     <div class="col-md-3">
                         <label>Estado Origen</label>
-                        <select class="form-control form-control-sm" id="esorigen">
+                        <select class="form-control form-control-sm" style="width:100%;" id="esorigen" onchange="llenadoCiudad('esorigen', 'ciorigen');">
                             <option value="0">Selecciona una opción</option>
                         </select>
                     </div>
                     <div class="col-3">
                         <label>Ciudad Origen</label>
-                        <select class="form-control form-control-sm" id="ciorigen">
+                        <select class="form-control form-control-sm" id="ciorigen" style="width:100%;">
                             <option value="0">Selecciona una opción</option>
                         </select>
                     </div>
                     <div class="col-3">
                         <label>Estado Destino</label>
-                        <select class="form-control form-control-sm" id="esdestino">
+                        <select class="form-control form-control-sm" style="width:100%;" id="esdestino" onchange="llenadoCiudad('esdestino', 'cidestino');">
                             <option value="0">Selecciona una opción</option>
                         </select>
                     </div>
                     <div class="col-3">
                         <label>Ciudad Destino</label>
-                        <select class="form-control form-control-sm" id="cidestino">
+                        <select class="form-control form-control-sm" style="width:100%;" id="cidestino">
                             <option value="0">Selecciona una opción</option>
                         </select>
                     </div>
@@ -218,76 +225,116 @@
                 <div class="row">
                     <div class="col-md-3">
                         <label>Tipo de unidad</label>
-                        <select class="form-control form-control-sm" style="width:100%;">
+                        <select class="form-control form-control-sm" style="width:100%;" id="idtipounidad">
                             <option value="0">Selecciona una opción</option>
                         </select>
                     </div>
                     <div class="col-md-3">
                         <label>Cantidad</label>
-                        <select class="form-control form-control-sm"  style="width:100%;">
-                            <option value="0">Selecciona una opción</option>
-                        </select>
+                        <input type="number" id="txtCantidad" class="form-control"/>
                     </div>
                     <div class="col-md-3">
                         <label>Fecha</label>
-                        <input type="datetime" class="form-control" name="name" value="" />
+                        <input type="datetime-local" class="form-control" id="txtFechaDisponibilidad"/>
                     </div>
                     <div class="col-md-3">
                         <label>Rango de espera</label>
-                        <input type="text" class="form-control" name="name" value="" />
+                        <input type="number" class="form-control" id="txtRangoEspera" />
                     </div>
                 </div>
+
                 <h5>Origen</h5>
                 <div class="row">
                     <div class="col-md-3">
                         <label>Nivel</label>
-                        <select class="form-control form-control-sm" style="width:100%;">
+                        <select class="form-control form-control-sm" style="width:100%;" id="txtNivelOrigen" onchange="llenadoNivel('txtNivelOrigen','seleccionaOrigen');">
                             <option value="0">Selecciona una opción</option>
+                            <option value="Region">Region</option>
+                            <option value="Estado">Estado</option>
+                            <option value="Ciudad">Ciudad</option>
                         </select>
                     </div>
                     <div class="col-md-3">
                         <label>Selecciona</label>
-                        <select class="form-control form-control-sm" style="width:100%;">
+                        <select class="form-control form-control-sm" style="width:100%;" id="seleccionaOrigen" onchange="mostrarCiudad('txtNivelOrigen','seleccionaOrigen','ciudadOrigen','txtToleranciaOrigen')">
                             <option value="0">Selecciona una opción</option>
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label>Cantidad</label>
-                        <input type="datetime" class="form-control" name="name" value="" />
+                        <label>Ciudad</label>
+                        <select class="form-control-sm" id="ciudadOrigen" style="width:100%;" disabled="disabled">
+                            <option value="0">Selecciona una opción</option>
+                        </select>
                     </div>
                     <div class="col-md-3">
                         <label>Tolerancia</label>
-                        <input type="text" class="form-control" name="name" value="" />
+                        <input type="number" class="form-control" id="txtToleranciaOrigen" disabled="disabled"/>
                     </div>
                 </div>
                 <h5>Destino</h5>
                 <div class="row">
                     <div class="col-md-3">
                         <label>Nivel</label>
-                        <select class="form-control form-control-sm" style="width:100%;">
+                        <select class="form-control form-control-sm" style="width:100%;" id="txtNivelDestino" onchange="llenadoNivel('txtNivelDestino','seleccionaDestino');">
                             <option value="0">Selecciona una opción</option>
+                            <option value="Region">Region</option>
+                            <option value="Estado">Estado</option>
+                            <option value="Ciudad">Ciudad</option>
                         </select>
                     </div>
                     <div class="col-md-3">
                         <label>Selecciona</label>
-                        <select class="form-control form-control-sm" style="width:100%;">
+                        <select class="form-control form-control-sm" style="width:100%;" id="seleccionaDestino" onchange="mostrarCiudad('txtNivelDestino','seleccionaDestino','ciudadDestino','txtToleranciaDestino')">
                             <option value="0">Selecciona una opción</option>
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label>Cantidad</label>
-                        <input type="datetime" class="form-control" name="name" value="" />
+                        <label>Ciudad</label>
+                        <select class="form-control-sm" id="ciudadDestino" style="width:100%;" disabled="disabled">
+                            <option value="0">Selecciona una opción</option>
+                        </select>
                     </div>
                     <div class="col-md-3">
                         <label>Tolerancia</label>
-                        <input type="text" class="form-control" name="name" value="" />
+                        <input type="number" class="form-control" name="name" id="txtToleranciaDestino" disabled="disabled"/>
                     </div>
                 </div>
 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-secondary">Agregar oferta</button>
+                <button type="button" class="btn btn-secondary" onclick="agregarOferta();">Agregar oferta</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal para separar*@
+<div class="modal fade" id="separarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Separar</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Ruta tentativa</label>
+                        <input type="text" class="form-control" placeholder="Escribe aqui" id="rutaTentativa"/>
+                    </div>
+                </div>
+                <div class="row pt-3">
+                    <div class="col-md-12">
+                        <label>Notas de cargo</label>
+                        <textarea class="form-control" rows="8" placeholder="Escribe aqui" id="notasCargo"></textarea>
+                    </div>
+                </div>
+                <br />
+                <button type="button" class="btn btn-primary" style="width:160px;" id="confirmarSeparar" onclick="guardarSeparar();">Confirmar</button>
+                <button type="button" class="btn btn-primary" style="width:160px;" id="editarSeparar" onclick="modificarSeparar();">Modificar</button>
             </div>
         </div>
     </div>
@@ -299,25 +346,101 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
     <script>
 
+        function agregarOferta() {//Metodo de agregar la oferta
+            jsonEnv = [];
+            var regionO = 0;
+            var estadoO = 0;
+            var ciudadO = 0;
+
+            var regionD = 0;
+            var estadoD = 0;
+            var ciudadD = 0;
+
+            var idTransportista = $("#idtransportista").val();
+
+            if (parseInt(idTransportista) != 0) {
+
+                var idTipounidad = $("#idtipounidad").val();
+
+                if (parseInt(idTipounidad) != 0) {
+                    var origen = $("#txtNivelOrigen").val();
+                    var destino = $("#txtNivelDestino").val();
+
+                    if (origen == 'Region') {
+                        regionO = $("#seleccionaOrigen").val();
+                    }
+
+                    if (origen == 'Estado') {
+                        estadoO = $("#seleccionaOrigen").val();
+                    }
+                    if (origen == 'Ciudad') {
+                        estadoO = $("#seleccionaOrigen").val();
+                        ciudadO = $("#ciudadOrigen").val();
+                    }
+
+                    if (destino == 'Region') {
+                        regionD = $("#seleccionaOrigen").val();
+                    }
+
+                    if (destino == 'Estado') {
+                        estadoD = $("#seleccionaOrigen").val();
+                    }
+                    if (destino == 'Ciudad') {
+                        estadoD = $("#seleccionaOrigen").val();
+                        ciudadD = $("#ciudadOrigen").val();
+                    }
+
+                    var fechaJs = moment($("#txtFechaDisponibilidad").val()).format('YYYY-MM-DD hh:mm:ss') + ".000000";
+
+                    jsonEnv.push(
+                        {
+                            "Transportista": idTransportista,
+                            "Tipo_De_Unidad": idTipounidad,
+                            "Cantidad": $("#txtCantidad").val(),
+                            "Fecha_Disponibilidad": fechaJs,
+                            "Rango_De_Espera": $("#txtRangoEspera").val(),
+                            "Nivel_Origen": origen,
+                            "Region_Origen": regionO,
+                            "Estado_Origen": estadoO,
+                            "ciudad_Origen": ciudadO,
+                            "Tolerancia_Origen": $("#txtToleranciaOrigen").val(),
+                            "Nivel_Destino": destino,
+                            "Region_Destino": regionD,
+                            "estado_Destino": estadoD,
+                            "ciudad_Destino": ciudadD,
+                            "Tolerancia_Destino": $("#txtToleranciaDestino").val(),
+                            "status": 1
+                        },
+                    );
+                    eGuardar();
+                } else {
+                    dToast("error", "Selecciona un tipo de unidad.", "Atención");
+                }
+            } else {
+                dToast("error", "Selecciona un transportista.", "Atención");
+            }
+            
+        }
         //Cargar datos de las rutas
         var dataRutas = [];
         var dataCheckpoint = [];
         var catCiudad = [];
         var catEstado = [];
+        var catRegion = [];
         var wb;
         var rABS = false;
         var jsonEnv = [];
         //Excel
         function importf(obj) {
-            //notifyLoading(true);
+            jsonEnv = [];
+
             if (!obj.files) {
                 notifyLoading(false);
                 $("#div-tabla").hide();
                 $("#bGuardar").attr("disabled", true);
                 return;
             }
-            //notifyLoading(false);
-
+            
             $("#div-tabla").show()
             $("#bGuardar").attr("disabled", false);
 
@@ -374,7 +497,7 @@
                             "status": item.status
                         },
                     );
-                    var fecha = moment(item[itemT[3]]).format('YYYY-DD-MM hh-mm-ss A');
+                    var fecha = moment(item[itemT[3]]).format('YYYY-DD-MM hh:mm:ss A');
                     $("#b-table").append(`
                     <tr>
                         <td>${item[itemT[0]]}</td>
@@ -385,7 +508,22 @@
                     </tr>
                     `);
                 });
-                dTable("table-data");
+
+                //dTable("table-data");
+                $('#table-data').dataTable({
+                    searching: false,
+                    info: false,
+                    "bLengthChange": false,
+                    language: {
+                        "paginate": {
+                            "first": "Primero",
+                            "last": "Ultimo",
+                            "next": "Siguiente",
+                            "previous": "Anterior"
+                        }
+                    }
+                });
+
             };
             if (rABS) {
                 reader.readAsArrayBuffer(f);
@@ -404,11 +542,14 @@
         }
         function eGuardar() {
             if (Object.keys(jsonEnv).length > 0) {
+                $("#btnGuardar").attr("disabled",true);
                 $.post("/Offer/setRouteMult", { "catCarga": jsonEnv }, function (res) {
                     Ofertas();
                     dToast("success", "Datos guardados con éxito", "Atención");
+                    $("#btnGuardar").attr("disabled", false);
                 }).fail(function (error) {
                     console.log("error", "Error al insertar" + error);
+                    $("#btnGuardar").attr("disabled", false);
                     dToast("error", "Error al insertar", "Error");
                 });
             } else {
@@ -421,18 +562,19 @@
         }
         //Excel
         function estado(estado) {
-            if (estado = 1) {return "Disponible"}
-            if (estado = 2) { return "Separado"}
-            if (estado = 3) { return "Confirmado"}
-            if (estado = 4) { return "Expirado"}
+            estado = parseInt(estado);
+            if (estado == 1) {return "Disponible"}
+            if (estado == 2) { return "Separado" }
+            if (estado == 3) { return "Confirmado"}
+            if (estado == 4) { return "Expirado"}
         }
         function color(estado) {
-            if (estado = 1) {
+            if (estado == 1) {
                 return "blue"
             }
-            if (estado = 2) { return "gray"}
-            if (estado = 3) { return "gray"}
-            if (estado = 4) { return "red"}
+            if (estado == 2) { return "gray"}
+            if (estado == 3) { return "gray"}
+            if (estado == 4) { return "red"}
         }
         function Ofertas() {
             var stable = $('.table-ofertas').DataTable();
@@ -444,26 +586,86 @@
             var cidestino = $("#cidestino").val();
             var tipounidad = $("#tipounidad").val();
             var nivelservicio = $("#Tamanio").val();
-            var fechadisp = $("#fechadisp").val();
+            //var fechadisp = $("#fechadisp").val();
             var transportista = $("#selTransportistas").val();
-            $.get("Offer/busqueda", {"seltransportista": transportista,"fechadisponibilidad":fechadisp,"transportista":nivelservicio, "idestadoorigen": esorigen, "idestadodestino": esdestino, "idciudadorigen": ciorigen, "idciudaddestino": cidestino, "idtipounidad": tipounidad}, function (res) {
-                console.log();
+            var fechadisp = null;
+            if ($("#fechadisp").val() != "" && $("#fechadisp").val() != null) {
+                fechadisp = moment($("#fechadisp").val() + " " + $("#HoraSalida").val()).format('YYYY-MM-DD hh:mm:ss') + ".000000";
+            }
+            var jsonData = { "seltransportista": transportista, "fechadisponibilidad": fechadisp, "transportista": nivelservicio, "idestadoorigen": esorigen, "idestadodestino": esdestino, "idciudadorigen": ciorigen, "idciudaddestino": cidestino, "idtipounidad": tipounidad };
+            console.log(fechadisp);
+            $.get("Offer/busqueda", jsonData , function (res) {
+                console.log(jsonData);
                 $("#tOfertas").empty();
                 $("#tOfertas").append(`OFERTA (${Object.keys(res).length})`);
                 $.each(res, (item, key) => {
+                    var Origen = "";
+                    var Destino = "";
+
+                    if (key.nivelOrigen == "Region") {
+                        let indice = catRegion.findIndex(service => service.id == key.idregionOrigen);
+                        Origen = catRegion[indice].nombre;
+                    }
+                    if (key.nivelOrigen == "Estado") {
+                        let indice = catEstado.findIndex(service => service.id == key.idestadoorigen);
+                        if (indice >= 0) {
+                            Origen = catEstado[indice].nombre;
+                        } else {
+                            Origen="-----"
+                        }
+                    }
+                    if (key.nivelOrigen == "Ciudad") {
+                        let estado = catEstado.findIndex(service => service.id == key.idestadoorigen);
+                        let ciudad = catCiudad.findIndex(service => service.id == key.idciudadorigen);
+                        Origen = catEstado[estado].nombre + " - " + catCiudad[ciudad].nombre;
+                    }
+
+                    //Nivel destino
+                    if (key.nivelDestino == "Region") {
+                        let indice = catRegion.findIndex(service => service.id == key.idregionDestino);
+                        Destino = catRegion[indice].nombre;
+                    }
+                    if (key.nivelDestino == "Estado") {
+                        let indice = catEstado.findIndex(service => service.id == key.idestadodestino);
+                        if (indice >= 0) {
+                            Destino = catEstado[indice].nombre;
+                        } else {
+                            Destino="-----"
+                        }
+                    }
+                    if (key.nivelDestino == "Ciudad") {
+                        let estado = catEstado.findIndex(service => service.id == key.idestadodestino);
+                        let ciudad = catCiudad.findIndex(service => service.id == key.idciudaddestino);
+                        Destino = catEstado[estado].nombre + " - " + catCiudad[ciudad].nombre;
+                    }
+
+                    var hrefModal = "";
+                    var btndisabled = "disabled";
+                    if (key.status == 1 || key.status == 2) {
+                        hrefModal = `<a data-toggle="modal" onclick="separarModal(${key.idoferta},${key.status})">` + estado(key.status) + `</a>`;
+                    } else {
+                        hrefModal = estado(key.status);
+                    }
+                    if (key.status != 1) { btndisabled = ""; }
+
                     $("#table-ofertas-info").append(`
                         <tr class="text-uppercase">
                             <td>${key.nombreTran}</td>
                             <td>${key.tipounidad}</td>
-                            <td>${key.estadoorigen} - ${key.ciudadorigen}</td>
-                            <td>${key.estadodestino} - ${key.ciudaddestino}</td>
-                            <td>${moment(key.fechadisponibilidad).format('DD/MM/YYYY hh-mm-ss')}</td>
+                            <td>${Origen}</td>
+                            <td>${Destino}</td>
+                            <td>${moment(key.fechadisponibilidad).format('DD/MM/YYYY hh:mm:ss A')}</td>
                             <td>(<span class="timeago" datetime="${key.fechadisponibilidad}"></span>) </td>
-                            <td style="color:`+ color(key.estatus) +`">`+ estado(key.estatus) +`</td>
-                            <td class="text-center"><a href="#">--</a></td>2
+                            <td style="color:`+ color(key.status) + `">${hrefModal}</td>
+                            <td class="text-center">
+                                <button class="btn btn-light ${btndisabled}" href="#">
+                                    <span style="color:blue;" class="material-icons">local_shipping</span>
+                                </button>
+                            </td>
                         </tr>`);
-                    timeago.render(document.querySelectorAll('.timeago'), 'es-MX'); 
+                    timeago.render(document.querySelectorAll('.timeago'), 'es-MX');
                 });
+
                 $('.table-ofertas').dataTable({
                     searching: true,
                     info: false,
@@ -488,11 +690,13 @@
                         }
                     }
                 });
+
                 $('#table_filter').hide();
                 $("#txtSearch").keyup(function () {
                     $('.table-ofertas').DataTable().search($('#txtSearch').val(), false, true).draw();
                 });
                 $("#modalBuscar").modal('hide');
+
             }).fail(function (error) {
                 dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
             });
@@ -500,7 +704,7 @@
         $(document).ready(function () {
             loadCity();
             loadState();
-            Ofertas();
+            cargarRegiones();
             cargarUnidades();
             listarRutas();
             selTransportistas();//Obtiene los transportistas
@@ -508,28 +712,44 @@
         //cargar tipo de unidades
         function cargarUnidades() {
             $.get("/Catalogs/TypesOfUnits/getUnidades", function (res) {
+                $("#idtipounidad").empty();
+                $("#idtipounidad").append(`<option value="0">Selecciona una opción</option>`);
                 $.each(res, function (item, key) {
+                    $("#idtipounidad").append(`<option value="${key.id}">${key.nombre}</option>`);
                     $("#tipounidad").append(`<option value="${key.id}">${key.nombre}</option>`);
                 });
+                dSelect('idtipounidad');
+                dSelect('tipounidad');
+
             }).fail(function (error) {
-                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+                console.log(error);
             });
         }
         function loadCity() {
             $.get("/Catalogs/Geography/City/getCity", function (res) {
                 res.map(data => {
                     const { estatus,id,nombre } = data;
-
                     if (estatus === 1) {
                         catCiudad = [...catCiudad, data];
-                        $("#ciorigen").append(`<option value="${id}">${nombre}</option>`);
-                        $("#cidestino").append(`<option value="${id}">${nombre}</option>`);
+                        //$("#ciorigen").append(`<option value="${id}">${nombre}</option>`);
+                        //$("#cidestino").append(`<option value="${id}">${nombre}</option>`);
                     }
                 });
 
             }).fail(function (error) {
                 dToast("error", "Error al obtener paises", "Atencion!");
             });
+        }
+        function llenadoCiudad(estado,ciudad) {
+            var estado = $("#" + estado).val();
+            $("#" + ciudad).empty();
+            $("#" + ciudad).append(`<option value="0">Selecciona una opción</option>`);
+            $.each(catCiudad, function (item, key) {
+                if (key.id_estado == estado) {
+                    $("#" + ciudad).append(`<option value="${key.id}">${key.nombre}</option>`);
+                }
+            });
+            //dSelect(ciudad);
         }
         //Cargar estados
         function loadState() {
@@ -544,6 +764,10 @@
                         $("#esdestino").append(`<option value="${id}">${nombre}</option>`);
                     }
                 });
+                dSelect('esorigen');
+                dSelect('esdestino');
+                dSelect('ciorigen');
+                dSelect('cidestino');
             }).fail(function (error) {
                 dToast("error", "Error al obtener paises", "Atencion!");
             });
@@ -614,6 +838,107 @@
                 });
                 dSelect('selTransportistas');
                 dSelect('idtransportista');
+            });
+        }
+        //Llenado de niveles
+        function llenadoNivel(nivel,selecciona){ //Origen o destino
+            var nivelOrigen = $("#" + nivel).val();
+            $("#" + selecciona).empty();
+            $("#" + selecciona).append(`<option value="0">Selecciona una opción</option>`);
+            if (nivelOrigen == 'Region') {
+                $.each(catRegion, function (item, key) {
+                    $("#" + selecciona).append(`<option value="${key.id}">${nCon(key.nombre)}</option>`);
+                });
+            }
+            if (nivelOrigen == 'Estado') {
+                $.each(catEstado, function (item, key) {
+                   $("#" + selecciona).append(`<option value="${key.id}">${nCon(key.nombre)}</option>`);
+                });
+            }
+            if (nivelOrigen == 'Ciudad') {
+                //$("#" + selecciona).attr("disabled", true);
+                $.each(catEstado, function (item, key) {
+                    $("#" + selecciona).append(`<option value="${key.id}">${nCon(key.nombre)}</option>`);
+                });
+            } else {
+                $("#txtToleranciaOrigen").attr("disabled", true);
+                $("#ciudadOrigen").attr("disabled", true);
+                $("#txtToleranciaDestino").attr("disabled", true);
+                $("#ciudadDestino").attr("disabled", true);
+            }
+        }
+        function mostrarCiudad(nivel, estado, ciudad, tolerancia) {
+            var nivelOrigen = $("#" + nivel).val();
+            if (nivelOrigen == 'Ciudad') {
+                var estado = $("#" + estado).val();
+                $("#" + ciudad).attr("disabled", false);
+                $("#" + tolerancia).attr("disabled", false);
+                $("#" + ciudad).empty();
+                $("#" + ciudad).append(`<option value="0">Selecciona una opción</option>`);
+                $.each(catCiudad, function (item, key) {
+                    if (key.id_estado == estado) {
+                        $("#" + ciudad).append(`<option value="${key.id}">${key.nombre}</option>`);
+                    }
+                });
+            }
+        }
+        //Descarga de excel
+        const DownloadLayout = e => {
+            $(e).prop('disabled', true);
+            fetch('/Offer/DownloadLayout')
+                .then(response => {
+                    const filename = response.headers.get('Content-Disposition').split('filename=')[1].split(';')[0];
+                    response.blob().then(blob => {
+                        const x = window.URL.createObjectURL(blob);
+                        const anchor = document.createElement('a');
+                        anchor.href = x;
+                        anchor.download = filename;
+                        anchor.click();
+                        $(e).prop('disabled', false);
+                    })
+                })
+                .catch(error => dToast("error", "Ocurrió un error al procesar la solicitud", "Error"))
+        }
+        function cargarRegiones() {
+            $.get("/Catalogs/Geography/Regions/getRegion", function (res) {
+                catRegion = res;
+                Ofertas();
+            });
+        }
+        var idOferta = 0;
+        var idSeparar = 0;
+        function separarModal(id, status) {
+            console.log(status);
+            idOferta = id;
+            $("#rutaTentativa").val("");
+            $("#notasCargo").val("");
+            $("#confirmarSeparar").hide();
+            $("#editarSeparar").hide();
+
+            if (status == 2) {
+                $("#editarSeparar").show();
+                $.get("Offer/getSeparar", { "id_oferta": id }, function (res) {
+                    $("#rutaTentativa").val(res.rutaTentativa);
+                    $("#notasCargo").val(res.notasCargo);
+                    idSeparar = res.id;
+                });
+            } else {
+                $("#confirmarSeparar").show();
+            }
+            $("#separarModal").modal('show');
+        }
+        function guardarSeparar() {
+            var jsonData = { "id_oferta": idOferta, "rutaTentativa": $("#rutaTentativa").val(), "notasCargo":$("#notasCargo").val() };
+            $.post("Offer/setSeparar", jsonData, function (res) {
+                Ofertas();
+                $("#separarModal").modal('hide');
+            });
+        }
+        function modificarSeparar() {
+            var jsonData = { "id": idSeparar, "id_oferta": idOferta, "rutaTentativa": $("#rutaTentativa").val(), "notasCargo": $("#notasCargo").val() };
+            $.post("Offer/putSeparar", jsonData, function (res) {
+                Ofertas();
+                $("#separarModal").modal('hide');
             });
         }
     </script>
