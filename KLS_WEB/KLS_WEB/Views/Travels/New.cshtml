@@ -395,7 +395,7 @@
         getCatalogos();
         dSelect('tipoviaje');
         $('[type=datetime-local]').map((k, e) => $(e).prop('min', new Date().toISOString().substring(0, 16)));
-        isDemand && SetServicesFromDemand();
+        isDemand && CarrierId != 0 && SetServicesFromDemand();
 
         $(".viaje").submit(event => {
             event.preventDefault();
@@ -682,10 +682,6 @@
                 response.map(({ id, nombreCorto, estatus }) => estatus === 1 ? $('#cliente').append(`<option value="${id}">${nombreCorto}</option>`) : null);
                 dSelect('cliente');
             });
-            //$.get("/Route/GetRoutes", response => {
-            //    response.map(({ id, fromTo }) => $('#ruta').append(`<option value="${id}">${fromTo}</option>`));
-            //    dSelect('ruta');
-            //});
 
             !isDemand && $('#fechasalida').val('');
             if (isDemand) {

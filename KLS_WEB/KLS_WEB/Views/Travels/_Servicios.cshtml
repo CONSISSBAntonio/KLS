@@ -294,7 +294,7 @@
                 $('#popup').modal('hide');
                 $(`#${service}`).remove();
                 $(`[name=${service}]`).prop('checked', false);
-                $('.serviciosseleccionados').children().length === 1 ? ($(`.addServicios`).show('slow', () => { $('.addServicios').show(); }), $('#frmServicios input').prop('checked', false)) : null;
+                $('.serviciosseleccionados').children().length === 2 ? ($(`.addServicios`).show('slow', () => { $('.addServicios').show(); }), $('#frmServicios input').prop('checked', false)) : null;
             });
         }
 

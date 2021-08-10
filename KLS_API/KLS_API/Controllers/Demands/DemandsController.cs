@@ -96,7 +96,7 @@ namespace KLS_API.Controllers.Demands
             try
             {
                 IEnumerable<DTModel> demands = !dtParams.CustomSearch ? (
-                    _dbContext.Demands.Where(x => x.Status == "nueva").Select(x => new DTModel
+                    _dbContext.Demands.Where(x => x.Status == "nueva" && x.FechaDisponibilidad >= DateTime.Now).Select(x => new DTModel
                     {
                         Id = x.Id,
                         ClientId = x.ClientId,
@@ -114,7 +114,7 @@ namespace KLS_API.Controllers.Demands
                         Status = x.Status
                     }).ToList()
                 ) : (
-                _dbContext.Demands.Where(x => (x.Status == "nueva") && x.ClientId == dtParams.searchmodel.ClientId || x.UnitId == dtParams.searchmodel.UnitId ||
+                _dbContext.Demands.Where(x => (x.Status == "nueva" && x.FechaDisponibilidad >= DateTime.Now) && x.ClientId == dtParams.searchmodel.ClientId || x.UnitId == dtParams.searchmodel.UnitId ||
                 x.FechaDisponibilidad == dtParams.searchmodel.FechaSalida || x.Origin.Id_Estado == dtParams.searchmodel.EstadoOrigenId ||
                 x.Origin.Id_Ciudad == dtParams.searchmodel.CiudadOrigenId || x.Destination.Id_Estado == dtParams.searchmodel.EstadoDestinoId ||
                 x.Destination.Id_Ciudad == dtParams.searchmodel.CiudadDestinoId || x.Client.Tamanio == dtParams.searchmodel.TamañoEmpresa).Select(x => new DTModel
