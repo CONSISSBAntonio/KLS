@@ -293,6 +293,20 @@ namespace KLS_API.Controllers
             public int estatus { get; set; }
         }
 
+        [HttpGet]
+        [Route("[action]/{Id}")]
+        public IActionResult GetOffer(int Id)
+        {
+            try
+            {
+                return Ok(context.Oferta.Find(Id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+                throw;
+            }
+        }
     }
 }
 

@@ -584,10 +584,9 @@
 
         const getClientParams = ClientId => {
             $.get("/Clients/Origins/getOrigen/", { "Id_Cliente": ClientId }, response => {
-                $(`#origen`).empty();
-                $(`#origen`).append(`<option value="0" disabled selected>SELECCIONA</option>`);
+                $(`#origen`).empty().append(`<option value="0" disabled selected>SELECCIONA</option>`);
                 response.length ? (response.map(({ id, estatus, nombre }) => {
-                    estatus === 1 && $(`#origen`).append(`<option value="${id}">${nombre}</option>`);
+                    estatus == 1 && $(`#origen`).append(`<option value="${id}">${nombre}</option>`);
                 })) : (dToast("warning", "El cliente seleccionado no tiene orígenes.", "Atencion!"));
 
                 dSelect(`origen`);
@@ -597,10 +596,9 @@
             });
 
             $.get("/Clients/Destinations/getDestino/", { "Id_Cliente": ClientId }, response => {
-                $(`#destino`).empty();
-                $(`#destino`).append(`<option value="0" disabled selected>SELECCIONA</option>`);
+                $(`#destino`).empty().append(`<option value="0" disabled selected>SELECCIONA</option>`);
                 response.length ? (response.map(({ id, estatus, nombre }) => {
-                    estatus === 1 && $(`#destino`).append(`<option value="${id}">${nombre}</option>`);
+                    estatus == 1 && $(`#destino`).append(`<option value="${id}">${nombre}</option>`);
                 })) : (dToast("warning", "El cliente seleccionado no tiene destinos.", "Atencion!"));
 
                 dSelect(`destino`);
