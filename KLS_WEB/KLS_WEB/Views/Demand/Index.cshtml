@@ -531,30 +531,50 @@
         }
 
         const upload = e => {
-            const data = new FormData(e);
+            if (!demands) {
+                return;
+            }
+            const data = new FormData();
+            data.append('demands', demands);
             const params = {
                 method: 'POST',
                 body: data
             }
-
+            console.log('post:', JSON.stringify({ csv: demands }));
             $('#sendcsv').prop('disabled', true).removeClass('btn-dark').addClass('btn-secondary').html('PROCESANDO...');
-            fetch('/Demand/CSV', params)
-                .then(response => {
-                    const filename = response.headers.get('Content-Disposition').split('filename=')[1].split(';')[0];
-                    response.blob().then(blob => {
-                        const x = window.URL.createObjectURL(blob);
-                        const anchor = document.createElement('a');
-                        anchor.href = x;
-                        anchor.download = filename;
-                        anchor.click();
-                        Table.draw();
-                        $('#sendcsv').prop('disabled', false).removeClass('btn-secondary').addClass('btn-dark').html('ENVIAR');
-                        $('#modalcargamasiva').modal('hide');
-                        dToast("success", "Carga realizada, revisa el reporte generado para verificar las operaciones realizadas", "Realizado");
-                    })
-                })
-                .catch(error => dToast("error", "Ocurrió un error al procesar la solicitud", "Error"), $('#sendcsv').prop('disabled', false).removeClass('btn-secondary').addClass('btn-dark').html('ENVIAR'))
+
+            const xxx = { "demands": demands };
+            console.log('asdsada', xxx);
+            $.post("/Demand/CSV", { "demands": demands }, response => {
+                const filename = response.headers.get('Content-Disposition').split('filename=')[1].split(';')[0];
+                const x = window.URL.createObjectURL(blob);
+                const anchor = document.createElement('a');
+                anchor.href = x;
+                anchor.download = filename;
+                anchor.click();
+                Table.draw();
+                $('#sendcsv').prop('disabled', false).removeClass('btn-secondary').addClass('btn-dark').html('ENVIAR');
+                $('#modalcargamasiva').modal('hide');
+                dToast("success", "Carga realizada, revisa el reporte generado para verificar las operaciones realizadas", "Realizado");
+            });
         }
+            //fetch('/Demand/CSV', params)
+            //    .then(response => {
+            //        const filename = response.headers.get('Content-Disposition').split('filename=')[1].split(';')[0];
+            //        response.blob().then(blob => {
+            //            const x = window.URL.createObjectURL(blob);
+            //            const anchor = document.createElement('a');
+            //            anchor.href = x;
+            //            anchor.download = filename;
+            //            anchor.click();
+            //            Table.draw();
+            //            $('#sendcsv').prop('disabled', false).removeClass('btn-secondary').addClass('btn-dark').html('ENVIAR');
+            //            $('#modalcargamasiva').modal('hide');
+            //            dToast("success", "Carga realizada, revisa el reporte generado para verificar las operaciones realizadas", "Realizado");
+            //        })
+            //    })
+            //    .catch(error => dToast("error", "Ocurrió un error al procesar la solicitud", "Error"), $('#sendcsv').prop('disabled', false).removeClass('btn-secondary').addClass('btn-dark').html('ENVIAR'))
+        //}
 
         const GetAddress = (id, type) => {
             type === 'origen' ? (
@@ -919,7 +939,7 @@
 
         var wb;
         var rABS = false;
-        var jsonEnv = [];
+        let demands = [];
 
         //Excel
         function importf(obj) {
@@ -948,14 +968,8 @@
                         return;
                     }
                     const { cliente, tipounidad, origen, destino, fechasalida, arribo } = v;
-                    const format = {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true
-                    }
+                    v['fechasalida'] = moment(fechasalida, 'dd/mm/yyyy hh:mm A').toDate();
+                    demands = [ ...demands, v ];
                     const now = moment().toDate();
                     const then = moment(fechasalida, 'dd/mm/yyyy hh:mm A').toDate();
                     const isvalid = then >= now && true;
@@ -969,7 +983,7 @@
                             <td>${arribo}</td>
                         </tr>`);
                 });
-
+                console.log(demands);
                 $('.table-csv').DataTable({
                     dom: 'Btp',
                     destroy: true,

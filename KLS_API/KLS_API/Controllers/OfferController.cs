@@ -302,7 +302,7 @@ namespace KLS_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        
+
         [HttpPut]
         [Route("putSeparar")]
         public ActionResult putSeparar([FromBody] Separar separar)
@@ -316,6 +316,8 @@ namespace KLS_API.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
         [HttpGet]
         [Route("[action]/{Id}")]
         public IActionResult GetOffer(int Id)
