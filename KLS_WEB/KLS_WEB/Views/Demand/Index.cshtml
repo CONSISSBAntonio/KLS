@@ -30,7 +30,7 @@
     <div class="p-4">
         <div class="text-left mb-3 d-flex justify-content-between">
             <div class="poppins medium size-24 pl-2">DEMANDAS DISPONIBLES</div>
-            <button type="button" class="btn btn-primary" onclick="$('#modalbusqueda').modal('show')" style="width: 20rem;">BUSCAR</button>
+            <button type="button" class="btn btn-primary" onclick="$('#modalbusqueda').modal('show')" style="width: 20rem; border-color: unset;">BUSCAR</button>
         </div>
 
         <div class="p-4 shadow bg-white">
@@ -908,8 +908,8 @@
                 ],
                 initComplete: () => {
                     $('#modalbusqueda').modal('hide');
-                    $('#table_length').html(`<a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary float-right d-flex flex-column" onclick="$('#modalcargamasiva').modal('show'), $('#formcsv')[0].reset(), $('.table-csv').addClass('d-none')" style="margin-left: .5rem;text-decoration: unset !important;"><span class="material-icons">upload</span><span style="font-size: 10px; margin-top: .2rem;">importar</importar></a>
-                    <a href="javascript:void(0);" class="btn btn-sm btn-outline-secondary float-right" onclick="addEdit(0, 0, 0, 0)" style="height: 52px;width: 52px;"><span class="material-icons" style="padding-top: 9px;">add</span></a>`).show();
+                    $('#table_length').html(`<a href="javascript:void(0);" class="btn btn-sm btn-secondary float-right d-flex flex-column" onclick="$('#modalcargamasiva').modal('show'), $('#formcsv')[0].reset(), $('.table-csv').addClass('d-none')" style="margin-left: .5rem;text-decoration: unset !important; box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 20%);"><span class="material-icons">upload</span><span style="font-size: 10px; margin-top: .2rem;">importar</importar></a>
+                    <a href="javascript:void(0);" class="btn btn-sm btn-secondary float-right" onclick="addEdit(0, 0, 0, 0)" style="height: 52px;width: 52px; box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 20%);"><span class="material-icons" style="padding-top: 9px;">add</span></a>`).show();
                     //$('[aria-controls="table"]').prop('placeholder', 'BUSCAR');
                     setTimeout(() => $('.filtro').removeClass('d-none'), 150);
                 }
