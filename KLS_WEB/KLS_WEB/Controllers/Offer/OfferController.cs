@@ -90,6 +90,7 @@ namespace KLS_WEB.Controllers.Offer
             public string nombreTran { get; set; }
         }
 
+        [Route("[action]")]
         public async Task<IActionResult> SetFullTravel(string OfferId)
         {
             Oferta demand = await AppContext.Execute<Oferta>(MethodType.GET, Path.Combine(_UrlApi, "GetOffer", OfferId), null);
