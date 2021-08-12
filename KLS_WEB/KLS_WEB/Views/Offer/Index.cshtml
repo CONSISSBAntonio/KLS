@@ -20,21 +20,20 @@
 
         <div class="p-4 shadow bg-white">
             <ul class="nav nav-pills" id="pills-tab" role="tablist">
-                <li class="nav-item">
+                <li class="nav-item" onclick="verBuscar('txtSearch');">
                     <a class="nav-link active" style="background-color:#EDECEC" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true"><span id="tOfertas"></span></a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" onclick="verBuscar('txtSearchRutas');">
                     <a class="nav-link" style="background-color:#EDECEC" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false"><span id="tRutasServicio"></a>
                 </li>
                 <li class="nav-item pl-lg-5">
-                    <!--<a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">-->@*Contact*@<!--</a>-->
                     <select class="form-control form-control-sm" style="width:200px;background-color:#EDECEC" id="selTransportistas" onchange="Ofertas();">
                         <option value="0">Todos</option>
                     </select>
                 </li>
                 <li class="nav-item pl-lg-5">
-                    <!--<a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">-->@*Contact*@<!--</a>-->
-                    <input type="text" class="form-control" style="background-color:#EDECEC" placeholder="Buscar" id="txtSearch" />
+                    <input type="text" class="form-control" style="background-color:#EDECEC;" placeholder="Buscar" id="txtSearch"/>
+                    <input type="text" class="form-control" style="background-color:#EDECEC;display:none;" placeholder="Buscar" id="txtSearchRutas" />
                 </li>
                 <li class="nav-item" style="padding-left:44%;">
                     <a class="btn btn-sm btn-outline-secondary" href="#" data-toggle="modal" data-target="#exampleModal">
@@ -42,7 +41,7 @@
                             file_upload
                         </span>
                     </a>
-                    <a class="btn btn-sm btn-outline-secondary" href="#" data-toggle="modal" data-target="#modalAgregar">
+                    <a class="btn btn-sm btn-outline-secondary" href="#" onclick="verModal();">
                         <span class="material-icons">
                             add
                         </span>
@@ -60,11 +59,15 @@
                                 <th>DESTINO</th>
                                 <th>FECHA DISPONIBILIDAD</th>
                                 <th>EXPIRA EN</th>
-                                <th>Estatus</th>
-                                <th style="width:3%;">Acciones</th>
+                                <th style="text-align:center;">Estatus</th>
+                                <th style="text-align:center;">Acciones</th>
                             </tr>
                         </thead>
-                        <tbody id="table-ofertas-info"></tbody>
+                        <tbody id="table-ofertas-info">
+                            <tr>
+                                <td colspan="8">Cargando....</td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
                 <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
@@ -115,7 +118,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary d-flex align-items-center mx-auto" onclick="eGuardar();" id="btnGuardar">Guardar ofertas</button>
+                <button type="button" class="btn btn-primary d-flex align-items-center mx-auto" onclick="validarExcel();" id="btnGuardar">Guardar ofertas</button>
                 <br />
                 <button class="btn btn-outline-info btn-sm d-flex align-items-center mx-auto" onclick="DownloadLayout(this)">
                     <i class="material-icons">download</i>
@@ -249,9 +252,9 @@
                         <label>Nivel</label>
                         <select class="form-control form-control-sm" style="width:100%;" id="txtNivelOrigen" onchange="llenadoNivel('txtNivelOrigen','seleccionaOrigen');">
                             <option value="0">Selecciona una opción</option>
-                            <option value="Region">Region</option>
-                            <option value="Estado">Estado</option>
-                            <option value="Ciudad">Ciudad</option>
+                            <option value="REGION">Region</option>
+                            <option value="ESTADO">Estado</option>
+                            <option value="CIUDAD">Ciudad</option>
                         </select>
                     </div>
                     <div class="col-md-3">
@@ -277,9 +280,9 @@
                         <label>Nivel</label>
                         <select class="form-control form-control-sm" style="width:100%;" id="txtNivelDestino" onchange="llenadoNivel('txtNivelDestino','seleccionaDestino');">
                             <option value="0">Selecciona una opción</option>
-                            <option value="Region">Region</option>
-                            <option value="Estado">Estado</option>
-                            <option value="Ciudad">Ciudad</option>
+                            <option value="REGION">Region</option>
+                            <option value="ESTADO">Estado</option>
+                            <option value="CIUDAD">Ciudad</option>
                         </select>
                     </div>
                     <div class="col-md-3">
@@ -321,14 +324,14 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <label>Ruta tentativa</label>
                         <input type="text" class="form-control" placeholder="Escribe aqui" id="rutaTentativa"/>
                     </div>
                 </div>
                 <div class="row pt-3">
                     <div class="col-md-12">
-                        <label>Notas de cargo</label>
+                        <label>Notas de carga</label>
                         <textarea class="form-control" rows="8" placeholder="Escribe aqui" id="notasCargo"></textarea>
                     </div>
                 </div>
@@ -341,6 +344,7 @@
 </div>
 
 @section Scripts{
+    <script src="@Url.Content("~/js/sheetjs/fileSaver.min.js")"></script>
     <script src="@Url.Content("~/js/sheetjs/xlsx.full.min.js")"></script>
     <script src="@Url.Content("~/js/jquery.unobtrusive-ajax.js")"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
@@ -363,37 +367,38 @@
                 var idTipounidad = $("#idtipounidad").val();
 
                 if (parseInt(idTipounidad) != 0) {
-                    var origen = $("#txtNivelOrigen").val();
-                    var destino = $("#txtNivelDestino").val();
+                    var origen = cUpper($("#txtNivelOrigen").val());
+                    var destino = cUpper($("#txtNivelDestino").val());
 
-                    if (origen == 'Region') {
+                    if (origen == 'REGION') {
                         regionO = $("#seleccionaOrigen").val();
                     }
 
-                    if (origen == 'Estado') {
+                    if (origen == 'ESTADO') {
                         estadoO = $("#seleccionaOrigen").val();
                     }
-                    if (origen == 'Ciudad') {
+                    if (origen == 'CIUDAD') {
                         estadoO = $("#seleccionaOrigen").val();
                         ciudadO = $("#ciudadOrigen").val();
                     }
 
-                    if (destino == 'Region') {
+                    if (destino == 'REGION') {
                         regionD = $("#seleccionaOrigen").val();
                     }
 
-                    if (destino == 'Estado') {
+                    if (destino == 'ESTADO') {
                         estadoD = $("#seleccionaOrigen").val();
                     }
-                    if (destino == 'Ciudad') {
+                    if (destino == 'CIUDAD') {
                         estadoD = $("#seleccionaOrigen").val();
                         ciudadD = $("#ciudadOrigen").val();
                     }
 
                     var fechaJs = moment($("#txtFechaDisponibilidad").val()).format('YYYY-MM-DD hh:mm:ss') + ".000000";
 
-                    jsonEnv.push(
+                    jsonGuardar.push(
                         {
+                            "id": idEditar,
                             "Transportista": idTransportista,
                             "Tipo_De_Unidad": idTipounidad,
                             "Cantidad": $("#txtCantidad").val(),
@@ -421,6 +426,54 @@
             }
             
         }
+        function verBuscar(ver) {
+            $("#txtSearch").hide();
+            $("#txtSearchRutas").hide();
+            $("#" + ver).show();
+        }
+
+        var idEditar = 0;
+        function verModal(ide = 0) {
+            idEditar = ide;
+            if (idEditar != 0) {
+                $.get("Offer/obOferta/" + idEditar, function (res) {
+                    console.log(res);
+                    $('#idtransportista').val(parseInt(res.transportista)).trigger('change');
+                    $('#idtipounidad').val(parseInt(res.tipo_De_Unidad)).trigger('change');
+                    $('#txtCantidad').val(parseInt(res.cantidad));
+                    $('#txtFechaDisponibilidad').val(res.fecha_Disponibilidad);
+                    $('#txtRangoEspera').val(res.rango_De_Espera);
+                    $('#txtNivelOrigen').val(cUpper(res.nivel_Origen)).trigger('change');
+
+                    if (cUpper(res.nivel_Origen) == "REGION") {
+                        $('#seleccionaOrigen').val(parseInt(res.region_Origen)).trigger('change');
+                    }
+                    if (cUpper(res.nivel_Origen) == "ESTADO") {
+                        $('#seleccionaOrigen').val(parseInt(res.estado_Origen)).trigger('change');
+                    }
+                    if (cUpper(res.nivel_Origen) == "CIUDAD") {
+                        $('#seleccionaOrigen').val(parseInt(res.estado_Origen)).trigger('change');
+                        $('#ciudadOrigen').val(parseInt(res.ciudad_Origen)).trigger('change');
+                    }
+
+                    $('#txtToleranciaOrigen').val(res.tolerancia_Origen);
+                    $('#txtNivelDestino').val(cUpper(res.nivel_Destino)).trigger('change');
+                    if (cUpper(res.nivel_Destino) == "REGION") {
+                        $('#seleccionaDestino').val(parseInt(res.region_Destino)).trigger('change');
+                    }
+                    if (cUpper(res.nivel_Destino) == "ESTADO") {
+                        $('#seleccionaDestino').val(parseInt(res.estado_Destino)).trigger('change');
+                    }
+                    if (cUpper(res.nivel_Destino) == "CIUDAD") {
+                        $('#seleccionaDestino').val(parseInt(res.estado_Destino)).trigger('change');
+                        $('#ciudadOrigen').val(parseInt(res.ciudad_Destino)).trigger('change');
+                    }
+                    $('#txtToleranciaDestino').val(res.tolerancia_Destino);
+                });
+            }
+            $("#modalAgregar").modal("show");
+        }
+
         //Cargar datos de las rutas
         var dataRutas = [];
         var dataCheckpoint = [];
@@ -430,12 +483,17 @@
         var wb;
         var rABS = false;
         var jsonEnv = [];
+        var jsonEnvIncorrectos = [];
+        var jsonGuardar = [];
+        var catTransportista = [];
+        var catUnidades = [];
+        var catOfertas = [];
         //Excel
         function importf(obj) {
             jsonEnv = [];
-
+            $("#b-table").empty();
             if (!obj.files) {
-                notifyLoading(false);
+                //notifyLoading(false);
                 $("#div-tabla").hide();
                 $("#bGuardar").attr("disabled", true);
                 return;
@@ -541,26 +599,209 @@
             return o;
         }
         function eGuardar() {
-            if (Object.keys(jsonEnv).length > 0) {
-                $("#btnGuardar").attr("disabled",true);
-                $.post("/Offer/setRouteMult", { "catCarga": jsonEnv }, function (res) {
-                    Ofertas();
-                    dToast("success", "Datos guardados con éxito", "Atención");
-                    $("#btnGuardar").attr("disabled", false);
-                }).fail(function (error) {
-                    console.log("error", "Error al insertar" + error);
-                    $("#btnGuardar").attr("disabled", false);
-                    dToast("error", "Error al insertar", "Error");
-                });
+            if (Object.keys(jsonGuardar).length > 0) {
+                //Comente el codigo de guardar para hacer pruebas con la carga de excel
+                if (idEditar == 0) {
+                    $.post("/Offer/setRouteMult", { "catCarga": jsonGuardar }, function (res) {
+                        Ofertas();
+                        dToast("success", "Datos guardados con éxito", "Atención");
+                        $("#btnGuardar").attr("disabled", false);
+                    }).fail(function (error) {
+                        console.log("error", "Error al insertar" + error);
+                        $("#btnGuardar").attr("disabled", false);
+                        dToast("error", "Error al insertar", "Error");
+                    });
+                } else {
+                    $.post("Offer/putOferta", jsonGuardar[0] , function (res) {
+                        Ofertas();
+                        dToast("success", "Datos actualizados con éxito", "Atención");
+                    }).fail(function (error) {
+                        console.log("error", "Error al actualizar" + error);
+                        dToast("error", "Error al insertar", "Error");
+                    });
+                    //console.log(jsonGuardar[0]);
+                }
             } else {
                 dToast("error", "No se encontraron registros para insertar.", "Error");
             }
-            jsonEnv = [];
+
+            //jsonEnv = [];
+
             $("#b-table").empty();
             $("#div-tabla").hide('fast');
             $("#archivoXlsx").val("");
         }
-        //Excel
+        function validarExcel()
+        {
+            jsonEnvIncorrectos = [];
+            jsonGuardar = [];
+            $("#btnGuardar").attr("disabled", true);
+            $.each(jsonEnv, function (item, key) {
+                var transportista = catTransportista.findIndex(service => cUpper(service.nombreComercial) == cUpper(key.Transportista));
+                var unidades = 0;
+                var regionOrigen = 0;
+                var estadoOrigen = 0;
+                var ciudadOrigen = 0;
+                var regionDestino = 0;
+                var estadoDestino = 0;
+                var ciudadDestino = 0;
+
+                var idtran = 0;
+                var idunidad = 0;
+
+                var idregionO = 0;
+                var idestadoO = 0;
+                var idciudadO = 0;
+
+                var idregionD = 0;
+                var idestadoD = 0;
+                var idciudadD = 0;
+
+                if (transportista >= 0) { //Si se encontró el transportista
+                    idtran = catTransportista[transportista].id
+                    unidades = catUnidades.findIndex(service => cUpper(service.nombre) == cUpper(key.Tipo_De_Unidad));
+                    if (unidades >= 0) {//Se encontraron unidades
+                        idunidad = catUnidades[unidades].id;
+                        var Nivel_Origen = cUpper(key.Nivel_Origen);
+                        if (Nivel_Origen != "REGION" && Nivel_Origen != "ESTADO" && Nivel_Origen != "CIUDAD") {
+                            //console.log("Esta region no pertenece  a ningun dato", Nivel_Origen); //<-----------------------------------------------------
+                            jsonEnvIncorrectos.push(key);
+                            return;
+                        } else {
+                            if (Nivel_Origen == "REGION") {
+                                regionOrigen = catRegion.findIndex(r => cUpper(r.nombre) == cUpper(key.Region_Origen));
+                                if (regionOrigen < 0) { //Si se encontro la region
+                                    //console.log("No se encontro region", key.NivelOrigen);
+                                    jsonEnvIncorrectos.push(key);
+                                    return;
+                                } else {
+                                    idregionO = catRegion[regionOrigen].id
+                                }
+                            }
+                            if (Nivel_Origen == "ESTADO") { //Validar cuando la region es estado
+                                estadoOrigen = catEstado.findIndex(es => cUpper(es.nombre) == cUpper(key.Estado_Origen));
+                                if (estadoOrigen < 0) {
+                                    //console.log("No se encontro ningun estado origen", key.Estado_Origen);
+                                    jsonEnvIncorrectos.push(key);
+                                    return;
+                                } else {
+                                    idestadoO = catEstado[estadoOrigen].id
+                                }
+                            }
+                            if (Nivel_Origen == "CIUDAD") {
+                                estadoOrigen = catEstado.findIndex(es => cUpper(es.nombre) == cUpper(key.Estado_Origen));
+                                ciudadOrigen = catCiudad.findIndex(ci => cUpper(ci.nombre) == cUpper(key.ciudad_Origen));
+
+                                if (estadoOrigen < 0 && ciudadOrigen < 0) {
+                                    //console.log("No se encontro nada con ciudad origen", key.Transportista, key.ciudad_Origen);
+                                    jsonEnvIncorrectos.push(key);
+                                    return;
+                                } else {
+                                    idestadoO = catEstado[estadoOrigen].id
+                                    idciudadO = catCiudad[ciudadOrigen].id
+                                }
+                            }
+                        }
+
+                        //Nivel Destino <-----------------------------------------------------------------------------------
+                        var Nivel_Destino = cUpper(key.Nivel_Destino);
+                        if (Nivel_Destino != "REGION" && Nivel_Destino != "ESTADO" && Nivel_Destino != "CIUDAD") {
+                            //console.log("Esta region no pertenece  a ningun dato", Nivel_Destino);
+                            jsonEnvIncorrectos.push(key);
+                            return;
+                        } else {
+                            if (Nivel_Destino == "REGION") {
+                                regionDestino = catRegion.findIndex(r => cUpper(r.nombre) == cUpper(key.Region_Destino));
+                                if (regionDestino < 0) { //Si se encontro la region
+                                    //console.log("No se encontro region destino", key.Nivel_Destino);
+                                    jsonEnvIncorrectos.push(key);
+                                    return;
+                                } else {
+                                    idregionD = catRegion[regionDestino].id
+                                }
+                            }
+                            if (Nivel_Destino == "ESTADO") { //Validar cuando la region es estado
+                                estadoDestino = catEstado.findIndex(es => cUpper(es.nombre) == cUpper(key.estado_Destino));
+                                if (estadoDestino < 0) {
+                                    //console.log("No se encontro ningun estado destinp", key.estado_Destino);
+                                    jsonEnvIncorrectos.push(key);
+                                    return;
+                                } else {
+                                    idestadoD= catEstado[estadoDestino].id
+                                }
+                            }
+                            if (Nivel_Destino == "CIUDAD") {
+                                estadoDestino = catEstado.findIndex(es => cUpper(es.nombre) == cUpper(key.estado_Destino));
+                                ciudadDestino = catCiudad.findIndex(ci => cUpper(ci.nombre) == cUpper(key.ciudad_Destino));
+                                if (estadoDestino < 0 && ciudadDestino < 0) {
+                                    //console.log("No se encontro nada con ciudad destino");
+                                    jsonEnvIncorrectos.push(key);
+                                    return;
+                                } else {
+                                    idestadoD = catEstado[estadoDestino].id
+                                    idciudadD = catCiudad[ciudadDestino].id
+                                }
+                            }
+                        }
+                        //---------------------------------------------
+                    } else {//No se encontraron unidades
+                        //console.log("No se encontro unidad", key.Tipo_De_Unidad);
+                        jsonEnvIncorrectos.push(key);
+                        return;
+                    }
+                } else { //No se encontro el transportista
+                    console.log("No se encontro transportista", key.Transportista);
+                    jsonEnvIncorrectos.push(key);
+                    return;
+                }
+
+                jsonGuardar.push(
+                    {
+                        "Transportista": idtran,
+                        "Tipo_De_Unidad": idunidad,
+                        "Cantidad": key.Cantidad,
+                        "Fecha_Disponibilidad": key.Fecha_Disponibilidad,
+                        "Rango_De_Espera": key.Rango_De_Espera,
+                        "Nivel_Origen": key.Nivel_Origen,
+                        "Region_Origen": idregionO,
+                        "Estado_Origen": idestadoO,
+                        "ciudad_Origen": idciudadO,
+                        "Tolerancia_Origen": key.Tolerancia_Origen,
+                        "Nivel_Destino": key.Nivel_Destino,
+                        "Region_Destino": idregionD,
+                        "estado_Destino": idestadoD,
+                        "ciudad_Destino": idciudadD,
+                        "Tolerancia_Destino": key.Tolerancia_Destino,
+                        "status": key.status
+                    }
+                );
+
+            });
+
+            //GENERAR EXCEL
+            var _fileName = "REPORTE.xlsx";
+            var _sheetName = "REPORTE";
+            var wb = XLSX.utils.book_new();
+            wb.Props = {
+                Title: "REPORTE ",
+                Subject: "NO ENCONTRADOS",
+                Author: "KLS",
+                CreatedDate: new Date(2021, 08, 11)
+            };
+            wb.SheetNames.push(_sheetName);
+            var ws_data = jsonEnvIncorrectos;
+            var ws = XLSX.utils.json_to_sheet(ws_data);
+            wb.Sheets[_sheetName] = ws;
+            var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+            saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), _fileName);
+            //
+            eGuardar();
+        }
+        //Excel<------------------------------------------------------------
+        function cUpper(texto) {
+            texto = texto.toUpperCase().trim().replace(/ /g, "");
+            return texto;
+        }
         function estado(estado) {
             estado = parseInt(estado);
             if (estado == 1) {return "Disponible"}
@@ -577,9 +818,6 @@
             if (estado == 4) { return "red"}
         }
         function Ofertas() {
-            var stable = $('.table-ofertas').DataTable();
-            stable.destroy();  
-            $("#table-ofertas-info").empty();
             var esorigen = $("#esorigen").val();
             var esdestino = $("#esdestino").val();
             var ciorigen = $("#ciorigen").val();
@@ -593,20 +831,23 @@
                 fechadisp = moment($("#fechadisp").val() + " " + $("#HoraSalida").val()).format('YYYY-MM-DD hh:mm:ss') + ".000000";
             }
             var jsonData = { "seltransportista": transportista, "fechadisponibilidad": fechadisp, "transportista": nivelservicio, "idestadoorigen": esorigen, "idestadodestino": esdestino, "idciudadorigen": ciorigen, "idciudaddestino": cidestino, "idtipounidad": tipounidad };
-            console.log(fechadisp);
+            $("#table-ofertas-info").empty();
+            var stable = $('.table-ofertas').DataTable();
+            stable.destroy();
             $.get("Offer/busqueda", jsonData , function (res) {
-                console.log(jsonData);
                 $("#tOfertas").empty();
                 $("#tOfertas").append(`OFERTA (${Object.keys(res).length})`);
+                $("#table-ofertas-info").empty();
+                catOfertas = res;
                 $.each(res, (item, key) => {
                     var Origen = "";
                     var Destino = "";
 
-                    if (key.nivelOrigen == "Region") {
+                    if (cUpper(key.nivelOrigen) == "REGION") {
                         let indice = catRegion.findIndex(service => service.id == key.idregionOrigen);
                         Origen = catRegion[indice].nombre;
                     }
-                    if (key.nivelOrigen == "Estado") {
+                    if (cUpper(key.nivelOrigen) == "ESTADO") {
                         let indice = catEstado.findIndex(service => service.id == key.idestadoorigen);
                         if (indice >= 0) {
                             Origen = catEstado[indice].nombre;
@@ -614,18 +855,18 @@
                             Origen="-----"
                         }
                     }
-                    if (key.nivelOrigen == "Ciudad") {
+                    if (cUpper(key.nivelOrigen) == "CIUDAD") {
                         let estado = catEstado.findIndex(service => service.id == key.idestadoorigen);
                         let ciudad = catCiudad.findIndex(service => service.id == key.idciudadorigen);
                         Origen = catEstado[estado].nombre + " - " + catCiudad[ciudad].nombre;
                     }
 
                     //Nivel destino
-                    if (key.nivelDestino == "Region") {
+                    if (cUpper(key.nivelDestino) == "REGION") {
                         let indice = catRegion.findIndex(service => service.id == key.idregionDestino);
                         Destino = catRegion[indice].nombre;
                     }
-                    if (key.nivelDestino == "Estado") {
+                    if (cUpper(key.nivelDestino) == "ESTADO") {
                         let indice = catEstado.findIndex(service => service.id == key.idestadodestino);
                         if (indice >= 0) {
                             Destino = catEstado[indice].nombre;
@@ -633,7 +874,7 @@
                             Destino="-----"
                         }
                     }
-                    if (key.nivelDestino == "Ciudad") {
+                    if (cUpper(key.nivelDestino) == "CIUDAD") {
                         let estado = catEstado.findIndex(service => service.id == key.idestadodestino);
                         let ciudad = catCiudad.findIndex(service => service.id == key.idciudaddestino);
                         Destino = catEstado[estado].nombre + " - " + catCiudad[ciudad].nombre;
@@ -642,25 +883,28 @@
                     var hrefModal = "";
                     var btndisabled = "disabled";
                     if (key.status == 1 || key.status == 2) {
-                        hrefModal = `<a data-toggle="modal" onclick="separarModal(${key.idoferta},${key.status})">` + estado(key.status) + `</a>`;
+                        hrefModal = `<a href="#" style="color:` + color(key.status) + `" data-toggle="modal" onclick="separarModal(${key.idoferta},${key.status})">` + estado(key.status) + `</a>`;
                     } else {
-                        hrefModal = estado(key.status);
+                        hrefModal = `<a style="color:` + color(key.status) + `">` + estado(key.status) + `</a>`;
                     }
                     if (key.status != 1) { btndisabled = ""; }
 
                     $("#table-ofertas-info").append(`
                         <tr class="text-uppercase">
-                            <td>${key.nombreTran}</td>
-                            <td>${key.tipounidad}</td>
+                            <td style="width:5% !important;">${key.nombreTran}</td>
+                            <td style="width:12% !important;">${key.tipounidad}</td>
                             <td>${Origen}</td>
                             <td>${Destino}</td>
-                            <td>${moment(key.fechadisponibilidad).format('DD/MM/YYYY hh:mm:ss A')}</td>
-                            <td>(<span class="timeago" datetime="${key.fechadisponibilidad}"></span>) </td>
-                            <td style="color:`+ color(key.status) + `">${hrefModal}</td>
-                            <td class="text-center">
-                                <button class="btn btn-light ${btndisabled}" href="#">
+                            <td style="width:15% !important;">${moment(key.fechadisponibilidad).format('DD/MM/YYYY hh:mm:ss A')}</td>
+                            <td style="width:8% !important;">(<span class="timeago" datetime="${key.fechadisponibilidad}"></span>) </td>
+                            <td style="width:7% !important;text-align:center;">${hrefModal}</td>
+                            <td style="width:7% !important;text-align:center;">
+                                <a class="btn btn-sm" href="#" onclick="verModal(${key.idoferta})">
+                                    <span style="color:blue;" class="material-icons">edit</span>
+                                </a>
+                                <a class="btn btn-sm ${btndisabled}" href="/Offer/SetFullTravel?OfferId=${key.idoferta}">
                                     <span style="color:blue;" class="material-icons">local_shipping</span>
-                                </button>
+                                </a>
                             </td>
                         </tr>`);
                     timeago.render(document.querySelectorAll('.timeago'), 'es-MX');
@@ -669,6 +913,7 @@
                 $('.table-ofertas').dataTable({
                     searching: true,
                     info: false,
+                    bLengthChange: false,
                     language: {
                         "decimal": "",
                         "emptyTable": "No hay información",
@@ -692,6 +937,7 @@
                 });
 
                 $('#table_filter').hide();
+                
                 $("#txtSearch").keyup(function () {
                     $('.table-ofertas').DataTable().search($('#txtSearch').val(), false, true).draw();
                 });
@@ -702,9 +948,7 @@
             });
         }
         $(document).ready(function () {
-            loadCity();
             loadState();
-            cargarRegiones();
             cargarUnidades();
             listarRutas();
             selTransportistas();//Obtiene los transportistas
@@ -712,6 +956,7 @@
         //cargar tipo de unidades
         function cargarUnidades() {
             $.get("/Catalogs/TypesOfUnits/getUnidades", function (res) {
+                catUnidades = res;
                 $("#idtipounidad").empty();
                 $("#idtipounidad").append(`<option value="0">Selecciona una opción</option>`);
                 $.each(res, function (item, key) {
@@ -727,6 +972,7 @@
         }
         function loadCity() {
             $.get("/Catalogs/Geography/City/getCity", function (res) {
+                cargarRegiones();
                 res.map(data => {
                     const { estatus,id,nombre } = data;
                     if (estatus === 1) {
@@ -755,9 +1001,9 @@
         function loadState() {
             $.get("/Catalogs/Geography/State/getState", function (res) {
                 catEstado = res;
+                loadCity();
                 res.map(data => {
                     const { estatus, id, nombre } = data;
-
                     if (estatus === 1) {
                         catCiudad = [...catCiudad, data];
                         $("#esorigen").append(`<option value="${id}">${nombre}</option>`);
@@ -785,15 +1031,44 @@
                     const status = nCon(key.estatus) == 1 ? 'Activo' : 'Inactivo';
                     $("#table-servicio").append(`
                         <tr class="text-uppercase">
-                            <td>${key.nombre}</td>
-                            <td>${IdGenerado}</td>
+                            <td style="width:10% !important;">${key.nombre}</td>
+                            <td style="width:8% !important;">${IdGenerado}</td>
                             <td>${key.estadoorigen} - ${key.ciudadorigen}</td>
                             <td>${key.estadodestino} - ${key.ciudaddestino}</td>
                             <td>${nCon(key.costo)} km</td>
-                            <td class="text-center">${status}</td>
+                            <td class="text-center" style="width:3% !important;">${status}</td>
                         </tr>`);
                 });
-                dataTbl("table-servicios");
+                $('.table-servicios').dataTable({
+                    searching: true,
+                    info: false,
+                    bLengthChange: false,
+                    language: {
+                        "decimal": "",
+                        "emptyTable": "No hay información",
+                        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                        "infoPostFix": "",
+                        "thousands": ",",
+                        "lengthMenu": "Mostrar _MENU_ Entradas",
+                        "loadingRecords": "Cargando...",
+                        "processing": "Procesando...",
+                        "search": "Buscar",
+                        "zeroRecords": "Sin resultados encontrados",
+                        "paginate": {
+                            "first": "Primero",
+                            "last": "Ultimo",
+                            "next": "Siguiente",
+                            "previous": "Anterior"
+                        }
+                    }
+                });
+                $("#table-servicios_filter").hide();
+                $("#txtSearchRutas").keyup(function () {
+                    $('.table-servicios').DataTable().search($('#txtSearchRutas').val(), false, true).draw();
+                });
+
             }).fail(function (error) {
                 dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
             });
@@ -828,6 +1103,8 @@
         }
         function selTransportistas(){ //Funcion de listasr los transportistas eb el select
             $.get("/Carriers/getCarriers", function (res) {
+                catTransportista = res;
+                console.log(res);
                 $("#selTransportistas").empty();
                 $("#idtransportista").empty();
                 $("#selTransportistas").append(`<option value="0">Todos</option>`);
@@ -841,21 +1118,21 @@
             });
         }
         //Llenado de niveles
-        function llenadoNivel(nivel,selecciona){ //Origen o destino
-            var nivelOrigen = $("#" + nivel).val();
+        function llenadoNivel(nivel, selecciona) { //Origen o destino
+            var nivelOrigen = cUpper($("#" + nivel).val());
             $("#" + selecciona).empty();
             $("#" + selecciona).append(`<option value="0">Selecciona una opción</option>`);
-            if (nivelOrigen == 'Region') {
+            if (nivelOrigen == 'REGION') {
                 $.each(catRegion, function (item, key) {
                     $("#" + selecciona).append(`<option value="${key.id}">${nCon(key.nombre)}</option>`);
                 });
             }
-            if (nivelOrigen == 'Estado') {
+            if (nivelOrigen == 'ESTADO') {
                 $.each(catEstado, function (item, key) {
                    $("#" + selecciona).append(`<option value="${key.id}">${nCon(key.nombre)}</option>`);
                 });
             }
-            if (nivelOrigen == 'Ciudad') {
+            if (nivelOrigen == 'CIUDAD') {
                 //$("#" + selecciona).attr("disabled", true);
                 $.each(catEstado, function (item, key) {
                     $("#" + selecciona).append(`<option value="${key.id}">${nCon(key.nombre)}</option>`);
@@ -869,7 +1146,7 @@
         }
         function mostrarCiudad(nivel, estado, ciudad, tolerancia) {
             var nivelOrigen = $("#" + nivel).val();
-            if (nivelOrigen == 'Ciudad') {
+            if (cUpper(nivelOrigen) == 'CIUDAD') {
                 var estado = $("#" + estado).val();
                 $("#" + ciudad).attr("disabled", false);
                 $("#" + tolerancia).attr("disabled", false);
@@ -905,10 +1182,10 @@
                 Ofertas();
             });
         }
+
         var idOferta = 0;
         var idSeparar = 0;
         function separarModal(id, status) {
-            console.log(status);
             idOferta = id;
             $("#rutaTentativa").val("");
             $("#notasCargo").val("");
@@ -940,6 +1217,12 @@
                 Ofertas();
                 $("#separarModal").modal('hide');
             });
+        }
+        function s2ab(s) {
+            var buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
+            var view = new Uint8Array(buf);  //create uint8array as viewer
+            for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
+            return buf;
         }
     </script>
 } 

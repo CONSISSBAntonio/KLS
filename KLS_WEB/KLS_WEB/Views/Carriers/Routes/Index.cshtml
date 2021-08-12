@@ -129,9 +129,9 @@
                         Guardar
                     </button>
                     
-                    <a href="#" class="btn btn-dark" style="width:31%;" onclick="guardarInventarios();">
+                    @*<a href="#" class="btn btn-dark" style="width:31%;" onclick="guardarInventarios();">
                         Guardar inventario
-                    </a>
+                    </a>*@
                 </form>
 
             </div>
@@ -162,12 +162,12 @@
 
                 var jsonInv = [];
                 $.each(dataInventory, function (item, key) {
-                    jsonInv.push({ "idRuta": 2, "idInventario": $("#inv-" + key.id).val()});
+                    jsonInv.push({ "Id_Inventario": key.id, "Costo": $("#inv-" + key.id).val() });
                 });
 
                 jsonData["ruta_has_inventario"] = jsonInv;
-                console.log(jsonData);
 
+                //console.log(jsonData);
                 if (parseInt(idruta) != 0) {
                     if (parseInt($("#idEditar").val()) != 0) {
                         $.post("/Carriers/Routes/putRoutes", jsonData, function (res) {
@@ -393,7 +393,7 @@
             $.get("/Carriers/Inventory/getInventory/", { "IdTransportista":@id}, function (res) {
                 dataInventory = res;
                 $.each(dataInventory, function (item, key) {
-                    console.log(key);
+                    //console.log(key);
                     let indice = catUnidad.findIndex(service => service.id === key.tipoUnidad);
                     $("#info-inventario").append(
                         `<tr>
@@ -403,21 +403,21 @@
                             <td>${nCon(key.noSerie)}</td>
                             <td>${nCon(key.placa)}</td>
                             <td>${nCon(key.color)}</td>
-                            <td><input type="number" class="form-control" value="${nCon(key.id)}" id="inv-${nCon(key.id)}"></td>
+                            <td><input type="number" class="form-control" id="inv-${nCon(key.id)}"></td>
                         </tr>`
                     );
                 });
             });
         }
 
-        function guardarInventarios() {
-            var jsonInv = [];
-            $.each(dataInventory, function (item, key) {
-                jsonInv.push({ "Id_Ruta_Tr": $("#inv-" + key.id).val() });
-                /*console.log($("#inv-"+ key.id).val());*/
-            });
-            console.log(jsonInv);
-        }
+        //function guardarInventarios() {
+        //    var jsonInv = [];
+        //    $.each(dataInventory, function (item, key) {
+        //        jsonInv.push({ "Id_Inventario": key.id, "Costo": $("#inv-" + key.id).val() });
+        //        /*console.log($("#inv-"+ key.id).val());*/
+        //    });
+        //    console.log(jsonInv);
+        //}
 
     </script>
 }

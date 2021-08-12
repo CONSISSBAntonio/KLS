@@ -10,7 +10,8 @@ namespace KLS_WEB.Models.Carriers
     {
         [Key]
         public int Id { get; set; }
-        public int Id_Tr_Has_Rutas { get; set; }
+        public int Id_Tr_Has_RutasId { get; set; }
         public int Id_Inventario { get; set; }
+        public int Costo { get; set; }
     }
 }

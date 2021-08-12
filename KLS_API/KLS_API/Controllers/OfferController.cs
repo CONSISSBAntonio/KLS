@@ -265,6 +265,38 @@ namespace KLS_API.Controllers
             public decimal costo { get; set; }
             public int estatus { get; set; }
         }
+        
+        [HttpGet]
+        [Route("obOferta")]
+        public ActionResult obOferta([FromBody] int id)
+        {
+            try
+            {
+                var oferta = context.Oferta.FirstOrDefault(f => f.Id == id);
+                return Ok(oferta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("putOferta")]
+        public ActionResult putOferta([FromBody] Oferta oferta)
+        {
+            try
+            {
+                context.Entry(oferta).State = EntityState.Modified;
+                context.SaveChanges();
+                return Ok(oferta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
 
         //Separar
         [HttpPost]
@@ -316,6 +348,9 @@ namespace KLS_API.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet]
         [Route("[action]/{Id}")]
         public IActionResult GetOffer(int Id)
@@ -330,6 +365,7 @@ namespace KLS_API.Controllers
                 throw;
             }
         }
+
     }
 }
 

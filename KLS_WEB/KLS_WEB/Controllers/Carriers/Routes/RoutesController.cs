@@ -35,7 +35,7 @@ namespace KLS_WEB.Controllers.Carriers.CarriersRoutes
         public async Task<JsonResult> Get(Route dataModel)
         {
             List<Route> dataReport;
-            dataReport = await this.AppContext.Execute<List<Route>>(MethodType.GET,"Route", dataModel);
+            dataReport = await this.AppContext.Execute<List<Route>>(MethodType.GET, _UrlApi, dataModel);
             return Json(dataReport);
         }
 
