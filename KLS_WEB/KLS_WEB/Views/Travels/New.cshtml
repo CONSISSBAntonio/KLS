@@ -382,6 +382,7 @@
         const RouteId = @Model.Ruta ;
         const UnitId = @Model.TipoUnidad ;
         const isDemand = @(Model.IsDemand ? "true" : "false");
+        const isOffer = @(Model.IsOffer ? "true" : "false");
         const CarrierId = @Model.Transportista ;
         let dataOrigenes = [];
         let dataState = [];
@@ -684,7 +685,7 @@
             });
 
             !isDemand && $('#fechasalida').val('');
-            if (isDemand) {
+            if (isDemand && !isOffer) {
                 setTimeout(() => {
                     $('#cliente').val(ClientId).trigger('change');
                     $('#tipounidad').val(RouteId).trigger('change');
@@ -698,7 +699,14 @@
                         setTimeout(() =>  $('[name=unidadterrestrenacional]').val(UnitId).trigger('change'), 1000);
                     }, 800);
                 }, 600);
+            }
 
+            if (isOffer) {
+                setTimeout(() => {
+                    $('#transportista').val(CarrierId).trigger('change');
+                    $('#addEquipo').click();
+                    setTimeout(() => $('[name=unidadterrestrenacional]').val(UnitId).trigger('change'), 1000);
+                }, 800);
             }
         };
 
