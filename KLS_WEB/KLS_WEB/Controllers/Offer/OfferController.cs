@@ -158,7 +158,8 @@ namespace KLS_WEB.Controllers.Offer
                 TipoUnidad = demand.Tipo_De_Unidad,
                 FechaSalida = demand.Fecha_Disponibilidad,
                 Transportista = demand.Transportista,
-                IsDemand = true
+                IsDemand = true,
+                IsOffer = true
             };
 
             return View("~/Views/Travels/New.cshtml", travel);

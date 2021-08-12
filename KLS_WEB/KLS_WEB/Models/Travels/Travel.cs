@@ -51,6 +51,7 @@ namespace KLS_WEB.Models.Travels
         public string ServiciosIds { get; set; }
         public List<int> ServicesId { get; set; }
         public bool IsDemand { get; set; }
+        public bool IsOffer { get; set; }
 
     }
 }

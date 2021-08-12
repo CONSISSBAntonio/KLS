@@ -23,7 +23,7 @@
     <div class="p-4">
         <div class="d-flex justify-content-between mb-3">
             <div class="d-flex">
-                <a href="/@(!string.IsNullOrEmpty(Model.DireccionDestinatario) ? "Travels" : "Demand")">
+                <a href="/@((Model.IsDemand && Model.IsOffer == false) ? "Demand" : Model.IsOffer ? "Offer" : "Travels")">
                     <div class="material-icons icon-red">arrow_back</div>
                 </a>
                 <div class="text-uppercase poppins medium size-24 pl-2">Nuevo viaje</div>
