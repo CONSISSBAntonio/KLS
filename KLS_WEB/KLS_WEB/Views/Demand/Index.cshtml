@@ -82,9 +82,9 @@
                             </select>
                         </div>
                         @*<div class="col-4">
-                            <label for="editreferencia" class="form-label size-12 font-weight-bold float-left">REFERENCIA</label>
-                            <input type="text" class="form-control form-control-sm" id="editreferencia" name="folio" value="-" disabled />
-                        </div>*@
+                                <label for="editreferencia" class="form-label size-12 font-weight-bold float-left">REFERENCIA</label>
+                                <input type="text" class="form-control form-control-sm" id="editreferencia" name="folio" value="-" disabled />
+                            </div>*@
                     </div>
                     <div class="row mt-3">
                         <div class="col-5">
@@ -362,12 +362,12 @@
             <div class="modal-body">
                 <form id="formcsv" class="mb-3" onsubmit="event.preventDefault(), upload(this)">
                     <div class="mb-3">
-                        <input class="form-control" type="file" id="formFile" name="csv" accept=".csv" onchange="importf(this)" required>
+                        <input class="form-control" type="file" id="formFile" name="csv" accept=".xlsx" onchange="importf(this)" required>
                     </div>
                     <button id="sendcsv" type="submit" class="btn btn-dark">ENVIAR</button>
                 </form>
 
-                <button class="btn btn-outline-info btn-sm d-flex align-items-center mx-auto" onclick="DownloadLayout(this)"><i class="material-icons">download</i><span>DESCARGAR PLANTILLA DE EJEMPLO</span></button>
+                <a asp-controller="Demand" asp-action="DownloadLayout" class="btn btn-outline-info btn-sm d-flex align-items-center mx-auto" style="text-decoration: unset !important; width: 17.5rem;"><i class="material-icons">download</i>DESCARGAR PLANTILLA DE EJEMPLO</a>
             </div>
             <div class="modal-footer d-flex flex-column">
                 <p class="text-info size-12">Es importante que el archivo CSV tenga codificación UTF-8 para el correcto tratamiento de acentos y caracteres especiales</p>
@@ -392,6 +392,7 @@
 @section scripts{
     <script src="@Url.Content("~/js/sheetjs/xlsx.full.min.js")"></script>
     <script src="@Url.Content("~/js/jquery.unobtrusive-ajax.js")"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
     <script>
         let dataOrigenes = [];
         let dataState = [];
@@ -511,35 +512,25 @@
             });
         }
 
-        const DownloadLayout = e => {
-            $(e).prop('disabled', true);
-
-            fetch('/Demand/DownloadLayout')
-                .then(response => {
-                    const filename = response.headers.get('Content-Disposition').split('filename=')[1].split(';')[0];
-                    response.blob().then(blob => {
-                        const x = window.URL.createObjectURL(blob);
-                        const anchor = document.createElement('a');
-                        anchor.href = x;
-                        anchor.download = filename;
-                        anchor.click();
-                        $(e).prop('disabled', false);
-                    })
-                })
-                .catch(error => dToast("error", "Ocurrió un error al procesar la solicitud", "Error"))
-        }
-
         const upload = e => {
-            const data = new FormData(e);
-            const params = {
-                method: 'POST',
-                body: data
+            $('#sendcsv').prop('disabled', true).removeClass('btn-dark').addClass('btn-secondary').html('PROCESANDO...');
+            if (!demands) {
+                dToast("error", "No fué posible leer los datos", "Error")
+                return;
             }
 
-            $('#sendcsv').prop('disabled', true).removeClass('btn-dark').addClass('btn-secondary').html('PROCESANDO...');
+
+            const params = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(demands)
+            }
+
             fetch('/Demand/CSV', params)
                 .then(response => {
-                    const filename = response.headers.get('Content-Disposition').split('filename=')[1].split(';')[0];
+                    const filename = response.headers.get('content-disposition').split('filename=')[1].replace('"', '').split(';')[0].replace('"', '');
                     response.blob().then(blob => {
                         const x = window.URL.createObjectURL(blob);
                         const anchor = document.createElement('a');
@@ -552,7 +543,7 @@
                         dToast("success", "Carga realizada, revisa el reporte generado para verificar las operaciones realizadas", "Realizado");
                     })
                 })
-                .catch(error => dToast("error", "Ocurrió un error al procesar la solicitud", "Error"))
+                .catch(error => dToast("error", "Ocurrió un error al procesar la solicitud", "Error"), $('#sendcsv').prop('disabled', false).removeClass('btn-secondary').addClass('btn-dark').html('ENVIAR'))
         }
 
         const GetAddress = (id, type) => {
@@ -778,22 +769,22 @@
                     unit
                 }) => {
                     $(".carrierinfo").append(`
-                    <tr class="text-uppercase">
-                    <td>${carrier}</td>
-                    <td>${unit}</td>
-                    <td>${origin}</td>
-                    <td>${destination}</td>
-                    <td>${fechaDisponibilidad}</td>
-                    <td>${expira} </td>
-                    <td>${costo} </td>
-                    <td class="text-center">
-                        <button type="button" class="btn btn-sm" onclick="AddEdit(${id});" style="background-color: #ffffff00;">
-                            <span class="material-icons details">
-                                search
-                            </span>
-                        </button>
-                    </td>
-                    </tr>`);
+                        <tr class="text-uppercase">
+                        <td>${carrier}</td>
+                        <td>${unit}</td>
+                        <td>${origin}</td>
+                        <td>${destination}</td>
+                        <td>${fechaDisponibilidad}</td>
+                        <td>${expira} </td>
+                        <td>${costo} </td>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-sm" onclick="AddEdit(${id});" style="background-color: #ffffff00;">
+                                <span class="material-icons details">
+                                    search
+                                </span>
+                            </button>
+                        </td>
+                        </tr>`);
                 })
             })
             setTimeout(() => {
@@ -837,10 +828,10 @@
                         render: (data, type, row) => {
                             const { carrierId } = row;
                             return `<a href="/Demand/SetFullTravel?DemandId=${DemandId}&CarrierId=${carrierId}">
-                                <span class="material-icons details">
-                                    local_shipping
-                                </span>
-                            </a>`
+                                    <span class="material-icons details">
+                                        local_shipping
+                                    </span>
+                                </a>`
                         }
                     }
                 ],
@@ -882,21 +873,21 @@
                         render: (data, type, row) => {
                             const { id, clientId, originId, destinationId, unitId, ofertasCount } = row;
                             return `
-                            <a href="javascript:void(0);" onclick="addEdit(${id}, ${clientId}, ${originId}, ${destinationId});">
-                                <span class="material-icons">
-                                    edit
-                                </span>
-                            </a>
-                            <a href="/Demand/SetTravel/${id}" onclick="create(${id});">
-                                <span class="material-icons">
-                                    local_shipping
-                                </span>
-                            </a>
-                            <a href="javascript:void(0);" onclick="DTC(${unitId}, ${originId}, ${id});">
-                                <span class="material-icons">
-                                    search
-                                </span>  ${ofertasCount > 0 ? `<span class="text-danger">${ofertasCount}</span>` : ``}
-                            </a>`
+                                <a href="javascript:void(0);" onclick="addEdit(${id}, ${clientId}, ${originId}, ${destinationId});">
+                                    <span class="material-icons">
+                                        edit
+                                    </span>
+                                </a>
+                                <a href="/Demand/SetTravel/${id}" onclick="create(${id});">
+                                    <span class="material-icons">
+                                        local_shipping
+                                    </span>
+                                </a>
+                                <a href="javascript:void(0);" onclick="DTC(${unitId}, ${originId}, ${id});">
+                                    <span class="material-icons">
+                                        search
+                                    </span>  ${ofertasCount > 0 ? `<span class="text-danger">${ofertasCount}</span>` : ``}
+                                </a>`
                         }
                     }
                 ],
@@ -909,7 +900,7 @@
                 initComplete: () => {
                     $('#modalbusqueda').modal('hide');
                     $('#table_length').html(`<a href="javascript:void(0);" class="btn btn-sm btn-secondary float-right d-flex flex-column" onclick="$('#modalcargamasiva').modal('show'), $('#formcsv')[0].reset(), $('.table-csv').addClass('d-none')" style="margin-left: .5rem;text-decoration: unset !important; box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 20%);"><span class="material-icons">upload</span><span style="font-size: 10px; margin-top: .2rem;">importar</importar></a>
-                    <a href="javascript:void(0);" class="btn btn-sm btn-secondary float-right" onclick="addEdit(0, 0, 0, 0)" style="height: 52px;width: 52px; box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 20%);"><span class="material-icons" style="padding-top: 9px;">add</span></a>`).show();
+                        <a href="javascript:void(0);" class="btn btn-sm btn-secondary float-right" onclick="addEdit(0, 0, 0, 0)" style="height: 52px;width: 52px; box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 20%);"><span class="material-icons" style="padding-top: 9px;">add</span></a>`).show();
                     //$('[aria-controls="table"]').prop('placeholder', 'BUSCAR');
                     setTimeout(() => $('.filtro').removeClass('d-none'), 150);
                 }
@@ -918,7 +909,7 @@
 
         var wb;
         var rABS = false;
-        var jsonEnv = [];
+        let demands = [];
 
         //Excel
         function importf(obj) {
@@ -947,15 +938,20 @@
                         return;
                     }
                     const { cliente, tipounidad, origen, destino, fechasalida, arribo } = v;
+                    v['fechasalida'] = moment(fechasalida, 'DD/MM/YYYY hh:mm A').toDate();
+                    demands = [ ...demands, v ];
+                    const now = moment().toDate();
+                    const then = moment(fechasalida, 'DD/MM/YYYY hh:mm A').toDate();
+                    const isvalid = then >= now ? true : false;
                     $('#csv-info').append(`
-                    <tr>
-                        <td>${cliente}</td>
-                        <td>${tipounidad}</td>
-                        <td>${origen}</td>
-                        <td>${destino}</td>
-                        <td>${fechasalida}</td>
-                        <td>${arribo}</td>
-                    </tr>`);
+                        <tr ${!isvalid && 'class="bg-warning"'}>
+                            <td>${cliente}</td>
+                            <td>${tipounidad}</td>
+                            <td>${origen}</td>
+                            <td>${destino}</td>
+                            <td ${!isvalid && 'class="text-danger font-weight-bold"'}>${fechasalida}</td>
+                            <td>${arribo}</td>
+                        </tr>`);
                 });
 
                 $('.table-csv').DataTable({
@@ -987,6 +983,6 @@
             o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w)));
             return o;
         }
-        //Excel
+            //Excel
     </script>
 }
