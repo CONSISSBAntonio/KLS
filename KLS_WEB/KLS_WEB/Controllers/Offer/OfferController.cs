@@ -54,6 +54,23 @@ namespace KLS_WEB.Controllers.Offer
             dataReport = await this.AppContext.Execute<List<listTran>>(MethodType.GET, _UrlApi+ "/listTransportistas", null);
             return Json(dataReport);
         }
+        
+        [Route("obOferta/{id}")]
+        public async Task<JsonResult> obOferta(int id)
+        {
+            Oferta dataReport;
+            dataReport = await this.AppContext.Execute<Oferta>(MethodType.GET, _UrlApi+ "/obOferta", id);
+            return Json(dataReport);
+        }
+
+        [HttpPost]
+        [Route("putOferta")]
+        public async Task<JsonResult> putOferta(Oferta oferta)
+        {
+            Oferta dataReport;
+            dataReport = await this.AppContext.Execute<Oferta>(MethodType.PUT, _UrlApi+ "/putOferta", oferta);
+            return Json(dataReport);
+        }
 
         public class listTran
         {
@@ -98,7 +115,7 @@ namespace KLS_WEB.Controllers.Offer
         [Route("DownloadLayout")]
         public FileResult DownloadLayout()
         {
-            return File("Resources/LayoutOferta/CargaExcel.xlsx", "application/octet-stream", "CargaExcel.csv");
+            return File("Resources/LayoutOferta/CargaExcel.xlsx", "application/octet-stream", "CargaExcel.xlsx");
         }
 
         [HttpPost]
