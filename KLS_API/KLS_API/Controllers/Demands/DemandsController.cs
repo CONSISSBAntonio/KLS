@@ -256,6 +256,7 @@ namespace KLS_API.Controllers.Demands
         public class Report
         {
             public List<DemandExcel> Added { get; set; } = new List<DemandExcel>();
+            public List<DemandExcel> PastDate { get; set; } = new List<DemandExcel>();
             public List<DemandExcel> NoClient { get; set; } = new List<DemandExcel>();
             public List<DemandExcel> NoUnit { get; set; } = new List<DemandExcel>();
             public List<DemandExcel> NoOrigin { get; set; } = new List<DemandExcel>();
@@ -272,6 +273,11 @@ namespace KLS_API.Controllers.Demands
 
                 foreach (DemandExcel demand in demands)
                 {
+                    if (demand.FechaSalida < DateTime.Now)
+                    {
+                        report.PastDate.Add(demand);
+                        continue;
+                    }
                     Clientes client = _dbContext.Clientes.FirstOrDefault(x => x.NombreComercial.Replace(" ", "").ToLower() == demand.Cliente.Replace(" ", "").ToLower() || x.NombreCorto.Replace(" ", "").ToLower() == demand.Cliente.Replace(" ", "").ToLower());
 
                     if (client != null)

@@ -141,6 +141,7 @@ namespace KLS_WEB.Controllers.Demand
         public class Report
         {
             public List<DemandExcel> Added { get; set; } = new List<DemandExcel>();
+            public List<DemandExcel> PastDate { get; set; } = new List<DemandExcel>();
             public List<DemandExcel> NoClient { get; set; } = new List<DemandExcel>();
             public List<DemandExcel> NoUnit { get; set; } = new List<DemandExcel>();
             public List<DemandExcel> NoOrigin { get; set; } = new List<DemandExcel>();
@@ -167,6 +168,15 @@ namespace KLS_WEB.Controllers.Demand
                 {
                     report.Add(new DemandExcel { Cliente = "DEMANDAS AGREGADAS CON EXITO" });
                     foreach (var demand in response.Added)
+                    {
+                        report.Add(demand);
+                    }
+                }
+
+                if (response.PastDate.Any())
+                {
+                    report.Add(new DemandExcel { Cliente = "FECHA INVALIDA" });
+                    foreach (var demand in response.PastDate)
                     {
                         report.Add(demand);
                     }
