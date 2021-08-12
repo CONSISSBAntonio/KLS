@@ -32,7 +32,7 @@ namespace KLS_WEB.Controllers.Demand
             _hostingEnvironment = webHostEnvironment;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             return View();
         }
@@ -242,6 +242,18 @@ namespace KLS_WEB.Controllers.Demand
         public FileResult DownloadLayout()
         {
             return File("/DemandsExcel/Layout.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "PlantillaCargaDemandas.xlsx");
+        }
+
+        public class Total
+        {
+            public int TotalDemands { get; set; }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> CountDemands()
+        {
+            var total = await AppContext.Execute<Total>(MethodType.GET, Path.Combine(_UrlApi, "CountDemands"), null);
+            return Json(total);
         }
     }
 }

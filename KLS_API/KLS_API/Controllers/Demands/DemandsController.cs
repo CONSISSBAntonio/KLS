@@ -339,5 +339,28 @@ namespace KLS_API.Controllers.Demands
                 throw;
             }
         }
+        public class Total
+        {
+            public int TotalDemands { get; set; }
+        }
+
+        [HttpGet]
+        public IActionResult CountDemands()
+        {
+            try
+            {
+                Total total = new Total
+                {
+                    TotalDemands = _dbContext.Demands.Where(x => x.Status == "nueva" && x.FechaDisponibilidad >= DateTime.Now).Count()
+                };
+
+                return Ok(total);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+                throw;
+            }
+        }
     }
 }

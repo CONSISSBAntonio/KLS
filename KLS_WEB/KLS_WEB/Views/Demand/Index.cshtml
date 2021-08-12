@@ -34,8 +34,11 @@
         </div>
 
         <div class="p-4 shadow bg-white">
-            <div class="mb-3 filtro d-flex justify-content-between">
+            <div class="filtro d-flex justify-content-between" style="height: 4rem;">
                 <div class="col-6 d-flex flex-row">
+                    <div>
+                        <a class="nav-link my-4 mr-3" style="background-color: black; color: white;" id="pills-home-tab" data-toggle="pill" href="javascript:void(0)" role="tab" aria-controls="pills-home" aria-selected="true"><span id="countDemands">DEMANDAS</span></a>
+                    </div>
                     <div>
                         <label for="editcliente" class="form-label size-12 font-weight-bold float-left">FILTRAR POR CLIENTE</label>
                         <select class="form-control form-control-sm cliente" style="width: 100%;" id="filtro" name="filtro[]" multiple="multiple" onchange="filter(this)">
@@ -427,6 +430,7 @@
             DT();
             initSelects();
             getCatalogos();
+            CountDemands();
             $("#frmRegister").submit(function (event) {
                 event.preventDefault();
                 const type = $(this).attr('rel') == 'destino' ? 'Destinations/setDestino' : 'Origins/setOrigen';
@@ -438,6 +442,8 @@
                         $(".guardar").attr("disabled", false);
                         $('#frmRegister').trigger("reset");
                         $('#addeditcliente').val(jsonData["Id_Cliente"]).trigger('change');
+                        Table.draw();
+                        CountDemands();
                     }).fail(function (error) {
                         dToast("error", "Error al tratar de guardar el registro", "Error");
                         $(".guardar").attr("disabled", false);
@@ -561,6 +567,7 @@
                 anchor.download = filename;
                 anchor.click();
                 Table.draw();
+                CountDemands();
                 $('#sendcsv').prop('disabled', false).removeClass('btn-secondary').addClass('btn-dark').html('ENVIAR');
                 $('#modalcargamasiva').modal('hide');
                 dToast("success", "Carga realizada, revisa el reporte generado para verificar las operaciones realizadas", "Realizado");
@@ -1010,6 +1017,16 @@
             o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w)));
             return o;
         }
-                                    //Excel
+        //Excel
+
+        const CountDemands = async () => {
+            try {
+                const response = await fetch('/Demand/CountDemands');
+                const { totalDemands } = await response.json();
+                $('#countDemands').html(`DEMANDAS (${totalDemands})`);
+            } catch (e) {
+                console.error(e);
+            }
+        }
     </script>
 }
