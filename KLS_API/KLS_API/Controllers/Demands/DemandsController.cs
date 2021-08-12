@@ -243,7 +243,7 @@ namespace KLS_API.Controllers.Demands
                 throw;
             }
         }
-        public class DemandsCSV
+        public class DemandExcel
         {
             public string Cliente { get; set; }
             public string TipoUnidad { get; set; }
@@ -253,32 +253,24 @@ namespace KLS_API.Controllers.Demands
             public string Arribo { get; set; }
         }
 
-        public class CSVReport
+        public class Report
         {
-            public List<DemandsCSV> Added { get; set; }
-            public List<DemandsCSV> NoClient { get; set; }
-            public List<DemandsCSV> NoUnit { get; set; }
-            public List<DemandsCSV> NoOrigin { get; set; }
-            public List<DemandsCSV> NoDestination { get; set; }
-            public List<DemandsCSV> NoRoute { get; set; }
+            public List<DemandExcel> Added { get; set; } = new List<DemandExcel>();
+            public List<DemandExcel> NoClient { get; set; } = new List<DemandExcel>();
+            public List<DemandExcel> NoUnit { get; set; } = new List<DemandExcel>();
+            public List<DemandExcel> NoOrigin { get; set; } = new List<DemandExcel>();
+            public List<DemandExcel> NoDestination { get; set; } = new List<DemandExcel>();
+            public List<DemandExcel> NoRoute { get; set; } = new List<DemandExcel>();
         }
 
         [HttpPost]
-        public IActionResult DemandCSV([FromBody] List<DemandsCSV> demands)
+        public IActionResult ImportDemands([FromBody] List<DemandExcel> demands)
         {
             try
             {
-                CSVReport report = new CSVReport
-                {
-                    Added = new List<DemandsCSV>(),
-                    NoClient = new List<DemandsCSV>(),
-                    NoUnit = new List<DemandsCSV>(),
-                    NoOrigin = new List<DemandsCSV>(),
-                    NoDestination = new List<DemandsCSV>(),
-                    NoRoute = new List<DemandsCSV>()
-                };
+                Report report = new Report();
 
-                foreach (DemandsCSV demand in demands)
+                foreach (DemandExcel demand in demands)
                 {
                     Clientes client = _dbContext.Clientes.FirstOrDefault(x => x.NombreComercial.Replace(" ", "").ToLower() == demand.Cliente.Replace(" ", "").ToLower() || x.NombreCorto.Replace(" ", "").ToLower() == demand.Cliente.Replace(" ", "").ToLower());
 

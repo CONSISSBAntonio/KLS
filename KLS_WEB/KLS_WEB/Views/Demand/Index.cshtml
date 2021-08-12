@@ -367,7 +367,7 @@
                     <button id="sendcsv" type="submit" class="btn btn-dark">ENVIAR</button>
                 </form>
 
-                <button class="btn btn-outline-info btn-sm d-flex align-items-center mx-auto" onclick="DownloadLayout(this)"><i class="material-icons">download</i><span>DESCARGAR PLANTILLA DE EJEMPLO</span></button>
+                <a asp-controller="Demand" asp-action="DownloadLayout" class="btn btn-outline-info btn-sm d-flex align-items-center mx-auto" style="text-decoration: unset !important; width: 17.5rem;"><i class="material-icons">download</i>DESCARGAR PLANTILLA DE EJEMPLO</a>
             </div>
             <div class="modal-footer d-flex flex-column">
                 <p class="text-info size-12">Es importante que el archivo CSV tenga codificación UTF-8 para el correcto tratamiento de acentos y caracteres especiales</p>
@@ -512,69 +512,39 @@
             });
         }
 
-        const DownloadLayout = e => {
-            $(e).prop('disabled', true);
+        const upload = e => {
+            $('#sendcsv').prop('disabled', true).removeClass('btn-dark').addClass('btn-secondary').html('PROCESANDO...');
+            if (!demands) {
+                dToast("error", "No fué posible leer los datos", "Error")
+                return;
+            }
 
-            fetch('/Demand/DownloadLayout')
+
+            const params = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(demands)
+            }
+
+            fetch('/Demand/CSV', params)
                 .then(response => {
-                    const filename = response.headers.get('Content-Disposition').split('filename=')[1].split(';')[0];
+                    const filename = response.headers.get('content-disposition').split('filename=')[1].replace('"', '').split(';')[0].replace('"', '');
                     response.blob().then(blob => {
                         const x = window.URL.createObjectURL(blob);
                         const anchor = document.createElement('a');
                         anchor.href = x;
                         anchor.download = filename;
                         anchor.click();
-                        $(e).prop('disabled', false);
+                        Table.draw();
+                        $('#sendcsv').prop('disabled', false).removeClass('btn-secondary').addClass('btn-dark').html('ENVIAR');
+                        $('#modalcargamasiva').modal('hide');
+                        dToast("success", "Carga realizada, revisa el reporte generado para verificar las operaciones realizadas", "Realizado");
                     })
                 })
-                .catch(error => dToast("error", "Ocurrió un error al procesar la solicitud", "Error"))
+                .catch(error => dToast("error", "Ocurrió un error al procesar la solicitud", "Error"), $('#sendcsv').prop('disabled', false).removeClass('btn-secondary').addClass('btn-dark').html('ENVIAR'))
         }
-
-        const upload = e => {
-            if (!demands) {
-                return;
-            }
-            const data = new FormData();
-            data.append('demands', demands);
-            const params = {
-                method: 'POST',
-                body: data
-            }
-            console.log('post:', JSON.stringify({ csv: demands }));
-            $('#sendcsv').prop('disabled', true).removeClass('btn-dark').addClass('btn-secondary').html('PROCESANDO...');
-
-            const xxx = { "demands": demands };
-            console.log('asdsada', xxx);
-            $.post("/Demand/CSV", { "demands": demands }, response => {
-                const filename = response.headers.get('Content-Disposition').split('filename=')[1].split(';')[0];
-                const x = window.URL.createObjectURL(blob);
-                const anchor = document.createElement('a');
-                anchor.href = x;
-                anchor.download = filename;
-                anchor.click();
-                Table.draw();
-                $('#sendcsv').prop('disabled', false).removeClass('btn-secondary').addClass('btn-dark').html('ENVIAR');
-                $('#modalcargamasiva').modal('hide');
-                dToast("success", "Carga realizada, revisa el reporte generado para verificar las operaciones realizadas", "Realizado");
-            });
-        }
-            //fetch('/Demand/CSV', params)
-            //    .then(response => {
-            //        const filename = response.headers.get('Content-Disposition').split('filename=')[1].split(';')[0];
-            //        response.blob().then(blob => {
-            //            const x = window.URL.createObjectURL(blob);
-            //            const anchor = document.createElement('a');
-            //            anchor.href = x;
-            //            anchor.download = filename;
-            //            anchor.click();
-            //            Table.draw();
-            //            $('#sendcsv').prop('disabled', false).removeClass('btn-secondary').addClass('btn-dark').html('ENVIAR');
-            //            $('#modalcargamasiva').modal('hide');
-            //            dToast("success", "Carga realizada, revisa el reporte generado para verificar las operaciones realizadas", "Realizado");
-            //        })
-            //    })
-            //    .catch(error => dToast("error", "Ocurrió un error al procesar la solicitud", "Error"), $('#sendcsv').prop('disabled', false).removeClass('btn-secondary').addClass('btn-dark').html('ENVIAR'))
-        //}
 
         const GetAddress = (id, type) => {
             type === 'origen' ? (
@@ -968,22 +938,22 @@
                         return;
                     }
                     const { cliente, tipounidad, origen, destino, fechasalida, arribo } = v;
-                    v['fechasalida'] = moment(fechasalida, 'dd/mm/yyyy hh:mm A').toDate();
+                    v['fechasalida'] = moment(fechasalida, 'DD/MM/YYYY hh:mm A').toDate();
                     demands = [ ...demands, v ];
                     const now = moment().toDate();
-                    const then = moment(fechasalida, 'dd/mm/yyyy hh:mm A').toDate();
-                    const isvalid = then >= now && true;
+                    const then = moment(fechasalida, 'DD/MM/YYYY hh:mm A').toDate();
+                    const isvalid = then >= now ? true : false;
                     $('#csv-info').append(`
-                        <tr ${isvalid && 'class="bg-warning"'}>
+                        <tr ${!isvalid && 'class="bg-warning"'}>
                             <td>${cliente}</td>
                             <td>${tipounidad}</td>
                             <td>${origen}</td>
                             <td>${destino}</td>
-                            <td ${isvalid && 'class="text-danger font-weight-bold"'}>${fechasalida}</td>
+                            <td ${!isvalid && 'class="text-danger font-weight-bold"'}>${fechasalida}</td>
                             <td>${arribo}</td>
                         </tr>`);
                 });
-                console.log(demands);
+
                 $('.table-csv').DataTable({
                     dom: 'Btp',
                     destroy: true,

@@ -128,8 +128,8 @@ namespace KLS_WEB.Controllers.Demand
             return Json(carriers);
         }
 
-        [DelimitedRecord(","), IgnoreFirst(1)]
-        public class DemandsCSV
+        [DelimitedRecord(",")]
+        public class DemandExcel
         {
             public string Cliente { get; set; }
             public string TipoUnidad { get; set; }
@@ -138,108 +138,100 @@ namespace KLS_WEB.Controllers.Demand
             public DateTime FechaSalida { get; set; }
             public string Arribo { get; set; }
         }
-        public class CSVReport
+        public class Report
         {
-            public List<DemandsCSV> Added { get; set; }
-            public List<DemandsCSV> NoClient { get; set; }
-            public List<DemandsCSV> NoUnit { get; set; }
-            public List<DemandsCSV> NoOrigin { get; set; }
-            public List<DemandsCSV> NoDestination { get; set; }
-            public List<DemandsCSV> NoRoute { get; set; }
+            public List<DemandExcel> Added { get; set; } = new List<DemandExcel>();
+            public List<DemandExcel> NoClient { get; set; } = new List<DemandExcel>();
+            public List<DemandExcel> NoUnit { get; set; } = new List<DemandExcel>();
+            public List<DemandExcel> NoOrigin { get; set; } = new List<DemandExcel>();
+            public List<DemandExcel> NoDestination { get; set; } = new List<DemandExcel>();
+            public List<DemandExcel> NoRoute { get; set; } = new List<DemandExcel>();
         }
 
-        public class Carga
-        {
-            public List<DemandsCSV> demands { get; set; }
-        }
         [HttpPost]
-        public async Task<FileResult> CSV(List<DemandsCSV> demands)
+        public async Task<FileResult> CSV([FromBody] List<DemandExcel> demands)
         {
-            //string path = Path.Combine(_hostingEnvironment.WebRootPath, "DemandsCSV");
-            //List<DemandsCSV> report = new List<DemandsCSV>();
-            //CSVReport response = new CSVReport
-            //{
-            //    Added = new List<DemandsCSV>(),
-            //    NoClient = new List<DemandsCSV>(),
-            //    NoUnit = new List<DemandsCSV>(),
-            //    NoOrigin = new List<DemandsCSV>(),
-            //    NoDestination = new List<DemandsCSV>(),
-            //    NoRoute = new List<DemandsCSV>()
-            //};
-            //string reportpath = string.Empty;
+            string path = Path.Combine(_hostingEnvironment.WebRootPath, "DemandsExcel");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            List<DemandExcel> report = new List<DemandExcel>();
+            Report response = new Report();
+            string reportpath = string.Empty;
 
-            //if (csv != null)
-            //{
-            //    response = await AppContext.Execute<CSVReport>(MethodType.POST, Path.Combine(_UrlApi, "DemandCSV"), csv);
+            if (demands.Any())
+            {
+                response = await AppContext.Execute<Report>(MethodType.POST, Path.Combine(_UrlApi, "ImportDemands"), demands);
 
-            //    #region Reporte
-            //    if (response.Added.Any())
-            //    {
-            //        report.Add(new DemandsCSV { Cliente = "DEMANDAS AGREGADAS CON EXITO" });
-            //        foreach (var demand in response.Added)
-            //        {
-            //            report.Add(demand);
-            //        }
-            //    }
+                #region Reporte
+                if (response.Added.Any())
+                {
+                    report.Add(new DemandExcel { Cliente = "DEMANDAS AGREGADAS CON EXITO" });
+                    foreach (var demand in response.Added)
+                    {
+                        report.Add(demand);
+                    }
+                }
 
-            //    if (response.NoClient.Any())
-            //    {
-            //        report.Add(new DemandsCSV { Cliente = "NO SE ENCONTRO EL CLIENTE" });
-            //        foreach (var demand in response.NoClient)
-            //        {
-            //            report.Add(demand);
-            //        }
-            //    }
+                if (response.NoClient.Any())
+                {
+                    report.Add(new DemandExcel { Cliente = "NO SE ENCONTRO EL CLIENTE" });
+                    foreach (var demand in response.NoClient)
+                    {
+                        report.Add(demand);
+                    }
+                }
 
-            //    if (response.NoUnit.Any())
-            //    {
-            //        report.Add(new DemandsCSV { Cliente = "NO SE ENCONTRO EL TIPO DE UNIDAD" });
-            //        foreach (var demand in response.NoUnit)
-            //        {
-            //            report.Add(demand);
-            //        }
-            //    }
+                if (response.NoUnit.Any())
+                {
+                    report.Add(new DemandExcel { Cliente = "NO SE ENCONTRO EL TIPO DE UNIDAD" });
+                    foreach (var demand in response.NoUnit)
+                    {
+                        report.Add(demand);
+                    }
+                }
 
-            //    if (response.NoOrigin.Any())
-            //    {
-            //        report.Add(new DemandsCSV { Cliente = "NO SE ENCONTRO EL ORIGEN" });
-            //        foreach (var demand in response.NoOrigin)
-            //        {
-            //            report.Add(demand);
-            //        }
-            //    }
+                if (response.NoOrigin.Any())
+                {
+                    report.Add(new DemandExcel { Cliente = "NO SE ENCONTRO EL ORIGEN" });
+                    foreach (var demand in response.NoOrigin)
+                    {
+                        report.Add(demand);
+                    }
+                }
 
-            //    if (response.NoDestination.Any())
-            //    {
-            //        report.Add(new DemandsCSV { Cliente = "NO SE ENCONTRO EL DESTINO" });
-            //        foreach (var demand in response.NoDestination)
-            //        {
-            //            report.Add(demand);
-            //        }
-            //    }
+                if (response.NoDestination.Any())
+                {
+                    report.Add(new DemandExcel { Cliente = "NO SE ENCONTRO EL DESTINO" });
+                    foreach (var demand in response.NoDestination)
+                    {
+                        report.Add(demand);
+                    }
+                }
 
-            //    if (response.NoRoute.Any())
-            //    {
-            //        report.Add(new DemandsCSV { Cliente = "NO SE ENCONTRO LA RUTA" });
-            //        foreach (var demand in response.NoRoute)
-            //        {
-            //            report.Add(demand);
-            //        }
-            //    }
-            //    #endregion
+                if (response.NoRoute.Any())
+                {
+                    report.Add(new DemandExcel { Cliente = "NO SE ENCONTRO LA RUTA" });
+                    foreach (var demand in response.NoRoute)
+                    {
+                        report.Add(demand);
+                    }
+                }
+                #endregion
 
-            //    var engine = new FileHelperEngine<DemandsCSV>();
-            //    reportpath = Path.Combine(path, string.Concat("Reporte.csv"));
-            //    engine.WriteFile(reportpath, report);
-            //}
+                var engine = new FileHelperEngine<DemandExcel>();
+                reportpath = Path.Combine(path, string.Concat("Reporte.csv"));
+                engine.WriteFile(reportpath, report);
+            }
 
-            return File(string.Concat("/DemandsCSV/", "Reporte.csv"), "application/octet-stream", string.Concat("Reporte.csv"));
+            string reportname = string.Concat("Reporte - ", DateTime.Now.ToString("dd MMMM hh.mm"), ".csv");
+
+            return File("/DemandsExcel/Reporte.csv", "application/octet-stream", reportname);
         }
 
-        [HttpGet]
+        [Route("[action]")]
         public FileResult DownloadLayout()
         {
-            return File("/DemandsCSV/Layout.csv", "application/octet-stream", "PlantillaCargaMasivaDemandas.csv");
+            return File("/DemandsExcel/Layout.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "PlantillaCargaDemandas.xlsx");
         }
     }
 }
