@@ -70,5 +70,13 @@ namespace KLS_WEB.Controllers.Carriers.CarriersRoutes
             dataReport = await this.AppContext.Execute<Tr_Has_Rutas>(MethodType.PUT, _UrlApi, dataModel);
             return Json(dataReport);
         }
+        
+        [Route("obRutas")]
+        public async Task<JsonResult> obRutas()
+        {
+            List<Route> dataReport;
+            dataReport = await this.AppContext.Execute<List<Route>>(MethodType.GET, _UrlApi+ "/obRutas", null);
+            return Json(dataReport);
+        }
     }
 }
