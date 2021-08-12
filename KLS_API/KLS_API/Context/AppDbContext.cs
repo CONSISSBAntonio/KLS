@@ -42,6 +42,7 @@ namespace KLS_API.Context
         public DbSet<Tr_Has_Inventario> Tr_Has_Inventario { get; set; }
         public DbSet<Tr_Has_Operadores> Tr_Has_Operadores { get; set; }
         public DbSet<Tr_Has_Ruta> Tr_Has_Ruta { get; set; }
+        public DbSet<ruta_has_inventario> ruta_has_inventario { get; set; }
         
         //Clientes
         public DbSet<Clientes> Clientes { get; set; }

@@ -205,7 +205,7 @@
             dSelect("EstadoDestino");
             dSelect("CiudadDestino");
             dSelect("Id_Ruta");
-            cargarCiudad();
+            cargarEstados();
             loadTipo();
         }
 
@@ -226,7 +226,7 @@
         function cargarEstados() {
             $.get("/Catalogs/Geography/State/getState", function (res) {
                 catEstado = res;
-                cargarRutas();
+                cargarCiudad();
                 $.each(res, function (item, key) {
                     $("#EstadoOrigen").append(`<option value="${key.id}">${key.nombre}</option>`);
                     $("#EstadoDestino").append(`<option value="${key.id}">${key.nombre}</option>`);
@@ -239,13 +239,13 @@
         function cargarCiudad() {
             $.get("/Catalogs/Geography/City/getCity", function (res) {
                 catCiudad = res;
-                cargarEstados();
+                cargarRutas();
             }).fail(function (error) {
                 dToast("error", "Error al obtener paises", "Atencion!");
             });
         }
 
-        function getRutas() {
+        function getRutas(idr = 0) {//Obtiene todas las rutas por seleccion
             var eorigen = parseInt($("#EstadoOrigen").val());
             var corigen = parseInt($("#CiudadOrigen").val());
             var edestino = parseInt($("#EstadoDestino").val());
@@ -266,6 +266,9 @@
                     }
                 });
                 //getRuta();
+                if (idr != 0) {
+                    $("#Id_Ruta").val(idr).trigger('change');
+                }
             });
         }
 
@@ -294,7 +297,7 @@
         }
 
         function cargarRutas() {
-            $.get("/Carriers/Routes/getRoutes", function (res) {
+            $.get("/Carriers/Routes/obRutas", function (res) {
                 catRutas = res;
                 getRuta();
             });
@@ -319,6 +322,8 @@
             $.get("/Carriers/Routes/getRutas", { "Id_Transportista":@id}, function (res) {
                 DataAirlines = res;
                 $.each(res, function (item, key) {
+                    console.log(key);
+                    console.log(catRutas);
                     let rutaI = catRutas.findIndex(service => parseInt(service.id) === parseInt(key.id_Ruta));
                     if (rutaI >= 0) {
                         const IdGenerado = `${String(catRutas[rutaI].id_ciudadorigen).padStart(4, '0')}${String(catRutas[rutaI].id_ciudaddestino).padStart(4, '0')}`;
@@ -365,18 +370,13 @@
             if (accion == "Editar") {
                 try {
                     let indice = DataAirlines.findIndex(service => service.id === idEditar);
-                    let rutaI = catRutas.findIndex(service => parseInt(service.id) === parseInt(DataAirlines[indice].id_Ruta));
-
+                    let rutaI = catRutas.findIndex(service => parseInt(service.id) == parseInt(DataAirlines[indice].id_Ruta));
                     $("#Costo").val(DataAirlines[indice].costo);
-                    $('#Estado option[value="' + catRutas[rutaI].id_estadoorigen + '"]').attr("selected", true);
-                    $("#Estado").change();
-
-                    $('#Ciudad option[value="' + catRutas[rutaI].id_ciudadorigen + '"]').attr("selected", true);
-                    $("#Ciudad").change();
-
-                    $('#Id_Ruta option[value="' + DataAirlines[indice].id_Ruta + '"]').attr("selected", true);
-                    $("#Id_Ruta").change();
-
+                    $("#EstadoOrigen").val(catRutas[rutaI].id_estadoorigen).trigger('change');
+                    $("#CiudadOrigen").val(catRutas[rutaI].id_ciudadorigen).trigger('change');
+                    $("#EstadoDestino").val(catRutas[rutaI].id_estadodestino).trigger('change');
+                    $("#CiudadDestino").val(catRutas[rutaI].id_ciudaddestino).trigger('change');
+                    getRutas(catRutas[rutaI].id);
                     $('#Estatus option[value="' + DataAirlines[indice].estatus + '"]').attr("selected", true);
                     $("#modalDiv").modal("show");
                 } catch (error) {
@@ -395,6 +395,8 @@
                 $.each(dataInventory, function (item, key) {
                     //console.log(key);
                     let indice = catUnidad.findIndex(service => service.id === key.tipoUnidad);
+                    //let inEdit = DataAirlines.findIndex(service => service.id === key.idEditar);
+
                     $("#info-inventario").append(
                         `<tr>
                             <td>${nCon(key.marca)}</td>
