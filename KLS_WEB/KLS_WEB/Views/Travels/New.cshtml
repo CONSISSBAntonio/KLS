@@ -39,7 +39,7 @@
 
             <div class="p-4 shadow bg-white">
                 <div class="row">
-                    <div class="form-group col-6">
+                    <div class="form-group col-3">
                         <label class="col-form-label col-form-label-sm">Cliente</label>
                         <div>
                             <select asp-for="ClienteId" class="form-control form-control-sm" id="cliente" name="cliente" style="width: 100%;" onchange="getClientParams(this.value)">
@@ -47,19 +47,19 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group col-2">
+                    <div class="form-group col-3">
                         <label class="col-form-label col-form-label-sm">Fecha de salida</label>
                         <div>
                             <input asp-for="FechaSalida" type="datetime-local" class="form-control form-control-sm" id="fechasalida" name="fechasalida" required>
                         </div>
                     </div>
-                    <div class="form-group col-2">
+                    <div class="form-group col-3">
                         <label class="col-form-label col-form-label-sm">Fecha de llegada</label>
                         <div>
                             <input type="datetime-local" class="form-control form-control-sm" id="fechallegada" name="fechallegada" required>
                         </div>
                     </div>
-                    <div class="form-group col-2">
+                    <div class="form-group col-3">
                         <label class="col-form-label col-form-label-sm">Tiempo de anticipación</label>
                         <div>
                             <input type="text" class="form-control form-control-sm" id="tiempoanticipacion" name="tiempoanticipacion" required>
@@ -751,7 +751,8 @@
         const GetRoutePrice = RouteId => {
             RouteId && (
                 $.get('/Travels/GetRoutePrice', { RouteId: RouteId }, ({ minimo, maximo }) => {
-                    minimo && maximo && $('.priceinfo').text(`$${parseFloat(minimo).toFixed(2)} - $${parseFloat(maximo).toFixed(2)}`), $('[name=terrestrenacionalprecio]').val(parseFloat(maximo).toFixed(2));
+                    minimo && maximo && $('.priceinfo').text(`$${parseFloat(minimo).toFixed(2)} - $${parseFloat(maximo).toFixed(2)}`), $('[name=terrestrenacionalprecio]').val(parseFloat(maximo).toFixed(2)), $('#preciocliente').html(`${parseFloat(maximo).toFixed(2)}`);
+
                 })
             )
         }

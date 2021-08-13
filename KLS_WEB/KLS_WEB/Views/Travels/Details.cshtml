@@ -1178,6 +1178,7 @@
 
                             }, 300);
                             $('.equipocontainer').attr('rel', idTransportista);
+                            let equipos = [];
                             unidades.map(({
                                 id,
                                 idUnidad,
@@ -1186,16 +1187,14 @@
                                 servicesId
                             }) => {
                                 const elementid = $('.equipocontainer').children().length;
+                                equipos.push([elementid, idEquipo]);
                                 $('#addEquipo').attr('onclick', `addEquipo('${nombre}', this);`);
                                 document.getElementById('addEquipo').click();
-                                setTimeout(() => {
-                                    $(`#unidad${elementid}`).val(idUnidad).trigger('change');
-
-                                }, 300);
-                                setTimeout(() => {
-                                    $(`#equipo${elementid}`).val(idEquipo).trigger('change');
-                                }, 500);
+                                setTimeout(() => $(`#unidad${elementid}`).val(idUnidad).trigger('change'), 1500);
                             });
+                            setTimeout(() => {
+                                equipos.map(([k, v]) => $(`#equipo${k}`).val(v).trigger('change'));
+                            }, 2800);
                         });
                         setPrecios();
                         setCostos();
