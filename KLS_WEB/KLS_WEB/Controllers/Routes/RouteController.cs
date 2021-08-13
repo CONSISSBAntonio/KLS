@@ -87,7 +87,7 @@ namespace KLS_WEB.Views.Catalogs.City
 
         [HttpGet]
         [Route("AddEdit/{id}")]
-        public async Task<IActionResult> AddEditAsync(int id, string idgenerado, Route dataModel)
+        public async Task<IActionResult> AddEditAsync(int id, Route dataModel)
         {
             Cat_Ciudad ciudadModel = new Cat_Ciudad();
             List<Cat_Ciudad> ciudades = await this.AppContext.Execute<List<Cat_Ciudad>>(MethodType.GET, "Catalogs/Geography/City", ciudadModel);
@@ -105,8 +105,8 @@ namespace KLS_WEB.Views.Catalogs.City
             if (id > 0)
             {
                 dataModel = await this.AppContext.Execute<Route>(MethodType.GET, string.Concat(_UrlApi, "/getRoute/", id), dataModel);
-                dataModel.IdGenerado = idgenerado;
             }
+
             return PartialView(string.Concat(_UrlView, "_AddEdit.cshtml"), dataModel);
         }
     }

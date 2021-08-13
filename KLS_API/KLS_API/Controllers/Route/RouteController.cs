@@ -84,6 +84,7 @@ namespace KLS_API.Controllers.Route
         {
             try
             {
+                ruta.Folio = string.Concat(ruta.id_ciudadorigen.ToString("D4"), ruta.id_ciudaddestino.ToString("D4"));
                 _context.Entry(ruta).State = EntityState.Modified;
                 _context.SaveChanges();
                 return CreatedAtRoute("getRoute", new { id = ruta.id }, ruta);
