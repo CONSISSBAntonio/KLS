@@ -622,10 +622,11 @@
                     treferencia3
                 } = response;
                 let referencias = ``;
-                referencias += referencia1 ? `<div class="form-group col-4" ><label class="col-form-label col-form-label-sm">${treferencia1.toUpperCase()}</label><div><input type="text" class="form-control form-control-sm" id="referencia1" name="referencia1" required></div></div>` : '';
-                referencias += referencia2 ? `<div class="form-group col-4" ><label class="col-form-label col-form-label-sm">${treferencia2.toUpperCase()}</label><div><input type="text" class="form-control form-control-sm" id="referencia2" name="referencia2" required></div></div>` : '';
-                referencias += referencia3 ? `<div class="form-group col-4" ><label class="col-form-label col-form-label-sm">${treferencia3.toUpperCase()}</label><div><input type="text" class="form-control form-control-sm" id="referencia3" name="referencia3" required></div></div>` : '';
+                referencias += referencia1 && treferencia1 != null ? `<div class="form-group col-4" ><label class="col-form-label col-form-label-sm">${treferencia1.toUpperCase()}</label><div><input type="text" class="form-control form-control-sm" id="referencia1" name="referencia1" required></div></div>` : '';
+                referencias += referencia2 && treferencia2 != null ? `<div class="form-group col-4" ><label class="col-form-label col-form-label-sm">${treferencia2.toUpperCase()}</label><div><input type="text" class="form-control form-control-sm" id="referencia2" name="referencia2" required></div></div>` : '';
+                referencias += referencia3 && treferencia3 != null ? `<div class="form-group col-4" ><label class="col-form-label col-form-label-sm">${treferencia3.toUpperCase()}</label><div><input type="text" class="form-control form-control-sm" id="referencia3" name="referencia3" required></div></div>` : '';
                 $('.referencias').html(referencias);
+                console.log('asdsads', referencias);
             });
         }
 
