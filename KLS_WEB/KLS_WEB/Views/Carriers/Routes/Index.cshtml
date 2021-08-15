@@ -37,7 +37,11 @@
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody id="table-info"></tbody>
+                <tbody id="table-info">
+                    <tr>
+                        <td colspan="8">Cargando...</td>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </div>
@@ -86,7 +90,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label class="">Ruta destino</label>
-                            <select class="form-control form-control-md" id="Id_Ruta" name="Id_Ruta" style="width:100%;font-size:8px;">
+                            <select class="form-control form-control-md" id="Id_Ruta" name="Id_Ruta" style="width:100%;font-size:6px;">
                                 <option value="0">Selecciona una opción</option>
                             </select>
                         </div>
@@ -128,10 +132,10 @@
                     <button type="submit" class="btn btn-dark guardar" style="width:31%;" id="btnAccion">
                         Guardar
                     </button>
-                    
+
                     @*<a href="#" class="btn btn-dark" style="width:31%;" onclick="guardarInventarios();">
-                        Guardar inventario
-                    </a>*@
+            Guardar inventario
+        </a>*@
                 </form>
 
             </div>
@@ -166,7 +170,6 @@
                 });
 
                 jsonData["ruta_has_inventario"] = jsonInv;
-
                 //console.log(jsonData);
                 if (parseInt(idruta) != 0) {
                     if (parseInt($("#idEditar").val()) != 0) {
@@ -184,9 +187,12 @@
                             dToast("success", "Se guardó el registro", "Registrado");
                             $(".guardar").attr("disabled", false);
                             $('#frmRegister').trigger("reset");
-                            $("#Estado").change();
-                            $("#Ciudad").change();
-                            $("#Id_Ruta").change();
+
+                            $("#EstadoOrigen").val(0).trigger('change');
+                            $("#CiudadOrigen").val(0).trigger('change');
+                            $("#EstadoDestino").val(0).trigger('change');
+                            $("#CiudadDestino").val(0).trigger('change');
+                            
                         }).fail(function (error) {
                             dToast("error", "Error al tratar de guardar el registro", "Error");
                             $(".guardar").attr("disabled", false);
@@ -250,7 +256,6 @@
             var corigen = parseInt($("#CiudadOrigen").val());
             var edestino = parseInt($("#EstadoDestino").val());
             var cdestino = parseInt($("#CiudadDestino").val());
-
             var jsondata = { 'id_estadoorigen': eorigen, 'id_ciudadorigen': corigen, 'id_estadodestino': edestino, 'id_ciudaddestino': cdestino };
             $.get("/Carriers/Routes/getRuta",jsondata, function (res) {
                 $("#Id_Ruta").empty();
@@ -262,7 +267,9 @@
                         let indice_cd = catCiudad.findIndex(service => service.id === key.id_ciudaddestino);
                         let indice_eo = catEstado.findIndex(service => service.id === key.id_estadoorigen);
                         let indice_ed = catEstado.findIndex(service => service.id === key.id_estadodestino);
-                        $("#Id_Ruta").append(`<option value="${key.id}">Id: ${IdGenerado} -- Estado origen: ${catEstado[indice_eo].nombre} -- Ciudad Origen:${catCiudad[indice_co].nombre}</option>`);
+                        $("#Id_Ruta").append(
+                            `<option value="${key.id}">Id: ${IdGenerado} -- Estado Origen: ${catEstado[indice_eo].nombre} -- Ciudad Origen:${catCiudad[indice_co].nombre}  -  Estado Destino: ${catEstado[indice_ed].nombre} -- Ciudad Destino:${catCiudad[indice_cd].nombre} </option>
+`);
                     }
                 });
                 //getRuta();
@@ -316,14 +323,13 @@
         }
 
         function getRuta() {
+            $("#table-info").empty();
             var stable = $('.table-viajes').DataTable();
             stable.destroy();
-            $("#table-info").empty();
             $.get("/Carriers/Routes/getRutas", { "Id_Transportista":@id}, function (res) {
                 DataAirlines = res;
+                $("#table-info").empty();
                 $.each(res, function (item, key) {
-                    console.log(key);
-                    console.log(catRutas);
                     let rutaI = catRutas.findIndex(service => parseInt(service.id) === parseInt(key.id_Ruta));
                     if (rutaI >= 0) {
                         const IdGenerado = `${String(catRutas[rutaI].id_ciudadorigen).padStart(4, '0')}${String(catRutas[rutaI].id_ciudaddestino).padStart(4, '0')}`;
@@ -331,13 +337,17 @@
                         let indice_cd = catCiudad.findIndex(service => service.id === catRutas[rutaI].id_ciudaddestino);
                         let indice_eo = catEstado.findIndex(service => service.id === catRutas[rutaI].id_estadoorigen);
                         let indice_ed = catEstado.findIndex(service => service.id === catRutas[rutaI].id_estadodestino);
+                        noc = "";
+                        if (indice_cd >= 0) {
+                            noc = catCiudad[indice_cd].nombre
+                        }
                         $("#table-info").append(`
                              <tr>
                                 <td>${nCon(IdGenerado)}</td>
                                 <td>${catEstado[indice_eo].nombre}</td>
                                 <td>${catCiudad[indice_co].nombre}</td>
                                 <td>${catEstado[indice_ed].nombre}</td>
-                                <td>${catCiudad[indice_cd].nombre}</td>
+                                <td>${noc}</td>
                                 <td>${key.costo}</td>
                                 <td>`+ statusTable(key.estatus) + `</td>
                                 <td>
@@ -359,10 +369,6 @@
 
         function showModal(titulo = "Title", accion, idEditar = 0) {
             $('#frmRegister').trigger("reset");
-            $("#Estado").change();
-            $("#Ciudad").change();
-            $("#Id_Ruta").change();
-
             $(".guardar").html(accion);
             $("#titulo-modal").empty("");
             $("#titulo-modal").html(titulo);
@@ -378,12 +384,22 @@
                     $("#CiudadDestino").val(catRutas[rutaI].id_ciudaddestino).trigger('change');
                     getRutas(catRutas[rutaI].id);
                     $('#Estatus option[value="' + DataAirlines[indice].estatus + '"]').attr("selected", true);
+
+                    $.each(DataAirlines[indice].ruta_has_inventario, function (item, keyc) {
+                        //console.log(keyc);
+                        $("#inv-" + keyc.id_Inventario).val(keyc.costo);
+                    });
+
                     $("#modalDiv").modal("show");
                 } catch (error) {
                     dToast("error", "Error al tratar de editar, intenta recargar la página.", "Error");
                     $("#modalDiv").modal("hide");
                 }
             } else {
+                $("#EstadoOrigen").val(0).trigger('change');
+                $("#CiudadOrigen").val(0).trigger('change');
+                $("#EstadoDestino").val(0).trigger('change');
+                $("#CiudadDestino").val(0).trigger('change');
                 $("#modalDiv").modal("show");
             }
         }

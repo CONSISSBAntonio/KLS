@@ -45,7 +45,11 @@ namespace KLS_WEB.Controllers.Clients
             public string ciudad { get; set; }
             public string direccion { get; set; }
             public string estatus { get; set; }
+            public int id_Estado { get; set; }
+            public int id_Ciudad { get; set; }
+            public int id_Colonia { get; set; }
             public int id { get; set; }
+            public string HoraAtencion { get; set; }
         }
 
         [Route("setDestino")]

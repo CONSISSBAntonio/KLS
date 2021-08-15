@@ -62,6 +62,7 @@ namespace KLS_API.Controllers
                                  where oferta.status != 3
                                  join tipounidad in context.Cat_Tipos_Unidades on oferta.Tipo_De_Unidad equals tipounidad.id
                                  join transportista in context.Transportista on oferta.Transportista equals transportista.id
+                                 where transportista.Estatus != 0
                                  orderby oferta.Fecha_Disponibilidad
                                  select new ofertas
                                  {

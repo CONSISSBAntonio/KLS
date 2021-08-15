@@ -167,6 +167,7 @@
 
         function setCp(id) {
             let indice = dataColonies.findIndex(service => service.id == id);
+            console.log(indice);
             if (parseInt(id) != 0) {
                 if (parseInt(indice) >= 0) {
                     $("#Cp").val(dataColonies[indice].cp);
@@ -177,7 +178,7 @@
             }
         }
 
-        function setColonias(id) {
+        function setColonias(id, idselect = 0) {
             $("#Id_Colonia").empty();
             $("#Id_Colonia").append(`<option value="0">Selecciona una opción</option>`);
             $.get("/Clients/Origins/getColonias/" + id, function (res) {
@@ -187,6 +188,9 @@
                         $("#Id_Colonia").append(`<option value="${key.id}">${key.nombre}</option>`);
                     };
                 });
+                if (idselect != 0) {
+                    $("#Id_Colonia").val(idselect).trigger('change');
+                }
             });
         }
 
@@ -229,6 +233,9 @@
                             dToast("success", "Registro guardado exitosamente.", "Registrado");
                             $(".guardar").attr("disabled", false);
                             $('#frmRegister').trigger("reset");
+                            $("#Id_Ciudad").val(0).trigger('change');
+                            $("#Id_Estado").val(0).trigger('change');
+                            $("#Id_Colonia").val(0).trigger('change');
                         }).fail(function (error) {
                             dToast("error", "Error al tratar de guardar el registro", "Error");
                             $(".guardar").attr("disabled", false);
@@ -243,24 +250,23 @@
 
         function showModal(titulo = "Title", accion, idEditar = 0) {
             $('#frmRegister').trigger("reset");
-            $("#Id_Ciudad").change();
-            $("#Id_Estado").change();
-            $("#Id_Colonia").change();
-
             $(".guardar").html(accion);
             $("#titulo-modal").empty("");
             $("#titulo-modal").html(titulo);
             $("#idEditar").val(idEditar);
+            $("#Id_Ciudad").val(0).trigger('change');
+            $("#Id_Estado").val(0).trigger('change');
+            $("#Id_Colonia").val(0).trigger('change');
             if (accion == "Editar") {
                 try {
                     let indice = dataOrigenes.findIndex(service => service.id === idEditar);
                     $("#Nombre").val(dataOrigenes[indice].nombre);
                     $("#Cp").val(dataOrigenes[indice].cp);
-                    $("#Direccion").val(dataOrigenes[indice].direccion);
-                    $('#Id_Estado option[value="' + dataOrigenes[indice].id_Estado + '"]').attr("selected", true);
-                    $('#Id_Ciudad option[value="' + dataOrigenes[indice].id_Ciudad + '"]').attr("selected", true);
-                    $('#Id_Colonia option[value="' + dataOrigenes[indice].id_Colonia + '"]').attr("selected", true);
                     $("#HoraAtencion").val(dataOrigenes[indice].horaAtencion);
+                    $("#Direccion").val(dataOrigenes[indice].direccion);
+                    $("#Id_Estado").val(dataOrigenes[indice].id_Estado).trigger('change');
+                    $("#Id_Ciudad").val(dataOrigenes[indice].id_Ciudad).trigger('change');
+                    setColonias(dataOrigenes[indice].id_Ciudad, dataOrigenes[indice].id_Colonia);
                     $("#modalDiv").modal("show");
                 } catch (error) {
                     dToast("error", "Error al tratar de editar, intenta recargar la página.", "Error");

@@ -45,6 +45,10 @@ namespace KLS_API.Controllers.Clients
                                  direccion = destinos.Direccion,
                                  estatus = destinos.Estatus,
                                  id = destinos.Id,
+                                 id_Estado = colonias.id_estado,
+                                 id_Ciudad = colonias.id_ciudad,
+                                 id_Colonia = colonias.id,
+                                 HoraAtencion = destinos.HoraAtencion
                              }).ToList().AsQueryable();
                 return Ok(queryable);
             }
