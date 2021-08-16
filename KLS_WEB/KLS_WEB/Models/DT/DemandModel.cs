@@ -12,6 +12,7 @@ namespace KLS_WEB.Models.DT
         public int OriginId { get; set; }
         public int UnitId { get; set; }
         public int DestinationId { get; set; }
+        public int RouteId { get; set; }
         public string Folio { get; set; }
         public string Cliente { get; set; }
         public string TipoUnidad { get; set; }

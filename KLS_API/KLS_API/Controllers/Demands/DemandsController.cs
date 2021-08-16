@@ -79,6 +79,7 @@ namespace KLS_API.Controllers.Demands
             public int OriginId { get; set; }
             public int UnitId { get; set; }
             public int DestinationId { get; set; }
+            public int RouteId { get; set; }
             public string Folio { get; set; }
             public string Cliente { get; set; }
             public string TipoUnidad { get; set; }
@@ -102,6 +103,7 @@ namespace KLS_API.Controllers.Demands
                         ClientId = x.ClientId,
                         OriginId = x.OriginId,
                         DestinationId = x.DestinationId,
+                        RouteId = x.RouteId,
                         Folio = x.Folio,
                         Cliente = x.Client.NombreCorto,
                         UnitId = x.Unit.id,
@@ -123,6 +125,7 @@ namespace KLS_API.Controllers.Demands
                     ClientId = x.ClientId,
                     OriginId = x.OriginId,
                     DestinationId = x.DestinationId,
+                    RouteId = x.RouteId,
                     Folio = x.Folio,
                     Cliente = x.Client.NombreCorto,
                     TipoUnidad = x.Unit.nombre,
@@ -210,7 +213,7 @@ namespace KLS_API.Controllers.Demands
         }
 
         [HttpGet]
-        public IActionResult GetCarrier([FromQuery] int OriginId, int UnidadId)
+        public IActionResult GetCarrier([FromQuery] int OriginId, int UnidadId, int RouteId)
         {
             try
             {
@@ -232,7 +235,7 @@ namespace KLS_API.Controllers.Demands
                     x.Tolerancia_Destino, " km)"),
                     FechaDisponibilidad = x.Fecha_Disponibilidad.ToString("g"),
                     Expira = DateTime.Now,
-                    Costo = _dbContext.Tr_Has_Rutas.FirstOrDefault(y => y.Id_Transportista == x.Transportista).Costo.ToString(specifier, culture)
+                    Costo = _dbContext.Tr_Has_Rutas.Any(y => y.Id_Transportista == x.Transportista && y.Id_Ruta == RouteId) ? _dbContext.Tr_Has_Rutas.FirstOrDefault(y => y.Id_Transportista == x.Transportista && y.Id_Ruta == RouteId).Costo.ToString(specifier, culture) : "TRANSPORTISTA SIN COSTOS DEFINIDOS"
                 }).ToList();
 
                 return Ok(carriers);

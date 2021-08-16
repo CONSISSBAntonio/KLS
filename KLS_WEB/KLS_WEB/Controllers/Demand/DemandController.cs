@@ -122,9 +122,9 @@ namespace KLS_WEB.Controllers.Demand
         }
 
         [HttpPost]
-        public async Task<JsonResult> GetCarrier(string OriginId, string UnitId)
+        public async Task<JsonResult> GetCarrier(string OriginId, string UnitId, string RouteId)
         {
-            List<CarrierDT> carriers = await AppContext.Execute<List<CarrierDT>>(MethodType.GET, string.Concat(_UrlApi, "/GetCarrier?OriginId=", OriginId, "&UnidadId=", UnitId), null);
+            List<CarrierDT> carriers = await AppContext.Execute<List<CarrierDT>>(MethodType.GET, string.Concat(_UrlApi, "/GetCarrier?OriginId=", OriginId, "&UnidadId=", UnitId, "&RouteId=", RouteId), null);
             return Json(carriers);
         }
 

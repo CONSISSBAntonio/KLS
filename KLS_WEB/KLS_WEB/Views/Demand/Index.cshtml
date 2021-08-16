@@ -786,6 +786,7 @@
         }
 
         const selectCarrier = (DemandId, ClientId, UnitId, OriginId, DestinationId) => {
+            debugger
             $('#modaltransportista').modal('show');
             $('.carrierinfo').empty();
             $.post('/Demand/GetCarrier', { OriginId: OriginId, UnitId: UnitId }, response => {
@@ -833,7 +834,7 @@
             })
         }
 
-        const DTC = (UnitId, OriginId, DemandId) => {
+        const DTC = (UnitId, OriginId, DemandId, RouteId) => {
             $('#modaltransportista').modal('show');
             DTCarrier = $('.table-carrier').DataTable({
                 destroy: true,
@@ -846,7 +847,8 @@
                     dataSrc: '',
                     data: data => {
                         data.UnitId = UnitId,
-                            data.OriginId = OriginId
+                            data.OriginId = OriginId,
+                            data.RouteId = RouteId
                     }
                 },
                 columns: [
@@ -909,7 +911,7 @@
                     { data: 'arribo' },
                     {
                         render: (data, type, row) => {
-                            const { id, clientId, originId, destinationId, unitId, ofertasCount } = row;
+                            const { id, clientId, originId, destinationId, unitId, ofertasCount, routeId } = row;
                             return `
                             <a href="javascript:void(0);" onclick="addEdit(${id}, ${clientId}, ${originId}, ${destinationId});">
                                 <span class="material-icons">
@@ -921,7 +923,7 @@
                                     local_shipping
                                 </span>
                             </a>
-                            <a href="javascript:void(0);" onclick="DTC(${unitId}, ${originId}, ${id});">
+                            <a href="javascript:void(0);" onclick="DTC(${unitId}, ${originId}, ${id}, ${routeId});">
                                 <span class="material-icons">
                                     search
                                 </span>  ${ofertasCount > 0 ? `<span class="text-danger">${ofertasCount}</span>` : ``}
