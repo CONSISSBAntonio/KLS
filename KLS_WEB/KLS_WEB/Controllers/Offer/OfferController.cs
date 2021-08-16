@@ -43,23 +43,23 @@ namespace KLS_WEB.Controllers.Offer
         public async Task<JsonResult> Get(ofertas dataModel)
         {
             List<ofertas> dataReport;
-            dataReport = await this.AppContext.Execute<List<ofertas>>(MethodType.GET, _UrlApi+ "/busquedas", dataModel);
+            dataReport = await this.AppContext.Execute<List<ofertas>>(MethodType.GET, _UrlApi + "/busquedas", dataModel);
             return Json(dataReport);
         }
-        
+
         [Route("listTransportista")]
         public async Task<JsonResult> listTransportista()
         {
             List<listTran> dataReport;
-            dataReport = await this.AppContext.Execute<List<listTran>>(MethodType.GET, _UrlApi+ "/listTransportistas", null);
+            dataReport = await this.AppContext.Execute<List<listTran>>(MethodType.GET, _UrlApi + "/listTransportistas", null);
             return Json(dataReport);
         }
-        
+
         [Route("obOferta/{id}")]
         public async Task<JsonResult> obOferta(int id)
         {
             Oferta dataReport;
-            dataReport = await this.AppContext.Execute<Oferta>(MethodType.GET, _UrlApi+ "/obOferta", id);
+            dataReport = await this.AppContext.Execute<Oferta>(MethodType.GET, _UrlApi + "/obOferta", id);
             return Json(dataReport);
         }
 
@@ -68,7 +68,7 @@ namespace KLS_WEB.Controllers.Offer
         public async Task<JsonResult> putOferta(Oferta oferta)
         {
             Oferta dataReport;
-            dataReport = await this.AppContext.Execute<Oferta>(MethodType.PUT, _UrlApi+ "/putOferta", oferta);
+            dataReport = await this.AppContext.Execute<Oferta>(MethodType.PUT, _UrlApi + "/putOferta", oferta);
             return Json(dataReport);
         }
 
@@ -123,16 +123,16 @@ namespace KLS_WEB.Controllers.Offer
         public async Task<JsonResult> setSeparar(Separar dataModel)
         {
             Separar dataReport;
-            dataReport = await this.AppContext.Execute<Separar>(MethodType.POST, _UrlApi+"/Separar", dataModel);
+            dataReport = await this.AppContext.Execute<Separar>(MethodType.POST, _UrlApi + "/Separar", dataModel);
             return Json(dataReport);
         }
-        
+
         [HttpGet]
         [Route("getSeparar")]
         public async Task<JsonResult> getSeparar(Separar dataModel)
         {
             Separar dataReport;
-            dataReport = await this.AppContext.Execute<Separar>(MethodType.GET, _UrlApi+"/getSeparar", dataModel);
+            dataReport = await this.AppContext.Execute<Separar>(MethodType.GET, _UrlApi + "/getSeparar", dataModel);
             return Json(dataReport);
         }
 
@@ -141,7 +141,7 @@ namespace KLS_WEB.Controllers.Offer
         public async Task<JsonResult> putSeparar(Separar dataModel)
         {
             Separar dataReport;
-            dataReport = await this.AppContext.Execute<Separar>(MethodType.PUT, _UrlApi+ "/putSeparar", dataModel);
+            dataReport = await this.AppContext.Execute<Separar>(MethodType.PUT, _UrlApi + "/putSeparar", dataModel);
             return Json(dataReport);
         }
 
@@ -163,6 +163,19 @@ namespace KLS_WEB.Controllers.Offer
             };
 
             return View("~/Views/Travels/New.cshtml", travel);
+        }
+
+        [HttpPost]
+        [Route("setExpirados")]
+        public async Task<JsonResult> setExpirados(expirados dataModel)
+        {
+            List<Oferta> dataReport;
+            dataReport = await this.AppContext.Execute<List<Oferta>>(MethodType.POST, _UrlApi + "/setExpirados", dataModel);
+            return Json(dataReport);
+        }
+
+        public class expirados{
+            public List<Oferta> expirado { get; set; }
         }
     }
 }

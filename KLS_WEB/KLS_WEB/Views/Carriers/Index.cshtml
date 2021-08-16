@@ -69,7 +69,7 @@
                         <td>${nCon(key.id)}</td>
                         <td>${nCon(key.nombreComercial)}</td>
                         <td>${nCon(key.nombreComercial)}</td>
-                        <td>${nCon(key.tamanio)}</td>
+                        <td>${getTamanio(key.tamanio)}</td>
                         <td>${nCon(key.comentario)}</td>
                         <td>${statusTable(key.estatus)}</td>
                         <td class="text-center">
@@ -106,5 +106,31 @@
            }
        }
 
+       function getTamanio(tamanio) {
+           switch (parseInt(tamanio)) {
+               case 1:
+                   return "Pequeño";
+                   break;
+               case 2:
+                   return "Mediano";
+                   break;
+               case 3:
+                   return "Grande";
+                   break;
+               case 4:
+                   return "Logística";
+                   break;
+               case 5:
+                   return "Hombre Camión";
+                   break;
+               default:
+                   return "";
+           }
+        //Pequeño
+        //Median
+        //Grande
+        //Logística
+        //Hombre Camión
+       }
    </script>
 } 

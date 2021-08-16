@@ -166,11 +166,20 @@
                 console.log("----------");
                 console.log(jsonData);
 
-                if (parseInt($("#D_Opcional").val()) != 0 &&
-                    parseInt($("#TipoPresentacion").val()) != 0 &&
-                    parseInt($("#Tp_Opcional").val()) != 0 &&
-                    parseInt($("#M_Opcional").val()) != 0) {
+                //if (parseInt($("#D_Opcional").val()) != 0 &&
+                //    parseInt($("#TipoPresentacion").val()) != 0 &&
+                //    parseInt($("#Tp_Opcional").val()) != 0 &&
+                //    parseInt($("#M_Opcional").val()) != 0) {
 
+                if ($('#Densidad').prop('checked') && parseInt($("#D_Opcional").val()) == 0) {
+                    dToast("error", "Selecciona una opción densidad", "Error");
+                } else if ($('#TipoPresentacion').prop('checked') && parseInt($("#Tp_Opcional").val()) == 0) {
+                    dToast("error", "Selecciona una opción tipo de presentación", "Error");
+                } else if ($('#Material').prop('checked') && parseInt($("#M_Opcional").val()) == 0) {
+                    dToast("error", "Selecciona una opción material", "Error");
+                } else if ($('#Valor').prop('checked') && parseInt($("#V_Opcional").val()) == 0) {
+                    dToast("error", "Selecciona una opción valor", "Error");
+                } else {
                     if (parseInt($("#idBox").val()) == 0) {
                         $.post("/Clients/Box/setBox/", jsonData, function (res) {
                             $("#idBox").val(res.id);
@@ -187,11 +196,7 @@
                             $(".guardar").attr("disabled", false);
                         });
                     }
-
-                } else {
-                    dToast("error", "Selecciona una opción", "Error");
                 }
-  
             });
         });
 

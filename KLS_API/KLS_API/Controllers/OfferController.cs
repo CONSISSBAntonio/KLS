@@ -188,6 +188,39 @@ namespace KLS_API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        
+        [HttpPost]
+        [Route("setExpirados")]
+        public ActionResult setExpirados([FromBody] expirados expirados)
+        {
+            try
+            {
+                if (expirados.expirado != null) 
+                {
+                    foreach (var item in expirados.expirado)
+                    {
+                        var dato_ = new Oferta
+                        {
+                            Id = item.Id,
+                            status = 3
+                        };
+                        context.Attach(dato_);
+                        context.Entry(dato_).Property("status").IsModified = true;
+                        context.SaveChanges();
+                    }
+                }
+                
+                return Ok(expirados);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        public class expirados
+        {
+            public List<Oferta> expirado { get; set; }
+        }
 
         public class ofertas
         {
