@@ -40,34 +40,54 @@ namespace KLS_API.Controllers.Catalogs
             {
                 IQueryable<object> queryable = null;
 
+                //if (paginacion.Buscar != null && paginacion.Buscar != "")
+                //{
+                //    queryable = (from estado in context.Cat_Estado
+                //                 where estado.estatus == 1
+                //                 join ciudad in context.Cat_Ciudad on estado.id equals ciudad.id_estado
+                //                 join colonia in context.Cat_Colonia on ciudad.id equals colonia.id
+                //                 where colonia.nombre.ToLower().Contains(paginacion.Buscar.ToLower())
+                //                 || colonia.cp.ToString().Contains(paginacion.Buscar.ToLower())
+                //                 || estado.nombre.ToLower().Contains(paginacion.Buscar.ToLower())
+                //                 || ciudad.nombre.ToLower().Contains(paginacion.Buscar.ToLower())
+                //                 select new Cat_Colonia
+                //                 {
+                //                     id = colonia.id,
+                //                     id_estado = colonia.id_estado,
+                //                     id_ciudad = colonia.id_ciudad,
+                //                     cp = colonia.cp,
+                //                     nombre = colonia.nombre,
+                //                     estatus = colonia.estatus
+                //                 }).ToList().AsQueryable();
+                //}
+                //else
+                //{
+                //    queryable = context.Cat_Colonia.AsQueryable();
+                //}
+
                 if (paginacion.Buscar != null && paginacion.Buscar != "")
                 {
-                    //queryable = context.Cat_Colonia.Where(x => x.nombre.ToLower().Contains(paginacion.Buscar)).ToList().AsQueryable();
                     queryable = (from colonia in context.Cat_Colonia
-                                    where colonia.estatus == 1
-                                    join estado in context.Cat_Estado on colonia.id_estado equals estado.id
-                                    //where estado.nombre.ToLower().Contains(paginacion.Buscar)
-                                    join ciudad in context.Cat_Ciudad on colonia.id_ciudad equals ciudad.id
-                                 //where ciudad.nombre.ToLower().Contains(paginacion.Buscar)
-                                 where colonia.nombre.ToLower().Contains(paginacion.Buscar)
+                                 join ciudad in context.Cat_Ciudad on colonia.id_ciudad equals ciudad.id
+                                 join estado in context.Cat_Estado on ciudad.id_estado equals estado.id
+                                 where colonia.nombre.ToLower().Contains(paginacion.Buscar.ToLower())
                                  || colonia.cp.ToString().Contains(paginacion.Buscar)
-                                 || estado.nombre.ToLower().Contains(paginacion.Buscar)
-                                 || ciudad.nombre.ToLower().Contains(paginacion.Buscar)
-                                 select new
-                                    {
-                                        colonia.id,
-                                        id_estado = estado.id,
-                                        id_ciudad = ciudad.id,
-                                        cp = colonia.cp,
-                                        nombre = colonia.nombre,
-                                        estatus = colonia.estatus
-                                    }).ToList().AsQueryable();
+                                 || estado.nombre.ToLower().Contains(paginacion.Buscar.ToLower())
+                                 || ciudad.nombre.ToLower().Contains(paginacion.Buscar.ToLower())
+                                 select new Cat_Colonia
+                                 {
+                                     id = colonia.id,
+                                     id_estado = colonia.id_estado,
+                                     id_ciudad = colonia.id_ciudad,
+                                     cp = colonia.cp,
+                                     nombre = colonia.nombre,
+                                     estatus = colonia.estatus
+                                 }).ToList().AsQueryable();
                 }
-                else {
+                else
+                {
                     queryable = context.Cat_Colonia.AsQueryable();
                 }
-                
-
 
                 HttpContext.InsertarParametrosPaginacionEnRespuesta(queryable, paginacion.CantidadAMostrar);
                 double conteo = queryable.Count();

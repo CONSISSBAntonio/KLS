@@ -95,8 +95,8 @@
 
         function valId(){
             if (parseInt(@id) != 0) {
-                $("#span-icon").empty();
                 $.get("/Carriers/Certifications/getCertifiacions/", { "Id_Transportista":@id}, function (res) {
+                    $("#span-icon").empty();
                     if (res != null) {
                         $("#span-icon").append("edit");
                         $("#C_Opcional").val(res.c_Opcional);

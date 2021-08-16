@@ -40,7 +40,7 @@
                 </thead>
                 <tbody id="table-info">
                     <tr>
-                        <td rowspan="4">Cargando...</td>
+                        <td colspan="4">Cargando...</td>
                     </tr>
                 </tbody>
             </table>
@@ -157,11 +157,12 @@
         }
 
         function loadTable() {
+            $("#table-info").empty();
             var stable = $('.table-viajes').DataTable();
             stable.destroy();
-            $("#table-info").empty();
             $.get("/Clients/Checkpoints/getCheckpoints", { "Id_Ruta": @idruta}, function (res) {
                 dataCheck = res;
+                $("#table-info").empty();
                 $.each(res, function (item, key) {
                     $("#table-info").append(`
                              <tr>

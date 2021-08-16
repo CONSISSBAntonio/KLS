@@ -80,7 +80,7 @@
                             <div class="form-group">
                                 <label class="">Estado</label>
                                 <select class="form-control form-control-sm" style="width:100%;" name="Id_Estado" id="Id_Estado" onchange="setCiudad(this.value);">
-                                    <option value="0">Selecciona</option>
+                                    <option value="0">Selecciona una opción</option>
                                 </select>
                             </div>
                         </div>
@@ -88,7 +88,7 @@
                             <div class="form-group">
                                 <label class="">Ciudad</label>
                                 <select class="form-control form-control-sm" style="width:100%;" name="Id_Ciudad" id="Id_Ciudad" onchange="setColonias(this.value);">
-                                    <option value="0">Selecciona</option>
+                                    <option value="0">Selecciona una opción</option>
                                 </select>
                             </div>
                         </div>
@@ -96,7 +96,7 @@
                             <div class="form-group">
                                 <label class="">Colonia</label>
                                 <select class="form-control form-control-sm" style="width:100%;" name="Id_Colonia" id="Id_Colonia" onchange="setCp(this.value);">
-                                    <option value="0">Selecciona</option>
+                                    <option value="0">Selecciona una opción</option>
                                 </select>
                             </div>
                         </div>
@@ -191,6 +191,7 @@
 
         function setCp(id) {
             let indice = dataColonies.findIndex(service => service.id == id);
+            console.log(indice);
             if (parseInt(id) != 0) {
                 if (parseInt(indice) >= 0) {
                     $("#Cp").val(dataColonies[indice].cp);
@@ -201,7 +202,7 @@
             }
         }
 
-        function setColonias(id) {
+        function setColonias(id,idselect=0) {
             $("#Id_Colonia").empty();
             $("#Id_Colonia").append(`<option value="0">Selecciona una opción</option>`);
             $.get("/Clients/Origins/getColonias/" + id, function (res) {
@@ -211,6 +212,9 @@
                         $("#Id_Colonia").append(`<option value="${key.id}">${key.nombre}</option>`);
                     };
                 });
+                if (idselect != 0) {
+                    $("#Id_Colonia").val(idselect).trigger('change');
+                }
             });
         }
         function setCiudad(id) {
@@ -248,6 +252,9 @@
                             dToast("success", "Registro guardado exitosamente.", "Registrado");
                             $(".guardar").attr("disabled", false);
                             $('#frmRegister').trigger("reset");
+                            $("#Id_Ciudad").val(0).trigger('change');
+                            $("#Id_Estado").val(0).trigger('change')
+                            $("#Id_Colonia").val(0).trigger('change')
                         }).fail(function (error) {
                             dToast("error", "Error al tratar de guardar el registro", "Error");
                             $(".guardar").attr("disabled", false);
@@ -258,22 +265,30 @@
                 }
             });
         });
+
         function showModal(titulo = "Title", accion, idEditar = 0) {
             $('#frmRegister').trigger("reset");
             $(".guardar").html(accion);
             $("#titulo-modal").empty("");
             $("#titulo-modal").html(titulo);
             $("#idEditar").val(idEditar);
+            $("#Id_Ciudad").val(0).trigger('change');
+            $("#Id_Estado").val(0).trigger('change')
+            $("#Id_Colonia").val(0).trigger('change')
             if (accion == "Editar") {
                 try {
-                    let indice = dataOrigenes.findIndex(service => service.id === idEditar);
+                    let indice = dataOrigenes.findIndex(service => service.id == idEditar);
+
+                    console.log(dataOrigenes[indice]);
+
                     $("#Nombre").val(dataOrigenes[indice].nombre);
                     $("#Cp").val(dataOrigenes[indice].cp);
                     $("#Direccion").val(dataOrigenes[indice].direccion);
                     $("#HoraAtencion").val(dataOrigenes[indice].horaAtencion);
-                    $('#Id_Estado option[value="' + dataOrigenes[indice].id_Estado + '"]').attr("selected", true);
-                    $('#Id_Ciudad option[value="' + dataOrigenes[indice].id_Ciudad + '"]').attr("selected", true);
-                    $('#Id_Colonia option[value="' + dataOrigenes[indice].id_Colonia + '"]').attr("selected", true);
+                    $("#Id_Estado").val(dataOrigenes[indice].id_Estado).trigger('change');
+                    $("#Id_Ciudad").val(dataOrigenes[indice].id_Ciudad).trigger('change');
+                    setColonias(dataOrigenes[indice].id_Ciudad, dataOrigenes[indice].id_Colonia);
+                    //$("#Id_Colonia").val(dataOrigenes[indice].id_Colonia).trigger('change');
                     $("#modalDiv").modal("show");
                 } catch (error) {
                     dToast("error", "Error al tratar de editar, intenta recargar la página.", "Error");
@@ -290,7 +305,8 @@
             
             $.get("/Clients/Origins/getOrigen", { "Id_Cliente":@id}, function (res) {
                 dataOrigenes = res;
-                console.log(res);
+                console.log( res );
+                $("#table-info").empty();
                 $.each(res, function (item, key) {
                     $("#table-info").append(`
                         <tr>

@@ -195,7 +195,7 @@
                             //loadTable();
                             dToast("success", "Registro actualizado exitosamente.", "Registrado");
                             $(".guardar").attr("disabled", false);
-                            Table.draw();
+                            //Table.draw();
                         }).fail(function (error) {
                             dToast("error", "Error al tratar de guardar el registro", "Error");
                             $(".guardar").attr("disabled", false);
@@ -203,7 +203,7 @@
                     } else {
                         $.post("Colonies/setColonies", jsonData, function (res) {
                             //loadTable();
-                            Table.draw();
+                            //Table.draw();
                             dToast("success", "Se guardó el registro", "Registrado");
                             $(".guardar").attr("disabled", false);
                             $('#frmRegister').trigger("reset");
@@ -309,8 +309,6 @@
 
         function btnLink() {
             btnes = Math.ceil(numRegistros / CantidadAMostrar);
-            console.log("--------------->");
-            console.log(btnes);
             $('.pagination').empty();
             $('.pagination').append(`<li class="paginate_button page-item previous" id="table_previous"><a href="#" aria-controls="table" data-dt-idx="0" tabindex="0" class="page-link" onclick="paginar('anterior');">Anterior</a></li>`);
 
@@ -349,7 +347,6 @@
                     if (restar < 3) {
                         ressumar = 2 - restar;
                         respa = respa - ressumar;
-                        console.log(respa);
                     }
 
                     for (var i = respa; i <= btnes + 1; i++) {
@@ -447,6 +444,7 @@
 
             $.get("Colonies/getColoniesF", { "Pagina": Pagina, "CantidadAMostrar": CantidadAMostrar, "Buscar": buscar }, function (res) {
                 dataColonias = res.colonias;
+                console.log(dataColonias);
                 numRegistros = res.total;
                 $("#table_info").empty();
                 $("#table_info").append("Mostrando " + Pagina + " a " + CantidadAMostrar + " de " + res.total + " Registros");

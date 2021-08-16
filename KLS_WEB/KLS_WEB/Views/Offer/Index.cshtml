@@ -35,13 +35,13 @@
                     <input type="text" class="form-control" style="background-color:#EDECEC;" placeholder="Buscar" id="txtSearch"/>
                     <input type="text" class="form-control" style="background-color:#EDECEC;display:none;" placeholder="Buscar" id="txtSearchRutas" />
                 </li>
-                <li class="nav-item" style="padding-left:44%;">
-                    <a class="btn btn-sm btn-outline-secondary" href="#" data-toggle="modal" data-target="#exampleModal">
+                <li class="nav-item ml-auto">
+                    <a class="btn btn-sm btn-secondary float-right" href="#" data-toggle="modal" data-target="#exampleModal">
                         <span class="material-icons">
                             file_upload
                         </span>
                     </a>
-                    <a class="btn btn-sm btn-outline-secondary" href="#" onclick="verModal();">
+                    <a class="btn btn-sm btn-secondary float-right" href="#" onclick="verModal();">
                         <span class="material-icons">
                             add
                         </span>
@@ -367,57 +367,67 @@
                 var idTipounidad = $("#idtipounidad").val();
 
                 if (parseInt(idTipounidad) != 0) {
-                    var origen = cUpper($("#txtNivelOrigen").val());
-                    var destino = cUpper($("#txtNivelDestino").val());
 
-                    if (origen == 'REGION') {
-                        regionO = $("#seleccionaOrigen").val();
+                    if ($("#txtRangoEspera").val() != "" && $("#txtRangoEspera").val() !=0 && $("#txtCantidad").val() != "" && $("#txtCantidad").val() != 0 && $("#txtCantidad").val() != null && $("#txtFechaDisponibilidad").val() != "" && $("#txtFechaDisponibilidad").val() != null) {
+                        if ($("#txtNivelOrigen").val() != 0) {
+                            if ($("#txtNivelDestino").val()!=0) {
+                                //Validaciones
+                                var origen = cUpper($("#txtNivelOrigen").val());
+                                var destino = cUpper($("#txtNivelDestino").val());
+                                if (origen == 'REGION') {
+                                    regionO = $("#seleccionaOrigen").val();
+                                }
+                                if (origen == 'ESTADO') {
+                                    estadoO = $("#seleccionaOrigen").val();
+                                }
+                                if (origen == 'CIUDAD') {
+                                    estadoO = $("#seleccionaOrigen").val();
+                                    ciudadO = $("#ciudadOrigen").val();
+                                }
+                                if (destino == 'REGION') {
+                                    regionD = $("#seleccionaDestino").val();
+                                }
+                                if (destino == 'ESTADO') {
+                                    estadoD = $("#seleccionaDestino").val();
+                                }
+                                if (destino == 'CIUDAD') {
+                                    estadoD = $("#seleccionaDestino").val();
+                                    ciudadD = $("#ciudadDestino").val();
+                                }
+                                var fechaJs = moment($("#txtFechaDisponibilidad").val()).format('YYYY-MM-DD hh:mm:ss') + ".000000";
+                                jsonGuardar.push(
+                                    {
+                                        "id": idEditar,
+                                        "Transportista": idTransportista,
+                                        "Tipo_De_Unidad": idTipounidad,
+                                        "Cantidad": $("#txtCantidad").val(),
+                                        "Fecha_Disponibilidad": fechaJs,
+                                        "Rango_De_Espera": $("#txtRangoEspera").val(),
+                                        "Nivel_Origen": origen,
+                                        "Region_Origen": regionO,
+                                        "Estado_Origen": estadoO,
+                                        "ciudad_Origen": ciudadO,
+                                        "Tolerancia_Origen": $("#txtToleranciaOrigen").val(),
+                                        "Nivel_Destino": destino,
+                                        "Region_Destino": regionD,
+                                        "estado_Destino": estadoD,
+                                        "ciudad_Destino": ciudadD,
+                                        "Tolerancia_Destino": $("#txtToleranciaDestino").val(),
+                                        "status": 1
+                                    },
+                                );
+                                eGuardar();
+                                //Validaciones
+                            } else {
+                                dToast("error", "Selecciona un nivel de destino.", "Atención");
+                            }
+                        } else {
+                            dToast("error", "Selecciona un nivel de origen.", "Atención");
+                        }
+                        
+                    } else {
+                        dToast("error", "Todos los campos son necesarios.", "Atención");
                     }
-
-                    if (origen == 'ESTADO') {
-                        estadoO = $("#seleccionaOrigen").val();
-                    }
-                    if (origen == 'CIUDAD') {
-                        estadoO = $("#seleccionaOrigen").val();
-                        ciudadO = $("#ciudadOrigen").val();
-                    }
-
-                    if (destino == 'REGION') {
-                        regionD = $("#seleccionaOrigen").val();
-                    }
-
-                    if (destino == 'ESTADO') {
-                        estadoD = $("#seleccionaOrigen").val();
-                    }
-                    if (destino == 'CIUDAD') {
-                        estadoD = $("#seleccionaOrigen").val();
-                        ciudadD = $("#ciudadOrigen").val();
-                    }
-
-                    var fechaJs = moment($("#txtFechaDisponibilidad").val()).format('YYYY-MM-DD hh:mm:ss') + ".000000";
-
-                    jsonGuardar.push(
-                        {
-                            "id": idEditar,
-                            "Transportista": idTransportista,
-                            "Tipo_De_Unidad": idTipounidad,
-                            "Cantidad": $("#txtCantidad").val(),
-                            "Fecha_Disponibilidad": fechaJs,
-                            "Rango_De_Espera": $("#txtRangoEspera").val(),
-                            "Nivel_Origen": origen,
-                            "Region_Origen": regionO,
-                            "Estado_Origen": estadoO,
-                            "ciudad_Origen": ciudadO,
-                            "Tolerancia_Origen": $("#txtToleranciaOrigen").val(),
-                            "Nivel_Destino": destino,
-                            "Region_Destino": regionD,
-                            "estado_Destino": estadoD,
-                            "ciudad_Destino": ciudadD,
-                            "Tolerancia_Destino": $("#txtToleranciaDestino").val(),
-                            "status": 1
-                        },
-                    );
-                    eGuardar();
                 } else {
                     dToast("error", "Selecciona un tipo de unidad.", "Atención");
                 }
@@ -434,6 +444,7 @@
 
         var idEditar = 0;
         function verModal(ide = 0) {
+            limpiarCampos();
             idEditar = ide;
             if (idEditar != 0) {
                 $.get("Offer/obOferta/" + idEditar, function (res) {
@@ -516,7 +527,7 @@
                     });
                 }
                 //var dataXLSX = JSON.stringify(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]));
-                dataXLSX = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { raw: false, 'date_format': 'dd/mm/yyyy' });
+                dataXLSX = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { raw: false });
 
                 $("#h-table").empty();
                 $("#h-table").append(`
@@ -533,8 +544,11 @@
                 table.destroy();
                 $("#b-table").empty();
                 $.each(dataXLSX, function (data, item) {
+
+                    //console.log(item);
+
                     var itemT = Object.keys(item);
-                    var fechaJs = moment(item[itemT[3]]).format('YYYY-MM-DD hh:mm:ss') + ".000000";
+                    var fechaJs = moment(item[itemT[3]]).format('YYYY-MM-DD HH:mm:ss') + ".000000";
                     jsonEnv.push(
                         {
                             "Transportista": item[itemT[0]],
@@ -604,6 +618,7 @@
                 if (idEditar == 0) {
                     $.post("/Offer/setRouteMult", { "catCarga": jsonGuardar }, function (res) {
                         Ofertas();
+                        limpiarCampos();
                         dToast("success", "Datos guardados con éxito", "Atención");
                         $("#btnGuardar").attr("disabled", false);
                     }).fail(function (error) {
@@ -622,6 +637,7 @@
                     //console.log(jsonGuardar[0]);
                 }
             } else {
+                $("#btnGuardar").attr("disabled", false);
                 dToast("error", "No se encontraron registros para insertar.", "Error");
             }
 
@@ -631,6 +647,23 @@
             $("#div-tabla").hide('fast');
             $("#archivoXlsx").val("");
         }
+
+        function limpiarCampos() {
+            $("#idtransportista").val(0).trigger('change');
+            $("#idtipounidad").val(0).trigger('change');
+            $("#txtNivelOrigen").val(0).trigger('change');
+            $("#txtNivelDestino").val(0).trigger('change');
+            $("#seleccionaOrigen").val(0).trigger('change');
+            $("#ciudadOrigen").val(0).trigger('change');
+            $("#seleccionaDestino").val(0).trigger('change');
+            $("#ciudadDestino").val(0).trigger('change');
+            $("#txtFechaDisponibilidad").val("");
+            $("#txtRangoEspera").val("");
+            $("#txtToleranciaOrigen").val("");
+            $("#txtToleranciaDestino").val("");
+            $("#txtCantidad").val("");
+        }
+
         function validarExcel()
         {
             jsonEnvIncorrectos = [];
@@ -778,23 +811,24 @@
 
             });
 
-            //GENERAR EXCEL
-            var _fileName = "REPORTE.xlsx";
-            var _sheetName = "REPORTE";
-            var wb = XLSX.utils.book_new();
-            wb.Props = {
-                Title: "REPORTE ",
-                Subject: "NO ENCONTRADOS",
-                Author: "KLS",
-                CreatedDate: new Date(2021, 08, 11)
-            };
-            wb.SheetNames.push(_sheetName);
-            var ws_data = jsonEnvIncorrectos;
-            var ws = XLSX.utils.json_to_sheet(ws_data);
-            wb.Sheets[_sheetName] = ws;
-            var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
-            saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), _fileName);
-            //
+            if (Object.keys(jsonEnvIncorrectos).length > 0) {
+                //GENERAR EXCEL
+                var _fileName = "REPORTE.xlsx";
+                var _sheetName = "REPORTE";
+                var wb = XLSX.utils.book_new();
+                wb.Props = {
+                    Title: "REPORTE ",
+                    Subject: "NO ENCONTRADOS",
+                    Author: "KLS",
+                    CreatedDate: new Date(2021, 08, 11)
+                };
+                wb.SheetNames.push(_sheetName);
+                var ws_data = jsonEnvIncorrectos;
+                var ws = XLSX.utils.json_to_sheet(ws_data);
+                wb.Sheets[_sheetName] = ws;
+                var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+                saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), _fileName);
+            }
             eGuardar();
         }
         //Excel<------------------------------------------------------------
@@ -839,6 +873,7 @@
                 $("#tOfertas").append(`OFERTA (${Object.keys(res).length})`);
                 $("#table-ofertas-info").empty();
                 catOfertas = res;
+                console.log(res);
                 $.each(res, (item, key) => {
                     var Origen = "";
                     var Destino = "";
@@ -858,7 +893,11 @@
                     if (cUpper(key.nivelOrigen) == "CIUDAD") {
                         let estado = catEstado.findIndex(service => service.id == key.idestadoorigen);
                         let ciudad = catCiudad.findIndex(service => service.id == key.idciudadorigen);
-                        Origen = catEstado[estado].nombre + " - " + catCiudad[ciudad].nombre;
+                        try {
+                            Origen = catEstado[estado].nombre + " - " + catCiudad[ciudad].nombre;
+                        } catch (e) {
+                            console.log(e);
+                        }
                     }
 
                     //Nivel destino
@@ -877,7 +916,11 @@
                     if (cUpper(key.nivelDestino) == "CIUDAD") {
                         let estado = catEstado.findIndex(service => service.id == key.idestadodestino);
                         let ciudad = catCiudad.findIndex(service => service.id == key.idciudaddestino);
-                        Destino = catEstado[estado].nombre + " - " + catCiudad[ciudad].nombre;
+                        try {
+                            Destino = catEstado[estado].nombre + " - " + catCiudad[ciudad].nombre;
+                        } catch (e) {
+                            console.log(e);
+                        }
                     }
 
                     var hrefModal = "";
@@ -1000,12 +1043,12 @@
         //Cargar estados
         function loadState() {
             $.get("/Catalogs/Geography/State/getState", function (res) {
-                catEstado = res;
+                //catEstado = res;
                 loadCity();
                 res.map(data => {
                     const { estatus, id, nombre } = data;
                     if (estatus === 1) {
-                        catCiudad = [...catCiudad, data];
+                        catEstado = [...catEstado, data];
                         $("#esorigen").append(`<option value="${id}">${nombre}</option>`);
                         $("#esdestino").append(`<option value="${id}">${nombre}</option>`);
                     }
@@ -1014,6 +1057,12 @@
                 dSelect('esdestino');
                 dSelect('ciorigen');
                 dSelect('cidestino');
+                dSelect('txtNivelOrigen');
+                dSelect('seleccionaOrigen');
+                dSelect('txtNivelDestino');
+                dSelect('seleccionaDestino');
+                dSelect('ciudadOrigen');
+                dSelect('ciudadDestino');
             }).fail(function (error) {
                 dToast("error", "Error al obtener paises", "Atencion!");
             });
@@ -1104,14 +1153,15 @@
         function selTransportistas(){ //Funcion de listasr los transportistas eb el select
             $.get("/Carriers/getCarriers", function (res) {
                 catTransportista = res;
-                console.log(res);
                 $("#selTransportistas").empty();
                 $("#idtransportista").empty();
                 $("#selTransportistas").append(`<option value="0">Todos</option>`);
                 $("#idtransportista").append(`<option value="0">Selecciona una opcion</option>`);
                 $.each(res, function (item, key) {
-                    $("#selTransportistas").append(`<option value="${key.id}">${key.nombreComercial}</option>`);
-                    $("#idtransportista").append(`<option value="${key.id}">${key.nombreComercial}</option>`);
+                    if (key.estatus == 1) {
+                        $("#selTransportistas").append(`<option value="${key.id}">${key.nombreComercial}</option>`);
+                        $("#idtransportista").append(`<option value="${key.id}">${key.nombreComercial}</option>`);
+                    }
                 });
                 dSelect('selTransportistas');
                 dSelect('idtransportista');
@@ -1178,7 +1228,14 @@
         }
         function cargarRegiones() {
             $.get("/Catalogs/Geography/Regions/getRegion", function (res) {
-                catRegion = res;
+                res.map(data => {
+                    const { estatus, id, nombre } = data;
+                    if (estatus === 1) {
+                        catRegion = [...catRegion, data];
+                        //$("#ciorigen").append(`<option value="${id}">${nombre}</option>`);
+                        //$("#cidestino").append(`<option value="${id}">${nombre}</option>`);
+                    }
+                });
                 Ofertas();
             });
         }

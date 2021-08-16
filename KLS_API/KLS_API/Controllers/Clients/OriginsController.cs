@@ -12,8 +12,8 @@ using System.Threading.Tasks;
 namespace KLS_API.Controllers.Clients
 {
     [Route("Clients/Origins")]
-    //[ApiController]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class OriginsController : Controller
     {
         private readonly AppDbContext context;
@@ -41,6 +41,10 @@ namespace KLS_API.Controllers.Clients
                                  direccion = destinos.Direccion,
                                  estatus = destinos.Estatus,
                                  id = destinos.Id,
+                                 id_Estado = colonias.id_estado,
+                                 id_Ciudad = colonias.id_ciudad,
+                                 id_Colonia = colonias.id,
+                                 HoraAtencion = destinos.HoraAtencion
                              }).ToList().AsQueryable();
                 return Ok(queryable);
                 //var Origen = context.Cl_Has_Origen.Where(f => f.Id_Cliente == tr_origen.Id_Cliente).ToList();
