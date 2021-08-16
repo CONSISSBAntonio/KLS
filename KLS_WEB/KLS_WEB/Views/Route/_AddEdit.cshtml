@@ -321,12 +321,10 @@
                             const origen = $('#fciudadorigen').val();
                             const destino = $('#fciudaddestino').val();
 
-                            //console.log(origen, destino);
-                            //console.log(String(origen).padStart(4, '0'), String(destino).padStart(4, '0'));
                             $('#idgenerado').val(String(origen).padStart(4, '0') + String(destino).padStart(4, '0'));
                             $('#factualizadopor').html(res.actualizadopor);
                             $('#fultimocambio').html(new Date(res.ultimocambio).toLocaleString());
-                            dToast("success", "Registro actualizado exitosamente.", "Registrado");
+                            dToast("success", "Se guardó el registro", "Registrado");
                             botonse.attr("disabled", false);
                         }).fail(function (error) {
                             dToast("error", "Error al tratar de guardar el registro", "Error");
@@ -337,6 +335,7 @@
                     botonse.attr('disabled', true);
                     $.post("Route/setRoute", jsonData, function (res) {
                         $('.body').html(res);
+                        dToast("success", "Ruta guardada exitosamente.", "Registrado");
                         loadTable();
                     }).fail(function (error) {
                         dToast("error", "Error al tratar de guardar el registro", "Error");
