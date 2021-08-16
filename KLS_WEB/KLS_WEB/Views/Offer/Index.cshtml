@@ -21,10 +21,14 @@
         <div class="p-4 shadow bg-white">
             <ul class="nav nav-pills" id="pills-tab" role="tablist">
                 <li class="nav-item" onclick="verBuscar('txtSearch');">
-                    <a class="nav-link active" style="background-color:#EDECEC" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true"><span id="tOfertas"></span></a>
+                    <a class="nav-link active" style="background-color:#EDECEC" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">
+                    <span id="tOfertas">Ofertas (0)</span>
+                    </a>
                 </li>
                 <li class="nav-item" onclick="verBuscar('txtSearchRutas');">
-                    <a class="nav-link" style="background-color:#EDECEC" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false"><span id="tRutasServicio"></a>
+                    <a class="nav-link" style="background-color:#EDECEC" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">
+                        <span id="tRutasServicio">Rutas con servicio (0)</span>
+                    </a>
                 </li>
                 <li class="nav-item pl-lg-5">
                     <select class="form-control form-control-sm" style="width:200px;background-color:#EDECEC" id="selTransportistas" onchange="Ofertas();">
@@ -54,7 +58,7 @@
                         <thead>
                             <tr>
                                 <th>TRANSPORTISTA</th>
-                                <th>TIPO DE UNIDAD</th>
+                                <th>TIPO DE SERVICIO</th>
                                 <th>ORIGEN</th>
                                 <th>DESTINO</th>
                                 <th>FECHA DISPONIBILIDAD</th>
@@ -145,7 +149,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-3">
-                        <label>Tipo de unidad</label>
+                        <label>Tipo de servicio</label>
                         <select class="form-control form-control-sm" id="tipounidad" name="">
                             <option value="0">Selecciona una opción</option>
                         </select>
@@ -444,7 +448,6 @@
 
         var idEditar = 0;
         function verModal(ide = 0) {
-            limpiarCampos();
             idEditar = ide;
             if (idEditar != 0) {
                 $.get("Offer/obOferta/" + idEditar, function (res) {
@@ -464,11 +467,12 @@
                     }
                     if (cUpper(res.nivel_Origen) == "CIUDAD") {
                         $('#seleccionaOrigen').val(parseInt(res.estado_Origen)).trigger('change');
-                        $('#ciudadOrigen').val(parseInt(res.ciudad_Origen)).trigger('change');
+                        $('#ciudadOrigen').val(res.ciudad_Origen).trigger('change');
                     }
 
                     $('#txtToleranciaOrigen').val(res.tolerancia_Origen);
                     $('#txtNivelDestino').val(cUpper(res.nivel_Destino)).trigger('change');
+
                     if (cUpper(res.nivel_Destino) == "REGION") {
                         $('#seleccionaDestino').val(parseInt(res.region_Destino)).trigger('change');
                     }
@@ -477,12 +481,16 @@
                     }
                     if (cUpper(res.nivel_Destino) == "CIUDAD") {
                         $('#seleccionaDestino').val(parseInt(res.estado_Destino)).trigger('change');
-                        $('#ciudadOrigen').val(parseInt(res.ciudad_Destino)).trigger('change');
+                        $('#ciudadDestino').val(parseInt(res.ciudad_Destino)).trigger('change');
                     }
                     $('#txtToleranciaDestino').val(res.tolerancia_Destino);
+
                 });
+                $("#modalAgregar").modal("show");
+            } else {
+                limpiarCampos();
+                $("#modalAgregar").modal("show");
             }
-            $("#modalAgregar").modal("show");
         }
 
         //Cargar datos de las rutas
@@ -576,7 +584,7 @@
                         <td>${item[itemT[1]]}</td>
                         <td>${item[itemT[2]]}</td>
                         <td>${fecha}</td>
-                        <td>${item[itemT[5]]}</td>
+                        <td>${item[itemT[4]]}</td>
                     </tr>
                     `);
                 });
@@ -621,6 +629,7 @@
                         limpiarCampos();
                         dToast("success", "Datos guardados con éxito", "Atención");
                         $("#btnGuardar").attr("disabled", false);
+                        jsonGuardar = [];
                     }).fail(function (error) {
                         console.log("error", "Error al insertar" + error);
                         $("#btnGuardar").attr("disabled", false);
@@ -851,6 +860,8 @@
             if (estado == 3) { return "gray"}
             if (estado == 4) { return "red"}
         }
+
+        var expirados = [];
         function Ofertas() {
             var esorigen = $("#esorigen").val();
             var esdestino = $("#esdestino").val();
@@ -864,16 +875,16 @@
             if ($("#fechadisp").val() != "" && $("#fechadisp").val() != null) {
                 fechadisp = moment($("#fechadisp").val() + " " + $("#HoraSalida").val()).format('YYYY-MM-DD hh:mm:ss') + ".000000";
             }
+
             var jsonData = { "seltransportista": transportista, "fechadisponibilidad": fechadisp, "transportista": nivelservicio, "idestadoorigen": esorigen, "idestadodestino": esdestino, "idciudadorigen": ciorigen, "idciudaddestino": cidestino, "idtipounidad": tipounidad };
             $("#table-ofertas-info").empty();
             var stable = $('.table-ofertas').DataTable();
             stable.destroy();
-            $.get("Offer/busqueda", jsonData , function (res) {
-                $("#tOfertas").empty();
-                $("#tOfertas").append(`OFERTA (${Object.keys(res).length})`);
+
+            $.get("Offer/busqueda", jsonData, function (res) {
                 $("#table-ofertas-info").empty();
                 catOfertas = res;
-                console.log(res);
+
                 $.each(res, (item, key) => {
                     var Origen = "";
                     var Destino = "";
@@ -882,6 +893,7 @@
                         let indice = catRegion.findIndex(service => service.id == key.idregionOrigen);
                         Origen = catRegion[indice].nombre;
                     }
+
                     if (cUpper(key.nivelOrigen) == "ESTADO") {
                         let indice = catEstado.findIndex(service => service.id == key.idestadoorigen);
                         if (indice >= 0) {
@@ -890,6 +902,7 @@
                             Origen="-----"
                         }
                     }
+
                     if (cUpper(key.nivelOrigen) == "CIUDAD") {
                         let estado = catEstado.findIndex(service => service.id == key.idestadoorigen);
                         let ciudad = catCiudad.findIndex(service => service.id == key.idciudadorigen);
@@ -925,21 +938,28 @@
 
                     var hrefModal = "";
                     var btndisabled = "disabled";
-                    if (key.status == 1 || key.status == 2) {
+
+                    if (key.status == 1 || key.status == 2)
+                    {
                         hrefModal = `<a href="#" style="color:` + color(key.status) + `" data-toggle="modal" onclick="separarModal(${key.idoferta},${key.status})">` + estado(key.status) + `</a>`;
                     } else {
                         hrefModal = `<a style="color:` + color(key.status) + `">` + estado(key.status) + `</a>`;
                     }
+
                     if (key.status != 1) { btndisabled = ""; }
 
-                    $("#table-ofertas-info").append(`
-                        <tr class="text-uppercase">
+                    if (moment(key.fechadisponibilidad).format('DD/MM/YYYY hh:mm A') > moment().format('DD/MM/YYYY hh:mm A') ) {
+                        $("#table-ofertas-info").append(`
+                        <tr class="text-uppercase" id="re${key.idoferta}">
                             <td style="width:5% !important;">${key.nombreTran}</td>
                             <td style="width:12% !important;">${key.tipounidad}</td>
                             <td>${Origen}</td>
                             <td>${Destino}</td>
-                            <td style="width:15% !important;">${moment(key.fechadisponibilidad).format('DD/MM/YYYY hh:mm:ss A')}</td>
-                            <td style="width:8% !important;">(<span class="timeago" datetime="${key.fechadisponibilidad}"></span>) </td>
+                            <td style="width:15% !important;">${moment(key.fechadisponibilidad).format('DD/MM/YYYY hh:mm A')}</td>
+
+                            <td style="width:8% !important;">
+                                <span id="days${key.idoferta}"></span>d <span id="hours${key.idoferta}"></span>h <span id="minutes${key.idoferta}"></span>m <span id="seconds${key.idoferta}"></span>s
+                            </td>
                             <td style="width:7% !important;text-align:center;">${hrefModal}</td>
                             <td style="width:7% !important;text-align:center;">
                                 <a class="btn btn-sm" href="#" onclick="verModal(${key.idoferta})">
@@ -950,9 +970,14 @@
                                 </a>
                             </td>
                         </tr>`);
-                    timeago.render(document.querySelectorAll('.timeago'), 'es-MX');
+                        ver(key.idoferta, moment(key.fechadisponibilidad).format('MM/DD/YYYY HH:mm:ss'));
+                    } else {
+                        expirados.push({ 'Id': key.idoferta })
+                    }
                 });
 
+                $("#tOfertas").empty();
+                $("#tOfertas").append(`OFERTA (${Object.keys(res).length - Object.keys(expirados).length})`);
                 $('.table-ofertas').dataTable({
                     searching: true,
                     info: false,
@@ -978,34 +1003,82 @@
                         }
                     }
                 });
-
                 $('#table_filter').hide();
-                
+
                 $("#txtSearch").keyup(function () {
                     $('.table-ofertas').DataTable().search($('#txtSearch').val(), false, true).draw();
                 });
-                $("#modalBuscar").modal('hide');
 
+                $("#modalBuscar").modal('hide');
             }).fail(function (error) {
                 dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
             });
         }
+
+        function expirar() {
+            $.post("Offer/setExpirados", { "expirado": expirados }, function (res) {
+                expirados = [];
+            });
+        }
+        //---------------------------------------funcion de fecha>
+        var DATE_TARGET = "";
+        const MILLISECONDS_OF_A_SECOND = 1000;
+        const MILLISECONDS_OF_A_MINUTE = MILLISECONDS_OF_A_SECOND * 60;
+        const MILLISECONDS_OF_A_HOUR = MILLISECONDS_OF_A_MINUTE * 60;
+        const MILLISECONDS_OF_A_DAY = MILLISECONDS_OF_A_HOUR * 24
+        function ver(id, fecha) {
+            var i = 0;
+            var timer = setInterval(function () {
+                var fechaJs = moment().format('DD/MM/YYYY H:mm:ss');
+                try {
+                    DATE_TARGET = new Date(fecha);
+                    const NOW = new Date()
+                    const DURATION = DATE_TARGET - NOW;
+                    const REMAINING_DAYS = Math.floor(DURATION / MILLISECONDS_OF_A_DAY);
+                    const REMAINING_HOURS = Math.floor((DURATION % MILLISECONDS_OF_A_DAY) / MILLISECONDS_OF_A_HOUR);
+                    const REMAINING_MINUTES = Math.floor((DURATION % MILLISECONDS_OF_A_HOUR) / MILLISECONDS_OF_A_MINUTE);
+                    const REMAINING_SECONDS = Math.floor((DURATION % MILLISECONDS_OF_A_MINUTE) / MILLISECONDS_OF_A_SECOND);
+                    document.querySelector('span#days' + id + '').textContent = REMAINING_DAYS;
+                    document.querySelector('span#hours' + id + '').textContent = REMAINING_HOURS;
+                    document.querySelector('span#minutes' + id + '').textContent = REMAINING_MINUTES;
+                    document.querySelector('span#seconds' + id + '').textContent = REMAINING_SECONDS;
+                    if (moment(fecha).format('DD/MM/YYYY H:mm:ss') <= fechaJs) {
+                        expirados.push({ 'Id': id })
+                        expirar();
+                        Ofertas();
+                    }
+                } catch (e) {
+
+                }
+            }, 1000);
+        }
+        //--------------------------------------->
         $(document).ready(function () {
             loadState();
             cargarUnidades();
             listarRutas();
             selTransportistas();//Obtiene los transportistas
         });
+
         //cargar tipo de unidades
         function cargarUnidades() {
             $.get("/Catalogs/TypesOfUnits/getUnidades", function (res) {
-                catUnidades = res;
+                //catUnidades = res;
                 $("#idtipounidad").empty();
                 $("#idtipounidad").append(`<option value="0">Selecciona una opción</option>`);
-                $.each(res, function (item, key) {
-                    $("#idtipounidad").append(`<option value="${key.id}">${key.nombre}</option>`);
-                    $("#tipounidad").append(`<option value="${key.id}">${key.nombre}</option>`);
+                res.map(data => {
+                    const { estatus, id, nombre } = data;
+                    if (estatus == 1) {
+                        catUnidades = [...catUnidades, data];
+                        $("#idtipounidad").append(`<option value="${id}">${nombre}</option>`);
+                        $("#tipounidad").append(`<option value="${id}">${nombre}</option>`);
+                    }
                 });
+
+                
+                //$.each(res, function (item, key) {
+                    
+                //});
                 dSelect('idtipounidad');
                 dSelect('tipounidad');
 
@@ -1280,6 +1353,14 @@
             var view = new Uint8Array(buf);  //create uint8array as viewer
             for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
             return buf;
+        }
+
+
+        //remove tr
+        function remTr(id) {
+            //table-ofertas 
+            //$('#re'+id).remove(); 
+            $('#re' + id).fadeOut(200, function () { $(this).remove(); });
         }
     </script>
 } 

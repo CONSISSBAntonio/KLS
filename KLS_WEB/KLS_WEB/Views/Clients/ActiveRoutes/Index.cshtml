@@ -161,6 +161,10 @@
                             dToast("success", "Se guardó el registro", "Registrado");
                             $(".guardar").attr("disabled", false);
                             $('#frmRegister').trigger("reset");
+                            $('#estadoOrigen').val(0).trigger('change');
+                            $('#estadoDestino').val(0).trigger('change');
+                            $('#ciudadOrigen').val(0).trigger('change');
+                            $('#ciudadDestino').val(0).trigger('change');
                             obtenerConversiones();
                         }).fail(function (error) {
                             dToast("error", "Error al tratar de guardar el registro", "Error");
@@ -289,6 +293,11 @@
             $("#titulo-modal").empty("");
             $("#titulo-modal").html(titulo);
             $("#idEditar").val(idEditar);
+            $('#estadoOrigen').val(0).trigger('change');
+            $('#estadoDestino').val(0).trigger('change');
+            $('#ciudadOrigen').val(0).trigger('change');
+            $('#ciudadDestino').val(0).trigger('change');
+
             if (accion == "Editar") {
                 try {
                     let indice = dataConversiones.findIndex(service => service.id == idEditar);
@@ -305,7 +314,6 @@
                     dToast("error", "Error al tratar de editar, intenta recargar la página." + error, "Error");
                     $("#modalDiv").modal("hide");
                 }
-
             } else {
                 $("#modalDiv").modal("show");
             }
