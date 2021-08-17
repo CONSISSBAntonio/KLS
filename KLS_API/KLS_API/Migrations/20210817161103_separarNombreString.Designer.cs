@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210817161103_separarNombreString")]
+    partial class separarNombreString
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1405,17 +1407,17 @@ namespace KLS_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("fecha")
-                        .HasColumnType("DateTime");
+                    b.Property<DateTime>("fecha")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("id_User")
-                        .HasColumnType("varchar(250)");
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<int>("id_oferta")
                         .HasColumnType("int");
 
                     b.Property<string>("nombre")
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("notasCargo")
                         .HasColumnType("varchar(250)");

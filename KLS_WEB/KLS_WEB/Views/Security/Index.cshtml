@@ -1,22 +1,8 @@
 ﻿@{
-    ViewData["Title"] = "Catalogos";
+    ViewData["Title"] = "Seguridad";
 }
 <div class="data-content p-4 text-left">
-    @*<div class="title font-barlow">Seguridad</div>*@
-    <div class="p-4">
-        <!--<div class="text-left d-flex mb-3">-->
-        @*<a href="/Catalogs">
-            <div class="material-icons icon-red">arrow_back</div>
-        </a>*@
-        <!--<div class="text-uppercase poppins medium size-24 pl-2">SEGURIDAD</div>
-        <div style="padding-left:20%;">
-            <button class="btn btn-sm btn-dark" onclick="showModal('AGREGAR','Agregar');">
-                <span class="material-icons">
-                    add
-                </span>
-            </button>
-        </div>
-    </div>-->
+    <div class="">
         <div class="d-flex flex-nowrap">
             <div class="p-2">
                 <div class="text-left d-flex">
@@ -43,11 +29,16 @@
                         <th>A. paterno</th>
                         <th>A. materno</th>
                         <th>Correo</th>
+                        <th>Rol</th>
                         <th>Estatus</th>
                         <th style="width:3%;" class="text-center">Acciones</th>
                     </tr>
                 </thead>
-                <tbody id="table-info"></tbody>
+                <tbody id="table-info">
+                    <tr>
+                        <td colspan="8">Cargando...</td>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </div>
@@ -64,15 +55,30 @@
                 </div>
                 <div class="modal-body text-left">
                     <form id="frmRegister" action="#" method="post">
-                        <input type="hidden" name="id" id="idEditar" value="0" />
+                        <input type="hidden" name="id" id="idEditar" value="" />
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="">Nombre</label>
+                                <input type="text" class="form-control" name="Nombre" id="Nombre" required />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="">Apellido paterno</label>
+                                <input type="text" class="form-control" name="Apaterno" id="Apaterno" required />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="">Apellido Materno</label>
+                                <input type="text" class="form-control" name="Amaterno" id="Amaterno" required />
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-4">
                                 <label class="">Correo</label>
-                                <input type="text" class="form-control" name="email" id="email" required />
+                                <input type="email" class="form-control" name="email" id="email" required />
                             </div>
                             <div class="col-md-4">
                                 <label class="">Contraseña</label>
-                                <input type="text" class="form-control" name="password" id="password" required />
+                                <input type="text" class="form-control" name="password" id="password" required style="text-transform: none;" />
                             </div>
                             <div class="col-md-4">
                                 <label class="">Tipo usuario</label>
@@ -82,6 +88,18 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="">Activo</label>
+                                <select class="form-control form-control-sm" name="activo" id="activo">
+                                    <option value="1">Activo</option>
+                                    <option value="0">Inactivo</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <br />
                         <button type="submit" class="btn btn-dark guardar" style="width:20%;" id="btnAccion">
                             Guardar
                         </button>
@@ -90,7 +108,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
-                    @*<button type="button" class="btn btn-primary">Save changes</button>*@
                 </div>
             </div>
         </div>
@@ -106,19 +123,37 @@
                 event.preventDefault();
                 var jsonData = convertJson($("#frmRegister"));
                 $.post("Security/setSecurity", jsonData, function (res) {
-                    console.log(res);
+                    if (res != null) {
+                        dToast("error", res.response.errors[0].errorMessage, "Error");
+                    } else {
+                        dToast("success", "Usuario registrado exitosamente", "Registrado");
+                        $('#frmRegister').trigger("reset");
+                        loadTable();
+                    }
                 }).fail(function (error, xhr, status) {
                     console.log(xhr);
                 });
             });
         });
-        function showModal(titulo = "Title", accion, idEditar = 0) {
+        //Kls123!.
+        function showModal(titulo = "Title", accion, idEditar = "") {
             $('#frmRegister').trigger("reset");
             $(".guardar").html(accion);
             $("#titulo-modal").empty("");
             $("#titulo-modal").html(titulo);
             if (accion == "Editar") {
                 try {
+                    console.log(dataSeguridad);
+                    let indice = dataSeguridad.findIndex(service => service.id_User == idEditar);
+                    $("#Nombre").val(dataSeguridad[indice].nombre);
+                    $("#Apaterno").val(dataSeguridad[indice].apaterno);
+                    $("#Amaterno").val(dataSeguridad[indice].amaterno);
+                    $("#email").val(dataSeguridad[indice].email);
+                    $("#password").val(dataSeguridad[indice].password);
+                    $("#Rol").val(dataSeguridad[indice].rol).trigger('change');
+                    $("#activo").val(dataSeguridad[indice].activo).trigger('change');
+
+
                     $("#modalDiv").modal("show");
                 } catch (error) {
                     dToast("error", "Error al tratar de editar, intenta recargar la página.", "Error");
@@ -129,12 +164,12 @@
             }
         }
         function loadTable() {
-            var stable = $('.table-viajes').DataTable();
-            stable.destroy();
-            $("#table-info").empty();
             $.get("Security/getSecurity", function (res) {
+                $("#table-info").empty();
+                var stable = $('.table-viajes').DataTable();
+                stable.destroy();
+                $("#table-info").empty();
                 dataSeguridad = res;
-                console.log(dataSeguridad);
                 let i = 0;
                 $.each(res, function (item, key) {
                     i++;
@@ -145,10 +180,11 @@
                             <td>${nCon(key.apaterno)}</td>
                             <td>${nCon(key.amaterno)}</td>
                             <td>${nCon(key.email)}</td>
+                            <td>${nCon(key.rol)}</td>
                             <td>`+ statusTable(key.estatus) + `</td>
                             <td class="text-center">
                                 <a href="#">
-                                    <span class="material-icons" onclick="showModal('EDITAR','Editar',${nCon(key.id)});">
+                                    <span class="material-icons" onclick="showModal('EDITAR','Editar','${nCon(key.id_User)}');">
                                         mode_edit
                                     </span>
                                 </a>

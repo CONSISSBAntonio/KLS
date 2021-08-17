@@ -39,32 +39,6 @@ namespace KLS_API.Controllers.Catalogs
             try
             {
                 IQueryable<object> queryable = null;
-
-                //if (paginacion.Buscar != null && paginacion.Buscar != "")
-                //{
-                //    queryable = (from estado in context.Cat_Estado
-                //                 where estado.estatus == 1
-                //                 join ciudad in context.Cat_Ciudad on estado.id equals ciudad.id_estado
-                //                 join colonia in context.Cat_Colonia on ciudad.id equals colonia.id
-                //                 where colonia.nombre.ToLower().Contains(paginacion.Buscar.ToLower())
-                //                 || colonia.cp.ToString().Contains(paginacion.Buscar.ToLower())
-                //                 || estado.nombre.ToLower().Contains(paginacion.Buscar.ToLower())
-                //                 || ciudad.nombre.ToLower().Contains(paginacion.Buscar.ToLower())
-                //                 select new Cat_Colonia
-                //                 {
-                //                     id = colonia.id,
-                //                     id_estado = colonia.id_estado,
-                //                     id_ciudad = colonia.id_ciudad,
-                //                     cp = colonia.cp,
-                //                     nombre = colonia.nombre,
-                //                     estatus = colonia.estatus
-                //                 }).ToList().AsQueryable();
-                //}
-                //else
-                //{
-                //    queryable = context.Cat_Colonia.AsQueryable();
-                //}
-
                 if (paginacion.Buscar != null && paginacion.Buscar != "")
                 {
                     queryable = (from colonia in context.Cat_Colonia

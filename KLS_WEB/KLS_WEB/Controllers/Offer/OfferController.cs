@@ -9,6 +9,7 @@ using KLS_WEB.Models.Oferta;
 using KLS_WEB.Models.Travels;
 using KLS_WEB.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KLS_WEB.Controllers.Offer
@@ -122,6 +123,10 @@ namespace KLS_WEB.Controllers.Offer
         [Route("setSeparar")]
         public async Task<JsonResult> setSeparar(Separar dataModel)
         {
+            DateTime localDate = DateTime.Now;
+            dataModel.fecha = localDate;
+            dataModel.id_User = HttpContext.Session.GetString("Id");
+            dataModel.nombre = HttpContext.Session.GetString("Nombre")+" "+HttpContext.Session.GetString("Apaterno")+" "+ HttpContext.Session.GetString("Amaterno");
             Separar dataReport;
             dataReport = await this.AppContext.Execute<Separar>(MethodType.POST, _UrlApi + "/Separar", dataModel);
             return Json(dataReport);
@@ -140,6 +145,10 @@ namespace KLS_WEB.Controllers.Offer
         [Route("putSeparar")]
         public async Task<JsonResult> putSeparar(Separar dataModel)
         {
+            DateTime localDate = DateTime.Now;
+            dataModel.fecha = localDate;
+            dataModel.id_User = HttpContext.Session.GetString("Id");
+            dataModel.nombre = HttpContext.Session.GetString("Nombre") + " " + HttpContext.Session.GetString("Apaterno") + " " + HttpContext.Session.GetString("Amaterno");
             Separar dataReport;
             dataReport = await this.AppContext.Execute<Separar>(MethodType.PUT, _UrlApi + "/putSeparar", dataModel);
             return Json(dataReport);

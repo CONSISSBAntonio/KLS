@@ -201,7 +201,6 @@
                         </select>
                     </div>
                 </div>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -330,7 +329,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <label>Ruta tentativa</label>
-                        <input type="text" class="form-control" placeholder="Escribe aqui" id="rutaTentativa"/>
+                        <input type="text" class="form-control" placeholder="Escribe aqui" id="rutaTentativa" />
                     </div>
                 </div>
                 <div class="row pt-3">
@@ -339,7 +338,7 @@
                         <textarea class="form-control" rows="8" placeholder="Escribe aqui" id="notasCargo"></textarea>
                     </div>
                 </div>
-                <br />
+                <div id="info-update"></div>
                 <button type="button" class="btn btn-primary" style="width:160px;" id="confirmarSeparar" onclick="guardarSeparar();">Confirmar</button>
                 <button type="button" class="btn btn-primary" style="width:160px;" id="editarSeparar" onclick="modificarSeparar();">Modificar</button>
             </div>
@@ -484,7 +483,6 @@
                         $('#ciudadDestino').val(parseInt(res.ciudad_Destino)).trigger('change');
                     }
                     $('#txtToleranciaDestino').val(res.tolerancia_Destino);
-
                 });
                 $("#modalAgregar").modal("show");
             } else {
@@ -629,7 +627,15 @@
                         limpiarCampos();
                         dToast("success", "Datos guardados con éxito", "Atención");
                         $("#btnGuardar").attr("disabled", false);
+                        jsonGuardar.length = 0;
                         jsonGuardar = [];
+
+                        jsonEnvIncorrectos.length = 0;
+                        jsonEnvIncorrectos = [];
+
+                        jsonEnv.length = 0;
+                        jsonEnv = [];
+
                     }).fail(function (error) {
                         console.log("error", "Error al insertar" + error);
                         $("#btnGuardar").attr("disabled", false);
@@ -648,6 +654,14 @@
             } else {
                 $("#btnGuardar").attr("disabled", false);
                 dToast("error", "No se encontraron registros para insertar.", "Error");
+                jsonGuardar.length = 0;
+                jsonGuardar = [];
+
+                jsonEnvIncorrectos.length = 0;
+                jsonEnvIncorrectos = [];
+
+                jsonEnv.length = 0;
+                jsonEnv = [];
             }
 
             //jsonEnv = [];
@@ -1020,6 +1034,7 @@
                 expirados = [];
             });
         }
+
         //---------------------------------------funcion de fecha>
         var DATE_TARGET = "";
         const MILLISECONDS_OF_A_SECOND = 1000;
@@ -1321,12 +1336,16 @@
             $("#notasCargo").val("");
             $("#confirmarSeparar").hide();
             $("#editarSeparar").hide();
-
+            $("#info-update").empty();
             if (status == 2) {
                 $("#editarSeparar").show();
                 $.get("Offer/getSeparar", { "id_oferta": id }, function (res) {
                     $("#rutaTentativa").val(res.rutaTentativa);
                     $("#notasCargo").val(res.notasCargo);
+                    $("#info-update").append(`
+                        <b style="font-size:12px;">Actualizado por : ${res.nombre}</b><br>
+                        <b style="font-size:12px;">Fecha actualización : ${moment(res.fecha).format('YYYY-MM-DD HH:mm:ss')}</b><br>
+                    `);
                     idSeparar = res.id;
                 });
             } else {
@@ -1335,18 +1354,26 @@
             $("#separarModal").modal('show');
         }
         function guardarSeparar() {
-            var jsonData = { "id_oferta": idOferta, "rutaTentativa": $("#rutaTentativa").val(), "notasCargo":$("#notasCargo").val() };
-            $.post("Offer/setSeparar", jsonData, function (res) {
-                Ofertas();
-                $("#separarModal").modal('hide');
-            });
+            if ($("#rutaTentativa").val() != "" && $("#notasCargo").val() != "") {
+                var jsonData = { "id_oferta": idOferta, "rutaTentativa": $("#rutaTentativa").val(), "notasCargo": $("#notasCargo").val() };
+                $.post("Offer/setSeparar", jsonData, function (res) {
+                    Ofertas();
+                    $("#separarModal").modal('hide');
+                });
+            } else {
+                dToast("error", "Todos los campos son requeridos.", "Atención");
+            }
         }
         function modificarSeparar() {
-            var jsonData = { "id": idSeparar, "id_oferta": idOferta, "rutaTentativa": $("#rutaTentativa").val(), "notasCargo": $("#notasCargo").val() };
-            $.post("Offer/putSeparar", jsonData, function (res) {
-                Ofertas();
-                $("#separarModal").modal('hide');
-            });
+            if ($("#rutaTentativa").val() != "" && $("#notasCargo").val() != "") {
+                var jsonData = { "id": idSeparar, "id_oferta": idOferta, "rutaTentativa": $("#rutaTentativa").val(), "notasCargo": $("#notasCargo").val() };
+                $.post("Offer/putSeparar", jsonData, function (res) {
+                    Ofertas();
+                    $("#separarModal").modal('hide');
+                });
+            } else {
+                dToast("error", "Todos los campos son requeridos.", "Atención");
+            }
         }
         function s2ab(s) {
             var buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
@@ -1354,12 +1381,7 @@
             for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
             return buf;
         }
-
-
-        //remove tr
         function remTr(id) {
-            //table-ofertas 
-            //$('#re'+id).remove(); 
             $('#re' + id).fadeOut(200, function () { $(this).remove(); });
         }
     </script>

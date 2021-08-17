@@ -4,6 +4,7 @@ using KLS_API.Models.DTO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -25,23 +26,63 @@ namespace KLS_API.Controllers.System
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly IConfiguration configuration;
         private readonly AppDbContext context;
-        public UsersController(UserManager<AddUser> userManager,
-                              SignInManager<AddUser> signInManager,
-                              RoleManager<IdentityRole> roleManager,
-                              IHttpClientFactory httpClientFactory,
-                              IConfiguration configuration, AppDbContext context)
+        public UsersController(UserManager<AddUser> userManager,SignInManager<AddUser> signInManager,RoleManager<IdentityRole> roleManager,IHttpClientFactory httpClientFactory,IConfiguration configuration, AppDbContext context)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.roleManager = roleManager;
             this.configuration = configuration;
+            this.context = context;
         }
 
-        public ActionResult ListUsers()
+        public async Task<ActionResult> ListUsersAsync()
         {
-            var users = userManager.Users;
-            return Ok(users);
+            var users = userManager.Users.ToList();
+            List<UserDTO> parts = new List<UserDTO>();
+            foreach (var user in users)
+            {
+                var rol = await userManager.GetRolesAsync(user);
+                foreach (var roles in rol)
+                {
+                    parts.Add(new UserDTO() { 
+                        Nombre = user.Nombre,
+                        Apaterno = user.Apaterno,
+                        Amaterno = user.Amaterno,
+                        Email = user.Email,
+                        Id_User = user.Id,
+                        Rol = roles.ToString(),
+                        activo = user.activo
+                    });
+                }
+            }
+            return Ok(parts);
         }
+        
+        //[HttpPost]
+        //public async Task<ActionResult> ListUsersAsync()
+        //{
+        //    var users = userManager.Users.ToList();
+        //    List<UserDTO> parts = new List<UserDTO>();
+        //    foreach (var user in users)
+        //    {
+        //        var rol = await userManager.GetRolesAsync(user);
+        //        foreach (var roles in rol)
+        //        {
+        //            parts.Add(new UserDTO() { 
+        //                Nombre = user.Nombre,
+        //                Apaterno = user.Apaterno,
+        //                Amaterno = user.Amaterno,
+        //                Email = user.Email,
+        //                Id_User = user.Id,
+        //                Rol = roles.ToString(),
+        //                activo = user.activo
+        //            });
+        //        }
+        //    }
+        //    return Ok(parts);
+        //}
+
+
 
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] UserDTO userDTO)
@@ -61,9 +102,7 @@ namespace KLS_API.Controllers.System
                 {
                     await roleManager.CreateAsync(new IdentityRole("Customer"));
                 }
-
                 await userManager.AddToRoleAsync(user, userDTO.Rol);
-
                 return NoContent();
             }
 
@@ -72,7 +111,7 @@ namespace KLS_API.Controllers.System
                 ModelState.AddModelError("Response", item.Description);
             }
 
-            return StatusCode(400, ModelState);
+            return Ok(ModelState);
         }
         
         [HttpPost("Login")]

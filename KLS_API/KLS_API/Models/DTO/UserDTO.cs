@@ -10,7 +10,7 @@ namespace KLS_API.Models.DTO
     public class UserDTO
     {
         [Key]
-        public int Id_User { get; set; }
+        public string Id_User { get; set; }
 
         [Column(TypeName = "varchar(25)")]
         public string Nombre { get; set; }
@@ -22,5 +22,6 @@ namespace KLS_API.Models.DTO
         public string Password { get; set; }
         [Column(TypeName = "varchar(15)")]
         public string Rol { get; set; }
+        public int activo { get; set; }
     }
 }
