@@ -40,9 +40,8 @@ namespace KLS_WEB.Controllers.Security
         [Route("setSecurity")]
         public async Task<JsonResult> Post(UserDTO dataModel)
         {
-            UserDTO dataReport;
-            dataReport = await this.AppContext.Execute<UserDTO>(MethodType.POST, _UrlApi, dataModel);
-            return Json(dataReport);
+            var modelStateError = await this.AppContext.Execute<ModelStateError>(MethodType.POST, "Users/Register", dataModel);
+            return Json(modelStateError);
         }
     }
 }

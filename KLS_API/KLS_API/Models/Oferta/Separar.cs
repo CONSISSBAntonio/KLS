@@ -16,5 +16,11 @@ namespace KLS_API.Models.Oferta
         public string rutaTentativa { get; set; }
         [Column(TypeName = "varchar(250)")]
         public string notasCargo { get; set; }
+        [Column(TypeName = "varchar(250)")]
+        public string id_User { get; set; }
+        [Column(TypeName = "varchar(100)")]
+        public string nombre { get; set; }
+        [Column(TypeName = "DateTime")]
+        public DateTime? fecha { get; set; }
     }
 }
