@@ -11,6 +11,7 @@ namespace KLS_WEB.Utility
         //public const string APIBaseUrl = "http://3.227.133.22:3001/KLSAPI/";
         public const string RegisterAPIUrl = APIBaseUrl + "Users/register";
         public const string LoginAPIUrl = APIBaseUrl + "Users/Login";
+        public const string RecoveryAPIUrl = APIBaseUrl + "Users/Recovery";
         public const string ContentType = "application/json";
     }
 }

@@ -53,6 +53,7 @@ namespace KLS_API
             services.AddCors();
             //Lineas agregadas 10/06/2021
             services.AddControllers();
+            services.AddControllersWithViews().AddNewtonsoftJson();
 
         }
 

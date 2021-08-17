@@ -1,11 +1,18 @@
 ﻿using KLS_WEB.Models;
+using KLS_WEB.Services;
 using KLS_WEB.Utility;
+using MailKit.Net.Smtp;
+using MailKit.Security;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using MimeKit;
+using MimeKit.Text;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
@@ -16,9 +23,15 @@ namespace KLS_WEB.Controllers.System
     public class LoginController : Controller
     {
         private readonly Util<User> util;
-        public LoginController(IHttpClientFactory httpClientFactory)
+        private readonly ILogger<LoginController> _logger;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAppContextService _appContext;
+        public LoginController(IHttpClientFactory httpClientFactory, ILogger<LoginController> logger, IHttpContextAccessor httpContextAccessor, IAppContextService _appContext)
         {
             util = new Util<User>(httpClientFactory);
+            _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
+            _appContext = this._appContext;
         }
 
         public IActionResult Login()
@@ -32,7 +45,7 @@ namespace KLS_WEB.Controllers.System
         {
             if (ModelState.IsValid)
             {
-                var modelStateError = await util.LoginAsync(Resource.LoginAPIUrl, user);
+                var modelStateError = await util.LoginAsync(Resource.RecoveryAPIUrl, user);
 
                 if (modelStateError.Response.Errors.Count > 0)
                 {
@@ -108,5 +121,46 @@ namespace KLS_WEB.Controllers.System
             return View();
         }
 
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(User user)
+        {
+            ModelStateError modelStateError = await util.LoginAsync(Resource.RecoveryAPIUrl, user);
+
+            if (modelStateError.Nombre != null)
+            {
+                string context = Request.GetTypedHeaders().Referer.AbsoluteUri;
+                var link = context + modelStateError.Token;
+                //var link = Path.Combine(_appContext, "owkeq");
+                //var link = Path.Combine(context, "/Login/ResetPassword/", modelStateError.Token);
+
+                var email = new MimeMessage();
+                email.From.Add(MailboxAddress.Parse("itmh@matehuala.tecnm.mx"));
+                email.To.Add(MailboxAddress.Parse(user.Email));
+                email.Subject = "Test Email Subject";
+                email.Body = new TextPart(TextFormat.Html) { Text = string.Concat(@"<h1>Recupera tu contraesña da click en el siguiente enlace</h1><a href=", link, @">RECUPERAR CONTRASEÑA</a>") };
+
+                // send email
+                using var smtp = new SmtpClient();
+                smtp.Connect("smtp-mail.outlook.com", 587, SecureSocketOptions.StartTls);
+                smtp.Authenticate("itmh@matehuala.tecnm.mx", "Mypassw0rd");
+                smtp.Send(email);
+                smtp.Disconnect(true);
+
+                var message = new Errors
+                {
+                    ErrorMessage = modelStateError.Nombre
+                };
+
+                user.Errors.Add(message);
+                return View(user);
+            }
+            return View(user);
+        }
     }
 }

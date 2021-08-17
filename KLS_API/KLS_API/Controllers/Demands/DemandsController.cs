@@ -219,7 +219,7 @@ namespace KLS_API.Controllers.Demands
             {
                 string specifier = "C";
                 CultureInfo culture = CultureInfo.CreateSpecificCulture("es-MX");
-                List<CarrierDT> carriers = _dbContext.Oferta.Where(x => x.ciudad_Destino == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == OriginId).Id_Ciudad
+                List<CarrierDT> carriers = _dbContext.Oferta.Where(x => x.ciudad_Destino == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == OriginId && x.Fecha_Disponibilidad > DateTime.Now).Id_Ciudad
                 && x.Tipo_De_Unidad == UnidadId).Select(x => new CarrierDT
                 {
                     Id = x.Id,
