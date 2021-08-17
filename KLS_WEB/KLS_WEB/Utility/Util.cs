@@ -110,7 +110,7 @@ namespace KLS_WEB.Utility
 
             return null;
         }
-        public async Task<T> GetAsync(string url, int id, string token)
+        public async Task<T> GetAsync(string url, string id, string token)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, url + id);
             if (token.Length > 0)
