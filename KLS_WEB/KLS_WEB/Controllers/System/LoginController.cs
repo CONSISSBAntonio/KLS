@@ -43,7 +43,7 @@ namespace KLS_WEB.Controllers.System
         {
             if (ModelState.IsValid)
             {
-                var modelStateError = await util.LoginAsync(Resource.RecoveryAPIUrl, user);
+                var modelStateError = await util.LoginAsync(Resource.LoginAPIUrl, user);
 
                 if (modelStateError.Response.Errors.Count > 0)
                 {
