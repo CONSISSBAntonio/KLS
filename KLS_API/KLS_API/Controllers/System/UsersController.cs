@@ -167,23 +167,23 @@ namespace KLS_API.Controllers.System
             return tokenHandler.WriteToken(token);
         }
 
-        [HttpPost("Recovery")]
-        public async Task<ActionResult<UserTokenDTO>> Recovery([FromBody] UserDTO userDTO)
-        {
-            if (userDTO != null)
-            {
+        //[HttpPost("Recovery")]
+        //public async Task<ActionResult<UserTokenDTO>> Recovery([FromBody] UserDTO userDTO)
+        //{
+        //    if (userDTO != null)
+        //    {
 
-                var user = await userManager.FindByEmailAsync(userDTO.Email);
+        //        var user = await userManager.FindByEmailAsync(userDTO.Email);
 
-                return new UserTokenDTO
-                {
-                    Token = user.Id,
-                    Nombre = string.Concat("El enlace para recuperar contraseña fué enviado al correro electrónico: ", user.Email)
-                };
-            }
+        //        return new UserTokenDTO
+        //        {
+        //            Token = user.Id,
+        //            Nombre = string.Concat("El enlace para recuperar contraseña fué enviado al correro electrónico: ", user.Email)
+        //        };
+        //    }
 
-            ModelState.AddModelError("Response", "Nombre de usuario/contraseña no válido");
-            return StatusCode(400, ModelState);
-        }
+        //    ModelState.AddModelError("Response", "Nombre de usuario/contraseña no válido");
+        //    return StatusCode(400, ModelState);
+        //}
     }
 }
