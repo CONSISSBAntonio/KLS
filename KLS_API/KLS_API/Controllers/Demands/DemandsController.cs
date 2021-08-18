@@ -235,7 +235,7 @@ namespace KLS_API.Controllers.Demands
                     x.Tolerancia_Destino, " km)"),
                     FechaDisponibilidad = x.Fecha_Disponibilidad.ToString("g"),
                     Expira = x.Fecha_Disponibilidad,
-                    Costo = _dbContext.Tr_Has_Rutas.Any(y => y.Id_Transportista == x.Transportista && y.Id_Ruta == RouteId) ? _dbContext.Tr_Has_Rutas.FirstOrDefault(y => y.Id_Transportista == x.Transportista && y.Id_Ruta == RouteId).Costo.ToString(specifier, culture) : "TRANSPORTISTA SIN COSTOS DEFINIDOS"
+                    Costo = _dbContext.Tr_Has_Rutas.Any(y => y.Id_Transportista == x.Transportista && y.Id_Ruta == RouteId) ? _dbContext.ruta_has_inventario.FirstOrDefault(y => y.Tr_Has_RutaId == _dbContext.Tr_Has_Ruta.FirstOrDefault(z => z.Id_Transportista == x.Transportista && z.Id_Ruta == RouteId).Id).CostoOne.ToString(specifier, culture) : "TRANSPORTISTA SIN COSTOS DEFINIDOS"
                 }).ToList();
 
                 return Ok(carriers);

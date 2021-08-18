@@ -92,13 +92,13 @@
             <div class="row">
                 <label for="fpreciominimo" class="col-sm-4 col-form-label col-form-label-sm">PRECIO MINÍMO</label>
                 <div class="col-sm-8">
-                    @Html.TextBoxFor(x => x.PrecioMinimo, new { @type = "number", @class = "form-control form-control-sm", @id = "fpreciominimo", @required = "", @onchange = "this.value = parseFloat(this.value).toFixed(2)" })
+                    @Html.TextBoxFor(x => x.PrecioMinimo, new { @type = "text", @class = "form-control form-control-sm", @id = "fpreciominimo", @required = "", @onchange = "this.value = parseMoney(this.value)" })
                 </div>
             </div>
             <div class="row">
                 <label for="fpreciomaximo" class="col-sm-4 col-form-label col-form-label-sm">PRECIO MÁXIMO</label>
                 <div class="col-sm-8">
-                    @Html.TextBoxFor(x => x.PrecioMaximo, new { @type = "number", @class = "form-control form-control-sm", @id = "fpreciomaximo", @required = "", @onchange = "this.value = parseFloat(this.value).toFixed(2)" })
+                    @Html.TextBoxFor(x => x.PrecioMaximo, new { @type = "text", @class = "form-control form-control-sm", @id = "fpreciomaximo", @required = "", @onchange = "this.value = parseMoney(this.value)" })
                 </div>
             </div>
             <div class="row">
@@ -261,6 +261,10 @@
 <script>
     rutaid = @Model.id;
     $(document).ready(function () {
+        const minimo = $('#fpreciominimo').val();
+        const maximo = $('#fpreciomaximo').val();
+        $('#fpreciominimo').val(parseMoney(minimo));
+        $('#fpreciomaximo').val(parseMoney(maximo));
         loadCheckpoint();
         //catEstado.map(({ id, nombre, estatus }) => {
         //    estatus === 1 && $("#festadoorigen, #festadodestino").append(`<option value="${id}">${nombre}</option>`);
@@ -314,6 +318,8 @@
                         $('.frmRegister :input').prop("disabled", false);
                         $(this).attr('rel', 'post');
                     } else {
+                        jsonData['PrecioMaximo'] = jsonData['PrecioMaximo'].replace(/[^\d.]+/g, '');
+                        jsonData['PrecioMinimo'] = jsonData['PrecioMinimo'].replace(/[^\d.]+/g, '');
                         $('.frmRegister :input').prop("disabled", true);
                         botonse.removeClass('btn-outline-info').addClass('btn-outline-secondary').html(`<i class="material-icons">edit</i>`).attr('disabled', true);
                         $(this).attr('rel', 'edit');
@@ -332,6 +338,8 @@
                         });
                     }
                 } else {
+                    jsonData['PrecioMaximo'] = jsonData['PrecioMaximo'].replace(/[^\d.]+/g, '');
+                    jsonData['PrecioMinimo'] = jsonData['PrecioMinimo'].replace(/[^\d.]+/g, '');
                     botonse.attr('disabled', true);
                     $.post("Route/setRoute", jsonData, function (res) {
                         $('.body').html(res);
@@ -374,6 +382,16 @@
             }
         });
     });
+
+    const parseMoney = val => {
+        val = !isNaN(val - parseFloat(val)) ? parseFloat(val) : 0;
+
+        const money = new Intl.NumberFormat('es-MX',
+            { style: 'currency', currency: 'MXN' }
+        ).format(val);
+
+        return money;
+    }
 
     generateId = (posicion, val) => {
         const origen = $('#fciudadorigen').val();
