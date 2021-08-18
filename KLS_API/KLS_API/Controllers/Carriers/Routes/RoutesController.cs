@@ -36,13 +36,27 @@ namespace KLS_API.Controllers.Carriers.Routes
             }
         }
 
+        //Modificar
         [Route("getRuta")]
         public ActionResult getRuta([FromBody] RouteTran tr_rutas)
         {
             try
             {
-                var asd = context.Ruta.Where(f => f.id_ciudadorigen == tr_rutas.id_ciudadorigen || f.id_estadoorigen == tr_rutas.id_estadoorigen || f.id_ciudaddestino == tr_rutas.id_ciudaddestino || f.id_estadodestino == tr_rutas.id_estadodestino).ToList();
-                return Ok(asd);
+                var rutas = context.Ruta.Where(f => f.estatus == 1).ToList().AsQueryable();
+
+                if (tr_rutas.id_ciudadorigen!=0) {
+                    rutas = rutas.Where(f=> f.id_ciudadorigen == tr_rutas.id_ciudadorigen);
+                }
+                if (tr_rutas.id_estadoorigen != 0) {
+                    rutas = rutas.Where(f => f.id_estadoorigen == tr_rutas.id_estadoorigen);
+                }
+                if (tr_rutas.id_ciudaddestino != 0) {
+                    rutas = rutas.Where(f => f.id_ciudaddestino == tr_rutas.id_ciudaddestino);
+                }
+                if (tr_rutas.id_estadodestino != 0) {
+                    rutas = rutas.Where(f => f.id_estadodestino == tr_rutas.id_estadodestino);
+                }
+                return Ok(rutas);
             }
             catch (Exception ex)
             {

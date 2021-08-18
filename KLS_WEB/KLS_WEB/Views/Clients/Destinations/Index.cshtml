@@ -140,29 +140,28 @@
         var dataCity = [];
         var dataColonies = [];
 
-        //$('#Cp').keypress(function (e) {
-        //    var keycode = (e.keyCode ? e.keyCode : e.which);
-        //    if (keycode == '13') {
-        //        searcCP();
-        //        e.preventDefault();
-        //        return false;
-        //    }
-        //});
+        $('#Cp').keypress(function (e) {
+            var keycode = (e.keyCode ? e.keyCode : e.which);
+            if (keycode == '13') {
+                searcCP();
+                e.preventDefault();
+                return false;
+            }
+        });
 
         function searcCP() {
             var codigoP = $("#Cp").val();
-            $.each(dataColonies, function (item, key) {
-                if (parseInt(key.estatus) == 1 && parseInt(key.cp) == parseInt(codigoP)) {
-                    $('#Id_Estado option[value="' + key.id_estado + '"]').attr("selected", true);
-                    setCiudad(key.id_estado);
-                    $("#Id_Estado").change();
-                    $('#Id_Ciudad option[value="' + key.id_ciudad + '"]').attr("selected", true);
-                    $("#Id_Ciudad").change();
-                    setColonias(key.id_ciudad);
-                    $("#Id_Colonia").change();
-                };
+            $.get("/Clients/Origins/getCp/" + codigoP, function (res) {
+                dataColonies = res;
+                $.each(res, function (item, key) {
+                    if (parseInt(key.estatus) == 1) {
+                        $("#Id_Colonia").append(`<option value="${key.id_estado}">${key.nombre}</option>`);
+                    };
+                });
+                $('#Id_Estado').val(res[0].id_estado).trigger('change');
+                console.log(res[0].id_ciudad);
+                $('#Id_Ciudad').val(res[0].id_ciudad).trigger('change');
             });
-
         }
 
         function setCp(id) {

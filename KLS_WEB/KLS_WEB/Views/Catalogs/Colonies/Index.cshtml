@@ -443,8 +443,9 @@
                             </tr>`);
 
             $.get("Colonies/getColoniesF", { "Pagina": Pagina, "CantidadAMostrar": CantidadAMostrar, "Buscar": buscar }, function (res) {
+                console.log(res.colonia);
                 dataColonias = res.colonias;
-                console.log(dataColonias);
+
                 numRegistros = res.total;
                 $("#table_info").empty();
                 $("#table_info").append("Mostrando " + Pagina + " a " + CantidadAMostrar + " de " + res.total + " Registros");
@@ -475,7 +476,7 @@
                 });
                 //dTable("table-viajes");
             }).fail(function (error) {
-                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+                dToast("error", "Error al tratar de obtener los registros.", "Error");
             });
             //filCiudad();
         }
