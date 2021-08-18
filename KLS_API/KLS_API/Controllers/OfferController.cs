@@ -73,7 +73,7 @@ namespace KLS_API.Controllers
                                      tipounidad = tipounidad.nombre,
                                      idtipounidad = tipounidad.id,
                                      fechadisponibilidad = oferta.Fecha_Disponibilidad,
-                                     transportista = transportista.NivelServicio,
+                                     transportista = transportista.Tamanio,
                                      idtransportista = transportista.id,
                                      status = oferta.status,
                                      nombreTran = transportista.NombreComercial,
@@ -105,7 +105,7 @@ namespace KLS_API.Controllers
                 {
                     queryable = queryable.Where(x => x.idtipounidad == busqueda.idtipounidad);
                 }
-                if (busqueda.transportista != 0)
+                if (busqueda.transportista != "0")
                 {
                     queryable = queryable.Where(x => x.transportista == busqueda.transportista);
                 }
@@ -236,7 +236,7 @@ namespace KLS_API.Controllers
             public string estadodestino { get; set; }
             public string tipounidad { get; set; }
             public DateTime fechadisponibilidad { get; set; }
-            public int transportista { get; set; }
+            public string transportista { get; set; }
             public int status { get; set; }
             public int idtransportista { get; set; }
             public string nombreTran { get; set; }
