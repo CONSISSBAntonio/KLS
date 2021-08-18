@@ -85,11 +85,6 @@ namespace KLS_API.Controllers.Carriers.Routes
             try
             {
 
-
-                //context.Entry(tr_rutas).State = EntityState.Modified;
-                //context.SaveChanges();
-                //return Ok(tr_rutas);
-
                 var datas = context.ruta_has_inventario.Where(b => EF.Property<int>(b, "Tr_Has_RutaId") == tr_rutas.Id);
                 context.ruta_has_inventario.RemoveRange(datas);
                 context.SaveChanges();
@@ -98,7 +93,7 @@ namespace KLS_API.Controllers.Carriers.Routes
                 {
                     foreach (var item in tr_rutas.ruta_has_inventario)
                     {
-                        var dato_ = new ruta_has_inventario { Tr_Has_RutaId = tr_rutas.Id, Id_Inventario = item.Id_Inventario,Costo = item.Costo };
+                        var dato_ = new ruta_has_inventario { Tr_Has_RutaId = tr_rutas.Id, Id_Inventario = item.Id_Inventario,Circuito = item.Circuito,CostoOne=item.CostoOne, CostoTwo = item.CostoTwo };
                         context.ruta_has_inventario.Add(dato_);
                         context.SaveChanges();
                     }

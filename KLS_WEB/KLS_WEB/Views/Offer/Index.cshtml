@@ -338,7 +338,8 @@
                         <textarea class="form-control" rows="8" placeholder="Escribe aqui" id="notasCargo"></textarea>
                     </div>
                 </div>
-                <div id="info-update"></div>
+                <div class="pt-3 pb-3" id="info-update"></div>
+
                 <button type="button" class="btn btn-primary" style="width:160px;" id="confirmarSeparar" onclick="guardarSeparar();">Confirmar</button>
                 <button type="button" class="btn btn-primary" style="width:160px;" id="editarSeparar" onclick="modificarSeparar();">Modificar</button>
             </div>
@@ -971,7 +972,7 @@
                             <td>${Destino}</td>
                             <td style="width:15% !important;">${moment(key.fechadisponibilidad).format('DD/MM/YYYY hh:mm A')}</td>
 
-                            <td style="width:8% !important;">
+                            <td style="width:8% !important;font-size:12px;">
                                 <span id="days${key.idoferta}"></span>d <span id="hours${key.idoferta}"></span>h <span id="minutes${key.idoferta}"></span>m <span id="seconds${key.idoferta}"></span>s
                             </td>
                             <td style="width:7% !important;text-align:center;">${hrefModal}</td>
@@ -1343,8 +1344,8 @@
                     $("#rutaTentativa").val(res.rutaTentativa);
                     $("#notasCargo").val(res.notasCargo);
                     $("#info-update").append(`
-                        <b style="font-size:12px;">Actualizado por : ${res.nombre}</b><br>
-                        <b style="font-size:12px;">Fecha actualización : ${moment(res.fecha).format('YYYY-MM-DD HH:mm:ss')}</b><br>
+                        <b style="font-size:12px;">Actualizado por: ${res.nombre}</b><br>
+                        <b style="font-size:12px;">Fecha actualización: ${moment(res.fecha).format('YYYY-MM-DD HH:mm:ss')}</b><br>
                     `);
                     idSeparar = res.id;
                 });
