@@ -319,24 +319,24 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="">Estado</label>
-                                <select class="form-control form-control-sm" name="Id_Estado" id="Id_Estado" onchange="setCiudad(this.value);">
-                                    <option value="0" disabled selected>Selecciona</option>
+                                <select class="form-control form-control-sm" style="width:100%;" name="Id_Estado" id="Id_Estado" onchange="setCiudad(this.value);">
+                                    <option value="0">Selecciona una opción</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="">Ciudad</label>
-                                <select class="form-control form-control-sm" name="Id_Ciudad" id="Id_Ciudad" onchange="setColonias(this.value);">
-                                    <option value="0" disabled selected>Selecciona</option>
+                                <select class="form-control form-control-sm" style="width:100%;" name="Id_Ciudad" id="Id_Ciudad" onchange="setColonias(this.value);">
+                                    <option value="0">Selecciona una opción</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="">Colonia</label>
-                                <select class="form-control form-control-sm" name="Id_Colonia" id="Id_Colonia" onchange="setCp(this.value);">
-                                    <option value="0" disabled selected>Selecciona</option>
+                                <select class="form-control form-control-sm" style="width:100%;" name="Id_Colonia" id="Id_Colonia" onchange="setCp(this.value);">
+                                    <option value="0">Selecciona una opción</option>
                                 </select>
                             </div>
                         </div>
@@ -346,6 +346,12 @@
                             <div class="form-group">
                                 <label class="">Dirección</label>
                                 <input type="text" class="form-control" name="Direccion" id="Direccion" required />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="">Hora de atención</label>
+                                <input type="time" class="form-control" name="HoraAtencion" id="HoraAtencion" required />
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -431,6 +437,9 @@
             initSelects();
             getCatalogos();
             CountDemands();
+            dSelect('Id_Estado');
+            dSelect('Id_Ciudad');
+            dSelect('Id_Colonia');
             $("#frmRegister").submit(function (event) {
                 event.preventDefault();
                 const type = $(this).attr('rel') == 'destino' ? 'Destinations/setDestino' : 'Origins/setOrigen';
@@ -450,16 +459,6 @@
                     });
                 } else {
                     dToast("error", "Selecciona una opción", "Error");
-                }
-            });
-
-            //Buscar por CP
-            $('#Cp').keypress(function (e) {
-                var keycode = (e.keyCode ? e.keyCode : e.which);
-                if (keycode == '13') {
-                    searcCP();
-                    e.preventDefault();
-                    return false;
                 }
             });
         });
@@ -510,6 +509,7 @@
 
         function setCp(id) {
             let indice = dataColonies.findIndex(service => service.id == id);
+            console.log(indice);
             if (parseInt(id) != 0) {
                 if (parseInt(indice) >= 0) {
                     $("#Cp").val(dataColonies[indice].cp);
@@ -520,21 +520,26 @@
             }
         }
 
-        function setColonias(id) {
+        function setColonias(id, idselect = 0) {
             $("#Id_Colonia").empty();
-            $("#Id_Colonia").append(`<option value="0" disabled selected>Selecciona una opción</option>`);
-            $.each(dataColonies, function (item, key) {
-                if (parseInt(key.estatus) == 1 && parseInt(id) == parseInt(key.id_ciudad)) {
-                    $("#Id_Colonia").append(`<option value="${key.id}">${key.nombre}</option>`);
-                };
+            $("#Id_Colonia").append(`<option value="0">Selecciona una opción</option>`);
+            $.get("/Clients/Origins/getColonias/" + id, function (res) {
+                dataColonies = res;
+                $.each(res, function (item, key) {
+                    if (parseInt(key.estatus) == 1) {
+                        $("#Id_Colonia").append(`<option value="${key.id}">${key.nombre}</option>`);
+                    };
+                });
+                if (idselect != 0) {
+                    $("#Id_Colonia").val(idselect).trigger('change');
+                }
             });
         }
-
         function setCiudad(id) {
             $("#Id_Ciudad").empty();
-            $("#Id_Ciudad").append(`<option value="0" disabled selected>Selecciona una opción</option>`);
+            $("#Id_Ciudad").append(`<option value="0">Selecciona una opción</option>`);
             $.each(dataCity, function (item, key) {
-                if (parseInt(key.estatus) == 1 && parseInt(id) == parseInt(key.id_estado)) {
+                if (parseInt(id) == parseInt(key.id_estado)) {
                     $("#Id_Ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
                 };
             });
