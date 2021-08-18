@@ -511,7 +511,6 @@
 
         function setCp(id) {
             let indice = dataColonies.findIndex(service => service.id == id);
-            console.log(indice);
             if (parseInt(id) != 0) {
                 if (parseInt(indice) >= 0) {
                     $("#Cp").val(dataColonies[indice].cp);
@@ -837,7 +836,6 @@
 
         const fullTravel = (CarrierId, DemandId) => {
             $.post('/Demand/SetFullTravel', { CarrierId: CarrierId, DemandId: DemandId }, response => {
-                console.log(response);
             })
         }
 

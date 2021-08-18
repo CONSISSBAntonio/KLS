@@ -28,6 +28,18 @@ namespace KLS_API.Controllers.Demands
         {
             try
             {
+                bool clrutaexists = _dbContext.Cl_Has_Routes.Any(x => x.Id_Ruta == demand.RouteId && x.Id_Cliente == demand.ClientId);
+                if (!clrutaexists)
+                {
+                    var clhasroutes = new Cl_Has_Routes
+                    {
+                        Id_Ruta = demand.RouteId,
+                        Id_Cliente = demand.ClientId,
+                        Monitoreable = false,
+                        Estatus = 1
+                    };
+                    _dbContext.Cl_Has_Routes.Add(clhasroutes);
+                }
                 var lastDemand = _dbContext.Demands.OrderByDescending(x => x.Id).FirstOrDefault();
                 int id = lastDemand is null ? 1 : lastDemand.Id + 1;
                 demand.Folio = string.Concat("D", DateTime.Now.ToString("yyMM"), id.ToString("D4"));
