@@ -102,7 +102,7 @@ namespace KLS_WEB.Controllers.Offer
             public string estadodestino { get; set; }
             public string tipounidad { get; set; }
             public DateTime fechadisponibilidad { get; set; }
-            public int transportista { get; set; }
+            public string transportista { get; set; }
             public int status { get; set; }
             public int idtransportista { get; set; }
             public string nombreTran { get; set; }
