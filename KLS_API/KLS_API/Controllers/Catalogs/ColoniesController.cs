@@ -66,7 +66,8 @@ namespace KLS_API.Controllers.Catalogs
                 HttpContext.InsertarParametrosPaginacionEnRespuesta(queryable, paginacion.CantidadAMostrar);
                 double conteo = queryable.Count();
 
-                var colonias = new { 
+                var colonias = new arregloColonia
+                { 
                     colonias = queryable.Paginar(paginacion).ToList(),
                     total = conteo
                 };
@@ -76,6 +77,11 @@ namespace KLS_API.Controllers.Catalogs
             {
                 return Json(ex.Message);
             }
+        }
+
+        public class arregloColonia {
+            public List<object> colonias { get; set; }
+            public double total { get; set; }
         }
 
         [HttpGet("{id}", Name = "getColonies")]
