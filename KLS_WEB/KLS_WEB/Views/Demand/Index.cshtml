@@ -856,13 +856,44 @@
                             data.RouteId = RouteId
                     }
                 },
+                'createdRow': (row, data, index) => {
+                    const { id } = data;
+                    $('td', row).eq(5).attr('id', `timer${id}`);
+                },
                 columns: [
                     { data: 'carrier' },
                     { data: 'unit' },
                     { data: 'origin' },
                     { data: 'destination' },
                     { data: 'fechaDisponibilidad' },
-                    { data: 'expira' },
+                    {
+                        render: (data, type, row) => {
+                            const { id, expira } = row;
+                            // Set the date we're counting down to
+                            const countDownDate = new Date(expira).getTime();
+
+                            // Update the count down every 1 second
+                            let countdown = setInterval(() => {
+                                const now = new Date().getTime();
+
+                                const distance = countDownDate - now;
+
+                                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                                document.querySelector(`#timer${id}`).innerHTML = days + "d " + hours + "h "
+                                    + minutes + "m " + seconds + "s ";
+                                if (distance < 0) {
+                                    clearInterval(x);
+                                    document.querySelector(`#timer${id}`).innerHTML = "EXPIRED";
+                                }
+                            }, 1000);
+
+                            return countdown === 7 ? 'CALCULANDO' : countdown;
+                        }
+                    },
                     { data: 'costo' },
                     {
                         render: (data, type, row) => {
@@ -879,7 +910,8 @@
                     url: '/json/dt-es.json'
                 },
                 columnDefs: [
-                    { className: 'text-center', targets: [6, 7] }
+                    { className: 'text-center', targets: [6, 7] },
+                    { className:`timer${DemandId}`, targets: [5] }
                 ],
                 initComplete: () => {
                 }

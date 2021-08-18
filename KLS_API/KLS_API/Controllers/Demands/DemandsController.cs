@@ -234,7 +234,7 @@ namespace KLS_API.Controllers.Demands
                     _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.ciudad_Destino).nombre.Trim(), " (",
                     x.Tolerancia_Destino, " km)"),
                     FechaDisponibilidad = x.Fecha_Disponibilidad.ToString("g"),
-                    Expira = DateTime.Now,
+                    Expira = x.Fecha_Disponibilidad,
                     Costo = _dbContext.Tr_Has_Rutas.Any(y => y.Id_Transportista == x.Transportista && y.Id_Ruta == RouteId) ? _dbContext.Tr_Has_Rutas.FirstOrDefault(y => y.Id_Transportista == x.Transportista && y.Id_Ruta == RouteId).Costo.ToString(specifier, culture) : "TRANSPORTISTA SIN COSTOS DEFINIDOS"
                 }).ToList();
 
