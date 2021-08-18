@@ -460,6 +460,7 @@
                 $.post(`/Clients/${type}`, jsonData, function (res) {
                     dToast("success", "Registro guardado exitosamente.", "Registrado");
                     $(".guardar").attr("disabled", false);
+                    $('select').map((k, e) => $(e).val('0').trigger('change'));
                     $('#frmOD').trigger("reset");
                     $('#cliente').val(jsonData["Id_Cliente"]).trigger('change');
                 }).fail(function (error) {
