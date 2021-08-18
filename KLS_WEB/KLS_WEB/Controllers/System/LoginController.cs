@@ -124,41 +124,42 @@ namespace KLS_WEB.Controllers.System
             return View();
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> ResetPassword(User user)
-        //{
-        //    ModelStateError modelStateError = await util.LoginAsync(Resource.RecoveryAPIUrl, user);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(User user)
+        {
+            ModelStateError modelStateError = await util.LoginAsync(Resource.RecoveryAPIUrl, user);
 
-        //    if (modelStateError.Nombre != null)
-        //    {
-        //        string context = Request.GetTypedHeaders().Referer.AbsoluteUri;
-        //        var link = context + modelStateError.Token;
-        //        //var link = Path.Combine(_appContext, "owkeq");
-        //        //var link = Path.Combine(context, "/Login/ResetPassword/", modelStateError.Token);
+            if (modelStateError.Nombre != null)
+            {
+                string context = Request.GetTypedHeaders().Referer.AbsoluteUri;
+                var x = Guid.NewGuid().ToString();
+                var link = context + modelStateError.Token;
+                //var link = Path.Combine(_appContext, "owkeq");
+                //var link = Path.Combine(context, "/Login/ResetPassword/", modelStateError.Token);
 
-        //        var email = new MimeMessage();
-        //        email.From.Add(MailboxAddress.Parse("itmh@matehuala.tecnm.mx"));
-        //        email.To.Add(MailboxAddress.Parse(user.Email));
-        //        email.Subject = "Test Email Subject";
-        //        email.Body = new TextPart(TextFormat.Html) { Text = string.Concat(@"<h1>Recupera tu contraesña da click en el siguiente enlace</h1><a href=", link, @">RECUPERAR CONTRASEÑA</a>") };
+                var email = new MimeMessage();
+                email.From.Add(MailboxAddress.Parse("itmh@matehuala.tecnm.mx"));
+                email.To.Add(MailboxAddress.Parse(user.Email));
+                email.Subject = "Test Email Subject";
+                email.Body = new TextPart(TextFormat.Html) { Text = string.Concat(@"<h1>Recupera tu contraesña da click en el siguiente enlace</h1><a href=", link, @">RECUPERAR CONTRASEÑA</a>") };
 
-        //        // send email
-        //        using var smtp = new SmtpClient();
-        //        smtp.Connect("smtp-mail.outlook.com", 587, SecureSocketOptions.StartTls);
-        //        smtp.Authenticate("itmh@matehuala.tecnm.mx", "Mypassw0rd");
-        //        smtp.Send(email);
-        //        smtp.Disconnect(true);
+                // send email
+                using var smtp = new SmtpClient();
+                smtp.Connect("smtp-mail.outlook.com", 587, SecureSocketOptions.StartTls);
+                smtp.Authenticate("itmh@matehuala.tecnm.mx", "Mypassw0rd");
+                smtp.Send(email);
+                smtp.Disconnect(true);
 
-        //        var message = new Errors
-        //        {
-        //            ErrorMessage = modelStateError.Nombre
-        //        };
+                var message = new Errors
+                {
+                    ErrorMessage = modelStateError.Nombre
+                };
 
-        //        user.Errors.Add(message);
-        //        return View(user);
-        //    }
-        //    return View(user);
-        //}
+                user.Errors.Add(message);
+                return View(user);
+            }
+            return View(user);
+        }
     }
 }

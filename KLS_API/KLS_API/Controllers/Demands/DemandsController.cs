@@ -112,7 +112,8 @@ namespace KLS_API.Controllers.Demands
                         Destino = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Destination.Id_Estado).nombre.Trim(), "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Destination.Id_Ciudad).nombre.Trim()),
                         FechaDisponibilidad = x.FechaDisponibilidad.ToString("dd/MM/yyyy. hh:mm tt"),
                         Arribo = x.Arribo ?? "-",
-                        OfertasCount = _dbContext.Oferta.Where(y => y.ciudad_Destino == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == x.OriginId).Id_Ciudad && y.Tipo_De_Unidad == x.UnitId).Count(),
+                        OfertasCount = 0,
+                        //OfertasCount = _dbContext.Oferta.Where(y => (y.ciudad_Destino == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == x.OriginId).Id_Ciudad && y.Tipo_De_Unidad == x.UnitId)).Count(),
                         Status = x.Status
                     }).ToList()
                 ) : (
@@ -133,7 +134,8 @@ namespace KLS_API.Controllers.Demands
                     Destino = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Destination.Id_Estado).nombre.Trim(), "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Destination.Id_Ciudad).nombre.Trim()),
                     FechaDisponibilidad = x.FechaDisponibilidad.ToString("dd/MM/yyyy. hh:mm tt"),
                     Arribo = x.Arribo ?? "-",
-                    OfertasCount = _dbContext.Oferta.Where(y => y.ciudad_Destino == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == x.OriginId).Id_Ciudad && y.Tipo_De_Unidad == x.UnitId).Count(),
+                    OfertasCount = 0,
+                    //OfertasCount = _dbContext.Oferta.Where(y => y.ciudad_Destino == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == x.OriginId).Id_Ciudad && y.Tipo_De_Unidad == x.UnitId).Count(),
                     Status = x.Status
                 }).ToList()
                 );
@@ -219,8 +221,11 @@ namespace KLS_API.Controllers.Demands
             {
                 string specifier = "C";
                 CultureInfo culture = CultureInfo.CreateSpecificCulture("es-MX");
-                List<CarrierDT> carriers = _dbContext.Oferta.Where(x => x.ciudad_Destino == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == OriginId && x.Fecha_Disponibilidad > DateTime.Now).Id_Ciudad
-                && x.Tipo_De_Unidad == UnidadId).Select(x => new CarrierDT
+
+                int[] regions = _dbContext.Region_Has_Estado.Where(x => x.id_estado == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == OriginId).Id_Estado).Select(x => x.Cat_RegionId).ToArray();
+
+                List<CarrierDT> carriers = _dbContext.Oferta.Where(x => (x.ciudad_Destino == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == OriginId && x.Fecha_Disponibilidad > DateTime.Now).Id_Ciudad
+                && x.Tipo_De_Unidad == UnidadId) || (x.Nivel_Destino.ToLower() == "region" && regions.Contains(x.Region_Destino)) || (x.Nivel_Destino.ToLower() == "estado" && x.estado_Destino == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == OriginId && x.Fecha_Disponibilidad > DateTime.Now).Id_Estado)).Select(x => new CarrierDT
                 {
                     Id = x.Id,
                     CarrierId = x.Transportista,

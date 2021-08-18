@@ -187,6 +187,14 @@ namespace KLS_API.Controllers.System
             {
 
                 var user = await userManager.FindByEmailAsync(userDTO.Email.Trim());
+                //var setToken = context.Users.FirstOrDefault(x => x.Email == userDTO.Email.Trim());
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                user.ResetToken = Guid.NewGuid().ToString();
+                context.SaveChanges();
 
                 return Ok(user);
             }

@@ -374,6 +374,7 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
+                //List<SearchRuta> routes = _dbContext.Ruta.Where(x => x.id_ciudadorigen == _dbContext.Cl_Has_Origen.Find(search.OrigenId).Id_Ciudad && x.id_ciudaddestino == _dbContext.Cl_Has_Destinos.Find(search.DestinoId).Id_Ciudad).Select(x => new SearchRuta
                 List<SearchRuta> routes = _dbContext.Ruta.Where(x => x.id_ciudadorigen == _dbContext.Cl_Has_Origen.Find(search.OrigenId).Id_Ciudad && x.id_ciudaddestino == _dbContext.Cl_Has_Destinos.Find(search.DestinoId).Id_Ciudad).Select(x => new SearchRuta
                 {
                     Id = x.id,

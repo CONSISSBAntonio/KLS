@@ -17,5 +17,6 @@ namespace KLS_API.Models
         [Column(TypeName = "varchar(25)")]
         public string Amaterno { get; set; }
         public int activo { get; set; }
+        public string ResetToken { get; set; }
     }
 }

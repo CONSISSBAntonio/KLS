@@ -23,6 +23,6 @@ namespace KLS_API.Models.DTO
         [Column(TypeName = "varchar(15)")]
         public string Rol { get; set; }
         public int activo { get; set; }
-        public string Token { get; set; }
+        public string ResetToken { get; set; }
     }
 }
