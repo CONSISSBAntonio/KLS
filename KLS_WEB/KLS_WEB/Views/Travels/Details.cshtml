@@ -150,10 +150,28 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-5 col-form-label col-form-label-sm">Tipo de SERVICIO</label>
+                        <label class="col-5 col-form-label col-form-label-sm">TIPO DE SERVICIO</label>
                         <div class="col-7">
                             <input asp-for="TipoUnidadNombre" type="text" class="form-control form-control-sm"
                                    id="tipounidad" disabled="disabled" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-5 col-form-label col-form-label-sm">EJECUTIVO</label>
+                        <div class="col-7">
+                            <input asp-for="Ejecutivo" type="text" class="form-control form-control-sm" disabled="disabled" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-5 col-form-label col-form-label-sm">CHOFER</label>
+                        <div class="col-7">
+                            <input asp-for="ChoferNombre" type="text" class="form-control form-control-sm" disabled="disabled" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-5 col-form-label col-form-label-sm">TELÉFONO CHOFER</label>
+                        <div class="col-7">
+                            <input asp-for="ChoferTelefono" type="text" class="form-control form-control-sm" disabled="disabled" required>
                         </div>
                     </div>
 
@@ -233,7 +251,7 @@
         <div class="col-6 facturacion d-none">
             <div class="text-left d-flex justify-content-between mb-3">
                 <h4>FACTURACIÓN</h4>
-                <div style="padding-left:20%;" onclick="">
+                <div style="padding-left:20%;" onclick="selectFactura(this)">
                     <a class="btn btn-sm bg-white" style="font-size:1.8rem;width:3.5rem" href="javascript:void(0);">
                         <span class="material-icons">
                             add
@@ -264,7 +282,7 @@
                 <div class="col-6 d-flex flex-column justify-content-between">
                     <div class="card mb-3 p-3">
                         <p class="text-left font-weight-bold">DESCRIPCIÓN</p>
-                        <form class="row g-3 text-left" onsubmit="">
+                        <form class="row g-3 text-left" onsubmit="event.preventDefault(), postMercancia(this)">
                             <div class="col-3">
                                 <label for="falto" class="form-label">Alto</label>
                                 <input type="number" class="form-control" id="falto" name="alto">
@@ -654,7 +672,7 @@
         <div class="col-12 historial d-none">
             <div class="text-left d-flex justify-content-between mb-3">
                 <h4>HISTORIAL</h4>
-                <div style="padding-left:20%;" onclick="">
+                <div style="padding-left:20%;" onclick="selectServicios(this)">
                 </div>
             </div>
 
@@ -676,7 +694,7 @@
         <div class="col-12 documentos d-none">
             <div class="p-4">
                 <h4>DOCUMENTOS</h4>
-                <button class="btn btn-dark px-5" style="border-radius:0px" onclick="">Generar carta porte</button>
+                <button class="btn btn-dark px-5" style="border-radius:0px" onclick="GenerateCartaPorte(this)">Generar carta porte</button>
                 <div class="row">
                     <div class="col-6 mt-3">
                         <div class="text-left d-flex justify-content-between">
@@ -752,17 +770,16 @@
                 <div class="form-group col-12 d-flex justify-content-between">
                     <h6 class="font-weight-bold">SERVICIOS</h6>
                     <div>
-                        <button class="btn btn-outline-light btn-sm" onclick="">
+                        <button class="btn btn-outline-light btn-sm" onclick="updateServicios(this)">
                             <i class="material-icons text-primary">save</i>
                         </button>
-                        <a class="btn btn-outline-secondary btn-sm" onclick="">
+                        <a class="btn btn-outline-secondary btn-sm" onclick="selectServicios(this)">
                             <i class="material-icons">add</i>
                         </a>
                     </div>
                 </div>
                 <div class="form-group col-12 addServicios">
-                    <div class="border rounded d-flex justify-content-center align-items-center font-weight-bolder"
-                         onclick=""
+                    <div class="border rounded d-flex justify-content-center align-items-center font-weight-bolder" onclick="selectServicios(this)"
                          style="border: 5px dashed #585858 !important; height: 7rem; opacity: 0.2; cursor: pointer;">
                         <h3>AGREGA SERVICIOS</h3>
                     </div>
@@ -800,7 +817,7 @@
                     </div>
                     <br />
                     <a href="javascript:void(0);" class="btn btn-dark guardar" style="width:100%"
-                       onclick="">
+                       onclick="UploadFile()">
                         Agregar
                     </a>
                 </form>
@@ -836,7 +853,7 @@
                     <div class="row">
                         <div class="col-6 text-left">
                             <b class="size-12">ESTATUS</b>
-                            <select class="form-control form-control-sm" name="estatus" id="estatus" style="width:100%" onchange="">
+                            <select class="form-control form-control-sm" name="estatus" id="estatus" style="width:100%" onchange="listSubestatus(this.value)">
                                 <option value="0" selected disabled>SELECIONA</option>
                                 <option value="confirmado">CONFIRMADO</option>
                                 <option value="entransito">EN TRÁNSITO</option>
@@ -853,7 +870,7 @@
                         </div>
                     </div>
                     <br />
-                    <a href="javascript:void(0);" class="btn btn-dark guardar" style="width:100%" onclick="">
+                    <a href="javascript:void(0);" class="btn btn-dark guardar" style="width:100%" onclick="updateStatus(this)">
                         GUARDAR
                     </a>
                 </form>
@@ -912,7 +929,7 @@
                         </div>*@
                 </form>
                 <br />
-                <button onclick="" class="btn btn-dark" style="width:100%;">
+                <button onclick="closeModal()" class="btn btn-dark" style="width:100%;">
                     Agregar
                 </button>
 

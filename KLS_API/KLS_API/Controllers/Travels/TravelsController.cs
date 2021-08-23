@@ -104,6 +104,10 @@ namespace KLS_API.Controllers.Travels
                                       into viajeservicio
                                       from serviciodata in viajeservicio.DefaultIfEmpty()
 
+                                      join chofer in _dbContext.Tr_Has_Operadores on serviciodata.IdChofer equals chofer.Id
+                                      into choferservicio
+                                      from choferdata in choferservicio.DefaultIfEmpty()
+
                                       join unidad in _dbContext.Unidades on serviciodata.Id equals unidad.ServicesId
                                       into unidadservicio
                                       from unidaddata in unidadservicio.DefaultIfEmpty()
@@ -128,7 +132,10 @@ namespace KLS_API.Controllers.Travels
                                           Transportista = serviciodata.IdTransportista,
                                           viajes.Estatus,
                                           viajes.SubEstatus,
-                                          viajes.StatusUpdated
+                                          viajes.StatusUpdated,
+                                          clientedata.Ejecutivo,
+                                          ChoferNombre = choferdata.nombre,
+                                          ChoferTelefono = choferdata.NoTelefono
                                       }).FirstOrDefault() : (
                                  from viajes in _dbContext.Viajes
                                  join cliente in _dbContext.Clientes on viajes.IdCliente equals cliente.id
@@ -139,6 +146,7 @@ namespace KLS_API.Controllers.Travels
                                  join ruta in _dbContext.Ruta on viajes.IdRuta equals ruta.id
                                  join unidad in _dbContext.Cat_Tipos_Unidades on viajes.IdUnidad equals unidad.id
                                  join servicio in _dbContext.Servicios on viajes.Id equals servicio.TravelId
+                                 join chofer in _dbContext.Tr_Has_Operadores on servicio.IdChofer equals chofer.Id
                                  select new
                                  {
                                      viajes.Id,
@@ -157,7 +165,10 @@ namespace KLS_API.Controllers.Travels
                                      Transportista = servicio.IdTransportista,
                                      viajes.Estatus,
                                      viajes.SubEstatus,
-                                     viajes.StatusUpdated
+                                     viajes.StatusUpdated,
+                                     cliente.Ejecutivo,
+                                     ChoferNombre = chofer.nombre,
+                                     ChoferTelefono = chofer.NoTelefono
                                  }).OrderByDescending(x => x.Id).FirstOrDefault();
 
                 return Ok(viaje);
