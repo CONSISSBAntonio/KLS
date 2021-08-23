@@ -1,9 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace KLS_WEB.Controllers.Catalogs
 {
@@ -16,7 +12,7 @@ namespace KLS_WEB.Controllers.Catalogs
         {
             return View(this._UrlView + "index.cshtml");
         }
-        
+
         [Route("Geografia")]
         public IActionResult Geografia()
         {

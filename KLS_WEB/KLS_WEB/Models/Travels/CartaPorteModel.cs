@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace KLS_WEB.Models.Travels
 {
@@ -12,8 +10,8 @@ namespace KLS_WEB.Models.Travels
         public string Lugar { get; set; }
         public string Ruta { get; set; }
         public string Ejecutivo { get; set; }
-        public string Origen{ get; set; }
-        public string Destino{ get; set; }
+        public string Origen { get; set; }
+        public string Destino { get; set; }
         public string PlazoEntrega { get; set; }
         public int Cantidad { get; set; }
         public string Embalaje { get; set; }

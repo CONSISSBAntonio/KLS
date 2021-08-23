@@ -228,18 +228,23 @@
             var estadoDestino = $('#estadoDestino').val();
             var ciudadOrigen = $('#ciudadOrigen').val();
             var ciudadDestino = $('#ciudadDestino').val();
+
             var jsonData = { "id_estadoorigen": estadoOrigen, "id_ciudadorigen": ciudadOrigen, "id_estadodestino": estadoDestino, "id_ciudaddestino": ciudadDestino };
+
             $.get("/Clients/ActiveRoutes/getRoutes", jsonData, function (res) {
                 $("#Id_Ruta").empty();
                 $("#Id_Ruta").append(`<option value="0">Selecciona una opcion</option>`);
                 $.each(res, function (item, key) {
                     $("#Id_Ruta").append(`<option value="${key.id}">Estado origen: ${key.estadoOrigen}--Ciudad Origen:${key.ciudadOrigen} Estado destino: ${key.estadoDestino}--Ciudad destino:${key.ciudadDestino}</option>`);
                 });
+                
                 if (id != 0) {
+                    console.log(id);
+                    //$('#Id_Ruta').val(id);
                     $('#Id_Ruta').val(id).trigger('change');
-                    $("#Id_Ruta").change();
                 }
             });
+            
         }
 
         function obtenerConversiones() { // Carga las conversiones activas por cliente
@@ -293,10 +298,7 @@
             $("#titulo-modal").empty("");
             $("#titulo-modal").html(titulo);
             $("#idEditar").val(idEditar);
-            $('#estadoOrigen').val(0).trigger('change');
-            $('#estadoDestino').val(0).trigger('change');
-            $('#ciudadOrigen').val(0).trigger('change');
-            $('#ciudadDestino').val(0).trigger('change');
+            
 
             if (accion == "Editar") {
                 try {
@@ -315,6 +317,10 @@
                     $("#modalDiv").modal("hide");
                 }
             } else {
+                $('#estadoOrigen').val(0).trigger('change');
+                $('#estadoDestino').val(0).trigger('change');
+                $('#ciudadOrigen').val(0).trigger('change');
+                $('#ciudadDestino').val(0).trigger('change');
                 $("#modalDiv").modal("show");
             }
         }

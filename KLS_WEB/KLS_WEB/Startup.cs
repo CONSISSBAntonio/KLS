@@ -73,8 +73,8 @@ namespace KLS_WEB
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            var hostingEnvironment = app.ApplicationServices.GetService<Microsoft.AspNetCore.Hosting.IHostingEnvironment>();
-            RotativaConfiguration.Setup(hostingEnvironment);
+            //var hostingEnvironment = app.ApplicationServices.GetService<Microsoft.AspNetCore.Hosting.IHostingEnvironment>();
+            //RotativaConfiguration.Setup(hostingEnvironment);
         }
     }
 }

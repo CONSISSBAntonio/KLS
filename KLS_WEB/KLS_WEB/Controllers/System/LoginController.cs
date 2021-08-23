@@ -7,13 +7,12 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 using MimeKit.Text;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -25,12 +24,16 @@ namespace KLS_WEB.Controllers.System
         private readonly Util<User> util;
         private readonly ILogger<LoginController> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private IConfiguration Configuration { get; }
         private readonly IAppContextService _appContext;
-        public LoginController(IHttpClientFactory httpClientFactory, ILogger<LoginController> logger, IHttpContextAccessor httpContextAccessor, IAppContextService appContext)
+
+
+        public LoginController(IConfiguration _Configuration, IHttpClientFactory httpClientFactory, ILogger<LoginController> logger, IHttpContextAccessor httpContextAccessor, IAppContextService appContext)
         {
             util = new Util<User>(httpClientFactory);
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
+            Configuration = _Configuration;
             _appContext = appContext;
         }
 
@@ -45,7 +48,7 @@ namespace KLS_WEB.Controllers.System
         {
             if (ModelState.IsValid)
             {
-                var modelStateError = await util.LoginAsync(Resource.LoginAPIUrl, user);
+                var modelStateError = await util.LoginAsync(Configuration["Api:Url"] + Resource.LoginAPIUrl, user);
 
                 if (modelStateError.Response.Errors.Count > 0)
                 {
@@ -93,7 +96,7 @@ namespace KLS_WEB.Controllers.System
         {
             if (ModelState.IsValid)
             {
-                var modelStateError = await util.RegisterAsync(Resource.RegisterAPIUrl, user);
+                var modelStateError = await util.RegisterAsync(Configuration["Api:Url"] + Resource.RegisterAPIUrl, user);
 
                 if (modelStateError.Response.Errors.Count > 0)
                 {
@@ -130,7 +133,7 @@ namespace KLS_WEB.Controllers.System
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(User user)
         {
-            ModelStateError modelStateError = await util.LoginAsync(Resource.RecoveryAPIUrl, user);
+            ModelStateError modelStateError = await util.LoginAsync(Configuration["Api:Url"] + Resource.RecoveryAPIUrl, user);
             var message = new Errors();
             message.ErrorMessage = "EL CORREO ELECTRÓNICO QUE INGRESASTE NO EXISTE EN NUESTRA BASE DE DATOS";
 

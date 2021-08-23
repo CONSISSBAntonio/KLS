@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace KLS_WEB.Models
+﻿namespace KLS_WEB.Models
 {
     public class RouteDTO
     {

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using KLS_WEB.Models;
+﻿using KLS_WEB.Models;
 using KLS_WEB.Models.Clients;
 using KLS_WEB.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace KLS_WEB.Controllers.Clients
 {
@@ -52,7 +50,7 @@ namespace KLS_WEB.Controllers.Clients
         public async Task<JsonResult> getRoutes(Cl_Has_Routes routes)
         {
             List<clRoutes> dataReport;
-            dataReport = await this.AppContext.Execute< List<clRoutes>>(MethodType.GET, _UrlApi+"/getRoute", routes);
+            dataReport = await this.AppContext.Execute<List<clRoutes>>(MethodType.GET, _UrlApi + "/getRoute", routes);
             return Json(dataReport);
         }
         public class clRoutes
@@ -75,7 +73,7 @@ namespace KLS_WEB.Controllers.Clients
         public async Task<JsonResult> getRoutes(Route routes)
         {
             List<routeActives> dataReport;
-            dataReport = await this.AppContext.Execute< List<routeActives>>(MethodType.GET, _UrlApi+ "/getRoutes", routes);
+            dataReport = await this.AppContext.Execute<List<routeActives>>(MethodType.GET, _UrlApi + "/getRoutes", routes);
             return Json(dataReport);
         }
 

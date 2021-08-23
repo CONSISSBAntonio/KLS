@@ -1,18 +1,17 @@
 ﻿using KLS_WEB.Models;
 using KLS_WEB.Models.Carriers;
+using KLS_WEB.Models.DT;
 using KLS_WEB.Models.Travels;
 using KLS_WEB.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Rotativa.AspNetCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Rotativa;
-using Rotativa.AspNetCore;
-using Microsoft.AspNetCore.Http;
-using KLS_WEB.Models.DT;
 
 namespace KLS_WEB.Controllers.Travels
 {

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using KLS_WEB.Models;
+﻿using KLS_WEB.Models;
 using KLS_WEB.Models.Clients;
 using KLS_WEB.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace KLS_WEB.Controllers.Clients
 {

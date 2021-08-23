@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using KLS_WEB.Models;
+﻿using KLS_WEB.Models;
 using KLS_WEB.Models.Clients;
 using KLS_WEB.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace KLS_WEB.Controllers.Clients
 {
@@ -57,7 +55,7 @@ namespace KLS_WEB.Controllers.Clients
         public async Task<JsonResult> getOtros(Cl_Has_Otros dataModel)
         {
             Cl_Has_Otros dataReport;
-            dataReport = await this.AppContext.Execute<Cl_Has_Otros>(MethodType.GET, _UrlApi+ "getOtros", dataModel);
+            dataReport = await this.AppContext.Execute<Cl_Has_Otros>(MethodType.GET, _UrlApi + "getOtros", dataModel);
             return Json(dataReport);
         }
 
@@ -66,7 +64,7 @@ namespace KLS_WEB.Controllers.Clients
         public async Task<JsonResult> setOtros(Cl_Has_Otros dataModel)
         {
             Cl_Has_Otros dataReport;
-            dataReport = await this.AppContext.Execute<Cl_Has_Otros>(MethodType.POST, _UrlApi+"setOtros", dataModel);
+            dataReport = await this.AppContext.Execute<Cl_Has_Otros>(MethodType.POST, _UrlApi + "setOtros", dataModel);
             return Json(dataReport);
         }
 
@@ -75,7 +73,7 @@ namespace KLS_WEB.Controllers.Clients
         public async Task<JsonResult> putOtros(Cl_Has_Otros dataModel)
         {
             Cl_Has_Otros dataReport;
-            dataReport = await this.AppContext.Execute<Cl_Has_Otros>(MethodType.PUT, _UrlApi+"putOtros", dataModel);
+            dataReport = await this.AppContext.Execute<Cl_Has_Otros>(MethodType.PUT, _UrlApi + "putOtros", dataModel);
             return Json(dataReport);
         }
 
