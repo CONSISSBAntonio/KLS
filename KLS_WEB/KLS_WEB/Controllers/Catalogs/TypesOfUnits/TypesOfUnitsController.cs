@@ -1,8 +1,6 @@
-﻿using KLS_API.Models;
-using KLS_WEB.Models;
+﻿using KLS_WEB.Models;
 using KLS_WEB.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -24,7 +22,7 @@ namespace KLS_WEB.Controllers.Catalogs.TypesOfUnits
 
         public IActionResult Index()
         {
-            return View(this._UrlView+"index.cshtml");
+            return View(this._UrlView + "index.cshtml");
         }
 
         [Route("getUnidades")]
@@ -34,7 +32,7 @@ namespace KLS_WEB.Controllers.Catalogs.TypesOfUnits
             dataReport = await this.AppContext.Execute<List<Cat_Tipos_Unidades>>(MethodType.GET, _UrlApi, dataModel);
             return Json(dataReport);
         }
-        
+
         [Route("setUnidades")]
         public async Task<JsonResult> Post(Cat_Tipos_Unidades dataModel)
         {

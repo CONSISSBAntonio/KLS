@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace KLS_WEB.Models.Carriers
 {
@@ -15,7 +11,7 @@ namespace KLS_WEB.Models.Carriers
 
         [Column(TypeName = "varchar(55)")]
         public string TipoContacto { get; set; }
-        
+
         [Column(TypeName = "varchar(55)")]
         public string Nombre { get; set; }
 

@@ -2,11 +2,8 @@
 using KLS_WEB.Models;
 using KLS_WEB.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace KLS_WEB.Controllers.Catalogs.Subservices
@@ -17,7 +14,7 @@ namespace KLS_WEB.Controllers.Catalogs.Subservices
     {
         private string _UrlView = "~/Views/Catalogs/Subservices/";
         private string _UrlApi = "Catalogs/Subservices";
-        
+
         private readonly IAppContextService AppContext;
         public SubservicesController(IAppContextService _AppContext)
         {
@@ -43,7 +40,7 @@ namespace KLS_WEB.Controllers.Catalogs.Subservices
             dataReport = await this.AppContext.Execute<Cat_Subservicios>(MethodType.POST, _UrlApi, dataModel);
             return Json(dataReport);
         }
-        
+
         [HttpPost]
         [Route("putSubservices")]
         public async Task<JsonResult> Put(Cat_Subservicios dataModel)

@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace KLS_WEB.Controllers.Carriers.CarriersInventory
 {
@@ -158,7 +157,7 @@ namespace KLS_WEB.Controllers.Carriers.CarriersInventory
                     zip.AddFile(Path.Combine(rutas + data.FotoUnidad), "");
                 }
 
-                string nombreDescarga = data.Id+data.Placa;
+                string nombreDescarga = data.Id + data.Placa;
 
                 using (MemoryStream output = new MemoryStream())
                 {

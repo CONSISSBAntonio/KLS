@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace KLS_WEB.Controllers.Carriers.CarriersLibrary
@@ -69,7 +68,7 @@ namespace KLS_WEB.Controllers.Carriers.CarriersLibrary
                 jsonData.Archivo = nombreArchivo;
             }
 
-            jsonData.Ruta = Path.Combine(rutaHoy,"");
+            jsonData.Ruta = Path.Combine(rutaHoy, "");
             jsonData.Id_Transportista = IdTransportista;
             var culture = new CultureInfo("en-US");
 
@@ -102,7 +101,7 @@ namespace KLS_WEB.Controllers.Carriers.CarriersLibrary
             }
 
             jsonData.Id_Transportista = IdTransportista;
-            
+
             DateTime localDate = DateTime.Now;
             jsonData.FechaEvento = localDate;
 
@@ -124,6 +123,6 @@ namespace KLS_WEB.Controllers.Carriers.CarriersLibrary
             return true;
         }
 
-        
+
     }
 }

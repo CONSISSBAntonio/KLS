@@ -1,5 +1,3 @@
-using System;
-
 namespace KLS_WEB.Models
 {
     public class ErrorViewModel

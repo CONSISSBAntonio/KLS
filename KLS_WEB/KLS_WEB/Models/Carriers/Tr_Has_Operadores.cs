@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace KLS_WEB.Models.Carriers
 {
@@ -19,12 +15,12 @@ namespace KLS_WEB.Models.Carriers
         public string NoLicencia { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string NoIne { get; set; }
-        
+
         [Column(TypeName = "varchar(250)")]
         public string FotoLicencia { get; set; }
         [Column(TypeName = "varchar(250)")]
         public string FotoIne { get; set; }
-        
+
         [Column(TypeName = "varchar(250)")]
         public string FotoSeguro { get; set; }
 

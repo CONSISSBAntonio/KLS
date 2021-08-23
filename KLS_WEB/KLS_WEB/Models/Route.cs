@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using KLS_API.Models;
-using KLS_WEB.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace KLS_WEB.Models
 {

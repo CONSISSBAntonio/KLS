@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using KLS_API.Models;
-using KLS_WEB.Models;
+﻿using KLS_WEB.Models;
 using KLS_WEB.Models.Oferta;
 using KLS_WEB.Models.Travels;
 using KLS_WEB.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace KLS_WEB.Controllers.Offer
 {
@@ -126,7 +124,7 @@ namespace KLS_WEB.Controllers.Offer
             DateTime localDate = DateTime.Now;
             dataModel.fecha = localDate;
             dataModel.id_User = HttpContext.Session.GetString("Id");
-            dataModel.nombre = HttpContext.Session.GetString("Nombre")+" "+HttpContext.Session.GetString("Apaterno")+" "+ HttpContext.Session.GetString("Amaterno");
+            dataModel.nombre = HttpContext.Session.GetString("Nombre") + " " + HttpContext.Session.GetString("Apaterno") + " " + HttpContext.Session.GetString("Amaterno");
             Separar dataReport;
             dataReport = await this.AppContext.Execute<Separar>(MethodType.POST, _UrlApi + "/Separar", dataModel);
             return Json(dataReport);
@@ -183,7 +181,8 @@ namespace KLS_WEB.Controllers.Offer
             return Json(dataReport);
         }
 
-        public class expirados{
+        public class expirados
+        {
             public List<Oferta> expirado { get; set; }
         }
     }

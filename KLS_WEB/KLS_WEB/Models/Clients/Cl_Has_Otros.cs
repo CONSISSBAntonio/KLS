@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace KLS_WEB.Models.Clients
 {
@@ -11,11 +7,11 @@ namespace KLS_WEB.Models.Clients
     {
         [Key]
         public int Id { get; set; }
-        public bool Id_Cliente { get;set;}
-        public bool Mandatario1 {get;set;}
-        public bool Mandatario2 {get;set;}
-        public bool Mandatario3 {get;set;}
-        public bool Referencia1{ get;set;}
+        public bool Id_Cliente { get; set; }
+        public bool Mandatario1 { get; set; }
+        public bool Mandatario2 { get; set; }
+        public bool Mandatario3 { get; set; }
+        public bool Referencia1 { get; set; }
         public bool Referencia2 { get; set; }
         public bool Referencia3 { get; set; }
         [Column(TypeName = "varchar(55)")]
@@ -24,6 +20,7 @@ namespace KLS_WEB.Models.Clients
         public string Treferencia2 { get; set; }
         [Column(TypeName = "varchar(55)")]
         public string
-            Treferencia3 {get;set;}
+            Treferencia3
+        { get; set; }
     }
 }

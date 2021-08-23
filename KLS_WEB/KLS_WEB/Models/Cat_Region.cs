@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace KLS_WEB.Models
 {
@@ -14,7 +11,7 @@ namespace KLS_WEB.Models
 
         [Column(TypeName = "varchar(10)")]
         public string nombre { get; set; }
-        public List<Region_Has_Estado> Region_Has_Estados {get;set;}
+        public List<Region_Has_Estado> Region_Has_Estados { get; set; }
         public int estatus { get; set; }
     }
 }

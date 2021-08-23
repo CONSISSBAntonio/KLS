@@ -108,7 +108,7 @@ namespace KLS_WEB.Services
                 _request.Method = new HttpMethod(EnumMethod.ToString());
                 _request.RequestUri = new Uri(this.Configuration["Api:Url"] + Path, System.UriKind.RelativeOrAbsolute);
                 _request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json"));
-                _request.Headers.Add("Authorization", "Bearer "+ this.HttpContextAccessor.HttpContext.Session.GetString("Token"));//Aqui se agrega el token
+                _request.Headers.Add("Authorization", "Bearer " + this.HttpContextAccessor.HttpContext.Session.GetString("Token"));//Aqui se agrega el token
                 //_usersessionservice.GetToken());
 
                 var response_ = await _client.SendAsync(_request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
@@ -169,7 +169,7 @@ namespace KLS_WEB.Services
                 _request.Method = new HttpMethod(EnumMethod.ToString());
                 _request.RequestUri = new Uri(this.Configuration["Api:Url"] + Path, System.UriKind.RelativeOrAbsolute);
                 _request.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json"));
-                _request.Headers.Add("Authorization", "Bearer "+ this.HttpContextAccessor.HttpContext.Session.GetString("Token"));//Aqui se agrega el token
+                _request.Headers.Add("Authorization", "Bearer " + this.HttpContextAccessor.HttpContext.Session.GetString("Token"));//Aqui se agrega el token
 
                 var response_ = await _client.SendAsync(_request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
 

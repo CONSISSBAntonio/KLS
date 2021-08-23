@@ -26,7 +26,7 @@ namespace KLS_WEB.Controllers.Carriers
         {
             return View(this._UrlView + "index.cshtml");
         }
-        
+
         [Route("formCarriers/{id=0}")]
         public IActionResult formCarriers(int id = 0)
         {
@@ -50,7 +50,7 @@ namespace KLS_WEB.Controllers.Carriers
             dataReport = await this.AppContext.Execute<Transportista>(MethodType.POST, _UrlApi, dataModel);
             return Json(dataReport);
         }
-        
+
         [Route("putCarriers")]
         public async Task<JsonResult> Put(Transportista dataModel)
         {
@@ -58,13 +58,13 @@ namespace KLS_WEB.Controllers.Carriers
             dataReport = await this.AppContext.Execute<Transportista>(MethodType.PUT, _UrlApi, dataModel);
             return Json(dataReport);
         }
-        
+
         [HttpGet]
         [Route("getCarrier")]
         public async Task<JsonResult> getCarrier(Transportista dataModel)
         {
             Transportista dataReport;
-            dataReport = await this.AppContext.Execute<Transportista>(MethodType.GET, _UrlApi+ "/getCarrier", dataModel);
+            dataReport = await this.AppContext.Execute<Transportista>(MethodType.GET, _UrlApi + "/getCarrier", dataModel);
             return Json(dataReport);
         }
 

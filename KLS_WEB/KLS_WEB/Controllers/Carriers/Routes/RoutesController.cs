@@ -3,9 +3,7 @@ using KLS_WEB.Models.Carriers;
 using KLS_WEB.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace KLS_WEB.Controllers.Carriers.CarriersRoutes
@@ -43,7 +41,7 @@ namespace KLS_WEB.Controllers.Carriers.CarriersRoutes
         public async Task<JsonResult> getRuta(RouteTran dataModel)
         {
             List<Ruta> dataReport;
-            dataReport = await this.AppContext.Execute<List<Ruta>>(MethodType.GET, _UrlApi+"/getRuta", dataModel);
+            dataReport = await this.AppContext.Execute<List<Ruta>>(MethodType.GET, _UrlApi + "/getRuta", dataModel);
             return Json(dataReport);
         }
 
@@ -70,12 +68,12 @@ namespace KLS_WEB.Controllers.Carriers.CarriersRoutes
             dataReport = await this.AppContext.Execute<Tr_Has_Rutas>(MethodType.PUT, _UrlApi, dataModel);
             return Json(dataReport);
         }
-        
+
         [Route("obRutas")]
         public async Task<JsonResult> obRutas()
         {
             List<Route> dataReport;
-            dataReport = await this.AppContext.Execute<List<Route>>(MethodType.GET, _UrlApi+ "/obRutas", null);
+            dataReport = await this.AppContext.Execute<List<Route>>(MethodType.GET, _UrlApi + "/obRutas", null);
             return Json(dataReport);
         }
     }

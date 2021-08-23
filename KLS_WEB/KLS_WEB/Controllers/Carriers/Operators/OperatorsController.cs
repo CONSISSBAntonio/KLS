@@ -2,7 +2,6 @@
 using KLS_WEB.Models;
 using KLS_WEB.Models.Carriers;
 using KLS_WEB.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +9,7 @@ using System;
 
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Text;
 
 namespace KLS_WEB.Controllers.Carriers.CarriersOperators
 {
@@ -20,7 +17,7 @@ namespace KLS_WEB.Controllers.Carriers.CarriersOperators
     //[Authorize]
     public class OperatorsController : Controller
     {
-        
+
         private string _UrlView = "~/Views/Carriers/Operators/";
         private string _UrlApi = "Carriers/Operators";
 
@@ -47,7 +44,7 @@ namespace KLS_WEB.Controllers.Carriers.CarriersOperators
             dataReport = await this.AppContext.Execute<List<Tr_Has_Operadores>>(MethodType.GET, _UrlApi, dataModel);
             return Json(dataReport);
         }
-        
+
         [Route("[action]/{id}")]
         public async Task<JsonResult> GetOperator(string id)
         {
@@ -59,7 +56,7 @@ namespace KLS_WEB.Controllers.Carriers.CarriersOperators
 
         [HttpPost]
         [Route("setOperators")]
-        public async Task<JsonResult> Post(Tr_Has_Operadores jsonData, IFormFile file, IFormFile file1,IFormFile file2, int IdTransportista)
+        public async Task<JsonResult> Post(Tr_Has_Operadores jsonData, IFormFile file, IFormFile file1, IFormFile file2, int IdTransportista)
         {
             Random rdn = new Random();
             int rutaRandom = rdn.Next(10000, 100000) + rdn.Next(10000, 100000);
@@ -82,7 +79,7 @@ namespace KLS_WEB.Controllers.Carriers.CarriersOperators
 
             if (file != null)
             {
-                nombreLicencia = string.Format("{0}{1:yyyyMMdd_HHmm_ss}{2}",rdn.Next(10000, 10000000), DateTime.Now, Path.GetExtension(file.FileName));
+                nombreLicencia = string.Format("{0}{1:yyyyMMdd_HHmm_ss}{2}", rdn.Next(10000, 10000000), DateTime.Now, Path.GetExtension(file.FileName));
                 LicenciaPath = Path.Combine(ruta, nombreLicencia);
                 await SaveFile(file, LicenciaPath);
                 jsonData.FotoLicencia = nombreLicencia;
@@ -90,12 +87,12 @@ namespace KLS_WEB.Controllers.Carriers.CarriersOperators
 
             if (file1 != null)
             {
-                nombreIne = string.Format("{0}{1:yyyyMMdd_HHmm_ss}{2}",rdn.Next(10000, 100000), DateTime.Now, Path.GetExtension(file1.FileName));
+                nombreIne = string.Format("{0}{1:yyyyMMdd_HHmm_ss}{2}", rdn.Next(10000, 100000), DateTime.Now, Path.GetExtension(file1.FileName));
                 InePath = Path.Combine(ruta, nombreIne);
                 await SaveFile(file1, InePath);
                 jsonData.FotoIne = nombreIne;
             }
-            
+
             if (file2 != null)
             {
                 nombreSeguro = string.Format("{0}{1:yyyyMMdd_HHmm_ss}{2}", rdn.Next(10000, 100000), DateTime.Now, Path.GetExtension(file2.FileName));
@@ -127,7 +124,7 @@ namespace KLS_WEB.Controllers.Carriers.CarriersOperators
 
 
         [Route("putOperators")]
-        public async Task<JsonResult> Put(Tr_Has_Operadores jsonData, IFormFile file, IFormFile file1,IFormFile file2, int IdTransportista)
+        public async Task<JsonResult> Put(Tr_Has_Operadores jsonData, IFormFile file, IFormFile file1, IFormFile file2, int IdTransportista)
         {
             Random rdn = new Random();
             int rutaRandom = rdn.Next(10000, 100000) + rdn.Next(10000, 100000);
@@ -176,7 +173,7 @@ namespace KLS_WEB.Controllers.Carriers.CarriersOperators
         [Route("DescargarZip/{id}")]
         public async Task<FileResult> DescargarAsync(string id)
         {
-            
+
             Random rdn = new Random();
             int nombreRandom = rdn.Next(10000, 100000) + rdn.Next(10000, 100000);
             using (ZipFile zip = new ZipFile())
@@ -184,7 +181,7 @@ namespace KLS_WEB.Controllers.Carriers.CarriersOperators
                 Tr_Has_Operadores operador = new Tr_Has_Operadores();
                 Tr_Has_Operadores data = await AppContext.Execute<Tr_Has_Operadores>(MethodType.GET, Path.Combine(_UrlApi, "GetOperator", id), operador);
 
-                var rutas = @_hostingEnvironment.WebRootPath + "\\Resources\\Operadores\\" + data.Ruta+"/";
+                var rutas = @_hostingEnvironment.WebRootPath + "\\Resources\\Operadores\\" + data.Ruta + "/";
 
                 //zip.AddDirectory(rutas);
                 if (data.FotoSeguro != null)
@@ -210,6 +207,6 @@ namespace KLS_WEB.Controllers.Carriers.CarriersOperators
 
 
         }
-        
+
     }
 }
