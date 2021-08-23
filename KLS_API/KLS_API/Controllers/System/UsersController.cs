@@ -187,7 +187,6 @@ namespace KLS_API.Controllers.System
             {
 
                 var user = await userManager.FindByEmailAsync(userDTO.Email.Trim());
-                //var setToken = context.Users.FirstOrDefault(x => x.Email == userDTO.Email.Trim());
                 if (user == null)
                 {
                     return NotFound();
@@ -200,6 +199,67 @@ namespace KLS_API.Controllers.System
             }
 
             return NotFound(userDTO);
+        }
+
+        public class PasswordReset
+        {
+            public string NewPassword { get; set; }
+            public string ResetToken { get; set; }
+            public bool IsValid { get; set; }
+        }
+
+        [HttpPost("ValidToken")]
+        public IActionResult ValidToken([FromBody] PasswordReset token)
+        {
+            try
+            {
+                bool isValid = context.Users.Any(x => x.ResetToken == token.ResetToken);
+                if (!isValid)
+                {
+                    return NotFound();
+                }
+
+                PasswordReset passwordReset = new PasswordReset
+                {
+                    ResetToken = token.ResetToken,
+                    IsValid = isValid
+                };
+
+                return Ok(passwordReset);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
+
+        [HttpPost("SetPassword")]
+        public async Task<ActionResult<UserTokenDTO>> SetPassword([FromBody] PasswordReset passwordReset)
+        {
+            var user = await userManager.FindByEmailAsync("francisco.robles@consiss.com");
+            var hashedNewPassword = userManager.PasswordHasher.HashPassword(user, passwordReset.NewPassword);
+            user.PasswordHash = hashedNewPassword;
+            context.SaveChanges();
+
+            var result = await signInManager.PasswordSignInAsync(user.Email, passwordReset.NewPassword, isPersistent: false, lockoutOnFailure: false);
+            if (result.Succeeded)
+            {
+                var roles = await userManager.GetRolesAsync(user);
+                var token = CreateToken(user, roles);
+
+                return new UserTokenDTO
+                {
+                    Token = token,
+                    UserName = user.UserName,
+                    Roles = roles,
+                    Id = user.Id,
+                    Nombre = user.Nombre,
+                    Apaterno = user.Apaterno,
+                    Amaterno = user.Amaterno,
+                };
+            }
+            return NotFound();
         }
     }
 }

@@ -130,36 +130,72 @@ namespace KLS_WEB.Controllers.System
         {
             ModelStateError modelStateError = await util.LoginAsync(Configuration["Api:Url"] + Resource.RecoveryAPIUrl, user);
 
-            if (modelStateError.Nombre != null)
+            if (modelStateError != null)
             {
-                string context = Request.GetTypedHeaders().Referer.AbsoluteUri;
-                var x = Guid.NewGuid().ToString();
-                var link = context + modelStateError.Token;
-                //var link = Path.Combine(_appContext, "owkeq");
-                //var link = Path.Combine(context, "/Login/ResetPassword/", modelStateError.Token);
+                string context = Request.GetTypedHeaders().Referer.AbsoluteUri.Replace("ResetPassword", "ValidateToken");
+                var link = context + "/" + modelStateError.ResetToken;
 
                 var email = new MimeMessage();
-                email.From.Add(MailboxAddress.Parse("itmh@matehuala.tecnm.mx"));
+                email.From.Add(MailboxAddress.Parse("account"));
                 email.To.Add(MailboxAddress.Parse(user.Email));
-                email.Subject = "Test Email Subject";
-                email.Body = new TextPart(TextFormat.Html) { Text = string.Concat(@"<h1>Recupera tu contraesña da click en el siguiente enlace</h1><a href=", link, @">RECUPERAR CONTRASEÑA</a>") };
+                email.Subject = "Cambio de contraseña";
+                string body = "<!DOCTYPE html> <html> <head> <link rel=\"stylesheet\" type=\"text/css\" href=\"https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons\" /> <title>Password Recovery</title> <style> body { font-family: 'Roboto', serif; font-size: 18px; font-weight: 300; } .positex { clear: both; } .float-left { float: left; } .float-right { float: right; } .borde { border-top-style: solid; border-bottom-style: solid; } .dashed { border: 1px dashed; } th { font-weight: 400; } .foot { padding-top: 50px; padding-bottom: 20px; } .foot-top { padding-top: 20px; width: 70%; } .logo { width: 150px; height: 120px; } .vertical-align { vertical-align: middle; } .text-right { text-align: right; } .text-center { text-align: center; } div span, div img { display: inline-block; vertical-align: middle; } </style> </head> <body> <div> <table width=\"100%\" bgcolor=\"#e0e0e0\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"> <tr> <td> <table align=\"center\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:650px; background-color:#fff; font-family:Verdana, Geneva, sans-serif;\"> <thead> <tr height=\"80\"> <th colspan=\"4\" style=\"background-color:black; border-bottom:solid 1px #FFFFFF; font-family:Verdana, Geneva, sans-serif; color:#FFFFFF; font-size:34px;\"> CAMBIO DE CONTRASEÑA</th> </tr> </thead> <tbody> <tr> <td colspan=\"4\" style=\"padding:20px;\"> <div> <img width=\"150\" src=\"https://iili.io/R0agqX.png\" style=\"float: right;\" /> </div> </td> </tr> <tr> <td colspan=\"4\" style=\"padding:20px;\"> <p style=\"text-align: justify;\"> <b>" + string.Concat(modelStateError.Nombre, " ", modelStateError.Apaterno) + "</b> <hr /> <p style=\"text-align: justify;\"> Para crear una nueva contraseña <b><a href=\"" + link + "\">DE CLICK AQUÍ</a></b> <p> Si usted no fué quien solicitó el cambio de contraseña haga caso omiso a este mensaje. </p> </p> <p style=\"color: red;\"> No respondas a este correo electrónico, es generado por el sistema. </p> </td> </tr> </tbody> </table> </td> </tr> </table> </div> </body> </html>";
+                email.Body = new TextPart(TextFormat.Html) { Text = body };
 
-                // send email
                 using var smtp = new SmtpClient();
                 smtp.Connect("smtp-mail.outlook.com", 587, SecureSocketOptions.StartTls);
-                smtp.Authenticate("itmh@matehuala.tecnm.mx", "Mypassw0rd");
+                smtp.Authenticate("email", "password");
                 smtp.Send(email);
                 smtp.Disconnect(true);
 
-                var message = new Errors
-                {
-                    ErrorMessage = modelStateError.Nombre
-                };
-
-                user.Errors.Add(message);
-                return View(user);
+                message.ErrorMessage = string.Concat("EL ENLACE PARA CAMBIAR TU CONTRASEÑA FUÉ ENVIADO A: ", user.Email);
             }
+
+            user.Errors.Add(message);
             return View(user);
+        }
+
+        public async Task<IActionResult> ValidateToken(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return NotFound();
+            }
+
+            PasswordReset pasword = new PasswordReset
+            {
+                ResetToken = id
+            };
+
+            PasswordReset validCode = await _appContext.Execute<PasswordReset>(MethodType.POST, Path.Combine("Users", "ValidToken"), pasword);
+
+            if (validCode.IsValid)
+            {
+                return View("~/Views/Login/NewPassword.cshtml", validCode);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        public IActionResult NewPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> NewPassword(PasswordReset passwordReset)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(passwordReset);
+            }
+
+            var user = await _appContext.Execute<User>(MethodType.POST, Path.Combine("Users", "SetPassword"), passwordReset);
+
+            return RedirectToAction("Login", user);
         }
     }
 }
