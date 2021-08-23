@@ -1,4 +1,5 @@
 ﻿using KLS_WEB.Models;
+using KLS_WEB.Services;
 using KLS_WEB.Utility;
 using MailKit.Net.Smtp;
 using MailKit.Security;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using MimeKit;
 using MimeKit.Text;
 using System;
+using System.IO;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -23,13 +25,16 @@ namespace KLS_WEB.Controllers.System
         private readonly ILogger<LoginController> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private IConfiguration Configuration { get; }
+        private readonly IAppContextService _appContext;
 
-        public LoginController(IConfiguration _Configuration, IHttpClientFactory httpClientFactory, ILogger<LoginController> logger, IHttpContextAccessor httpContextAccessor)
+
+        public LoginController(IConfiguration _Configuration, IHttpClientFactory httpClientFactory, ILogger<LoginController> logger, IHttpContextAccessor httpContextAccessor, IAppContextService appContext)
         {
             util = new Util<User>(httpClientFactory);
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
             Configuration = _Configuration;
+            _appContext = appContext;
         }
 
         public IActionResult Login()
@@ -129,6 +134,8 @@ namespace KLS_WEB.Controllers.System
         public async Task<IActionResult> ResetPassword(User user)
         {
             ModelStateError modelStateError = await util.LoginAsync(Configuration["Api:Url"] + Resource.RecoveryAPIUrl, user);
+            var message = new Errors();
+            message.ErrorMessage = "EL CORREO ELECTRÓNICO QUE INGRESASTE NO EXISTE EN NUESTRA BASE DE DATOS";
 
             if (modelStateError != null)
             {
