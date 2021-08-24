@@ -7,6 +7,8 @@ namespace KLS_WEB.Models.Travels
         public int Id { get; set; }
         public string Folio { get; set; }
         public int IdCliente { get; set; }
+        public int MainTravelId { get; set; }
+        public MainTravel MainTravel { get; set; }
         public DateTime FechaSalida { get; set; }
         public DateTime FechaLlegada { get; set; }
         public string TiempoAnticipacion { get; set; }
@@ -28,5 +30,9 @@ namespace KLS_WEB.Models.Travels
         public DateTime StatusUpdated { get; set; }
         public decimal CostoTotal { get; set; }
         public decimal PrecioClienteTotal { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime TimeCreated { get; set; }
+        public DateTime TimeUpdated { get; set; }
     }
 }

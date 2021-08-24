@@ -18,6 +18,14 @@
     <Compile Remove="Migrations\20210803204000_relRutasId.Designer.cs" />
     <Compile Remove="Migrations\20210804143315_destinos.cs" />
     <Compile Remove="Migrations\20210804143315_destinos.Designer.cs" />
+    <Compile Remove="Migrations\20210824143010_viajesuserdetail.cs" />
+    <Compile Remove="Migrations\20210824143010_viajesuserdetail.Designer.cs" />
+    <Compile Remove="Migrations\20210824181757_maintravel.cs" />
+    <Compile Remove="Migrations\20210824181757_maintravel.Designer.cs" />
+    <Compile Remove="Migrations\20210824182312_maintravel.cs" />
+    <Compile Remove="Migrations\20210824182312_maintravel.Designer.cs" />
+    <Compile Remove="Migrations\20210824190941_maintravel.cs" />
+    <Compile Remove="Migrations\20210824190941_maintravel.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

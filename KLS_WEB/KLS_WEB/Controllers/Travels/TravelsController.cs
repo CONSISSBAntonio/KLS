@@ -6,6 +6,7 @@ using KLS_WEB.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Rotativa.AspNetCore;
 using System;
 using System.Collections.Generic;
@@ -107,13 +108,33 @@ namespace KLS_WEB.Controllers.Travels
             return Json(mercancia);
         }
 
-        [Route("{id}")]
-        public async Task<IActionResult> AddEdit(int id)
+        //[Route("{id}")]
+        //public async Task<IActionResult> AddEdit(int id)
+        //{
+        //    Travel travel = await AppContext.Execute<Travel>(MethodType.GET, Path.Combine(_UrlApi, "GetTravel", id.ToString()), null);
+        //    TempData["TravelId"] = travel is null ? 0 : travel.Id;
+        //    TempData.Keep();
+        //    return View(this._UrlView + (id == 0 ? "New.cshtml" : "Details.cshtml"), travel == null ? new Travel() : travel);
+        //}
+
+        [Route("[action]")]
+        public async Task<IActionResult> AddMainTravel(int id)
         {
-            Travel travel = await AppContext.Execute<Travel>(MethodType.GET, Path.Combine(_UrlApi, "GetTravel", id.ToString()), null);
-            TempData["TravelId"] = travel is null ? 0 : travel.Id;
-            TempData.Keep();
-            return View(this._UrlView + (id == 0 ? "New.cshtml" : "Details.cshtml"), travel == null ? new Travel() : travel);
+            MainTravelDTO mainTravelDTO = new MainTravelDTO();
+
+            var x = await AppContext.Execute<MainTravel>(MethodType.GET, Path.Combine(_UrlApi, "GetMainTravel", id.ToString()), null);
+            var services = await AppContext.Execute<List<Cat_Tipos_Unidades>>(MethodType.GET, Path.Combine(_UrlApi, "GetTipoServicio"), null);
+
+            foreach (var item in services)
+            {
+                SelectListItem service = new SelectListItem { Value = item.id.ToString(), Text = item.nombre };
+                mainTravelDTO.Servicios.Add(service);
+            }
+
+            //TempData["TravelId"] = mainTravelDTO.MainTravel is null ? 0 : mainTravelDTO.MainTravel.Id;
+            //TempData.Keep();
+
+            return View(_UrlView + "New.cshtml", mainTravelDTO);
         }
 
         [Route("setMercancia")]
@@ -228,7 +249,9 @@ namespace KLS_WEB.Controllers.Travels
                     ReferenciaDos = dataModel.Referencia2,
                     ReferenciaTres = dataModel.Referencia3,
                     SubEstatus = "Alta de Viaje",
-                    StatusUpdated = DateTime.Now
+                    StatusUpdated = DateTime.Now,
+                    CreatedBy = HttpContext.Session.GetString("UserFN"),
+                    TimeCreated = DateTime.Now
                 };
 
                 TravelDTO newTravel = await this.AppContext.Execute<TravelDTO>(MethodType.POST, _UrlApi, viaje);
@@ -325,6 +348,7 @@ namespace KLS_WEB.Controllers.Travels
             public decimal Minimo { get; set; }
             public decimal Maximo { get; set; }
         }
+
         [HttpGet]
         [Route("[action]")]
         public async Task<JsonResult> GetRoutePrice(string RouteId)
@@ -333,5 +357,22 @@ namespace KLS_WEB.Controllers.Travels
             return Json(price);
         }
 
+        [HttpPost("[action]")]
+        public async Task<IActionResult> SetMainTravel(MainTravelDTO mainTravelDTO)
+        {
+
+            var services = await AppContext.Execute<List<Cat_Tipos_Unidades>>(MethodType.GET, Path.Combine(_UrlApi, "GetTipoServicio"), null);
+
+            foreach (var item in services)
+            {
+                SelectListItem service = new SelectListItem { Value = item.id.ToString(), Text = item.nombre };
+                mainTravelDTO.Servicios.Add(service);
+            }
+
+            mainTravelDTO.MainTravel.CreatedBy = HttpContext.Session.GetString("UserFN");
+            //mainTravelDTO.MainTravel = await AppContext.Execute<MainTravel>(MethodType.POST, Path.Combine(_UrlApi, "SetMainTravel"), mainTravelDTO.MainTravel);
+
+            return View(string.Concat(_UrlView, "New.cshtml"), mainTravelDTO);
+        }
     }
 }

@@ -47,6 +47,10 @@ namespace KLS_WEB.Models.Travels
         public string Ejecutivo { get; set; }
         public string ChoferNombre { get; set; }
         public string ChoferTelefono { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime TimeCreated { get; set; }
+        public DateTime TimeUpdated { get; set; }
 
         // ServicesId para details
         public string ServiciosIds { get; set; }

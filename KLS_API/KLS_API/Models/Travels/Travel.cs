@@ -9,6 +9,8 @@ namespace KLS_API.Models.Travels
     {
         [Key]
         public int Id { get; set; }
+        public int MainTravelId { get; set; }
+        public MainTravel MainTravel { get; set; }
         public string Folio { get; set; }
         public int IdCliente { get; set; }
         public int IdOrigen { get; set; }
@@ -42,5 +44,9 @@ namespace KLS_API.Models.Travels
         public string Intercom { get; set; }
         public List<Services> Servicios { get; set; }
         public List<Facturacion> Facturas { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime TimeCreated { get; set; }
+        public DateTime TimeUpdated { get; set; }
     }
 }

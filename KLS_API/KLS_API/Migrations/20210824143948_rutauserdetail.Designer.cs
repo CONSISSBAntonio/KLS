@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210824143948_rutauserdetail")]
+    partial class rutauserdetail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1594,38 +1596,6 @@ namespace KLS_API.Migrations
                     b.ToTable("Historial");
                 });
 
-            modelBuilder.Entity("KLS_API.Models.Travels.MainTravel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Ejecutivo")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("GrupoMonitor")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("ServiceId")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime>("TimeCreated")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("TimeUpdated")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MainTravels");
-                });
-
             modelBuilder.Entity("KLS_API.Models.Travels.Mercancia", b =>
                 {
                     b.Property<int>("Id")
@@ -1766,9 +1736,6 @@ namespace KLS_API.Migrations
                     b.Property<string>("Intercom")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<int>("MainTravelId")
-                        .HasColumnType("int");
-
                     b.Property<string>("PassEspejo")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
@@ -1812,8 +1779,6 @@ namespace KLS_API.Migrations
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MainTravelId");
 
                     b.ToTable("Viajes");
                 });
@@ -2051,15 +2016,6 @@ namespace KLS_API.Migrations
                     b.HasOne("KLS_API.Models.Travels.Travel", "Travel")
                         .WithMany("Servicios")
                         .HasForeignKey("TravelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("KLS_API.Models.Travels.Travel", b =>
-                {
-                    b.HasOne("KLS_API.Models.Travels.MainTravel", "MainTravel")
-                        .WithMany("Travels")
-                        .HasForeignKey("MainTravelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

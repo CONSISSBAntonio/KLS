@@ -1,848 +1,120 @@
-﻿@model KLS_WEB.Models.Travels.Travel
-@{
-    ViewData["Title"] = "Configuracion viajes";
-}
+﻿@model KLS_WEB.Models.Travels.MainTravelDTO
 
-<style>
-    .form-check-label {
-        font-size: 12px !important;
-    }
-
-    .select2-selection__rendered {
-        float: left;
-        font-size: 12px;
-        text-transform: uppercase;
-    }
-
-    select {
-        text-transform: uppercase;
-    }
-</style>
-
-<div class="data-content p-4 text-left">
+    <style>
+        .card, .cshadow {
+            box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 20%) !important;
+        }
+    </style>
     <div class="p-4">
         <div class="d-flex justify-content-between mb-3">
             <div class="d-flex">
-                <a href="/@((Model.IsDemand && Model.IsOffer == false) ? "Demand" : Model.IsOffer ? "Offer" : "Travels")">
+                @*<a href="/@((Model.IsDemand && Model.IsOffer == false) ? "Demand" : Model.IsOffer ? "Offer" : "Travels")" class="my-auto">
                     <div class="material-icons icon-red">arrow_back</div>
-                </a>
+                </a>*@
                 <div class="text-uppercase poppins medium size-24 pl-2">Nuevo viaje</div>
+            </div>
+        </div>
+    </div>
 
+    <div class="row pl-5">
+        <div class="col-6">
+            <div class="d-flex justify-content-around">
+                <div class="my-auto">
+                    @{string id = Model.MainTravel is null ? "0001" : (++Model.MainTravel.Id).ToString("D4"); }
+                    <h4 class="text-secondary size-14" id="folio">VT@(string.Concat(DateTime.Now.ToString("yyMM"), id))</h4>
+                </div>
+                <div class="card text-center">
+                    <div class="card-body pb-0 size-12">
+                        <b>$00.00 MXN</b>
+                        <p class="text-light-grey">COSTO</p>
+                    </div>
+                </div>
+                <div class="card text-center">
+                    <div class="card-body pb-0 size-12">
+                        <b>$00.00 MXN</b>
+                        <p class="text-light-grey">VENTA</p>
+                    </div>
+                </div>
+                <div class="card text-center">
+
+                    <div class="card-body pb-0 size-12">
+                        <b>$00.00 MXN</b>
+                        <p class="text-light-grey">VACIOS</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card mt-3">
+                <form asp-controller="Travels" asp-action="SetMainTravel" method="post">
+                    <div class="row">
+                        <div class="col-6 pl-4 pt-3">
+                            <label asp-for="MainTravel.ServiceId" class="form-label">TIPO DE SERVICIO</label>
+                            <select asp-for="MainTravel.ServiceId" asp-items="Model.Servicios" class="form-select" style="width: 100%" required></select>
+                            <span asp-validation-for="MainTravel.ServiceId" class="text-danger"></span>
+                        </div>
+                        <div class="col-6 pt-3 pr-4">
+                            <label asp-for="MainTravel.Ejecutivo" class="form-label">EJECUTIVO</label>
+                            <input asp-for="MainTravel.Ejecutivo" type="text" class="form-control form-control-sm">
+                        </div>
+                        <div class="col-6 pl-4 pt-3 pb-4">
+                            <label asp-for="MainTravel.GrupoMonitor" class="form-label">GRUPO MONITOR</label>
+                            <input asp-for="MainTravel.GrupoMonitor" type="text" class="form-control form-control-sm">
+                        </div>
+                        <p>@Model.MainTravel.ServiceId</p>
+                    </div>
+                    <div class="pb-3 pl-2">
+                        <button type="submit" id="guardar" class="btn btn-dark" style="width: 12.8rem;">GUARDAR</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-6 pr-5">
+            <div class="d-flex justify-content-between mb-2">
+                <b class="my-auto size-12">ADMINISTRACIÓN DE TRAMOS</b>
+                <button class="btn btn-dark cshadow"><span class="material-icons">add</span></button>
             </div>
             <div>
-                @{string id = Model is null ? "0001" : (++Model.Id).ToString("D4"); }
-                <h4 class="text-secondary" id="folio">VT@(string.Concat(DateTime.Now.ToString("yyMM"), id))</h4>
-            </div>
-        </div>
-
-        <form id="frmRegister" class="viaje">
-
-            <div class="p-4 shadow bg-white">
-                <div class="row">
-                    <div class="form-group col-3">
-                        <label class="col-form-label col-form-label-sm">Cliente</label>
-                        <div>
-                            <select asp-for="ClienteId" class="form-control form-control-sm" id="cliente" name="cliente" style="width: 100%;" onchange="getClientParams(this.value)">
-                                <option value="0" selected disabled>SELECCIONA</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group col-3">
-                        <label class="col-form-label col-form-label-sm">Fecha de salida</label>
-                        <div>
-                            <input asp-for="FechaSalida" type="datetime-local" class="form-control form-control-sm" id="fechasalida" name="fechasalida" required>
-                        </div>
-                    </div>
-                    <div class="form-group col-3">
-                        <label class="col-form-label col-form-label-sm">Fecha de llegada</label>
-                        <div>
-                            <input type="datetime-local" class="form-control form-control-sm" id="fechallegada" name="fechallegada" required>
-                        </div>
-                    </div>
-                    <div class="form-group col-3">
-                        <label class="col-form-label col-form-label-sm">Tiempo de anticipación</label>
-                        <div>
-                            <input type="text" class="form-control form-control-sm" id="tiempoanticipacion" name="tiempoanticipacion" required>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group col-6">
-                        <div class="d-flex justify-content-between">
-                            <label class="col-form-label col-form-label-sm">Origen</label>
-                            <a class="btn btn-link text-primary" onclick="showModal('AGREGAR','Agregar', 'origen')">Agregar</a>
-                        </div>
-                        <div>
-                            <select class="form-control form-control-sm text-uppercase" id="origen" name="origen" style="width: 100%;" onchange="GetAddress(this.value, 'origen'), getRoute()">
-                                <option value="0" selected disabled>SELECCIONA</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group col-6">
-                        <label class="col-form-label col-form-label-sm">Dirección Remitente</label>
-                        <div>
-                            <input type="text" class="form-control form-control-sm" id="direccionremitente" name="direccionremitente" required readonly>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group col-6">
-                        <div class="d-flex justify-content-between">
-                            <label class="col-form-label col-form-label-sm">Destino</label>
-                            <a class="btn btn-link text-primary" onclick="showModal('AGREGAR','Agregar', 'destino')">Agregar</a>
-                        </div>
-                        <div>
-                            <select class="form-control form-control-sm" id="destino" name="destino" style="width: 100%;" onchange="GetAddress(this.value, 'destino'), getRoute()">
-                                <option value="0" selected disabled>SELECCIONA</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group col-6">
-                        <label class="col-form-label col-form-label-sm">Dirección Destinatario</label>
-                        <div>
-                            <input type="text" class="form-control form-control-sm" id="direcciondestinatario" name="direcciondestinatario" required readonly>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group col-6">
-                        <label class="col-form-label col-form-label-sm">Ruta</label>
-                        <div>
-                            <select asp-for="Ruta" class="form-control form-control-sm" id="ruta" name="ruta" style="width: 100%;" onchange="GetRoutePrice(this.value)">
-                                <option value="0" selected disabled>SELECCIONA</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group col-3">
-                        <label class="col-form-label col-form-label-sm">Tipo de SERVICIO</label>
-                        <div>
-                            <select class="form-control form-control-sm" id="tipounidad" name="tipounidad">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group col-3">
-                        <label class="col-form-label col-form-label-sm">Tipo de Viaje</label>
-                        <div>
-                            <select class="form-control form-control-sm" id="tipoviaje" name="tipoviaje" onchange="{ SetFolio(this.value); }">
-                                <option value="VTNOW">TERRESTRE NACIONAL ONE WAY</option>
-                                <option value="VTNTW">TERRESTRE NACIONAL TWO WAY</option>
-                                <option value="VTNC">TERRESTRE NACIONAL CIRCUITEABLE</option>
-                                <option value="VTI">TERRESTRE INTERNACIONAL</option>
-                                <option value="VM">MARÍTIMO</option>
-                                <option value="VA">AÉREO</option>
-                                <option value="VMM">MULTIMODAL</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group col-4">
-                        <label class="col-form-label col-form-label-sm">Enlace cuenta espejo</label>
-                        <div>
-                            <input type="text" class="form-control form-control-sm" id="enlaceespejo" name="enlaceespejo" required>
-                        </div>
-                    </div>
-                    <div class="form-group col-4">
-                        <label class="col-form-label col-form-label-sm">Usuario</label>
-                        <div>
-                            <input type="text" class="form-control form-control-sm" id="usuarioespejo" name="usuarioespejo" required>
-                        </div>
-                    </div>
-                    <div class="form-group col-4">
-                        <label class="col-form-label col-form-label-sm">Contraseña</label>
-                        <div>
-                            <input type="text" class="form-control form-control-sm" id="passespejo" name="passespejo" required>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row referencias">
-                </div>
-
-                <div class="row mt-3">
-                    <div class="form-group col-12 d-flex justify-content-between">
-                        <h6 class="font-weight-bold">Servicios</h6>
-                        <a class="btn btn-outline-secondary btn-sm" onclick="selectServicios(this);">
-                            <i class="material-icons">add</i>
-                        </a>
-                    </div>
-                    <div class="form-group col-12 addServicios">
-                        <div class="border rounded d-flex justify-content-center align-items-center font-weight-bolder"
-                             onclick="selectServicios(this);"
-                             style="border: 5px dashed #585858 !important; height: 7rem; opacity: 0.2; cursor: pointer;">
-                            <h3>AGREGA SERVICIOS</h3>
-                        </div>
-
-                    </div>
-                    <div class="col-12 serviciosseleccionados" style="display: none;"></div>
-                </div>
-
-            </div>
-
-            <div class="row p-3">
-                <div class="col-3 bg-white">
-                    <p class="font-weight-bolder">Cálculos</p>
-                    <div class="d-flex justify-content-around">
-                        <div class="d-flex align-items-end flex-column">
-                            <span>Costo</span>
-                            <span>Precio Cliente</span>
-                        </div>
-                        <div class="d-flex flex-column">
-                            <div>
-                                $<b id="costos">0.00</b>
-                            </div>
-                            <div>
-                                $<b id="preciocliente">0.00</b>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="btn btn-dark col-12 mt-4 guardar">Guardar</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!--Modal global-->
-<div class="modal fade" id="modalDiv" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false"
-     aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="titulo-modal">AGREGAR</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body text-left">
-                <form id="frmServicios" class="viaje" onsubmit="event.preventDefault();">
-                    <div class="form-check d-flex align-items-center">
-                        <input class="form-check-input my-auto" type="checkbox" id="0" name="terrestrenacional">
-                        <label class="form-check-label" for="0">Terrestre nacional</label>
-                    </div>
-                    @*<div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="1" name="naviera">
-                            <label class="form-check-label" for="1">
-                                Naviera
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="2" name="agenteaduanal">
-                            <label class="form-check-label" for="2">
-                                Agente aduanal
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="3"
-                                   name="terrestreinternacional">
-                            <label class="form-check-label" for="3">
-                                Terrestre Internacional
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="4" name="aerolinea">
-                            <label class="form-check-label" for="4">
-                                Aerolinea
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="5" name="coloaders">
-                            <label class="form-check-label" for="5">
-                                Coloaders
-                            </label>
-                        </div>*@
-                </form>
-                <br />
-                <button onclick="closeModal('agregarServicios');" class="btn btn-dark" style="width:100%;">
-                    Agregar
-                </button>
-
+                <table class="table table-striped table-bordered display table-hover text-uppercase table-facturas" width="100%" style="height: 17rem;">
+                    <thead>
+                        <tr>
+                            <th>TRAMO</th>
+                            <th>COSTO</th>
+                            <th>VENTA</th>
+                            <th>CLIENTE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center" colspan="4">AGREGA UN TRAMO PARA COMENZAR</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-</div>
-
-<!--Modal AGREGAR ORIGEN-DESTINO-->
-<div class="modal fade" id="modalOD" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="titulo-modal"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body text-left">
-                <form id="frmOD" action="#" method="post">
-                    <input type="hidden" name="id" id="idEditar" value="0" />
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label class="">Nombre</label>
-                                <input type="text" class="form-control" name="Nombre" id="Nombre" required />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label class="">CP</label>
-                                <input type="number" class="form-control" name="Cp" id="Cp" required />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label class="">Estado</label>
-                                <select class="form-control form-control-sm" style="width:100%;" name="Id_Estado" id="Id_Estado" onchange="setCiudad(this.value);">
-                                    <option value="0">Selecciona una opción</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label class="">Ciudad</label>
-                                <select class="form-control form-control-sm" style="width:100%;" name="Id_Ciudad" id="Id_Ciudad" onchange="setColonias(this.value);">
-                                    <option value="0">Selecciona una opción</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label class="">Colonia</label>
-                                <select class="form-control form-control-sm" style="width:100%;" name="Id_Colonia" id="Id_Colonia" onchange="setCp(this.value);">
-                                    <option value="0">Selecciona una opción</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="">Dirección</label>
-                                <input type="text" class="form-control" name="Direccion" id="Direccion" required />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label class="">Hora de atención</label>
-                                <input type="time" class="form-control" name="HoraAtencion" id="HoraAtencion" required />
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="">Estatus</label>
-                            <select class="form-control form-control-sm" name="Estatus" id="Estatus">
-                                <option value="1">Activo</option>
-                                <option value="2">Inactivo</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-dark guardar" style="width:22%;" id="btnAccion">
-                        Guardar
-                    </button>
-                </form>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
-                @*<button type="button" class="btn btn-primary">Save changes</button>*@
-            </div>
-        </div>
-    </div>
-</div>
-<!--Modal AGREGAR ORIGEN-DESTINO-->
-<!-- modal confirm delete-->
-
-<div class="modal fade" id="popup" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="titulo-modal"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body text-left">
-                <p>¿Estas seguro de que deseas eliminar el SERVICIO seleccionado?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
-                <button id="confirm" type="button" class="btn">Si</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 @section Scripts{
     <script>
-        let dataCity = [];
-        let catPais = [];
-        let catEstado = [];
-        let catCiudad = [];
-        const ClientId = @Model.ClienteId ;
-        const OriginId = @Model.Origen ;
-        const DesitnationId = @Model.Destino ;
-        const RouteId = @Model.Ruta ;
-        const UnitId = @Model.TipoUnidad ;
-        const isDemand = @(Model.IsDemand ? "true" : "false");
-        const isOffer = @(Model.IsOffer ? "true" : "false");
-        const CarrierId = @Model.Transportista ;
-        let dataOrigenes = [];
-        let dataState = [];
-        let dataColonies = [];
+        $(() => {
 
-    $(() => {
-        loadState();
-        loadCountry();
-        loadUnits();
-        initSelects();
-        getCatalogos();
-        dSelect('tipoviaje');
-        dSelect('Id_Estado');
-        dSelect('Id_Ciudad');
-        dSelect('Id_Colonia');
-        $('[type=datetime-local]').map((k, e) => $(e).prop('min', new Date().toISOString().substring(0, 16)));
-        isDemand && CarrierId != 0 && SetServicesFromDemand();
+        });
 
-        $(".viaje").submit(event => {
-            event.preventDefault();
-            if (!existenServicios()) {
-                dToast("error", "LOS SERVICIOS SON OBLIGATORIOS", "Error");
-                return;
-            } else if (!validarSelect()) {
-                dToast("error", "LOS PARÁMETROS DE LOS SERVICIOS SON OBLIGATORIOS", "Error");
-                return;
-            }
-
-            $(".guardar").attr("disabled", true);
-
-            let jsonData = convertJson($(".viaje"));
-            const details = {
-                folio: $('#folio').text(),
-                estatus: 'REGISTRADO',
-                equipo: getEquipos(),
-                unidad: getUnidades(),
-                servicios: $('#frmServicios').serialize(),
-                preciototal: $('#preciocliente').text(),
-                costototal: $('#costos').text()
+        const SaveMainTravel = async e => {
+            const data = new FormData(e);
+            const params = {
+                method: 'POST',
+                body: data
             };
 
-            jsonData = { ...jsonData, ...details };
-
-            const serviceExists = jsonData.servicios != '' && jsonData.unidad != '' && true;
-
-            if (serviceExists) {
-                $.post("/Travels/setTravels", jsonData, response =>  {
-                    dToast("success", "Registro guardado exitosamente.", "Registrado");
-                    $(".guardar").attr("disabled", false);
-                    window.location.replace("@Url.Action("", "Travels")");
-                }).fail(error => {
-                    console.error(error);
-                    dToast("error", "Error al tratar de guardar el registro", "Error");
-                    $(".guardar").attr("disabled", false);
-                });
-            } else {
-                const { servicios } = jsonData;
-                dToast("error", servicios == '' ? "LOS SERVICIOS SON OBLIGATORIOS" : "LA UNIDAD ES OBLIGATORIA", "Error");
-                $(".guardar").attr("disabled", false);
-            }
-        });
-
-        $("#frmOD").submit(function (event) {
-            event.preventDefault();
-            const type = $(this).attr('rel') == 'destino' ? 'Destinations/setDestino' : 'Origins/setOrigen';
-            var jsonData = convertJson($("#frmOD"));
-            jsonData["Id_Cliente"] = $('#cliente').val();
-            if (parseInt($("#Id_Ciudad").val()) != 0 && parseInt($("#Id_Estado").val()) != 0 && parseInt($("#Id_Colonia").val()) != 0) {
-                $.post(`/Clients/${type}`, jsonData, function (res) {
-                    dToast("success", "Registro guardado exitosamente.", "Registrado");
-                    $(".guardar").attr("disabled", false);
-                    $('select').map((k, e) => $(e).val('0').trigger('change'));
-                    $('#frmOD').trigger("reset");
-                    $('#cliente').val(jsonData["Id_Cliente"]).trigger('change');
-                }).fail(function (error) {
-                    dToast("error", "Error al tratar de guardar el registro", "Error");
-                    $(".guardar").attr("disabled", false);
-                });
-            } else {
-                dToast("error", "Selecciona una opción", "Error");
-            }
-        });
-    });
-
-        //Catalogos
-        function getCatalogos() {
-            $.get("/Catalogs/Geography/State/getState", function (res) {
-                dataState = res;
-                $("#Id_Estado").empty();
-                $("#Id_Estado").append(`<option value="0" selected disabled>Selecciona una opción</option>`);
-                $.each(dataState, function (item, key) {
-                    if (parseInt(key.estatus) == 1) {
-                        $("#Id_Estado").append(`<option value="${key.id}">${key.nombre}</option>`);
-                    };
-                });
-            }).fail(function (error) {
-                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
-            });
-
-            $.get("/Catalogs/Geography/City/getCity", function (res) {
-                dataCity = res;
-            }).fail(function (error) {
-                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
-            });
-
-            $.get("/Catalogs/Geography/Colonies/getColonies", function (res) {
-                dataColonies = res;
-            }).fail(function (error) {
-                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
-            });
-        }
-
-        function searcCP() {
-            var codigoP = $("#Cp").val();
-            $.each(dataColonies, function (item, key) {
-                if (parseInt(key.estatus) == 1 && parseInt(key.cp) == parseInt(codigoP)) {
-                    $('#Id_Estado option[value="' + key.id_estado + '"]').attr("selected", true);
-                    setCiudad(key.id_estado);
-                    $("#Id_Estado").change();
-                    $('#Id_Ciudad option[value="' + key.id_ciudad + '"]').attr("selected", true);
-                    $("#Id_Ciudad").change();
-                    setColonias(key.id_ciudad);
-                    $("#Id_Colonia").change();
-                };
-            });
-
-        }
-
-        function setCp(id) {
-            let indice = dataColonies.findIndex(service => service.id == id);
-            console.log(indice);
-            if (parseInt(id) != 0) {
-                if (parseInt(indice) >= 0) {
-                    $("#Cp").val(dataColonies[indice].cp);
-                } else {
-                    $("#Cp").val("");
-                    dToast("info", "No se encontro ninguna colonia", "Atención");
-                }
-            }
-        }
-
-        function setColonias(id, idselect = 0) {
-            $("#Id_Colonia").empty();
-            $("#Id_Colonia").append(`<option value="0">Selecciona una opción</option>`);
-            $.get("/Clients/Origins/getColonias/" + id, function (res) {
-                dataColonies = res;
-                $.each(res, function (item, key) {
-                    if (parseInt(key.estatus) == 1) {
-                        $("#Id_Colonia").append(`<option value="${key.id}">${key.nombre}</option>`);
-                    };
-                });
-                if (idselect != 0) {
-                    $("#Id_Colonia").val(idselect).trigger('change');
-                }
-            });
-        }
-        function setCiudad(id) {
-            $("#Id_Ciudad").empty();
-            $("#Id_Ciudad").append(`<option value="0">Selecciona una opción</option>`);
-            $.each(dataCity, function (item, key) {
-                if (parseInt(id) == parseInt(key.id_estado)) {
-                    $("#Id_Ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
-                };
-            });
-        }
-
-        const getRoute = () => {
-            const origenid = $('#origen').val();
-            const destinoid = $('#destino').val();
-            origenid != null && destinoid != null && (
-                $("#ruta").empty().append(`<option value="0" selected disabled>Selecciona una opción</option>`),
-                $.post('/Travels/GetRuta', { origenid: origenid, destinoid: destinoid }, response => {
-                    response && response.length > 0 ? response.map(({ id, od }) => $('#ruta').append(`<option value="${id}">${od}</option>`)
-                    ) : ($("#ruta").empty().append(`<option value="0" selected disabled>No se encontraron rutas</option>`));
-                })
-            )
-            dSelect('ruta');
-        }
-
-        const GetAddress = (id, type) => {
-            type === 'origen' ? (
-                $.get(`/Clients/Origins/GetOrigin/${id}`, response => {
-                    if (!response) {
-                        return;
-                    }
-
-                    const { direccion } = response;
-                    direccion && $('#direccionremitente').val(direccion);
-                })
-            ) : (
-                $.get(`/Clients/Destinations/GetDestination/${id}`, response => {
-                    if (!response) {
-                        return;
-                    }
-                    const { direccion } = response;
-                    $('#direcciondestinatario').val(direccion);
-                })
-            );
-        }
-
-        const getClientParams = ClientId => {
-            $.get("/Clients/Origins/getOrigen/", { "Id_Cliente": ClientId }, response => {
-                $(`#origen`).empty().append(`<option value="0" disabled selected>SELECCIONA</option>`);
-                response.length ? (response.map(({ id, estatus, nombre }) => {
-                    estatus == 1 && $(`#origen`).append(`<option value="${id}">${nombre}</option>`);
-                })) : (dToast("warning", "El cliente seleccionado no tiene orígenes.", "Atencion!"));
-
-                dSelect(`origen`);
-            }).fail(error => {
-                console.error(error);
-                dToast("error", "Error al obtener los origenes del cliente", "Atencion!");
-            });
-
-            $.get("/Clients/Destinations/getDestino/", { "Id_Cliente": ClientId }, response => {
-                $(`#destino`).empty().append(`<option value="0" disabled selected>SELECCIONA</option>`);
-                response.length ? (response.map(({ id, estatus, nombre }) => {
-                    estatus == 1 && $(`#destino`).append(`<option value="${id}">${nombre}</option>`);
-                })) : (dToast("warning", "El cliente seleccionado no tiene destinos.", "Atencion!"));
-
-                dSelect(`destino`);
-            }).fail(error => {
-                console.error(error);
-                dToast("error", "Error al obtener los destinos del cliente", "Atencion!");
-            });
-
-            $.get(`/Clients/Others/getOtros/`, { Id_Cliente: ClientId }, response => {
-                if (!response) {
-                    return;
-                }
-
-                const {
-                    referencia1,
-                    referencia2,
-                    referencia3,
-                    treferencia1,
-                    treferencia2,
-                    treferencia3
-                } = response;
-                let referencias = ``;
-                referencias += referencia1 && treferencia1 != null ? `<div class="form-group col-4" ><label class="col-form-label col-form-label-sm">${treferencia1.toUpperCase()}</label><div><input type="text" class="form-control form-control-sm" id="referencia1" name="referencia1" required></div></div>` : '';
-                referencias += referencia2 && treferencia2 != null ? `<div class="form-group col-4" ><label class="col-form-label col-form-label-sm">${treferencia2.toUpperCase()}</label><div><input type="text" class="form-control form-control-sm" id="referencia2" name="referencia2" required></div></div>` : '';
-                referencias += referencia3 && treferencia3 != null ? `<div class="form-group col-4" ><label class="col-form-label col-form-label-sm">${treferencia3.toUpperCase()}</label><div><input type="text" class="form-control form-control-sm" id="referencia3" name="referencia3" required></div></div>` : '';
-                $('.referencias').html(referencias);
-                console.log('asdsads', referencias);
-            });
-        }
-
-        const validarSelect = () => {
-            let isset = true;
-            $('.serviciosseleccionados select').map((k, { value }) => {
-                if (value == 0) {
-                    isset = false;
-                    return;
-                }
-            });
-            return isset;
-        }
-
-        const existenServicios = () => {
-            let isset = false;
-            $('#frmServicios input').map((k, { checked }) => {
-                if (checked) {
-                    isset = checked;
-                    return;
-                }
-            });
-            return isset;
-        }
-
-        const SetFolio = tipoviaje => {
-            switch (tipoviaje) {
-                case 'VTNOW':
-                    tipoviaje = tipoviaje.replace('NOW', '');
-                    break;
-                case 'VTNTW':
-                    tipoviaje = tipoviaje.replace('NTW', '');
-                    break;
-                case 'VTNW':
-                    tipoviaje = tipoviaje.replace('NW', '');
-                    break;
-                case 'VTNC':
-                    tipoviaje = tipoviaje.replace('NC', '');
-                    break;
-                case 'VTI':
-                    tipoviaje = tipoviaje.replace('T', '');
-                    break;
-                case 'VMM':
-                    tipoviaje = tipoviaje.replace('MM', 'V');
-                    break;
-                default:
-                    break;
+            try {
+                const response = await fetch('/Travels/SetMainTravel/', params);
+                const data = await response.json();
+                console.log(data);
+            } catch (e) {
+                console.error(e);
             }
 
-            $('#folio').text($('#folio').text().replace(/[a-zA-Z_]+/g, tipoviaje));
-        }
-
-        const initSelects = () => {
-            $.get("/Clients/getClients", response => {
-                response.map(({ id, nombreCorto, estatus }) => estatus === 1 ? $('#cliente').append(`<option value="${id}">${nombreCorto}</option>`) : null);
-                dSelect('cliente');
-            });
-
-            !isDemand && $('#fechasalida').val('');
-            if (isDemand && !isOffer) {
-                setTimeout(() => {
-                    $('#cliente').val(ClientId).trigger('change');
-                    $('#tipounidad').val(RouteId).trigger('change');
-                    setTimeout(() => {
-                        $('#origen').val(OriginId).trigger('change');
-                        $('#destino').val(DesitnationId).trigger('change');
-                        $('#ruta').val(RouteId).trigger('change');
-                        GetRoutePrice(RouteId);
-                        $('#transportista').val(CarrierId).trigger('change');
-                        $('#addEquipo').click();
-                        setTimeout(() =>  $('[name=unidadterrestrenacional]').val(UnitId).trigger('change'), 1000);
-                    }, 800);
-                }, 600);
-            }
-
-            if (isOffer) {
-                setTimeout(() => {
-                    $('#transportista').val(CarrierId).trigger('change');
-                    $('#addEquipo').click();
-                    setTimeout(() => $('[name=unidadterrestrenacional]').val(UnitId).trigger('change'), 1000);
-                }, 800);
-            }
-        };
-
-        function showModal(titulo = "Title", accion, type) {
-            $('#frmOD').trigger("reset").attr('rel', type);
-            $(".guardar").html(accion);
-            $("#titulo-modal").empty("");
-            $("#titulo-modal").html(titulo);
-            $("#idEditar").val(idEditar);
-            $("#modalOD").modal("show");
-        }
-
-    const closeModal = action => {
-        $('#modalDiv').modal('hide');
-        if (action == 'agregarciudad') {
-            let jsonData = convertJson($("#frmAgregarCiudad"));
-            $.post("/Catalogs/Geography/City/setCity", jsonData, response => {
-                loadCity();
-                $('#modalAgregarCiudad').modal('hide');
-                dToast("success", "Registro actualizado exitosamente.", "Registrado");
-                $(".guardar").attr("disabled", false);
-                $('#frmAgregarCiudad')[0].reset();
-            }).fail(error => {
-                console.error(error);
-                dToast("error", "Error al tratar de guardar el registro", "Error");
-                $(".guardar").attr("disabled", false);
-            });
-        } else {
-            const servicios = $('#frmServicios').serialize();
-            if (servicios) {
-                $.post("@Url.Action("ReturnServicios", "Travels")", { servicios: servicios }, response => {
-                    $('.addServicios').hide();
-                    $('.serviciosseleccionados').html(response).show('slow', () => { $('.serviciosseleccionados').show(), GetRoutePrice($('#ruta').val()); });
-                });
-            } else {
-                $(`.addServicios`).show('slow', () => { $('.addServicios').show(); });
-                $('.serviciosseleccionados').empty().hide();
-            }
-        }
-        }
-
-        const GetRoutePrice = RouteId => {
-            RouteId && (
-                $.get('/Travels/GetRoutePrice', { RouteId: RouteId }, ({ minimo, maximo }) => {
-                    minimo && maximo && $('.priceinfo').text(`$${parseFloat(minimo).toFixed(2)} - $${parseFloat(maximo).toFixed(2)}`), $('[name=terrestrenacionalprecio]').val(parseFloat(maximo).toFixed(2)), $('#preciocliente').html(`${parseFloat(maximo).toFixed(2)}`);
-
-                })
-            )
-        }
-
-        //Cargar unidades
-        const loadUnits = () => {
-            $.get("/Catalogs/TypesOfUnits/getUnidades", response => {
-                $("#tipounidad").empty();
-                $.each(response, function (item, key) {
-                    key.estatus === 1 && $("#tipounidad").append(`<option value="${key.id}">${key.nombre}</option>`);
-                });
-                dSelect('tipounidad');
-            }).fail(error => {
-                console.error(error);
-                dToast("error", "Error al obtener ciudades", "Atencion!");
-            });
-        }
-
-    //Cargar ciudades
-    const loadCity = () => {
-        $.get("/Catalogs/Geography/City/getCity", response => {
-            response.map(data => {
-                const { id, nombre, estatus } = data;
-
-                if (estatus === 1) {
-                    catCiudad = [...catCiudad, data];
-                    $("#origen, #destino").append(`<option value="${id}">${nombre}</option>`);
-                }
-            });
-            dSelect('origen');
-            dSelect('destino');
-        }).fail(error => {
-            console.error(error);
-            dToast("error", "Error al obtener tipos de unidad", "Atencion!");
-        });
-    }
-
-    //Cargar paises
-    const loadCountry = () => {
-        $.get("/Catalogs/Geography/Country/getCountry", response => {
-            response.map(data => {
-                const { id, pais, estatus } = data;
-                if (estatus === 1) {
-                    catPais = [...catPais, data];
-                    $("#id_pais").append(`<option value="${id}">${pais}</option>`);
-                }
-            });
-            dSelect('id_pais');
-        }).fail(error => {
-            console.error(error);
-            dToast("error", "Error al obtener paises", "Atencion!");
-        });
-    }
-
-    //Cargar estados
-    const loadState = () => {
-        $.get("/Catalogs/Geography/State/getState", response => {
-            $("#id_estado").empty();
-            response.map(data => {
-                const { id, nombre, estatus } = data;
-                if (estatus === 1) {
-                    $("#id_estado").append(`<option value="${id}">${nombre}</option>`);
-                }
-            });
-            dSelect('id_estado');
-        }).fail(error => {
-            console.error(error);
-            dToast("error", "Error al obtener los estados", "Atencion!");
-        });
-    }
-
-    const selectServicios = element =>  {
-        $(element).attr('disabled', true);
-        $("#modalDiv").modal("show");
-        }
-
-
-        const SetServicesFromDemand = () => {
-            const servicios = 'terrestrenacional=on';
-            $.post("@Url.Action("ReturnServicios", "Travels")", { servicios: servicios }, response => {
-                $('.addServicios').hide();
-                $('.serviciosseleccionados').html(response).show('slow', () => { $('.serviciosseleccionados').show(), GetRoutePrice($('#ruta').val()); });
-            });
+            //$('#guardar').prop('disabled', true);
         }
 
     </script>

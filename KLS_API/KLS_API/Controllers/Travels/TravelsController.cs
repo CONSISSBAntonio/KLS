@@ -134,6 +134,7 @@ namespace KLS_API.Controllers.Travels
                                           viajes.SubEstatus,
                                           viajes.StatusUpdated,
                                           clientedata.Ejecutivo,
+                                          viajes.CreatedBy,
                                           ChoferNombre = choferdata.nombre,
                                           ChoferTelefono = choferdata.NoTelefono
                                       }).FirstOrDefault() : (
@@ -167,6 +168,7 @@ namespace KLS_API.Controllers.Travels
                                      viajes.SubEstatus,
                                      viajes.StatusUpdated,
                                      cliente.Ejecutivo,
+                                     viajes.CreatedBy,
                                      ChoferNombre = chofer.nombre,
                                      ChoferTelefono = chofer.NoTelefono
                                  }).OrderByDescending(x => x.Id).FirstOrDefault();
@@ -425,5 +427,64 @@ namespace KLS_API.Controllers.Travels
                 throw;
             }
         }
+
+        [HttpGet("[action]/{MainTravelId}")]
+        public IActionResult GetMainTravel(int MainTravelId)
+        {
+            try
+            {
+                MainTravel mainTravel = new MainTravel();
+                if (MainTravelId > 0)
+                {
+                    mainTravel = _dbContext.MainTravels.FirstOrDefault(x => x.Id == MainTravelId);
+
+                    if (mainTravel is null)
+                    {
+                        return NotFound(mainTravel);
+                    }
+                }
+
+                return Ok(mainTravel);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
+
+        [HttpPost("[action]")]
+        public IActionResult SetMainTravel([FromBody] MainTravel model)
+        {
+            try
+            {
+                model.TimeCreated = DateTime.Now;
+                _dbContext.MainTravels.Add(model);
+                _dbContext.SaveChanges();
+
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
+
+        [HttpGet("[action]")]
+        public IActionResult GetTipoServicio()
+        {
+            try
+            {
+                var unidades = _dbContext.Cat_Tipos_Unidades.Where(x => x.estatus == 1);
+                return Ok(unidades);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
+
     }
 }
