@@ -49,6 +49,7 @@
     .wrapper > .data-content {
         text-align: unset;
     }
+
     .btn-secondary {
         text-decoration: unset !important;
         box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 20%) !important;
@@ -700,40 +701,104 @@
         </div>
 
         @*MONITOREO*@
-        <div class="col-12 monitoreo">
+        <div class="col-12 monitoreo card pb-3 mb-5 mr-3">
             <div class="text-left d-flex justify-content-between mb-3 mt-3">
                 <div>
                     <h4>MONITOREO</h4>
                 </div>
                 <div>
-                    <button class="btn btn-sm btn-secondary"><span class="material-icons" style="margin-top: .5rem;">add</span></button>
-                    <button class="btn btn-sm btn-secondary"><span class="material-icons text-danger" style="margin-top: .5rem;">flag</span></button>
+                    <button class="btn btn-sm btn-secondary" onclick="$('#addcomment').modal('show')"><span class="material-icons" style="margin-top: .5rem;">add</span></button>
+                    <button class="btn btn-sm btn-secondary" onclick="$('#checkpointmodal').modal('show')"><span class="material-icons text-danger" style="margin-top: .5rem;">flag</span></button>
                 </div>
             </div>
-            <div class="d-flex justify-content-around">
+            <div class="d-flex justify-content-around mb-4">
                 <div class="d-flex flex-column">
-                    <label for="monitorselect" class="form-label">MONITOR</label>
-                    <select id="monitorselect" class="form-select" aria-label="Default select example" name="monitor">
-                        <option selected>Open this select menu</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                    </select>
+                    <label for="monitorselect" class="form-label">GRUPO MONITOR</label>
+                    <input id="grupomonitor" class="form-select" name="grupomonitor" required />
                 </div>
                 <div class="d-flex flex-column">
                     <label for="cuentaespejo" class="form-label">CUENTA ESPEJO</label>
-                    <input id="cuentaespejo" class="form-select" aria-label="Default select example" name="cuentaespejo" />
+                    <input id="cuentaespejo" class="form-select" name="cuentaespejo" required />
                 </div>
                 <div class="d-flex flex-column">
                     <label for="usuario" class="form-label">USUARIO</label>
-                    <input id="usuario" class="form-select" aria-label="Default select example" name="usuario" />
+                    <input id="usuario" class="form-select" name="usuario" required />
                 </div>
                 <div class="d-flex flex-column">
                     <label for="contraseña" class="form-label">CONTRASEÑA</label>
-                    <input id="contraseña" class="form-select" aria-label="Default select example" name="contraseña" />
+                    <input id="contraseña" class="form-select" name="contraseña" required />
+                </div>
+            </div>
+            <div class="px-4">
+                <div class="px-3 pt-4 card">
+                    <div class="d-flex justify-content-between">
+                        <p><b>Estatus: En tránsito - A tiempo</b></p>
+                        <p><b>Alberto Garza</b> 17/04/2021 12:45 PM</p>
+                    </div>
+                    <p>Lorem ipsum dolor sit amet, consteteur sadipscing elitr, sed diam nonumy eirmond tempor invidunt ut labore et dolore</p>
                 </div>
             </div>
         </div>
+
+        @*MODAL MONITOREO*@
+        <div class="modal fade" id="addcomment" tabindex="-1" aria-labelledby="monitoreomodal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="monitoreomodal">AGREGAR COMENTARIO MONITOREO</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form onsubmit="event.preventDefault(), AddComment(this)">
+                            <div class="mb-3">
+                                <label class="form-label">Comentario</label>
+                                <textarea class="form-control" name="comment" rows="5" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="commentfile" class="form-label">Evidencia</label>
+                                <input class="form-control form-control-sm" id="commentfile" type="file" name="evidences" multiple>
+                            </div>
+                            <button type="submit" class="btn btn-dark mt-2 w-50">GUARDAR</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*MODAL CHECKPOINTS MONITOREO*@
+        <div class="modal fade" id="checkpointmodal" tabindex="-1" aria-labelledby="checkpoint" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="checkpoint">CHECKPOINTS</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-right size-12">Hora de salida: 12/04/2021 12:30 PM</p>
+                        <table id="table" class="table table-striped table-bordered display table-hover table-viajes text-uppercase" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>CHECKPOINT</th>
+                                    <th>HORA ORIGINAL</th>
+                                    <th>HORA ESPERADA</th>
+                                    <th>HORA REAL</th>
+                                    <th>USUARIO</th>
+                                    <th>DONE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        @*END MONITOREO*@
 
 
         @* documentos *@
@@ -1014,6 +1079,25 @@
             getEstatus();
             getEvidencia();
         });
+
+        const AddComment = async e => {
+            const data = new FormData(e);
+            data.append('TravelId', TravelId);
+
+            const params = {
+                method: 'POST',
+                body: data
+            };
+
+            try {
+                const response = await fetch('/Travels/AddComment', params);
+                const data = await response.json();
+                console.log(data);
+            } catch (e) {
+                console.error(e);
+                dToast("error", "OCURRIÓ UN ERROR AL PROCESAR LA SOLICITUD", "Error");
+            }
+        };
 
         const GenerateCartaPorte = e => {
             $(e).prop('disabled', true).removeClass('btn-dark').addClass('btn-secondary').html('Generando...');

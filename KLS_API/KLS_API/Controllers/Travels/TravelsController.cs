@@ -7,6 +7,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using KLS_API.Models;
+using System.Threading.Tasks;
 
 namespace KLS_API.Controllers.Travels
 {
@@ -486,5 +487,35 @@ namespace KLS_API.Controllers.Travels
             }
         }
 
+        [HttpPost("[action]")]
+        public async Task<IActionResult> AddComment([FromBody] TravelComment travelComment)
+        {
+            try
+            {
+                bool travel = await _dbContext.Viajes.AnyAsync(x => x.Id == travelComment.TravelId);
+                if (!travel)
+                {
+                    return NotFound();
+                }
+
+                if (travelComment.Evidences.Any())
+                {
+                    foreach (var evidence in travelComment.Evidences)
+                    {
+                        await _dbContext.Evidences.AddAsync(evidence);
+                    }
+                }
+
+                await _dbContext.TravelComments.AddAsync(travelComment);
+                await _dbContext.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
     }
 }

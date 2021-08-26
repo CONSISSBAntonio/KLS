@@ -66,6 +66,8 @@ namespace KLS_API.Context
         public DbSet<Mercancia> Mercancias { get; set; }
         public DbSet<Historial> Historial { get; set; }
         public DbSet<MainTravel> MainTravels { get; set; }
+        public DbSet<TravelComment> TravelComments { get; set; }
+        public DbSet<Evidence> Evidences { get; set; }
 
         // Demandas
         public DbSet<Demand> Demands { get; set; }
