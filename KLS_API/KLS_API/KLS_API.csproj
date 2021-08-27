@@ -26,6 +26,10 @@
     <Compile Remove="Migrations\20210824182312_maintravel.Designer.cs" />
     <Compile Remove="Migrations\20210824190941_maintravel.cs" />
     <Compile Remove="Migrations\20210824190941_maintravel.Designer.cs" />
+    <Compile Remove="Migrations\20210825181959_maintravelstatus.cs" />
+    <Compile Remove="Migrations\20210825181959_maintravelstatus.Designer.cs" />
+    <Compile Remove="Migrations\20210825183324_maintravelstatus.cs" />
+    <Compile Remove="Migrations\20210825183324_maintravelstatus.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using KLS_WEB.Models;
 using KLS_WEB.Models.Carriers;
+using KLS_WEB.Models.Clients;
 using KLS_WEB.Models.DT;
 using KLS_WEB.Models.Travels;
 using KLS_WEB.Services;
@@ -12,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace KLS_WEB.Controllers.Travels
@@ -44,7 +46,6 @@ namespace KLS_WEB.Controllers.Travels
             List<SearchRuta> route = await AppContext.Execute<List<SearchRuta>>(MethodType.POST, Path.Combine(_UrlApi, "GetRuta"), search);
             return Json(route);
         }
-
 
         [Route("SetHistorial")]
         public void SetHistorial(string accion)
@@ -117,13 +118,18 @@ namespace KLS_WEB.Controllers.Travels
         //    return View(this._UrlView + (id == 0 ? "New.cshtml" : "Details.cshtml"), travel == null ? new Travel() : travel);
         //}
 
-        [Route("[action]")]
-        public async Task<IActionResult> AddMainTravel(int id)
+        [Route("[action]/{id}")]
+        public async Task<IActionResult> AddEditMainTravel(int id)
         {
             MainTravelDTO mainTravelDTO = new MainTravelDTO();
 
-            var x = await AppContext.Execute<MainTravel>(MethodType.GET, Path.Combine(_UrlApi, "GetMainTravel", id.ToString()), null);
+            MainTravel main = await AppContext.Execute<MainTravel>(MethodType.GET, Path.Combine(_UrlApi, "GetMainTravel", id.ToString()), null);
             var services = await AppContext.Execute<List<Cat_Tipos_Unidades>>(MethodType.GET, Path.Combine(_UrlApi, "GetTipoServicio"), null);
+
+            if (main != null)
+            {
+                mainTravelDTO.MainTravel = main;
+            }
 
             foreach (var item in services)
             {
@@ -223,14 +229,17 @@ namespace KLS_WEB.Controllers.Travels
             List<ServicesDTO> services = new List<ServicesDTO>();
             List<UnidadDTO> units = new List<UnidadDTO>();
             int ViajeId = dataModel.Id != 0 ? dataModel.Id : 0;
+            int counttramos = await AppContext.Execute<int>(MethodType.GET, Path.Combine(_UrlApi, "CountTramos", dataModel.MainTravelId.ToString()), null);
+            await AppContext.Execute<ServicesDTO>(MethodType.DELETE, Path.Combine(_UrlApi, "TruncateTramo", ViajeId.ToString()), null);
 
             if (ViajeId == 0)
             {
                 TravelDTO viaje = new TravelDTO
                 {
+                    MainTravelId = dataModel.MainTravelId,
                     Estatus = dataModel.Estatus,
-                    Folio = dataModel.Folio,
-                    IdCliente = dataModel.Cliente,
+                    Folio = string.Concat(dataModel.Folio, "-", ++counttramos),
+                    IdCliente = dataModel.ClienteId,
                     FechaSalida = dataModel.FechaSalida,
                     FechaLlegada = dataModel.FechaLlegada,
                     TiempoAnticipacion = dataModel.TiempoAnticipacion,
@@ -243,6 +252,7 @@ namespace KLS_WEB.Controllers.Travels
                     IdRuta = dataModel.Ruta,
                     IdUnidad = dataModel.TipoUnidad,
                     TipoViaje = dataModel.TipoViaje,
+                    EnlaceEspejo = dataModel.EnlaceEspejo,
                     UsuarioEspejo = dataModel.UsuarioEspejo,
                     PassEspejo = dataModel.PassEspejo,
                     ReferenciaUno = dataModel.Referencia1,
@@ -259,6 +269,34 @@ namespace KLS_WEB.Controllers.Travels
                 TempData["TravelId"] = ViajeId;
                 TempData.Keep();
                 SetHistorial("Alta de viaje");
+            }
+            else
+            {
+                var url = "https://localhost:44345/Travels/PatchTramo/7";
+
+                var httpRequest = (HttpWebRequest)WebRequest.Create(url);
+                httpRequest.Method = "PATCH";
+
+                httpRequest.Accept = "application/json";
+                httpRequest.ContentType = "application/json";
+
+                var data = @"[{
+                  ""op"": ""replace"",
+                  ""path"": ""/costototal"",
+                  ""value"": " + dataModel.Costototal + "},{\"op\": \"replace\",\"path\": \"/precioclientetotal\", \"value\": " + dataModel.Preciototal + "}]";
+
+                using (var streamWriter = new StreamWriter(httpRequest.GetRequestStream()))
+                {
+                    streamWriter.Write(data);
+                }
+
+                var httpResponse = (HttpWebResponse)httpRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                }
+
+                //await AppContext.Execute<TravelDTO>(MethodType.PATCH, Path.Combine(_UrlApi, "UpdateViaje"), viaje);
             }
 
             if (dataModel.ServicesId != null)
@@ -369,10 +407,32 @@ namespace KLS_WEB.Controllers.Travels
                 mainTravelDTO.Servicios.Add(service);
             }
 
+            mainTravelDTO.MainTravel.Folio = mainTravelDTO.TravelDTO.Folio;
+            mainTravelDTO.MainTravel.FechaSalida = mainTravelDTO.TravelDTO.FechaSalida;
+            mainTravelDTO.MainTravel.FechaLlegada = mainTravelDTO.TravelDTO.FechaLlegada;
             mainTravelDTO.MainTravel.CreatedBy = HttpContext.Session.GetString("UserFN");
-            //mainTravelDTO.MainTravel = await AppContext.Execute<MainTravel>(MethodType.POST, Path.Combine(_UrlApi, "SetMainTravel"), mainTravelDTO.MainTravel);
+            mainTravelDTO.MainTravel = await AppContext.Execute<MainTravel>(MethodType.POST, Path.Combine(_UrlApi, "SetMainTravel"), mainTravelDTO.MainTravel);
 
-            return View(string.Concat(_UrlView, "New.cshtml"), mainTravelDTO);
+            return RedirectToAction("AddEditMainTravel", new { id = mainTravelDTO.MainTravel.Id });
+        }
+
+        [HttpGet("[action]/{TramoId}")]
+        public async Task<IActionResult> GetTramo(string TramoId)
+        {
+            Tramo tramo = new Tramo();
+            if (TramoId != "0")
+            {
+                tramo.Travel = await AppContext.Execute<TravelDTO>(MethodType.GET, Path.Combine(_UrlApi, "GetTramo", TramoId), null);
+            }
+            List<Clientes> clientes = await AppContext.Execute<List<Clientes>>(MethodType.GET, Path.Combine(_UrlApi, "GetCustomers"), null);
+
+            foreach (var item in clientes)
+            {
+                SelectListItem customer = new SelectListItem { Value = item.id.ToString(), Text = item.NombreCorto };
+                tramo.Clients.Add(customer);
+            }
+
+            return PartialView(string.Concat(_UrlView, "_Tramo.cshtml"), tramo);
         }
     }
 }

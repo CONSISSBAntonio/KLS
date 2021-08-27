@@ -9,7 +9,9 @@ namespace KLS_WEB.Models.Travels
     public class MainTravelDTO
     {
         public MainTravel MainTravel { get; set; } = new MainTravel();
-        public List<SelectListItem> Servicios { get; set; } = new List<SelectListItem> { (new SelectListItem { Disabled = true, Value = "0", Text = "SELECCIONA" }) };
+        public TravelDTO TravelDTO { get; set; } = new TravelDTO();
+        public List<SelectListItem> Servicios { get; set; } = new List<SelectListItem> { (new SelectListItem { Disabled = true, Selected = true, Value = "0", Text = "SELECCIONA" }) };
+        public string Type { get; set; } = "new";
         //public List<SelectListItem> Servicios { get; set; } = new List<SelectListItem> {
         //    (new SelectListItem { Disabled = true, Value = "0", Text = "SELECCIONA" }),
         //    (new SelectListItem { Value = "VTNOW", Text = "TERRESTRE NACIONAL ONE WAY" }),

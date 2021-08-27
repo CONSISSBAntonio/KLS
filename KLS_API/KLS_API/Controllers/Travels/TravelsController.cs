@@ -7,7 +7,9 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using KLS_API.Models;
+using KLS_API.Models.Clients;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace KLS_API.Controllers.Travels
 {
@@ -67,6 +69,7 @@ namespace KLS_API.Controllers.Travels
                          select new
                          {
                              viajes.Id,
+                             viajes.MainTravelId,
                              viajes.Folio,
                              cliente = cliente.NombreCorto,
                              origen = string.Concat(estadoorigen.nombre, "-", ciudadorigen.nombre),
@@ -75,6 +78,7 @@ namespace KLS_API.Controllers.Travels
                              viajes.FechaLlegada,
                              viajes.Estatus
                          };
+
                 return Ok(dt);
             }
             catch (Exception ex)
@@ -187,6 +191,7 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
+                travel.NombreCliente = _dbContext.Clientes.FirstOrDefault(x => x.id == travel.IdCliente).NombreCorto;
                 travel.StatusUpdated = DateTime.Now;
                 _dbContext.Viajes.Add(travel);
                 _dbContext.SaveChanges();
@@ -434,15 +439,27 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
-                MainTravel mainTravel = new MainTravel();
-                if (MainTravelId > 0)
+                MainTravel mainTravel = _dbContext.MainTravels.Where(x => x.Id == MainTravelId).Select(x => new MainTravel
                 {
-                    mainTravel = _dbContext.MainTravels.FirstOrDefault(x => x.Id == MainTravelId);
+                    Id = x.Id,
+                    ServiceId = x.ServiceId,
+                    Ejecutivo = x.Ejecutivo,
+                    GrupoMonitor = x.GrupoMonitor,
+                    CreatedBy = x.CreatedBy,
+                    UpdatedBy = x.UpdatedBy,
+                    TimeCreated = x.TimeCreated,
+                    TimeUpdated = x.TimeUpdated,
+                    FechaLlegada = x.FechaLlegada,
+                    FechaSalida = x.FechaSalida,
+                    Folio = x.Folio,
+                    Status = x.Status,
+                    Subestatus = x.Subestatus,
+                    Travels = _dbContext.Viajes.Where(y => y.MainTravelId == x.Id)
+                }).FirstOrDefault();
 
-                    if (mainTravel is null)
-                    {
-                        return NotFound(mainTravel);
-                    }
+                if (MainTravelId > 0 && mainTravel is null)
+                {
+                    return NotFound(mainTravel);
                 }
 
                 return Ok(mainTravel);
@@ -459,6 +476,7 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
+                model.Status = "registrado";
                 model.TimeCreated = DateTime.Now;
                 _dbContext.MainTravels.Add(model);
                 _dbContext.SaveChanges();
@@ -487,28 +505,81 @@ namespace KLS_API.Controllers.Travels
             }
         }
 
-        [HttpPost("[action]")]
-        public async Task<IActionResult> AddComment([FromBody] TravelComment travelComment)
+        [HttpGet("[action]/{TramoId}")]
+        public IActionResult GetTramo(int TramoId)
         {
             try
             {
-                bool travel = await _dbContext.Viajes.AnyAsync(x => x.Id == travelComment.TravelId);
-                if (!travel)
+                Travel travel = new Travel();
+                travel = _dbContext.Viajes.FirstOrDefault(x => x.Id == TramoId);
+
+                if (TramoId > 0 && travel is null)
                 {
                     return NotFound();
                 }
 
-                if (travelComment.Evidences.Any())
+                return Ok(travel);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
+
+        [HttpGet("[action]")]
+        public IActionResult GetCustomers()
+        {
+            try
+            {
+                IEnumerable<Clientes> customers = _dbContext.Clientes.Where(x => x.Estatus == 1);
+                return Ok(customers);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
+
+        [HttpGet("[action]/{MainTravelId}")]
+        public IActionResult CountTramos(int MainTravelId)
+        {
+            try
+            {
+                int counter = _dbContext.Viajes.Count(x => x.MainTravelId == MainTravelId);
+                return Ok(counter);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
+
+        [HttpDelete("[action]/{TramoId}")]
+        public IActionResult TruncateTramo(int TramoId)
+        {
+            try
+            {
+                var services = _dbContext.Servicios.Where(x => x.TravelId == TramoId).ToList();
+
+                if (services.Any())
                 {
-                    foreach (var evidence in travelComment.Evidences)
+                    foreach (var service in services)
                     {
-                        await _dbContext.Evidences.AddAsync(evidence);
+                        int serviceId = service.Id;
+                        var units = _dbContext.Unidades.Where(x => x.ServicesId == serviceId).ToList();
+                        foreach (var unit in units)
+                        {
+                            _dbContext.Unidades.Remove(unit);
+                        }
+                        _dbContext.Remove(service);
                     }
+                    //var tramo = _dbContext.Viajes.Find(TramoId);
+                    //_dbContext.Viajes.Remove(tramo);
+                    _dbContext.SaveChanges();
                 }
-
-                await _dbContext.TravelComments.AddAsync(travelComment);
-                await _dbContext.SaveChangesAsync();
-
                 return Ok();
             }
             catch (Exception ex)
@@ -516,6 +587,42 @@ namespace KLS_API.Controllers.Travels
                 return BadRequest(ex.Message);
                 throw;
             }
+        }
+
+        [HttpPut("[action]")]
+        public IActionResult UpdateViaje(Travel travel)
+        {
+            try
+            {
+                _dbContext.Entry(travel).State = EntityState.Modified;
+                _dbContext.SaveChanges();
+                return Ok(travel);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
+
+        [HttpPatch]
+        [Route("[action]/{TramoId}")]
+        public IActionResult PatchTramo(int TramoId, [FromBody] JsonPatchDocument<Travel> patchDoc)
+        {
+            var route = _dbContext.Viajes.Find(TramoId);
+            if (route == null)
+            {
+                return NotFound();
+            }
+            if (patchDoc == null)
+            {
+                return BadRequest();
+            }
+
+            patchDoc.ApplyTo(route);
+
+            _dbContext.SaveChanges();
+            return Ok(route);
         }
     }
 }

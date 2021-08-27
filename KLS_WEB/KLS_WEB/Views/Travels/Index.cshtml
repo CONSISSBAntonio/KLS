@@ -54,13 +54,13 @@
                     { data: 'llegada' },
                     { data: 'estatus' },
                     {
-                        data: 'id',
-                        render: (Id, type, full, meta) => `
-                                    <a href="/Travels/${Id}">
-                                        <span class="material-icons">
-                                            open_in_new
-                                        </span>
-                                    </a>`
+                        data: 'mainTravelId',
+                        render: (mainTravelId, type, full, meta) => `
+                            <a href="/Travels/AddEditMainTravel/${mainTravelId}">
+                                <span class="material-icons">
+                                    open_in_new
+                                </span>
+                            </a>`
                     }
                 ],
                 language: {
@@ -84,7 +84,7 @@
                     }
                 },
                 initComplete: () => {
-                    $('#table_length').html(`<a href="/Travels/AddMainTravel" class="btn btn-sm btn-outline-secondary float-right"><span class="material-icons">add</span></a>`).show();
+                    $('#table_length').html(`<a href="/Travels/AddEditMainTravel/0" class="btn btn-sm btn-outline-secondary float-right"><span class="material-icons">add</span></a>`).show();
                 }
             });
         }

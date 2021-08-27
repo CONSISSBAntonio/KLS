@@ -33,6 +33,7 @@ namespace KLS_API.Models.Travels
         public DateTime StatusUpdated { get; set; }
 
         //Extras
+        public string EnlaceEspejo { get; set; }
         public string UsuarioEspejo { get; set; }
         public string PassEspejo { get; set; }
         public string ReferenciaUno { get; set; }
@@ -48,6 +49,6 @@ namespace KLS_API.Models.Travels
         public string UpdatedBy { get; set; }
         public DateTime TimeCreated { get; set; }
         public DateTime TimeUpdated { get; set; }
-        public ICollection<TravelComment> TravelComments { get; set; }
+        public string NombreCliente { get; set; }
     }
 }
