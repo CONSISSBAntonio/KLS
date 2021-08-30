@@ -119,7 +119,7 @@ namespace KLS_WEB.Controllers.Travels
         }
         private async Task<List<SelectListItem>> GetCarriers()
         {
-            List<SelectListItem> listItems = new List<SelectListItem> { new SelectListItem { Disabled = true, Selected = true, Value = "0", Text = "SELECCIONA" } };
+            List<SelectListItem> listItems = new List<SelectListItem> { new SelectListItem { Selected = true, Value = "0", Text = "SELECCIONA" } };
             List<Transportista> carriers = await AppContext.Execute<List<Transportista>>(MethodType.GET, Path.Combine(_UrlApi, "GetCarriers"), null);
 
             foreach (var carrier in carriers)
@@ -237,28 +237,44 @@ namespace KLS_WEB.Controllers.Travels
             return PartialView(string.Concat(_UrlView, "_Section.cshtml"), travelDTO);
         }
 
-        [HttpPost]
-        public async Task<JsonResult> AddEditSection(TravelDTO travelDTO)
+        public class Tester
         {
-            var UserName = HttpContext.Session.GetString("UserFN");
-            travelDTO.Section.TravelId = (int)TempData["TravelId"];
-            TempData.Keep();
-
-            if (travelDTO.Section.Id == 0)
+            public string Service { get; set; }
+            public Section Section { get; set; }
+            public string Cost { get; set; }
+            public string Price { get; set; }
+            public int CarrierId { get; set; }
+            public int DriverId { get; set; }
+            public Unidad Unit { get; set; }
+            public class Unidad
             {
-                travelDTO.Travel.CreatedBy = UserName;
+                public string TypeId { get; set; }
+                public string UnitId { get; set; }
             }
-            else
-            {
-                travelDTO.Travel.UpdatedBy = UserName;
-            }
+        }
 
-            MethodType sectionMethod = travelDTO.Section.Id > 0 ? MethodType.PUT : MethodType.POST;
-            string sectionAction = travelDTO.Section.Id > 0 ? "PutSection" : "PostSection";
+        [HttpPost]
+        public async Task<JsonResult> AddEditSection([FromBody]Tester travelDTO)
+        {
+            //var UserName = HttpContext.Session.GetString("UserFN");
+            //travelDTO.Section.TravelId = (int)TempData["TravelId"];
+            //TempData.Keep();
 
-            var x = await AppContext.Execute<Travel>(sectionMethod, Path.Combine(_UrlApi, sectionAction), travelDTO.Section);
+            //if (travelDTO.Section.Id == 0)
+            //{
+            //    travelDTO.Travel.CreatedBy = UserName;
+            //}
+            //else
+            //{
+            //    travelDTO.Travel.UpdatedBy = UserName;
+            //}
 
-            return Json(x);
+            //MethodType sectionMethod = travelDTO.Section.Id > 0 ? MethodType.PUT : MethodType.POST;
+            //string sectionAction = travelDTO.Section.Id > 0 ? "PutSection" : "PostSection";
+
+            //var x = await AppContext.Execute<Travel>(sectionMethod, Path.Combine(_UrlApi, sectionAction), travelDTO.Section);
+
+            return Json(travelDTO);
         }
         #endregion
 
