@@ -1683,9 +1683,6 @@ namespace KLS_API.Migrations
                     b.Property<int>("SectionTypeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
-
                     b.Property<int>("SubstatusId")
                         .HasColumnType("int");
 
@@ -1717,8 +1714,6 @@ namespace KLS_API.Migrations
                     b.HasIndex("RutaId");
 
                     b.HasIndex("SectionTypeId");
-
-                    b.HasIndex("StatusId");
 
                     b.HasIndex("SubstatusId");
 
@@ -1938,9 +1933,6 @@ namespace KLS_API.Migrations
                     b.Property<string>("GrupoMonitor")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
-
                     b.Property<int>("SubstatusId")
                         .HasColumnType("int");
 
@@ -1956,8 +1948,6 @@ namespace KLS_API.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Cat_Tipos_UnidadesId");
-
-                    b.HasIndex("StatusId");
 
                     b.HasIndex("SubstatusId");
 
@@ -2234,12 +2224,6 @@ namespace KLS_API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("KLS_API.Models.Travel.Status", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("KLS_API.Models.Travel.Substatus", "Substatus")
                         .WithMany()
                         .HasForeignKey("SubstatusId")
@@ -2318,12 +2302,6 @@ namespace KLS_API.Migrations
                     b.HasOne("KLS_API.Models.Cat_Tipos_Unidades", "Cat_Tipos_Unidades")
                         .WithMany()
                         .HasForeignKey("Cat_Tipos_UnidadesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("KLS_API.Models.Travel.Status", "Status")
-                        .WithMany()
-                        .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

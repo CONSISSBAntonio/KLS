@@ -1064,7 +1064,6 @@ namespace KLS_API.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    StatusId = table.Column<int>(nullable: false),
                     SubstatusId = table.Column<int>(nullable: false),
                     Folio = table.Column<string>(nullable: true),
                     Cat_Tipos_UnidadesId = table.Column<int>(nullable: false),
@@ -1084,12 +1083,6 @@ namespace KLS_API.Migrations
                         column: x => x.Cat_Tipos_UnidadesId,
                         principalTable: "Cat_Tipos_Unidades",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Travels_Statuses_StatusId",
-                        column: x => x.StatusId,
-                        principalTable: "Statuses",
-                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Travels_Substatuses_SubstatusId",
@@ -1152,7 +1145,6 @@ namespace KLS_API.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     TravelId = table.Column<int>(nullable: false),
-                    StatusId = table.Column<int>(nullable: false),
                     SubstatusId = table.Column<int>(nullable: false),
                     Folio = table.Column<string>(nullable: true),
                     ClientesId = table.Column<int>(nullable: false),
@@ -1219,12 +1211,6 @@ namespace KLS_API.Migrations
                         name: "FK_Sections_SectionTypes_SectionTypeId",
                         column: x => x.SectionTypeId,
                         principalTable: "SectionTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Sections_Statuses_StatusId",
-                        column: x => x.StatusId,
-                        principalTable: "Statuses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -1511,11 +1497,6 @@ namespace KLS_API.Migrations
                 column: "SectionTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sections_StatusId",
-                table: "Sections",
-                column: "StatusId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Sections_SubstatusId",
                 table: "Sections",
                 column: "SubstatusId");
@@ -1549,11 +1530,6 @@ namespace KLS_API.Migrations
                 name: "IX_Travels_Cat_Tipos_UnidadesId",
                 table: "Travels",
                 column: "Cat_Tipos_UnidadesId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Travels_StatusId",
-                table: "Travels",
-                column: "StatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Travels_SubstatusId",

@@ -16,8 +16,6 @@ namespace KLS_API.Models.Travel
         public int TravelId { get; set; }
         public Travel Travel { get; set; }
         public ICollection<Service> Services { get; set; }
-        public int StatusId { get; set; }
-        public Status Status { get; set; }
         public int SubstatusId { get; set; }
         public Substatus Substatus { get; set; }
         public string Folio { get; set; }

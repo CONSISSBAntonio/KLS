@@ -95,9 +95,8 @@ namespace KLS_API.Controllers.Travels
                 Travel travel = await _dbContext.Travels.Include(x => x.Sections).Where(x => x.Id == TravelId && x.Active).Select(x => new Travel
                 {
                     Id = x.Id,
-                    StatusId = x.StatusId,
-                    Status = _dbContext.Statuses.SingleOrDefault(z => z.Active && z.Id == x.StatusId),
                     SubstatusId = x.SubstatusId,
+                    Substatus = _dbContext.Substatuses.SingleOrDefault(z => z.Active && z.Id == x.SubstatusId),
                     Folio = x.Folio,
                     Cat_Tipos_UnidadesId = x.Cat_Tipos_UnidadesId,
                     Cat_Tipos_Unidades = _dbContext.Cat_Tipos_Unidades.SingleOrDefault(y => y.estatus == 1 && y.id == x.Cat_Tipos_UnidadesId),
@@ -133,7 +132,6 @@ namespace KLS_API.Controllers.Travels
                 int lastid = _dbContext.Travels.DefaultIfEmpty().Max(x => x == null ? 1 : x.Id);
 
                 travel.Folio = string.Concat("V", DateTime.Now.ToString("yyMM"), lastid.ToString("D4"));
-                travel.StatusId = status;
                 travel.SubstatusId = substatus;
 
                 await _dbContext.Travels.AddAsync(travel);
@@ -217,7 +215,6 @@ namespace KLS_API.Controllers.Travels
                 int lastid = _dbContext.Sections.Where(x => x.TravelId == section.TravelId && x.Active).Count() + 1;
 
                 section.Folio = string.Concat("V", DateTime.Now.ToString("yyMM"), section.TravelId.ToString("D4"), "-", lastid.ToString("D2"));
-                section.StatusId = _dbContext.Statuses.FirstOrDefault(x => x.Name.ToLower() == "registrado").Id;
                 section.SubstatusId = _dbContext.Substatuses.FirstOrDefault(x => x.Name.ToLower() == "registrado").Id;
                 section.Cl_Has_OtrosId = _dbContext.Cl_Has_Otros.FirstOrDefault(x => x.Id_Cliente == section.ClientesId).Id;
 
@@ -238,7 +235,6 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
-                model.StatusId = _dbContext.Statuses.FirstOrDefault(x => x.Name.ToLower() == "registrado").Id;
                 model.SubstatusId = _dbContext.Substatuses.FirstOrDefault(x => x.Name.ToLower() == "registrado").Id;
                 model.Cl_Has_OtrosId = _dbContext.Cl_Has_Otros.FirstOrDefault(x => x.Id_Cliente == model.ClientesId).Id;
                 model.TimeUpdated = DateTime.Now;
