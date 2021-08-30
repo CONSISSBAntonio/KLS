@@ -9,8 +9,6 @@ namespace KLS_API.Models.Travel
     public class Travel
     {
         public int Id { get; set; }
-        public int StatusId { get; set; }
-        public Status Status { get; set; }
         public int SubstatusId { get; set; }
         public Substatus Substatus { get; set; }
         public string Folio { get; set; }
