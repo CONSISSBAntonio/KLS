@@ -155,13 +155,28 @@
                     <div class="row">
                         <div class="col-md-6">
                             <label class="">Foto de la unidad</label>
-
                             <input type="file" class="form-control" name="file" id="FotoU" accept=".jpg,.jpeg,.png">
 
+                            <a href="#" download id="hFotoU" style="text-decoration: none !important;">
+                                <div class="text-left d-flex pt-2" style="color: #207EEC;">
+                                    <div class="material-icons icon-red" style="font-size: 20px; color: #207EEC;">download</div>
+                                    <b class="poppins medium size-12 pl-2">Descargar archivo</b>
+                                </div>
+                            </a>
+
                         </div>
+
                         <div class="col-md-6">
                             <label class="">Póliza de seguro</label>
                             <input type="file" class="form-control" name="FotoP" id="FotoP" accept=".jpg,.jpeg,.png">
+
+                            <a href="#" download id="hFotoP" style="text-decoration: none !important;">
+                                <div class="text-left d-flex pt-2" style="color: #207EEC;">
+                                    <div class="material-icons icon-red" style="font-size: 20px; color: #207EEC;">download</div>
+                                    <b class="poppins medium size-12 pl-2">Descargar archivo</b>
+                                </div>
+                            </a>
+
                         </div>
                     </div>
                     <br />
@@ -234,11 +249,21 @@
         });
 
         function showModal(titulo = "Title", accion, idEditar = 0) {
+            $("#FotoU").val(null);
+            $("#FotoP").val(null);
             $('#frmRegister').trigger("reset");
             $(".guardar").html(accion);
             $("#titulo-modal").empty("");
             $("#titulo-modal").html(titulo);
             $("#idEditar").val(idEditar);
+
+            $("#hFotoU").attr("href", "#")
+            $("#hFotoU").hide();
+
+            $("#hFotoP").attr("href", "#")
+            $("#hFotoP").hide();
+
+
             if (accion == "Editar") {
                 try {
                     let indice = dataInventory.findIndex(service => service.id === idEditar);
@@ -259,12 +284,28 @@
 
                     $('#Estatus option[value="' + dataInventory[indice].estatus + '"]').attr("selected", true);
                     $('#TipoUnidad option[value="' + dataInventory[indice].tipoUnidad + '"]').attr("selected", true);
+
+                    if (dataInventory[indice].fotoUnidad != "" && dataInventory[indice].fotoUnidad != null) {
+                        let rutaLicencia = `../../Resources/Inventario/${dataInventory[indice].ruta}/${dataInventory[indice].fotoUnidad}`;
+                        $("#hFotoU").show();
+                        $("#hFotoU").prop("href", rutaLicencia);
+                    }
+
+                    if (dataInventory[indice].fotoPoliza != "" && dataInventory[indice].fotoPoliza != null) {
+                        let rutaLicencia = `../../Resources/Inventario/${dataInventory[indice].ruta}/${dataInventory[indice].fotoPoliza}`;
+                        $("#hFotoP").show();
+                        $("#hFotoP").prop("href", rutaLicencia);
+                    }
+
                     $("#modalDiv").modal("show");
                 } catch (error) {
                     dToast("error", "Error al tratar de editar, intenta recargar la página.", "Error");
                     $("#modalDiv").modal("hide");
                 }
             } else {
+                $("#Ruta").val("");
+                $("#FotoUnidad").val("");
+                $("#FotoPoliza").val("");
                 $("#modalDiv").modal("show");
             }
         }

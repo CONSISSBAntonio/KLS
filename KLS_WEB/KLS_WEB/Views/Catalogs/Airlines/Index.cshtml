@@ -123,7 +123,7 @@
             $("#frmRegister").submit(function (event) {
                 event.preventDefault();
                 var jsonData = convertJson($("#frmRegister"));
-                console.log(jsonData);
+
                 if (parseInt($("#idEditar").val()) != 0) {
                     $.post("Airlines/putAirlines", jsonData, function (res) {
                         console.log( res );

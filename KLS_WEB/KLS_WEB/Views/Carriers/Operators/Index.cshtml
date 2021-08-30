@@ -103,7 +103,15 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="">Licencia</label>
-                                <input type="file" class="form-control" name="Licencia" id="Licencia" accept="image/png, image/gif, image/jpeg"/>
+                                <input type="file" class="form-control" name="Licencia" id="Licencia" accept="image/png, image/gif,image/jpeg"/>
+                                
+                                <a href="#" download id="hLicencia" style="text-decoration: none !important;">
+                                    <div class="text-left d-flex pt-2" style="color: #207EEC;">
+                                        <div class="material-icons icon-red" style="font-size: 20px; color: #207EEC;">download</div>
+                                        <b class="poppins medium size-12 pl-2">Descargar archivo</b>
+                                    </div>
+                                </a>
+
                             </div>
                         </div>
                     </div>
@@ -111,20 +119,26 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class=""># Licencia</label>
-                                <input type="number" class="form-control" name="NoLicencia" id="NoLicencia" required/>
+                                <input type="text" class="form-control" name="NoLicencia" id="NoLicencia" required/>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="">INE</label>
-                                <input type="file" class="form-control" name="Ine" id="Ine" accept="image/png, image/gif, image/jpeg"/>
+                                <input type="file" class="form-control" name="Ine" id="Ine" accept="image/png,image/gif, image/jpeg" />
+                                <a href="#" download id="hIne" style="text-decoration: none !important;">
+                                    <div class="text-left d-flex pt-2" style="color: #207EEC;">
+                                        <div class="material-icons icon-red" style="font-size: 20px; color: #207EEC;">download</div>
+                                        <b class="poppins medium size-12 pl-2">Descargar archivo</b>
+                                    </div>
+                                </a>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class=""># INE</label>
-                                <input type="number" class="form-control" name="NoIne" id="NoIne" required/>
+                                <input type="text" class="form-control" name="NoIne" id="NoIne" required/>
                             </div>
                         </div>
                     </div>
@@ -132,13 +146,19 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="">Seguro Social</label>
-                                <input type="file" class="form-control" name="SeguroSocial" id="SeguroSocial" accept="image/png, image/gif, image/jpeg"/>
+                                <input type="file" class="form-control" name="SeguroSocial" id="SeguroSocial" accept="image/png, image/gif, image/jpeg" />
+                                <a href="#" download id="hSeguroSocial" style="text-decoration: none !important;">
+                                    <div class="text-left d-flex pt-2" style="color: #207EEC;">
+                                        <div class="material-icons icon-red" style="font-size: 20px; color: #207EEC;">download</div>
+                                        <b class="poppins medium size-12 pl-2">Descargar archivo</b>
+                                    </div>
+                                </a>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="">IMSS</label>
-                                <input type="number" class="form-control" name="Imss" id="Imss" required/>
+                                <input type="text" class="form-control" name="Imss" id="Imss" required/>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -223,6 +243,17 @@
             $("#titulo-modal").empty("");
             $("#titulo-modal").html(titulo);
             $("#idEditar").val(idEditar);
+
+            $("#hLicencia").attr("href", "#")
+            $("#hLicencia").hide();
+
+            $("#hIne").attr("href", "#")
+            $("#hIne").hide();
+
+            $("#hSeguroSocial").attr("href", "#")
+            $("#hSeguroSocial").hide();
+
+
             if (accion == "Editar") {
                 try {
                     let indice = dataOperators.findIndex(service => service.id === idEditar);
@@ -238,11 +269,35 @@
                     $("#Ruta").val(dataOperators[indice].ruta);
                     $('#estatus option[value="' + dataOperators[indice].estatus + '"]').attr("selected", true);
                     $("#modalDiv").modal("show");
+
+                    if (dataOperators[indice].fotoLicencia != "" && dataOperators[indice].fotoLicencia != null) {
+                        let rutaLicencia = `../../Resources/Operadores/${dataOperators[indice].ruta}/${dataOperators[indice].fotoLicencia}`;
+                        $("#hLicencia").show();
+                        $("#hLicencia").prop("href", rutaLicencia);
+                    }
+
+                    if (dataOperators[indice].fotoIne != "" && dataOperators[indice].fotoIne != null) {
+                        let rutaIne = `../../Resources/Operadores/${dataOperators[indice].ruta}/${dataOperators[indice].fotoIne}`;
+                        $("#hIne").show();
+                        $("#hIne").prop("href", rutaIne);
+                    }
+
+                    if (dataOperators[indice].fotoSeguro != "" && dataOperators[indice].fotoSeguro != null) {
+                        let rutaSeguro = `../../Resources/Operadores/${dataOperators[indice].ruta}/${dataOperators[indice].fotoSeguro}`;
+                        $("#hSeguroSocial").show();
+                        $("#hSeguroSocial").prop("href", rutaSeguro);
+                    }
+
                 } catch (error) {
                     dToast("error", "Error al tratar de editar, intenta recargar la página.", "Error");
                     $("#modalDiv").modal("hide");
                 }
             } else {
+                $("#Ruta").val("");
+                $("#FotoLicencia").val("");
+                $("#FotoIne").val("");
+                $("#FotoSeguro").val("");
+
                 $("#modalDiv").modal("show");
             }
         }

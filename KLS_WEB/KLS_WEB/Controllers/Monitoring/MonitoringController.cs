@@ -1,9 +1,15 @@
-﻿using KLS_WEB.Services;
+﻿using KLS_WEB.Models;
+using KLS_WEB.Models.Clients;
+using KLS_WEB.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace KLS_WEB.Controllers.Monitoring
 {
     [Route("Monitoring")]
+    [Authorize]
     public class MonitoringController : Controller
     {
         private string _UrlView = "~/Views/Monitoring/";
@@ -19,6 +25,33 @@ namespace KLS_WEB.Controllers.Monitoring
         public IActionResult Index()
         {
             return View(_UrlView + "/index.cshtml");
+        }
+
+        [Route("getMonitoring")]
+        public async Task<JsonResult> Get()
+        {
+            List<Monitoring> dataMonitoring;
+            dataMonitoring = await this.AppContext.Execute<List<Monitoring>>(MethodType.GET, _UrlApi, null);
+            return Json(dataMonitoring);
+        }
+
+        public class Monitoring {
+            public string folio { get; set; }
+            public string origen { get; set; }
+            public string destino { get; set; }
+            public string  fechallegada {get;set;}
+            public string fechallegada_ { get;set;}
+            public string estatus { get; set; }
+            public int idviaje { get; set; }
+            public string cliente { get; set; }
+        }
+
+        [Route("getClient")]
+        public async Task<JsonResult> getClient()
+        {
+            List<Clientes> dataClient;
+            dataClient = await this.AppContext.Execute<List<Clientes>>(MethodType.GET, _UrlApi+"/getClient", null);
+            return Json(dataClient);
         }
     }
 }

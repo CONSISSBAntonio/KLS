@@ -1,5 +1,6 @@
 ﻿using KLS_WEB.Models;
 using KLS_WEB.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 namespace KLS_WEB.Controllers.Routes
 {
     [Route("RouteHasCheckpoint")]
+    [Authorize]
     public class RouteHasCheckpointController : Controller
     {
         private string _UrlView = "~/Views/Route/";

@@ -1,6 +1,7 @@
 ﻿using KLS_WEB.Models;
 using KLS_WEB.Models.Clients;
 using KLS_WEB.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 namespace KLS_WEB.Controllers.Clients
 {
     [Route("Clients/Library")]
+    [Authorize]
     public class LibraryController : Controller
     {
         private string _UrlView = "~/Views/Clients/Library/";

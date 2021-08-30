@@ -1,6 +1,7 @@
 ﻿using KLS_API.Models;
 using KLS_WEB.Models;
 using KLS_WEB.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 namespace KLS_WEB.Controllers.Catalogs.Country
 {
     [Route("Catalogs/Geography/Country")]
+    [Authorize]
     public class CountryController : Controller
     {
         private string _UrlView = "~/Views/Catalogs/Country/";

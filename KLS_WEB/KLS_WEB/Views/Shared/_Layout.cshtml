@@ -177,7 +177,7 @@
         var hideMenuLeft = true;
         $(document).ready(function () {
             var value = '@HttpContextAccessor.HttpContext.Session.GetString("Nombre")';
-            if (value == "") {
+            if (value.trim() == "") {
                 $.post("Login/Logout", function () {
                     location.reload();
                 });

@@ -1,6 +1,7 @@
 ﻿using KLS_WEB.Models;
 using KLS_WEB.Models.DT;
 using KLS_WEB.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 namespace KLS_WEB.Controllers.Catalogs.Colonies
 {
     [Route("Catalogs/Geography/Colonies")]
+    [Authorize]
     public class ColoniesController : Controller
     {
         private string _UrlView = "~/Views/Catalogs/Colonies/";

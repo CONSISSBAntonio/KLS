@@ -98,6 +98,12 @@
                             <div class="form-group">
                                 <label class="">Archivo</label>
                                 <input type="file" name="FileArchivo" id="FileArchivo" />
+                                <a href="#" download id="archivoF" style="text-decoration: none !important;">
+                                    <div class="text-left d-flex pt-2" style="color: #207EEC;">
+                                        <div class="material-icons icon-red" style="font-size: 20px; color: #207EEC;">download</div>
+                                        <b class="poppins medium size-12 pl-2">Descargar archivo</b>
+                                    </div>
+                                </a>
                             </div>
                         </div>
                         @*<div class="col-md-4">
@@ -183,8 +189,10 @@
             $("#titulo-modal").empty("");
             $("#titulo-modal").html(titulo);
             $("#idEditar").val(idEditar);
-            console.log(idEditar);
-            console.log(dataLibrary);
+
+            $("#archivoF").attr("href", "#")
+            $("#archivoF").hide();
+
             if (accion == "Editar") {
                 try {
                     let indice = dataLibrary.findIndex(service => service.id === idEditar);
@@ -192,12 +200,20 @@
                     $("#Archivo").val(dataLibrary[indice].archivo);
                     $("#Ruta").val(dataLibrary[indice].ruta);
                     //$('#estatus option[value="' + dataLibrary[indice].estatus + '"]').attr("selected", true);
+                    if (dataLibrary[indice].archivo != "" && dataLibrary[indice].archivo != null) {
+                        let rutaLicencia = `../../Resources/Clientes/Biblioteca/${dataLibrary[indice].ruta}/${dataLibrary[indice].archivo}`;
+                        $("#archivoF").show();
+                        $("#archivoF").prop("href", rutaLicencia);
+                    }
+
                     $("#modalDiv").modal("show");
                 } catch (error) {
                     dToast("error", "Error al tratar de editar, intenta recargar la página.", "Error");
                     $("#modalDiv").modal("hide");
                 }
             } else {
+                $("#Ruta").val("");
+                $("#Archivo").val("");
                 $("#modalDiv").modal("show");
             }
         }

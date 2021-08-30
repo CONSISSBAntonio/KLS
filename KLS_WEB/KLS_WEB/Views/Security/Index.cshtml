@@ -7,8 +7,8 @@
             <div class="p-2">
                 <div class="text-left d-flex">
                     @*<a href="/Catalogs">
-                        <div class="material-icons icon-red">arrow_back</div>
-                    </a>*@
+                            <div class="material-icons icon-red">arrow_back</div>
+                        </a>*@
                     <div class="text-uppercase poppins medium size-24 pl-2">SEGURIDAD</div>
                 </div>
             </div>
@@ -76,10 +76,10 @@
                                 <label class="">Correo</label>
                                 <input type="email" class="form-control" name="email" id="email" required />
                             </div>
-                            <div class="col-md-4">
+                            @*<div class="col-md-4">
                                 <label class="">Contraseña</label>
                                 <input type="text" class="form-control" name="password" id="password" required style="text-transform: none;" />
-                            </div>
+                            </div>*@
                             <div class="col-md-4">
                                 <label class="">Tipo usuario</label>
                                 <select class="form-control form-control-sm" id="Rol" name="Rol">
@@ -87,9 +87,6 @@
                                     <option value="Customer">Cliente</option>
                                 </select>
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div class="col-md-4">
                                 <label class="">Activo</label>
                                 <select class="form-control form-control-sm" name="activo" id="activo">
@@ -98,9 +95,8 @@
                                 </select>
                             </div>
                         </div>
-
                         <br />
-                        <button type="submit" class="btn btn-dark guardar" style="width:20%;" id="btnAccion">
+                        <button type="submit" class="btn btn-dark guardar" style="width:31%;" id="btnAccion">
                             Guardar
                         </button>
                     </form>
@@ -113,6 +109,46 @@
         </div>
     </div>
     <!--Modal global-->
+
+    @*cambiar conraseña*@
+    <div class="modal fade" id="modalPass" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="titulo-modal"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-left">
+                    <form id="frmUpdate" action="#" method="post">
+                        <input type="hidden" name="id" id="idEditarPass" value="" />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Contraseña</label>
+                                <input type="text" class="form-control" id="pass1" required onkeyup="edValueKeyPress()">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="">Repetir contraseña</label>
+                                <input type="text" class="form-control" name="passwordR" id="passwordR" required onkeyup="edValueKeyPress()"/>
+                                <div class="invalid-feedback">
+                                    Las contraseñas no coinciden.
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <button type="submit" class="btn btn-dark guardar" style="width:47%;" id="btnAccion" disabled>
+                            Actualizar contraseña
+                        </button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*cambiar conraseña*@
 </div>
 @section Scripts{
     <script>
@@ -122,38 +158,41 @@
             $("#frmRegister").submit(function (event) {
                 event.preventDefault();
                 var jsonData = convertJson($("#frmRegister"));
-                $.post("Security/setSecurity", jsonData, function (res) {
-                    if (res != null) {
-                        dToast("error", res.response.errors[0].errorMessage, "Error");
-                    } else {
-                        dToast("success", "Usuario registrado exitosamente", "Registrado");
-                        $('#frmRegister').trigger("reset");
-                        loadTable();
-                    }
-                }).fail(function (error, xhr, status) {
-                    console.log(xhr);
-                });
+                if ($("#idEditar").val() != "") {
+                    console.log(jsonData);
+                } else {
+                    $.post("Security/setSecurity", jsonData, function (res) {
+                        if (res != null) {
+                            dToast("error", res.response.errors[0].errorMessage, "Error");
+                        } else {
+                            dToast("success", "Usuario registrado exitosamente", "Registrado");
+                            $('#frmRegister').trigger("reset");
+                            loadTable();
+                        }
+                    }).fail(function (error, xhr, status) {
+                        console.log(xhr);
+                    });
+                }
             });
         });
+
         //Kls123!.
         function showModal(titulo = "Title", accion, idEditar = "") {
             $('#frmRegister').trigger("reset");
             $(".guardar").html(accion);
             $("#titulo-modal").empty("");
             $("#titulo-modal").html(titulo);
+            $("#idEditar").val(idEditar);
             if (accion == "Editar") {
                 try {
-                    console.log(dataSeguridad);
                     let indice = dataSeguridad.findIndex(service => service.id_User == idEditar);
+                    console.log(dataSeguridad[indice]);
                     $("#Nombre").val(dataSeguridad[indice].nombre);
                     $("#Apaterno").val(dataSeguridad[indice].apaterno);
                     $("#Amaterno").val(dataSeguridad[indice].amaterno);
                     $("#email").val(dataSeguridad[indice].email);
-                    $("#password").val(dataSeguridad[indice].password);
                     $("#Rol").val(dataSeguridad[indice].rol).trigger('change');
                     $("#activo").val(dataSeguridad[indice].activo).trigger('change');
-
-
                     $("#modalDiv").modal("show");
                 } catch (error) {
                     dToast("error", "Error al tratar de editar, intenta recargar la página.", "Error");
@@ -188,6 +227,11 @@
                                         mode_edit
                                     </span>
                                 </a>
+                                <a href="#">
+                                    <span class="material-icons" onclick="updPass('${nCon(key.id_User)}');">
+                                        lock
+                                    </span>
+                                </a>
                             </td>
                         </tr>`);
                 });
@@ -196,5 +240,25 @@
                 dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
             });
         }
+        function updPass(id) {
+            let indice = dataSeguridad.findIndex(service => service.id_User == id);
+            $("#idEditarPass").val(dataSeguridad[indice].id_User);
+            $("#modalPass").modal("show");
+        }
+
+        function edValueKeyPress() {
+            //Aqui se valida que la contraseña contenga los valores necesarios
+
+            //if ($("#passwordR").val()!="") {
+            //    if ($("#passwordR").val() != $("#pass1").val()) {
+            //        $("#passwordR").removeClass("is-valid");
+            //        $("#passwordR").addClass("is-invalid");
+            //    } else {
+            //        $("#passwordR").removeClass("is-invalid");
+            //        $("#passwordR").addClass("is-valid");
+            //    }
+            //}
+        }
+
     </script>
 }

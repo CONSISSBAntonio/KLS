@@ -82,7 +82,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="">Archivo</label>
-                                <input type="file" name="FileArchivo" id="FileArchivo"/>
+                                <input type="file" name="FileArchivo" id="FileArchivo" />
+                                <a href="#" download id="archivoF" style="text-decoration: none !important;">
+                                    <div class="text-left d-flex pt-2" style="color: #207EEC;">
+                                        <div class="material-icons icon-red" style="font-size: 20px; color: #207EEC;">download</div>
+                                        <b class="poppins medium size-12 pl-2">Descargar archivo</b>
+                                    </div>
+                                </a>
                             </div>
                         </div>
 
@@ -123,7 +129,6 @@
                 var formData = new FormData(document.getElementById("frmRegister"));
                 formData.append('file', $('#FileArchivo')[0].files[0]);
                 formData.append('IdTransportista', @id);
-
                 if (parseInt($("#idEditar").val()) != 0) {
                     $.ajax({
                         url: "/Carriers/Library/putLibrary",
@@ -168,8 +173,10 @@
             $("#titulo-modal").empty("");
             $("#titulo-modal").html(titulo);
             $("#idEditar").val(idEditar);
-            console.log(idEditar);
-            console.log(dataLibrary);
+
+            $("#archivoF").attr("href", "#")
+            $("#archivoF").hide();
+
             if (accion == "Editar") {
                 try {
                     let indice = dataLibrary.findIndex(service => service.id === idEditar);
@@ -177,12 +184,21 @@
                     $("#Archivo").val(dataLibrary[indice].archivo);
                     $("#Ruta").val(dataLibrary[indice].ruta);
                     $('#estatus option[value="' + dataLibrary[indice].estatus + '"]').attr("selected", true);
+
+                    if (dataLibrary[indice].archivo != "" && dataLibrary[indice].archivo != null) {
+                        let rutaLicencia = `../../Resources/Biblioteca/${dataLibrary[indice].ruta}/${dataLibrary[indice].archivo}`;
+                        $("#archivoF").show();
+                        $("#archivoF").prop("href", rutaLicencia);
+                    }
+
                     $("#modalDiv").modal("show");
                 } catch (error) {
                     dToast("error", "Error al tratar de editar, intenta recargar la página.", "Error");
                     $("#modalDiv").modal("hide");
                 }
             } else {
+                $("#Ruta").val("");
+                $("#Archivo").val("");
                 $("#modalDiv").modal("show");
             }
         }
@@ -193,15 +209,12 @@
             $("#table-info").empty();
             $.get("/Carriers/Library/getLibrary/", { "Id_Transportista":@id}, function (res) {
                 dataLibrary = res;
-                console.log(dataLibrary);
                 $.each(dataLibrary, function (item, key) {
                     let d = new Date(key.fechaEvento);
                     let fecha = d.getFullYear() + "-" + d.getMonth() + "-" + d.getDay() + "  " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
                     if (parseInt(key.estatus) != 2) {
                         var archivo = key.archivo;
-                        console.log(archivo);
                         var ruta = String(key.ruta);
-                        console.log(key.ruta);
                         $("#table-info").append(`
                              <tr>
                                 <td>${nCon(key.nombre)}</td>
