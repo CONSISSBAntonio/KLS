@@ -1,5 +1,6 @@
 ﻿using KLS_WEB.Models;
 using KLS_WEB.Models.Clients;
+using KLS_WEB.Models.Travels;
 using KLS_WEB.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -51,6 +52,21 @@ namespace KLS_WEB.Controllers.Monitoring
         {
             List<Clientes> dataClient;
             dataClient = await this.AppContext.Execute<List<Clientes>>(MethodType.GET, _UrlApi+"/getClient", null);
+            return Json(dataClient);
+        }
+        
+        [Route("getStatus")]
+        public async Task<JsonResult> getStatus()
+        {
+            List<Status> dataClient;
+            dataClient = await this.AppContext.Execute<List<Status>>(MethodType.GET, _UrlApi+ "/getStatus", null);
+            return Json(dataClient);
+        }
+        [Route("getSubStatus")]
+        public async Task<JsonResult> getSubStatus()
+        {
+            List<Substatus> dataClient;
+            dataClient = await this.AppContext.Execute<List<Substatus>>(MethodType.GET, _UrlApi+ "/getSubStatus", null);
             return Json(dataClient);
         }
     }
