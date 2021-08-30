@@ -43,7 +43,9 @@ namespace KLS_API.Migrations
                     AccessFailedCount = table.Column<int>(nullable: false),
                     Nombre = table.Column<string>(type: "varchar(25)", nullable: true),
                     Apaterno = table.Column<string>(type: "varchar(25)", nullable: true),
-                    Amaterno = table.Column<string>(type: "varchar(25)", nullable: true)
+                    Amaterno = table.Column<string>(type: "varchar(25)", nullable: true),
+                    activo = table.Column<int>(nullable: false),
+                    ResetToken = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -427,7 +429,7 @@ namespace KLS_API.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Id_Cliente = table.Column<bool>(nullable: false),
+                    Id_Cliente = table.Column<int>(nullable: false),
                     Mandatario1 = table.Column<bool>(nullable: false),
                     Mandatario2 = table.Column<bool>(nullable: false),
                     Mandatario3 = table.Column<bool>(nullable: false),
@@ -538,19 +540,17 @@ namespace KLS_API.Migrations
                     Cantidad = table.Column<int>(nullable: false),
                     Fecha_Disponibilidad = table.Column<DateTime>(nullable: false),
                     Rango_De_Espera = table.Column<int>(nullable: false),
-                    Nivel_Origen = table.Column<string>(type: "varchar(20)", nullable: false),
+                    Nivel_Origen = table.Column<string>(type: "varchar(20)", nullable: true),
                     Region_Origen = table.Column<int>(nullable: false),
                     Estado_Origen = table.Column<int>(nullable: false),
                     ciudad_Origen = table.Column<int>(nullable: false),
                     Tolerancia_Origen = table.Column<int>(nullable: false),
-                    Nivel_Destino = table.Column<int>(nullable: false),
+                    Nivel_Destino = table.Column<string>(type: "varchar(20)", nullable: true),
                     Region_Destino = table.Column<int>(nullable: false),
                     estado_Destino = table.Column<int>(nullable: false),
                     ciudad_Destino = table.Column<int>(nullable: false),
                     Tolerancia_Destino = table.Column<int>(nullable: false),
-                    status = table.Column<int>(nullable: false),
-                    ToleranciaOrigen = table.Column<int>(nullable: false),
-                    ToleranciaDestino = table.Column<int>(nullable: false)
+                    status = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -567,6 +567,7 @@ namespace KLS_API.Migrations
                     id_ciudadorigen = table.Column<int>(nullable: false),
                     id_estadodestino = table.Column<int>(nullable: false),
                     id_ciudaddestino = table.Column<int>(nullable: false),
+                    Folio = table.Column<string>(nullable: true),
                     totalkilometros = table.Column<int>(nullable: false),
                     eficiencia = table.Column<int>(nullable: false),
                     tiemporuta = table.Column<int>(nullable: false),
@@ -599,6 +600,57 @@ namespace KLS_API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Ruta_Has_Checkpoint", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SectionTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: true),
+                    Acronym = table.Column<string>(nullable: true),
+                    Active = table.Column<bool>(nullable: false),
+                    TimeCreated = table.Column<DateTime>(nullable: false),
+                    TimeUpdated = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SectionTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Separar",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    id_oferta = table.Column<int>(nullable: false),
+                    rutaTentativa = table.Column<string>(type: "varchar(120)", nullable: true),
+                    notasCargo = table.Column<string>(type: "varchar(250)", nullable: true),
+                    id_User = table.Column<string>(type: "varchar(250)", nullable: true),
+                    nombre = table.Column<string>(type: "varchar(100)", nullable: true),
+                    fecha = table.Column<DateTime>(type: "DateTime", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Separar", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Statuses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: false),
+                    Active = table.Column<bool>(nullable: false),
+                    TimeCreated = table.Column<DateTime>(nullable: false),
+                    TimeUpdated = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Statuses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -777,44 +829,6 @@ namespace KLS_API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Transportista", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Viajes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Folio = table.Column<string>(nullable: true),
-                    IdCliente = table.Column<int>(nullable: false),
-                    IdOrigen = table.Column<int>(nullable: false),
-                    IdDestino = table.Column<int>(nullable: false),
-                    IdRuta = table.Column<int>(nullable: false),
-                    IdUnidad = table.Column<int>(nullable: false),
-                    TipoViaje = table.Column<string>(nullable: true),
-                    FechaSalida = table.Column<DateTime>(nullable: false),
-                    FechaLlegada = table.Column<DateTime>(nullable: false),
-                    TiempoAnticipacion = table.Column<string>(nullable: true),
-                    DireccionRemitente = table.Column<string>(nullable: true),
-                    DireccionDestinatario = table.Column<string>(nullable: true),
-                    CostoTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    PrecioClienteTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Estatus = table.Column<string>(nullable: true),
-                    SubEstatus = table.Column<string>(nullable: true),
-                    StatusUpdated = table.Column<DateTime>(nullable: false),
-                    UsuarioEspejo = table.Column<string>(nullable: true),
-                    PassEspejo = table.Column<string>(nullable: true),
-                    ReferenciaUno = table.Column<string>(nullable: true),
-                    ReferenciaDos = table.Column<string>(nullable: true),
-                    ReferenciaTres = table.Column<string>(nullable: true),
-                    Shipper = table.Column<string>(nullable: true),
-                    Consignee = table.Column<string>(nullable: true),
-                    HBL = table.Column<string>(nullable: true),
-                    Intercom = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Viajes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -999,14 +1013,39 @@ namespace KLS_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Substatuses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    StatusId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Active = table.Column<bool>(nullable: false),
+                    TimeCreated = table.Column<DateTime>(nullable: false),
+                    TimeUpdated = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Substatuses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Substatuses_Statuses_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "Statuses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ruta_has_inventario",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Id_Tr_Has_Rutas = table.Column<int>(nullable: false),
+                    Tr_Has_RutaId = table.Column<int>(nullable: false),
                     Id_Inventario = table.Column<int>(nullable: false),
-                    Tr_Has_RutaId = table.Column<int>(nullable: true)
+                    CostoOne = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CostoTwo = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Circuito = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1016,7 +1055,48 @@ namespace KLS_API.Migrations
                         column: x => x.Tr_Has_RutaId,
                         principalTable: "Tr_Has_Ruta",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Travels",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    StatusId = table.Column<int>(nullable: false),
+                    SubstatusId = table.Column<int>(nullable: false),
+                    Folio = table.Column<string>(nullable: true),
+                    Cat_Tipos_UnidadesId = table.Column<int>(nullable: false),
+                    Ejecutivo = table.Column<string>(nullable: true),
+                    GrupoMonitor = table.Column<string>(nullable: true),
+                    Active = table.Column<bool>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    UpdatedBy = table.Column<string>(nullable: true),
+                    TimeCreated = table.Column<DateTime>(nullable: false),
+                    TimeUpdated = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Travels", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Travels_Cat_Tipos_Unidades_Cat_Tipos_UnidadesId",
+                        column: x => x.Cat_Tipos_UnidadesId,
+                        principalTable: "Cat_Tipos_Unidades",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Travels_Statuses_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "Statuses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Travels_Substatuses_SubstatusId",
+                        column: x => x.SubstatusId,
+                        principalTable: "Substatuses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1035,15 +1115,15 @@ namespace KLS_API.Migrations
                 {
                     table.PrimaryKey("PK_Facturacion", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Facturacion_Viajes_TravelId",
+                        name: "FK_Facturacion_Travels_TravelId",
                         column: x => x.TravelId,
-                        principalTable: "Viajes",
+                        principalTable: "Travels",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Historial",
+                name: "SectionLogs",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -1051,92 +1131,249 @@ namespace KLS_API.Migrations
                     TravelId = table.Column<int>(nullable: false),
                     Registro = table.Column<string>(nullable: true),
                     Usuario = table.Column<string>(nullable: true),
+                    Active = table.Column<bool>(nullable: false),
                     TimeCreated = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Historial", x => x.Id);
+                    table.PrimaryKey("PK_SectionLogs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Historial_Viajes_TravelId",
+                        name: "FK_SectionLogs_Travels_TravelId",
                         column: x => x.TravelId,
-                        principalTable: "Viajes",
+                        principalTable: "Travels",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Mercancias",
+                name: "Sections",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     TravelId = table.Column<int>(nullable: false),
+                    StatusId = table.Column<int>(nullable: false),
+                    SubstatusId = table.Column<int>(nullable: false),
+                    Folio = table.Column<string>(nullable: true),
+                    ClientesId = table.Column<int>(nullable: false),
+                    Cl_Has_OrigenId = table.Column<int>(nullable: false),
+                    Cl_Has_DestinosId = table.Column<int>(nullable: false),
+                    SectionTypeId = table.Column<int>(nullable: false),
+                    Cl_Has_OtrosId = table.Column<int>(nullable: false),
+                    RutaId = table.Column<int>(nullable: false),
+                    FechaSalida = table.Column<DateTime>(nullable: false),
+                    FechaLlegada = table.Column<DateTime>(nullable: false),
+                    Anticipacion = table.Column<string>(nullable: true),
+                    Espejo = table.Column<string>(nullable: true),
+                    Usuario = table.Column<string>(nullable: true),
+                    Contraseña = table.Column<string>(nullable: true),
+                    Referencia1 = table.Column<string>(nullable: true),
+                    Referencia2 = table.Column<string>(nullable: true),
+                    Referencia3 = table.Column<string>(nullable: true),
                     Alto = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Ancho = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Largo = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Peso = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    PesoVolumetrico = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    PesoVolumetrico = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    IsEmpty = table.Column<bool>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    UpdatedBy = table.Column<string>(nullable: true),
+                    Active = table.Column<bool>(nullable: false),
+                    TimeCreated = table.Column<DateTime>(nullable: false),
+                    TimeUpdated = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Mercancias", x => x.Id);
+                    table.PrimaryKey("PK_Sections", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Mercancias_Viajes_TravelId",
+                        name: "FK_Sections_Cl_Has_Destinos_Cl_Has_DestinosId",
+                        column: x => x.Cl_Has_DestinosId,
+                        principalTable: "Cl_Has_Destinos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Sections_Cl_Has_Origen_Cl_Has_OrigenId",
+                        column: x => x.Cl_Has_OrigenId,
+                        principalTable: "Cl_Has_Origen",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Sections_Cl_Has_Otros_Cl_Has_OtrosId",
+                        column: x => x.Cl_Has_OtrosId,
+                        principalTable: "Cl_Has_Otros",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Sections_Clientes_ClientesId",
+                        column: x => x.ClientesId,
+                        principalTable: "Clientes",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Sections_Ruta_RutaId",
+                        column: x => x.RutaId,
+                        principalTable: "Ruta",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Sections_SectionTypes_SectionTypeId",
+                        column: x => x.SectionTypeId,
+                        principalTable: "SectionTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Sections_Statuses_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "Statuses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Sections_Substatuses_SubstatusId",
+                        column: x => x.SubstatusId,
+                        principalTable: "Substatuses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Sections_Travels_TravelId",
                         column: x => x.TravelId,
-                        principalTable: "Viajes",
+                        principalTable: "Travels",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Servicios",
+                name: "SectionComments",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    TravelId = table.Column<int>(nullable: false),
-                    Nombre = table.Column<string>(nullable: true),
-                    IdTransportista = table.Column<int>(nullable: false),
-                    IdChofer = table.Column<int>(nullable: false),
+                    SectionId = table.Column<int>(nullable: false),
+                    StatusId = table.Column<int>(nullable: false),
+                    SubstatusId = table.Column<int>(nullable: false),
+                    Comment = table.Column<string>(nullable: false),
+                    Active = table.Column<bool>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    UpdatedBy = table.Column<string>(nullable: true),
+                    TimeCreated = table.Column<DateTime>(nullable: false),
+                    TimeUpdated = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SectionComments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SectionComments_Sections_SectionId",
+                        column: x => x.SectionId,
+                        principalTable: "Sections",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SectionComments_Statuses_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "Statuses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SectionComments_Substatuses_SubstatusId",
+                        column: x => x.SubstatusId,
+                        principalTable: "Substatuses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Services",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    SectionId = table.Column<int>(nullable: false),
+                    TransportistaId = table.Column<int>(nullable: false),
+                    Tr_Has_OperadoresId = table.Column<int>(nullable: false),
+                    Folio = table.Column<string>(nullable: true),
                     Costo = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Precio = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    IdNaviera = table.Column<int>(nullable: false),
-                    Buque = table.Column<string>(nullable: true),
-                    IdAgenteAduanal = table.Column<int>(nullable: false),
-                    IdContactoAA = table.Column<int>(nullable: false),
-                    IdAerolinea = table.Column<int>(nullable: false),
-                    IdContactoA = table.Column<int>(nullable: false),
-                    IdCoLoader = table.Column<int>(nullable: false),
-                    IdContactoCL = table.Column<int>(nullable: false)
+                    Precio = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Servicios", x => x.Id);
+                    table.PrimaryKey("PK_Services", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Servicios_Viajes_TravelId",
-                        column: x => x.TravelId,
-                        principalTable: "Viajes",
+                        name: "FK_Services_Sections_SectionId",
+                        column: x => x.SectionId,
+                        principalTable: "Sections",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Services_Tr_Has_Operadores_Tr_Has_OperadoresId",
+                        column: x => x.Tr_Has_OperadoresId,
+                        principalTable: "Tr_Has_Operadores",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Services_Transportista_TransportistaId",
+                        column: x => x.TransportistaId,
+                        principalTable: "Transportista",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Evidences",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    SectionCommentId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Path = table.Column<string>(nullable: false),
+                    Active = table.Column<bool>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: true),
+                    UpdatedBy = table.Column<string>(nullable: true),
+                    TimeCreated = table.Column<DateTime>(nullable: false),
+                    TimeUpdated = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Evidences", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Evidences_SectionComments_SectionCommentId",
+                        column: x => x.SectionCommentId,
+                        principalTable: "SectionComments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Unidades",
+                name: "Units",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    IdUnidad = table.Column<int>(nullable: false),
-                    IdEquipo = table.Column<int>(nullable: false),
-                    ServicesId = table.Column<int>(nullable: false)
+                    ServiceId = table.Column<int>(nullable: false),
+                    Cat_Tipos_UnidadesId = table.Column<int>(nullable: false),
+                    Tr_Has_InventarioId = table.Column<int>(nullable: false),
+                    Active = table.Column<bool>(nullable: false),
+                    TimeCreated = table.Column<DateTime>(nullable: false),
+                    TimeUpdated = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Unidades", x => x.Id);
+                    table.PrimaryKey("PK_Units", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Unidades_Servicios_ServicesId",
-                        column: x => x.ServicesId,
-                        principalTable: "Servicios",
+                        name: "FK_Units_Cat_Tipos_Unidades_Cat_Tipos_UnidadesId",
+                        column: x => x.Cat_Tipos_UnidadesId,
+                        principalTable: "Cat_Tipos_Unidades",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Units_Services_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Services",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Units_Tr_Has_Inventario_Tr_Has_InventarioId",
+                        column: x => x.Tr_Has_InventarioId,
+                        principalTable: "Tr_Has_Inventario",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1204,18 +1441,13 @@ namespace KLS_API.Migrations
                 column: "UnitId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Evidences_SectionCommentId",
+                table: "Evidences",
+                column: "SectionCommentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Facturacion_TravelId",
                 table: "Facturacion",
-                column: "TravelId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Historial_TravelId",
-                table: "Historial",
-                column: "TravelId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Mercancias_TravelId",
-                table: "Mercancias",
                 column: "TravelId");
 
             migrationBuilder.CreateIndex(
@@ -1229,14 +1461,119 @@ namespace KLS_API.Migrations
                 column: "Tr_Has_RutaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Servicios_TravelId",
-                table: "Servicios",
+                name: "IX_SectionComments_SectionId",
+                table: "SectionComments",
+                column: "SectionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SectionComments_StatusId",
+                table: "SectionComments",
+                column: "StatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SectionComments_SubstatusId",
+                table: "SectionComments",
+                column: "SubstatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SectionLogs_TravelId",
+                table: "SectionLogs",
                 column: "TravelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Unidades_ServicesId",
-                table: "Unidades",
-                column: "ServicesId");
+                name: "IX_Sections_Cl_Has_DestinosId",
+                table: "Sections",
+                column: "Cl_Has_DestinosId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sections_Cl_Has_OrigenId",
+                table: "Sections",
+                column: "Cl_Has_OrigenId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sections_Cl_Has_OtrosId",
+                table: "Sections",
+                column: "Cl_Has_OtrosId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sections_ClientesId",
+                table: "Sections",
+                column: "ClientesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sections_RutaId",
+                table: "Sections",
+                column: "RutaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sections_SectionTypeId",
+                table: "Sections",
+                column: "SectionTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sections_StatusId",
+                table: "Sections",
+                column: "StatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sections_SubstatusId",
+                table: "Sections",
+                column: "SubstatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sections_TravelId",
+                table: "Sections",
+                column: "TravelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Services_SectionId",
+                table: "Services",
+                column: "SectionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Services_Tr_Has_OperadoresId",
+                table: "Services",
+                column: "Tr_Has_OperadoresId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Services_TransportistaId",
+                table: "Services",
+                column: "TransportistaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Substatuses_StatusId",
+                table: "Substatuses",
+                column: "StatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Travels_Cat_Tipos_UnidadesId",
+                table: "Travels",
+                column: "Cat_Tipos_UnidadesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Travels_StatusId",
+                table: "Travels",
+                column: "StatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Travels_SubstatusId",
+                table: "Travels",
+                column: "SubstatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Units_Cat_Tipos_UnidadesId",
+                table: "Units",
+                column: "Cat_Tipos_UnidadesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Units_ServiceId",
+                table: "Units",
+                column: "ServiceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Units_Tr_Has_InventarioId",
+                table: "Units",
+                column: "Tr_Has_InventarioId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -1305,9 +1642,6 @@ namespace KLS_API.Migrations
                 name: "Cl_Has_Evidencia");
 
             migrationBuilder.DropTable(
-                name: "Cl_Has_Otros");
-
-            migrationBuilder.DropTable(
                 name: "Cl_Has_Requisitos");
 
             migrationBuilder.DropTable(
@@ -1317,13 +1651,10 @@ namespace KLS_API.Migrations
                 name: "Demands");
 
             migrationBuilder.DropTable(
+                name: "Evidences");
+
+            migrationBuilder.DropTable(
                 name: "Facturacion");
-
-            migrationBuilder.DropTable(
-                name: "Historial");
-
-            migrationBuilder.DropTable(
-                name: "Mercancias");
 
             migrationBuilder.DropTable(
                 name: "Oferta");
@@ -1338,6 +1669,12 @@ namespace KLS_API.Migrations
                 name: "ruta_has_inventario");
 
             migrationBuilder.DropTable(
+                name: "SectionLogs");
+
+            migrationBuilder.DropTable(
+                name: "Separar");
+
+            migrationBuilder.DropTable(
                 name: "Tr_Has_Biblioteca");
 
             migrationBuilder.DropTable(
@@ -1350,16 +1687,7 @@ namespace KLS_API.Migrations
                 name: "Tr_Has_Contactos");
 
             migrationBuilder.DropTable(
-                name: "Tr_Has_Inventario");
-
-            migrationBuilder.DropTable(
-                name: "Tr_Has_Operadores");
-
-            migrationBuilder.DropTable(
-                name: "Transportista");
-
-            migrationBuilder.DropTable(
-                name: "Unidades");
+                name: "Units");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -1368,19 +1696,7 @@ namespace KLS_API.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Clientes");
-
-            migrationBuilder.DropTable(
-                name: "Cl_Has_Destinos");
-
-            migrationBuilder.DropTable(
-                name: "Cl_Has_Origen");
-
-            migrationBuilder.DropTable(
-                name: "Ruta");
-
-            migrationBuilder.DropTable(
-                name: "Cat_Tipos_Unidades");
+                name: "SectionComments");
 
             migrationBuilder.DropTable(
                 name: "Cat_Region");
@@ -1389,10 +1705,49 @@ namespace KLS_API.Migrations
                 name: "Tr_Has_Ruta");
 
             migrationBuilder.DropTable(
-                name: "Servicios");
+                name: "Services");
 
             migrationBuilder.DropTable(
-                name: "Viajes");
+                name: "Tr_Has_Inventario");
+
+            migrationBuilder.DropTable(
+                name: "Sections");
+
+            migrationBuilder.DropTable(
+                name: "Tr_Has_Operadores");
+
+            migrationBuilder.DropTable(
+                name: "Transportista");
+
+            migrationBuilder.DropTable(
+                name: "Cl_Has_Destinos");
+
+            migrationBuilder.DropTable(
+                name: "Cl_Has_Origen");
+
+            migrationBuilder.DropTable(
+                name: "Cl_Has_Otros");
+
+            migrationBuilder.DropTable(
+                name: "Clientes");
+
+            migrationBuilder.DropTable(
+                name: "Ruta");
+
+            migrationBuilder.DropTable(
+                name: "SectionTypes");
+
+            migrationBuilder.DropTable(
+                name: "Travels");
+
+            migrationBuilder.DropTable(
+                name: "Cat_Tipos_Unidades");
+
+            migrationBuilder.DropTable(
+                name: "Substatuses");
+
+            migrationBuilder.DropTable(
+                name: "Statuses");
         }
     }
 }

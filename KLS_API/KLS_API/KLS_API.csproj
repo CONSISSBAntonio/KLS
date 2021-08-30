@@ -6,33 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20210723235742_demand.cs" />
-    <Compile Remove="Migrations\20210723235742_demand.Designer.cs" />
-    <Compile Remove="Migrations\20210727164702_ruta-update.cs" />
-    <Compile Remove="Migrations\20210727164702_ruta-update.Designer.cs" />
-    <Compile Remove="Migrations\20210728213754_demand.cs" />
-    <Compile Remove="Migrations\20210728213754_demand.Designer.cs" />
-    <Compile Remove="Migrations\20210728221940_demand.cs" />
-    <Compile Remove="Migrations\20210728221940_demand.Designer.cs" />
-    <Compile Remove="Migrations\20210803204000_relRutasId.cs" />
-    <Compile Remove="Migrations\20210803204000_relRutasId.Designer.cs" />
-    <Compile Remove="Migrations\20210804143315_destinos.cs" />
-    <Compile Remove="Migrations\20210804143315_destinos.Designer.cs" />
-    <Compile Remove="Migrations\20210824143010_viajesuserdetail.cs" />
-    <Compile Remove="Migrations\20210824143010_viajesuserdetail.Designer.cs" />
-    <Compile Remove="Migrations\20210824181757_maintravel.cs" />
-    <Compile Remove="Migrations\20210824181757_maintravel.Designer.cs" />
-    <Compile Remove="Migrations\20210824182312_maintravel.cs" />
-    <Compile Remove="Migrations\20210824182312_maintravel.Designer.cs" />
-    <Compile Remove="Migrations\20210824190941_maintravel.cs" />
-    <Compile Remove="Migrations\20210824190941_maintravel.Designer.cs" />
-    <Compile Remove="Migrations\20210825181959_maintravelstatus.cs" />
-    <Compile Remove="Migrations\20210825181959_maintravelstatus.Designer.cs" />
-    <Compile Remove="Migrations\20210825183324_maintravelstatus.cs" />
-    <Compile Remove="Migrations\20210825183324_maintravelstatus.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.10" />
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="5.0.9" />
