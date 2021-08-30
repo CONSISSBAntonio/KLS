@@ -1,6 +1,6 @@
 ﻿using KLS_API.Models;
 using KLS_API.Models.Carriers;
-using KLS_API.Models.Travels;
+using KLS_API.Models.Travel;
 using KLS_API.Models.Clients;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +10,7 @@ using KLS_API.Models.Oferta;
 
 namespace KLS_API.Context
 {
-    public class AppDbContext: IdentityDbContext<AddUser>
+    public class AppDbContext : IdentityDbContext<AddUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -43,7 +43,7 @@ namespace KLS_API.Context
         public DbSet<Tr_Has_Operadores> Tr_Has_Operadores { get; set; }
         public DbSet<Tr_Has_Ruta> Tr_Has_Ruta { get; set; }
         public DbSet<ruta_has_inventario> ruta_has_inventario { get; set; }
-        
+
         //Clientes
         public DbSet<Clientes> Clientes { get; set; }
         public DbSet<Cl_Has_Routes> Cl_Has_Routes { get; set; }
@@ -59,15 +59,17 @@ namespace KLS_API.Context
         public DbSet<Cl_Has_Requisitos> Cl_Has_Requisitos { get; set; }
 
         //Viajes
-        public DbSet<Facturacion> Facturacion { get; set; }
-        public DbSet<Travel> Viajes { get; set; }
-        public DbSet<Services> Servicios { get; set; }
-        public DbSet<Unidad> Unidades { get; set; }
-        public DbSet<Mercancia> Mercancias { get; set; }
-        public DbSet<Historial> Historial { get; set; }
-        public DbSet<MainTravel> MainTravels { get; set; }
-        public DbSet<TravelComment> TravelComments { get; set; }
+        public DbSet<Travel> Travels { get; set; }
+        public DbSet<Section> Sections { get; set; }
+        public DbSet<Service> Services { get; set; }
+        public DbSet<Unit> Units { get; set; }
+        public DbSet<Status> Statuses { get; set; }
+        public DbSet<Substatus> Substatuses { get; set; }
+        public DbSet<SectionType> SectionTypes { get; set; }
+        public DbSet<SectionLog> SectionLogs { get; set; }
+        public DbSet<SectionComment> SectionComments { get; set; }
         public DbSet<Evidence> Evidences { get; set; }
+        public DbSet<Facturacion> Facturacion { get; set; }
 
         // Demandas
         public DbSet<Demand> Demands { get; set; }

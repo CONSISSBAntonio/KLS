@@ -1,24 +1,19 @@
 ﻿using KLS_WEB.Models;
 using KLS_WEB.Models.Carriers;
 using KLS_WEB.Models.Clients;
-using KLS_WEB.Models.DT;
 using KLS_WEB.Models.Travels;
+using KLS_WEB.Models.Travels.DTO;
 using KLS_WEB.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Rotativa.AspNetCore;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace KLS_WEB.Controllers.Travels
 {
-    [Route("Travels/")]
     [Authorize]
     public class TravelsController : Controller
     {
@@ -29,410 +24,273 @@ namespace KLS_WEB.Controllers.Travels
 
         public TravelsController(IAppContextService _AppContext)
         {
-            this.AppContext = _AppContext;
+            AppContext = _AppContext;
         }
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        #region InitSelects
+        private async Task<List<SelectListItem>> GetTiposUnidades()
+        {
+            List<SelectListItem> Cat_Tipos_Unidades = new List<SelectListItem> { new SelectListItem { Disabled = true, Selected = true, Value = "0", Text = "SELECCIONA" } };
+            List<Cat_Tipos_Unidades> cat_Tipos_Unidades = await AppContext.Execute<List<Cat_Tipos_Unidades>>(MethodType.GET, Path.Combine(_UrlApi, "GetTiposUnidades"), null);
+
+            foreach (var tipounidad in cat_Tipos_Unidades)
+            {
+                SelectListItem selectListItem = new SelectListItem { Value = tipounidad.id.ToString(), Text = tipounidad.nombre };
+                Cat_Tipos_Unidades.Add(selectListItem);
+            }
+
+            return Cat_Tipos_Unidades;
+        }
+        private async Task<List<SelectListItem>> GetCustomers()
+        {
+            List<SelectListItem> Customers = new List<SelectListItem> { new SelectListItem { Disabled = true, Selected = true, Value = "0", Text = "SELECCIONA" } };
+            List<Clientes> customers = await AppContext.Execute<List<Clientes>>(MethodType.GET, Path.Combine(_UrlApi, "GetCustomers"), null);
+
+            foreach (var customer in customers)
+            {
+                SelectListItem selectListItem = new SelectListItem { Value = customer.id.ToString(), Text = customer.NombreCorto };
+                Customers.Add(selectListItem);
+            }
+
+            return Customers;
+        }
+        private async Task<List<SelectListItem>> GetRoute(int OriginId, int DestinationId)
+        {
+            SearchRuta searchRuta = new SearchRuta
+            {
+                OriginId = OriginId,
+                DestinationId = DestinationId
+            };
+
+            List<SelectListItem> selectListItems = new List<SelectListItem> { new SelectListItem { Disabled = true, Selected = true, Value = "0", Text = "SELECCIONA" } };
+            List<SearchRuta> routes = await AppContext.Execute<List<SearchRuta>>(MethodType.POST, Path.Combine(_UrlApi, "GetRoute"), searchRuta);
+
+            foreach (var route in routes)
+            {
+                SelectListItem selectListItem = new SelectListItem { Value = route.Id.ToString(), Text = route.OD };
+                selectListItems.Add(selectListItem);
+            }
+
+            return selectListItems;
+        }
+        private async Task<List<SelectListItem>> GetSectionType()
+        {
+            List<SelectListItem> listItems = new List<SelectListItem> { new SelectListItem { Disabled = true, Selected = true, Value = "0", Text = "SELECCIONA" } };
+            List<SectionType> sectionTypes = await AppContext.Execute<List<SectionType>>(MethodType.GET, Path.Combine(_UrlApi, "GetSectionType"), null);
+
+            foreach (var sectionType in sectionTypes)
+            {
+                SelectListItem listItem = new SelectListItem { Value = sectionType.Id.ToString(), Text = sectionType.Name };
+                listItems.Add(listItem);
+            }
+
+            return listItems;
+        }
+        private async Task<TravelDTO> GetCustomerOD(int CustomerId)
+        {
+            TravelDTO travelDTO = new TravelDTO
+            {
+                Selects =
+                {
+                    CustomerOrigins = new List<SelectListItem> { new SelectListItem { Disabled = true, Selected = true, Value = "0", Text = "SELECCIONA" } },
+                    CustomerDestinations = new List<SelectListItem> { new SelectListItem { Disabled = true, Selected = true, Value = "0", Text = "SELECCIONA" } }
+                }
+            };
+
+            CustomerOD customerOD = await AppContext.Execute<CustomerOD>(MethodType.GET, Path.Combine(_UrlApi, "GetCustomerOD", CustomerId.ToString()), null);
+
+            foreach (var origin in customerOD.Origins)
+            {
+                SelectListItem selectListItem = new SelectListItem { Value = origin.Id.ToString(), Text = origin.Nombre };
+                travelDTO.Selects.CustomerOrigins.Add(selectListItem);
+            }
+            foreach (var destination in customerOD.Destinations)
+            {
+                SelectListItem selectListItem = new SelectListItem { Value = destination.Id.ToString(), Text = destination.Nombre };
+                travelDTO.Selects.CustomerDestinations.Add(selectListItem);
+            }
+
+            return travelDTO;
+        }
+        private async Task<List<SelectListItem>> GetCarriers()
+        {
+            List<SelectListItem> listItems = new List<SelectListItem> { new SelectListItem { Disabled = true, Selected = true, Value = "0", Text = "SELECCIONA" } };
+            List<Transportista> carriers = await AppContext.Execute<List<Transportista>>(MethodType.GET, Path.Combine(_UrlApi, "GetCarriers"), null);
+
+            foreach (var carrier in carriers)
+            {
+                SelectListItem listItem = new SelectListItem { Value = carrier.id.ToString(), Text = carrier.NombreComercial };
+                listItems.Add(listItem);
+            }
+
+            return listItems;
+        }
+        #endregion
+
+        #region Travel
+        [Route("[controller]/[action]/{TravelId}")]
+        public async Task<IActionResult> AddEdit(int TravelId)
+        {
+            TravelDTO travelDTO = new TravelDTO
+            {
+                Selects =
+                {
+                    Cat_Tipos_Unidades = await GetTiposUnidades(),
+                    Customers = await GetCustomers(),
+                    SectionType = await GetSectionType()
+                }
+            };
+
+            if (TravelId > 0)
+            {
+                travelDTO.Travel = await AppContext.Execute<Travel>(MethodType.GET, Path.Combine(_UrlApi, "GetTravel", TravelId.ToString()), null);
+            }
+
+            TempData["TravelId"] = TravelId;
+            TempData.Keep();
+
+            return View(travelDTO);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddEditTravel(TravelDTO model)
+        {
+            var UserName = HttpContext.Session.GetString("UserFN");
+
+            if (model.Travel.Id == 0)
+            {
+                model.Travel.CreatedBy = UserName;
+            }
+            else
+            {
+                model.Travel.UpdatedBy = UserName;
+            }
+
+            // SETSELECTS
+            model.Selects.Cat_Tipos_Unidades = await GetTiposUnidades();
+            model.Selects.Customers = await GetCustomers();
+            model.Selects.SectionType = await GetSectionType();
+            //var customerOD = await GetCustomerOD(model.Section.ClientesId);
+            //model.Selects.CustomerOrigins = customerOD.Selects.CustomerOrigins;
+            //model.Selects.CustomerDestinations = customerOD.Selects.CustomerDestinations;
+            //if (model.Section.Cl_Has_OrigenId != 0 && model.Section.Cl_Has_DestinosId != 0)
+            //{
+            //    model.Selects.Routes = await GetRoute(model.Section.Cl_Has_OrigenId, model.Section.Cl_Has_DestinosId);
+            //}
+            // END SETSELECTS
+
+            // SET TRAVEL
+            MethodType method = model.Travel.Id > 0 ? MethodType.PUT : MethodType.POST;
+            string action = model.Travel.Id > 0 ? "PutTravel" : "PostTravel";
+
+            await AppContext.Execute<Travel>(method, Path.Combine(_UrlApi, action), model.Travel);
+            // END SET TRAVEL
+
+            // SET SECTION
+            //MethodType sectionMethod = model.Section.Id > 0 ? MethodType.PUT : MethodType.POST;
+            //string sectionAction = model.Section.Id > 0 ? "PutSection" : "PostSection";
+            //model.Section.TravelId = model.;
+            //model.Section.Cl_Has_OtrosId = 1;
+
+            //await AppContext.Execute<Travel>(sectionMethod, Path.Combine(_UrlApi, sectionAction), model.Section);
+            // END SET SECTION
+
+            return View(_UrlView + "AddEdit.cshtml", model);
+        }
+        #endregion
+
+        #region Section
+        [HttpGet]
+        public async Task<JsonResult> GetCustomerOD(string CustomerId)
+        {
+            CustomerOD customerOD = await AppContext.Execute<CustomerOD>(MethodType.GET, Path.Combine(_UrlApi, "GetCustomerOD", CustomerId), null);
+            return Json(customerOD);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetSection(int SectionId)
+        {
+            TravelDTO travelDTO = new TravelDTO();
+            if (SectionId > 0)
+            {
+                travelDTO.Section = await AppContext.Execute<Section>(MethodType.GET, Path.Combine(_UrlApi, "GetSection", SectionId.ToString()), null);
+            }
+
+            // INIT SELECTS
+            travelDTO.Selects.Cat_Tipos_Unidades = await GetTiposUnidades();
+            travelDTO.Selects.Customers = await GetCustomers();
+            travelDTO.Selects.SectionType = await GetSectionType();
+            var customerOD = await GetCustomerOD(travelDTO.Section.ClientesId);
+            travelDTO.Selects.CustomerOrigins = customerOD.Selects.CustomerOrigins;
+            travelDTO.Selects.CustomerDestinations = customerOD.Selects.CustomerDestinations;
+            if (travelDTO.Section.Cl_Has_OrigenId != 0 && travelDTO.Section.Cl_Has_DestinosId != 0)
+            {
+                travelDTO.Selects.Routes = await GetRoute(travelDTO.Section.Cl_Has_OrigenId, travelDTO.Section.Cl_Has_DestinosId);
+            }
+            // END INIT SELECTS
+
+            return PartialView(string.Concat(_UrlView, "_Section.cshtml"), travelDTO);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> AddEditSection(TravelDTO travelDTO)
+        {
+            var UserName = HttpContext.Session.GetString("UserFN");
+            travelDTO.Section.TravelId = (int)TempData["TravelId"];
+            TempData.Keep();
+
+            if (travelDTO.Section.Id == 0)
+            {
+                travelDTO.Travel.CreatedBy = UserName;
+            }
+            else
+            {
+                travelDTO.Travel.UpdatedBy = UserName;
+            }
+
+            MethodType sectionMethod = travelDTO.Section.Id > 0 ? MethodType.PUT : MethodType.POST;
+            string sectionAction = travelDTO.Section.Id > 0 ? "PutSection" : "PostSection";
+
+            var x = await AppContext.Execute<Travel>(sectionMethod, Path.Combine(_UrlApi, sectionAction), travelDTO.Section);
+
+            return Json(x);
+        }
+        #endregion
+
+        #region Services
+        [HttpPost]
+        public async Task<IActionResult> GetServices([FromBody] ServicesDTO servicesDTOs)
+        {
+            servicesDTOs.Selects.Carriers = await GetCarriers();
+            return PartialView(string.Concat(_UrlView, "_Service.cshtml"), servicesDTOs);
+        }
+        #endregion
 
         public class SearchRuta
         {
             public int Id { get; set; }
             public string OD { get; set; }
-            public int OrigenId { get; set; }
-            public int DestinoId { get; set; }
+            public int OriginId { get; set; }
+            public int DestinationId { get; set; }
         }
 
-        [Route("[action]")]
-        public async Task<JsonResult> GetRuta(SearchRuta search)
+        [HttpPost]
+        public async Task<JsonResult> GetRoute([FromBody] SearchRuta search)
         {
-            List<SearchRuta> route = await AppContext.Execute<List<SearchRuta>>(MethodType.POST, Path.Combine(_UrlApi, "GetRuta"), search);
+            List<SearchRuta> route = await AppContext.Execute<List<SearchRuta>>(MethodType.POST, Path.Combine(_UrlApi, "GetRoute"), search);
             return Json(route);
         }
 
-        [Route("SetHistorial")]
-        public void SetHistorial(string accion)
-        {
-            int TravelId = (int)TempData.Peek("TravelId");
-            var UserName = HttpContext.Session.GetString("UserFN");
-            if (UserName != null && accion != null)
-            {
-                HistorialDTO historial = new HistorialDTO
-                {
-                    TravelId = TravelId,
-                    Registro = accion,
-                    Usuario = UserName,
-                    TimeCreated = DateTime.Now
-                };
-
-                AppContext.Execute<HistorialDTO>(MethodType.POST, Path.Combine(_UrlApi, "SetHistorial"), historial);
-            };
-
-        }
-
-        [Route("GetHistorial")]
-        public async Task<IActionResult> GetHistorial(string TravelId)
-        {
-            List<HistorialDTO> historial = await AppContext.Execute<List<HistorialDTO>>(MethodType.GET, Path.Combine(_UrlApi, "GetHistorial", TravelId), null);
-            return Json(historial);
-        }
-
-        [Route("[action]/{TravelId}")]
-        public async Task<IActionResult> CartaPorte(string TravelId)
-        {
-            CartaPorteModel cartaPorte = await AppContext.Execute<CartaPorteModel>(MethodType.GET, Path.Combine(_UrlApi, "CartaPorte", TravelId), null);
-            return new ViewAsPdf(cartaPorte);
-        }
-
-        [Route("GetEstatus")]
-        public async Task<IActionResult> GetEstatus(int Id)
-        {
-            Travel travel = await AppContext.Execute<Travel>(MethodType.GET, Path.Combine(_UrlApi, "GetTravel", Id.ToString()), null);
-            return Json(travel);
-        }
-
-        [Route("UpdateStatus")]
-        public async Task<IActionResult> UpdateStatus(TravelDTO travelDTO)
-        {
-            TravelDTO travel = await AppContext.Execute<TravelDTO>(MethodType.PUT, Path.Combine(_UrlApi, "UpdateStatus"), travelDTO);
-            SetHistorial(travelDTO.Estatus.ToLower() == "cerrado" ? travelDTO.Estatus : string.Concat(travelDTO.Estatus, ", ", travelDTO.SubEstatus));
-            return Json(travel);
-        }
-
-        public IActionResult Index()
-        {
-            return View(this._UrlView + "Index.cshtml");
-        }
-
-        [Route("GetMercancia/{id}")]
-        public async Task<JsonResult> GetMercancia(int id)
-        {
-            MercanciaDTO mercancia = await AppContext.Execute<MercanciaDTO>(MethodType.GET, Path.Combine(_UrlApi, "GetMercancia", id.ToString()), null);
-
-            return Json(mercancia);
-        }
-
-        //[Route("{id}")]
-        //public async Task<IActionResult> AddEdit(int id)
-        //{
-        //    Travel travel = await AppContext.Execute<Travel>(MethodType.GET, Path.Combine(_UrlApi, "GetTravel", id.ToString()), null);
-        //    TempData["TravelId"] = travel is null ? 0 : travel.Id;
-        //    TempData.Keep();
-        //    return View(this._UrlView + (id == 0 ? "New.cshtml" : "Details.cshtml"), travel == null ? new Travel() : travel);
-        //}
-
-        [Route("[action]/{id}")]
-        public async Task<IActionResult> AddEditMainTravel(int id)
-        {
-            MainTravelDTO mainTravelDTO = new MainTravelDTO();
-
-            MainTravel main = await AppContext.Execute<MainTravel>(MethodType.GET, Path.Combine(_UrlApi, "GetMainTravel", id.ToString()), null);
-            var services = await AppContext.Execute<List<Cat_Tipos_Unidades>>(MethodType.GET, Path.Combine(_UrlApi, "GetTipoServicio"), null);
-
-            if (main != null)
-            {
-                mainTravelDTO.MainTravel = main;
-            }
-
-            foreach (var item in services)
-            {
-                SelectListItem service = new SelectListItem { Value = item.id.ToString(), Text = item.nombre };
-                mainTravelDTO.Servicios.Add(service);
-            }
-
-            //TempData["TravelId"] = mainTravelDTO.MainTravel is null ? 0 : mainTravelDTO.MainTravel.Id;
-            //TempData.Keep();
-
-            return View(_UrlView + "New.cshtml", mainTravelDTO);
-        }
-
-        [Route("setMercancia")]
-        public async Task<JsonResult> PostMercancia(MercanciaDTO mercanciaDTO)
-        {
-            MercanciaDTO mercancia = await AppContext.Execute<MercanciaDTO>(MethodType.POST, Path.Combine(_UrlApi, "PostMercancia"), mercanciaDTO);
-            SetHistorial("mercancia actualizada");
-            return Json(mercancia);
-        }
-
-        [Route("GetServicios/{id}")]
-        public async Task<JsonResult> GetServicios(string id)
-        {
-            List<ServicesDTO> servicios = await AppContext.Execute<List<ServicesDTO>>(MethodType.GET, Path.Combine(_UrlApi, "GetServicios", id), null);
-            return Json(servicios);
-        }
-
-        [HttpPost]
-        [Route("getTravels")]
-        public async Task<JsonResult> Get(DataTablesParameters param)
-        {
-            IEnumerable<TravelDT> dataReport = await AppContext.Execute<List<TravelDT>>(MethodType.GET, _UrlApi, null);
-
-            long total = dataReport.Count();
-
-            #region Búsqueda
-            if (!string.IsNullOrEmpty(param.search.value[0]))
-            {
-                string keyword = param.search.value[0].ToLower();
-
-                dataReport = dataReport.Where(x => x.Folio.ToLower().Contains(keyword) ||
-                x.Cliente.ToLower().Contains(keyword) ||
-                x.Origen.ToLower().Contains(keyword) ||
-                x.Destino.ToLower().Contains(keyword) ||
-                x.Salida.ToLower().Contains(keyword) ||
-                x.Llegada.ToLower().Contains(keyword) ||
-                x.Estatus.ToLower().Contains(keyword));
-            }
-
-            long totalFiltered = dataReport.Count();
-            #endregion
-
-            #region Ordenamiento
-            int columnId = param.order[0].column[0];
-
-            Func<TravelDT, string> orderFunction = (x => columnId == 0 ? x.Folio :
-            columnId == 1 ? x.Cliente :
-            columnId == 2 ? x.Origen :
-            columnId == 3 ? x.Destino :
-            columnId == 4 ? x.Salida :
-            columnId == 5 ? x.Llegada :
-            x.Estatus);
-
-            dataReport = param.order[0].dir[0] == "asc" ? dataReport.OrderBy(orderFunction) : dataReport.OrderByDescending(orderFunction);
-            #endregion
-
-            #region Paginado
-            dataReport.Skip(param.start).Take(param.length);
-            #endregion
-
-            #region DataTable
-            List<TravelDT> data = dataReport.ToList();
-            #endregion
-
-            return Json(new
-            {
-                aaData = data,
-                param.draw,
-                iTotalRecords = total,
-                iTotalDisplayRecords = totalFiltered
-            });
-        }
-
-        [Route("DeleteService/{id}")]
-        public async Task<JsonResult> DeleteService(string id)
-        {
-            ServicesDTO service = await AppContext.Execute<ServicesDTO>(MethodType.DELETE, Path.Combine(_UrlApi, "DeleteService", id), null);
-            SetHistorial(string.Concat(service.Nombre, ", servicio eliminado"));
-            return Json(service);
-        }
-
-
-        [Route("setTravels")]
-        public async Task<JsonResult> Post(Travel dataModel)
-        {
-            List<ServicesDTO> services = new List<ServicesDTO>();
-            List<UnidadDTO> units = new List<UnidadDTO>();
-            int ViajeId = dataModel.Id != 0 ? dataModel.Id : 0;
-            int counttramos = await AppContext.Execute<int>(MethodType.GET, Path.Combine(_UrlApi, "CountTramos", dataModel.MainTravelId.ToString()), null);
-            await AppContext.Execute<ServicesDTO>(MethodType.DELETE, Path.Combine(_UrlApi, "TruncateTramo", ViajeId.ToString()), null);
-
-            if (ViajeId == 0)
-            {
-                TravelDTO viaje = new TravelDTO
-                {
-                    MainTravelId = dataModel.MainTravelId,
-                    Estatus = dataModel.Estatus,
-                    Folio = string.Concat(dataModel.Folio, "-", ++counttramos),
-                    IdCliente = dataModel.ClienteId,
-                    FechaSalida = dataModel.FechaSalida,
-                    FechaLlegada = dataModel.FechaLlegada,
-                    TiempoAnticipacion = dataModel.TiempoAnticipacion,
-                    IdOrigen = dataModel.Origen,
-                    DireccionRemitente = dataModel.DireccionRemitente,
-                    IdDestino = dataModel.Destino,
-                    DireccionDestinatario = dataModel.DireccionDestinatario,
-                    CostoTotal = dataModel.Costototal,
-                    PrecioClienteTotal = dataModel.Preciototal,
-                    IdRuta = dataModel.Ruta,
-                    IdUnidad = dataModel.TipoUnidad,
-                    TipoViaje = dataModel.TipoViaje,
-                    EnlaceEspejo = dataModel.EnlaceEspejo,
-                    UsuarioEspejo = dataModel.UsuarioEspejo,
-                    PassEspejo = dataModel.PassEspejo,
-                    ReferenciaUno = dataModel.Referencia1,
-                    ReferenciaDos = dataModel.Referencia2,
-                    ReferenciaTres = dataModel.Referencia3,
-                    SubEstatus = "Alta de Viaje",
-                    StatusUpdated = DateTime.Now,
-                    CreatedBy = HttpContext.Session.GetString("UserFN"),
-                    TimeCreated = DateTime.Now
-                };
-
-                TravelDTO newTravel = await this.AppContext.Execute<TravelDTO>(MethodType.POST, _UrlApi, viaje);
-                ViajeId = newTravel.Id;
-                TempData["TravelId"] = ViajeId;
-                TempData.Keep();
-                SetHistorial("Alta de viaje");
-            }
-            else
-            {
-                var url = "https://localhost:44345/Travels/PatchTramo/7";
-
-                var httpRequest = (HttpWebRequest)WebRequest.Create(url);
-                httpRequest.Method = "PATCH";
-
-                httpRequest.Accept = "application/json";
-                httpRequest.ContentType = "application/json";
-
-                var data = @"[{
-                  ""op"": ""replace"",
-                  ""path"": ""/costototal"",
-                  ""value"": " + dataModel.Costototal + "},{\"op\": \"replace\",\"path\": \"/precioclientetotal\", \"value\": " + dataModel.Preciototal + "}]";
-
-                using (var streamWriter = new StreamWriter(httpRequest.GetRequestStream()))
-                {
-                    streamWriter.Write(data);
-                }
-
-                var httpResponse = (HttpWebResponse)httpRequest.GetResponse();
-                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-                {
-                    var result = streamReader.ReadToEnd();
-                }
-
-                //await AppContext.Execute<TravelDTO>(MethodType.PATCH, Path.Combine(_UrlApi, "UpdateViaje"), viaje);
-            }
-
-            if (dataModel.ServicesId != null)
-            {
-                foreach (var id in dataModel.ServicesId)
-                {
-                    if (id > 0)
-                    {
-                        ServicesDTO service = await AppContext.Execute<ServicesDTO>(MethodType.DELETE, Path.Combine(_UrlApi, "DeleteService", id.ToString()), null);
-                    }
-                }
-            }
-
-            var servicios = dataModel.Servicios.Split("&");
-
-            foreach (var servicio in servicios)
-            {
-                string nombre = servicio.Replace("=on", "");
-
-                ServicesDTO service = new ServicesDTO
-                {
-                    TravelId = ViajeId,
-                    Nombre = nombre,
-                    IdTransportista = dataModel.Transportista,
-                    IdChofer = dataModel.Chofer,
-                    Precio = dataModel.TerrestreNacionalPrecio,
-                    Costo = dataModel.TerrestreNacionalCosto
-                };
-
-                ServicesDTO newService = await this.AppContext.Execute<ServicesDTO>(MethodType.POST, Path.Combine(_UrlApi, "PostService"), service);
-                services.Add(newService);
-
-                int IdServicio = newService.Id;
-
-                var unidades = dataModel.Unidad.Split("&");
-                var equipos = dataModel.Equipo.Split("&");
-                int index = 0;
-                foreach (var unidad in unidades)
-                {
-                    if (unidad.Contains(nombre))
-                    {
-                        string Id = new string(unidad.Where(char.IsDigit).ToArray());
-                        string IdEquipo = new string(equipos[index].Where(char.IsDigit).ToArray());
-                        UnidadDTO unidaddb = new UnidadDTO
-                        {
-                            IdUnidad = Convert.ToInt32(Id),
-                            IdEquipo = Convert.ToInt32(IdEquipo),
-                            ServicesId = IdServicio
-                        };
-
-                        UnidadDTO newUnity = await AppContext.Execute<UnidadDTO>(MethodType.POST, Path.Combine(_UrlApi, "PostUnit"), unidaddb);
-                        units.Add(newUnity);
-                        ++index;
-                    }
-                }
-            }
-
-            return Json(new { services, units });
-        }
-
-        [Route("putTravels")]
-        public async Task<JsonResult> Put(Travel dataModel)
-        {
-            Travel dataReport;
-            dataReport = await this.AppContext.Execute<Travel>(MethodType.PUT, _UrlApi, dataModel);
-            return Json(dataReport);
-        }
-
         [HttpGet]
-        [Route("getCarrier")]
-        public async Task<JsonResult> getCarrier(Transportista dataModel)
+        public async Task<JsonResult> GetAddress(string Id, string Type)
         {
-            Transportista dataReport;
-            dataReport = await this.AppContext.Execute<Transportista>(MethodType.GET, _UrlApi + "/getCarrier", dataModel);
-            return Json(dataReport);
-        }
-
-        [HttpPost]
-        public PartialViewResult ReturnServicios(Travel travel)
-        {
-            return PartialView(string.Concat(_UrlView, "_Servicios.cshtml"), travel);
-        }
-
-
-        public class RoutePrice
-        {
-            public decimal Minimo { get; set; }
-            public decimal Maximo { get; set; }
-        }
-
-        [HttpGet]
-        [Route("[action]")]
-        public async Task<JsonResult> GetRoutePrice(string RouteId)
-        {
-            RoutePrice price = await AppContext.Execute<RoutePrice>(MethodType.GET, Path.Combine(_UrlApi, "GetRoutePrice", RouteId), null);
-            return Json(price);
-        }
-
-        [HttpPost("[action]")]
-        public async Task<IActionResult> SetMainTravel(MainTravelDTO mainTravelDTO)
-        {
-
-            var services = await AppContext.Execute<List<Cat_Tipos_Unidades>>(MethodType.GET, Path.Combine(_UrlApi, "GetTipoServicio"), null);
-
-            foreach (var item in services)
-            {
-                SelectListItem service = new SelectListItem { Value = item.id.ToString(), Text = item.nombre };
-                mainTravelDTO.Servicios.Add(service);
-            }
-
-            mainTravelDTO.MainTravel.Folio = mainTravelDTO.TravelDTO.Folio;
-            mainTravelDTO.MainTravel.FechaSalida = mainTravelDTO.TravelDTO.FechaSalida;
-            mainTravelDTO.MainTravel.FechaLlegada = mainTravelDTO.TravelDTO.FechaLlegada;
-            mainTravelDTO.MainTravel.CreatedBy = HttpContext.Session.GetString("UserFN");
-            mainTravelDTO.MainTravel = await AppContext.Execute<MainTravel>(MethodType.POST, Path.Combine(_UrlApi, "SetMainTravel"), mainTravelDTO.MainTravel);
-
-            return RedirectToAction("AddEditMainTravel", new { id = mainTravelDTO.MainTravel.Id });
-        }
-
-        [HttpGet("[action]/{TramoId}")]
-        public async Task<IActionResult> GetTramo(string TramoId)
-        {
-            Tramo tramo = new Tramo();
-            if (TramoId != "0")
-            {
-                tramo.Travel = await AppContext.Execute<TravelDTO>(MethodType.GET, Path.Combine(_UrlApi, "GetTramo", TramoId), null);
-            }
-            List<Clientes> clientes = await AppContext.Execute<List<Clientes>>(MethodType.GET, Path.Combine(_UrlApi, "GetCustomers"), null);
-
-            foreach (var item in clientes)
-            {
-                SelectListItem customer = new SelectListItem { Value = item.id.ToString(), Text = item.NombreCorto };
-                tramo.Clients.Add(customer);
-            }
-
-            return PartialView(string.Concat(_UrlView, "_Tramo.cshtml"), tramo);
+            string address = await AppContext.Execute<dynamic>(MethodType.GET, Path.Combine(_UrlApi, "GetAddress", Type, Id), null);
+            return Json(address);
         }
     }
 }

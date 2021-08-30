@@ -1,4 +1,4 @@
-﻿@model KLS_WEB.Models.Travels.Travel
+﻿<!--
 
 @{
     ViewData["Title"] = "Detalles del viaje";
@@ -257,9 +257,9 @@
 
     </div>
 
-    <div class="row mt-4 bottomPanel">
+    <div class="row mt-4 bottomPanel">-->
         @*Facturacion*@
-        <div class="col-6 facturacion d-none">
+        <!--<div class="col-6 facturacion d-none">
             <div class="text-left d-flex justify-content-between mb-3">
                 <h4>FACTURACIÓN</h4>
                 <div style="padding-left:20%;" onclick="selectFactura(this)">
@@ -282,10 +282,10 @@
                 </thead>
                 <tbody id="facturacionInfo"></tbody>
             </table>
-        </div>
+        </div>-->
 
         @*Mercancia*@
-        <div class="col-12 mercancia mb-5 d-none">
+        <!--<div class="col-12 mercancia mb-5 d-none">
             <div class="text-left d-flex justify-content-start mb-3">
                 <h4>MERCANCIA</h4>
             </div>
@@ -458,11 +458,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
 
         @* Requisitos *@
-        <div class="row requisitos d-none">
+        <!--<div class="row requisitos d-none">
             <div class="col-6">
                 <h4>REQUISITOS CARGA</h4>
 
@@ -677,10 +677,10 @@
                 </div>
             </div>
 
-        </div>
+        </div>-->
 
         @*HISTORIAL*@
-        <div class="col-12 historial d-none">
+        <!--<div class="col-12 historial d-none">
             <div class="text-left d-flex justify-content-between mb-3">
                 <h4>HISTORIAL</h4>
                 <div style="padding-left:20%;" onclick="selectServicios(this)">
@@ -698,10 +698,10 @@
                 </thead>
                 <tbody id="historialInfo"></tbody>
             </table>
-        </div>
+        </div>-->
 
         @*MONITOREO*@
-        <div class="col-12 monitoreo card pb-3 mb-5 mr-3">
+        <!--<div class="col-12 monitoreo card pb-3 mb-5 mr-3">
             <div class="text-left d-flex justify-content-between mb-3 mt-3">
                 <div>
                     <h4>MONITOREO</h4>
@@ -738,10 +738,10 @@
                     <p>Lorem ipsum dolor sit amet, consteteur sadipscing elitr, sed diam nonumy eirmond tempor invidunt ut labore et dolore</p>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         @*MODAL MONITOREO*@
-        <div class="modal fade" id="addcomment" tabindex="-1" aria-labelledby="monitoreomodal" aria-hidden="true">
+        <!--<div class="modal fade" id="addcomment" tabindex="-1" aria-labelledby="monitoreomodal" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -765,9 +765,9 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
         @*MODAL CHECKPOINTS MONITOREO*@
-        <div class="modal fade" id="checkpointmodal" tabindex="-1" aria-labelledby="checkpoint" aria-hidden="true">
+        <!--<div class="modal fade" id="checkpointmodal" tabindex="-1" aria-labelledby="checkpoint" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -795,14 +795,14 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
 
         @*END MONITOREO*@
 
 
         @* documentos *@
-        <div class="col-12 documentos d-none">
+        <!--<div class="col-12 documentos d-none">
             <div class="p-4">
                 <h4>DOCUMENTOS</h4>
                 <button class="btn btn-dark px-5" style="border-radius:0px" onclick="GenerateCartaPorte(this)">Generar carta porte</button>
@@ -853,7 +853,7 @@
                                             <label class="col-form-label col-form-label-sm">Sello de vigilancia</label>
                                         </div>
                                     </div>
-                                </div>
+                                </div>-->
                                 @*<div class="col-6">
                                         <div class="d-flex">
                                             <h6>TIEMPO DE ENTREGA</h6>
@@ -868,15 +868,15 @@
                                         </div>
 
                                     </div>*@
-                            </div>
+                            <!--</div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         @*Servicios*@
-        <div class="col-12 servicios d-none mb-5">
+        <!--<div class="col-12 servicios d-none mb-5">
             <div class="card p-3">
                 <div class="form-group col-12 d-flex justify-content-between">
                     <h6 class="font-weight-bold">SERVICIOS</h6>
@@ -908,7 +908,7 @@
 
 
 <!--Modal agregar factura-->
-<div class="modal fade" id="modalFactura" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false"
+<!--<div class="modal fade" id="modalFactura" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false"
      aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -931,7 +931,7 @@
                        onclick="UploadFile()">
                         Agregar
                     </a>
-                </form>
+                </form>-->
                 @*<form asp-controller="Facturacion" asp-action="UploadFile" method="post"
                     enctype="multipart/form-data">
                     <div class="form-group col-12">
@@ -943,13 +943,13 @@
                     <br />
                     <button type="submit" class="btn btn-dark guardar" style="width:100%">Agregar</button>
                     </form>*@
-            </div>
+            <!--</div>
         </div>
     </div>
-</div>
+</div>-->
 <!--Modal agregar factura-->
 <!--Modal actualizar estado-->
-<div class="modal fade" id="modalEstatus" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false"
+<!--<div class="modal fade" id="modalEstatus" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false"
      aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -988,10 +988,10 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
 <!--Modal actualizar estado-->
 <!--Modal servicio-->
-<div class="modal fade" id="modalDiv" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false"
+<!--<div class="modal fade" id="modalDiv" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false"
      aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
@@ -1006,7 +1006,7 @@
                     <div class="form-check d-flex align-items-center">
                         <input class="form-check-input my-auto" type="checkbox" id="0" name="terrestrenacional">
                         <label class="form-check-label" for="0">Terrestre nacional</label>
-                    </div>
+                    </div>-->
                     @*<div class="form-check">
                             <input class="form-check-input" type="checkbox" id="1" name="naviera">
                             <label class="form-check-label" for="1">
@@ -1038,7 +1038,7 @@
                                 Coloaders
                             </label>
                         </div>*@
-                </form>
+                @*</form>
                 <br />
                 <button onclick="closeModal()" class="btn btn-dark" style="width:100%;">
                     Agregar
@@ -1047,10 +1047,10 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->*@
 <!--Modal servicio-->
 <!-- Modal confirm delete -->
-<div class="modal fade" id="popup" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!--<div class="modal fade" id="popup" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -1523,4 +1523,4 @@
         $("#modalDiv").modal("show");
     }
     </script>
-}
+}-->

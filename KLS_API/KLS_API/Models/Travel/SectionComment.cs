@@ -4,15 +4,21 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace KLS_WEB.Models.Travels
+namespace KLS_API.Models.Travel
 {
-    public class TravelComment
+    public class SectionComment
     {
         public int Id { get; set; }
-        public int TravelId { get; set; }
-        public Travel Travel { get; set; }
-        public string Status { get; set; }
-        public string Substatus { get; set; }
+        [Required]
+        public int SectionId { get; set; }
+        public Section Section { get; set; }
+        [Required]
+        public int StatusId { get; set; }
+        public Status Status { get; set; }
+        [Required]
+        public int SubstatusId { get; set; }
+        public Substatus Substatus { get; set; }
+        [Required]
         public string Comment { get; set; }
         public ICollection<Evidence> Evidences { get; set; }
         public bool Active { get; set; } = true;
