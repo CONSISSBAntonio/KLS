@@ -152,25 +152,25 @@ namespace KLS_WEB.Controllers.Offer
             return Json(dataReport);
         }
 
-        [Route("[action]")]
-        public async Task<IActionResult> SetFullTravel(string OfferId)
-        {
-            Oferta demand = await AppContext.Execute<Oferta>(MethodType.GET, Path.Combine(_UrlApi, "GetOffer", OfferId), null);
+        //[Route("[action]")]
+        //public async Task<IActionResult> SetFullTravel(string OfferId)
+        //{
+        //    Oferta demand = await AppContext.Execute<Oferta>(MethodType.GET, Path.Combine(_UrlApi, "GetOffer", OfferId), null);
 
-            Travel lasttravel = await AppContext.Execute<Travel>(MethodType.GET, Path.Combine("Travels", "GetTravel", "0"), null);
+        //    Travel lasttravel = await AppContext.Execute<Travel>(MethodType.GET, Path.Combine("Travels", "GetTravel", "0"), null);
 
-            Travel travel = new Travel
-            {
-                Id = lasttravel == null ? 1 : lasttravel.Id,
-                TipoUnidad = demand.Tipo_De_Unidad,
-                FechaSalida = demand.Fecha_Disponibilidad,
-                Transportista = demand.Transportista,
-                IsDemand = true,
-                IsOffer = true
-            };
+        //    Travel travel = new Travel
+        //    {
+        //        Id = lasttravel == null ? 1 : lasttravel.Id,
+        //        TipoUnidad = demand.Tipo_De_Unidad,
+        //        FechaSalida = demand.Fecha_Disponibilidad,
+        //        Transportista = demand.Transportista,
+        //        IsDemand = true,
+        //        IsOffer = true
+        //    };
 
-            return View("~/Views/Travels/New.cshtml", travel);
-        }
+        //    return View("~/Views/Travels/New.cshtml", travel);
+        //}
 
         [HttpPost]
         [Route("setExpirados")]

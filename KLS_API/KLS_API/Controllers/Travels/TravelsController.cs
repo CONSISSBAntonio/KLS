@@ -1,16 +1,20 @@
 ﻿using KLS_API.Context;
-using KLS_API.Models.Travels;
 using Microsoft.AspNetCore.Mvc;
-using KLS_API.Models.DTO;
 using System;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using KLS_API.Models;
+using Microsoft.EntityFrameworkCore;
+using KLS_API.Models.Travel;
+using KLS_API.Models.Clients;
+using KLS_API.Models.Travel.DTO;
+using KLS_API.Models.Carriers;
 
 namespace KLS_API.Controllers.Travels
 {
-    [Route("[controller]")]
+    [ApiController]
+    [Route("[controller]/[action]")]
     public class TravelsController : Controller
     {
         private readonly AppDbContext _dbContext;
@@ -19,370 +23,256 @@ namespace KLS_API.Controllers.Travels
             _dbContext = dbContext;
         }
 
-        [HttpGet("[action]/{id}")]
-        public IActionResult GetServicios(int id)
+        #region SelectList
+        [HttpGet]
+        public async Task<IActionResult> GetTiposUnidades()
         {
             try
             {
-                var servicios = _dbContext.Servicios.Where(x => x.TravelId == id).Select(x => new Services
-                {
-                    Id = x.Id,
-                    TravelId = x.TravelId,
-                    Nombre = x.Nombre,
-                    IdTransportista = x.IdTransportista,
-                    IdChofer = x.IdChofer,
-                    Costo = x.Costo,
-                    Precio = x.Precio,
-                    IdNaviera = x.IdNaviera,
-                    Buque = x.Buque,
-                    IdAgenteAduanal = x.IdAgenteAduanal,
-                    IdContactoAA = x.IdContactoAA,
-                    IdAerolinea = x.IdAerolinea,
-                    IdContactoA = x.IdContactoA,
-                    IdCoLoader = x.IdCoLoader,
-                    IdContactoCL = x.IdContactoCL,
-                    Unidades = x.Unidades.Where(x => x.ServicesId == x.Services.Id).ToList()
-                }).ToList();
-
-                return Ok(servicios);
+                ICollection<Cat_Tipos_Unidades> cat_Tipos_Unidades = await _dbContext.Cat_Tipos_Unidades.Where(x => x.estatus == 1).ToListAsync();
+                return Ok(cat_Tipos_Unidades);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
+                throw;
             }
         }
 
         [HttpGet]
-        public IActionResult GetTravels()
+        public async Task<IActionResult> GetCustomers()
         {
             try
             {
-                var dt = from viajes in _dbContext.Viajes
-                         join cliente in _dbContext.Clientes on viajes.IdCliente equals cliente.id
-                         join ciudadorigen in _dbContext.Cat_Ciudad on viajes.IdOrigen equals ciudadorigen.id
-                         join estadoorigen in _dbContext.Cat_Estado on ciudadorigen.id_estado equals estadoorigen.id
-                         join ciudaddestino in _dbContext.Cat_Ciudad on viajes.IdDestino equals ciudaddestino.id
-                         join estadodestino in _dbContext.Cat_Estado on ciudaddestino.id_estado equals estadodestino.id
-                         select new
-                         {
-                             viajes.Id,
-                             viajes.Folio,
-                             cliente = cliente.NombreCorto,
-                             origen = string.Concat(estadoorigen.nombre, "-", ciudadorigen.nombre),
-                             destino = string.Concat(estadodestino.nombre, "-", ciudaddestino.nombre),
-                             viajes.FechaSalida,
-                             viajes.FechaLlegada,
-                             viajes.Estatus
-                         };
-                return Ok(dt);
+                ICollection<Clientes> customers = await _dbContext.Clientes.Where(x => x.Estatus == 1).ToListAsync();
+                return Ok(customers);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
+                throw;
             }
         }
 
-        [HttpGet("[action]/{id}")]
-        public IActionResult GetTravel(int id)
+        [HttpGet]
+        public async Task<IActionResult> GetSectionType()
         {
             try
             {
-                var viaje = id > 0 ? (from viajes in _dbContext.Viajes
-                                      where viajes.Id == id
-
-                                      join cliente in _dbContext.Clientes on viajes.IdCliente equals cliente.id
-                                      into viajecliente
-                                      from clientedata in viajecliente.DefaultIfEmpty()
-
-                                      join ciudadorigen in _dbContext.Cat_Ciudad on viajes.IdOrigen equals ciudadorigen.id
-                                      join estadoorigen in _dbContext.Cat_Estado on ciudadorigen.id_estado equals estadoorigen.id
-                                      join ciudaddestino in _dbContext.Cat_Ciudad on viajes.IdDestino equals ciudaddestino.id
-                                      join estadodestino in _dbContext.Cat_Estado on ciudaddestino.id_estado equals estadodestino.id
-                                      join ruta in _dbContext.Ruta on viajes.IdRuta equals ruta.id
-
-                                      join servicio in _dbContext.Servicios on viajes.Id equals servicio.TravelId
-                                      into viajeservicio
-                                      from serviciodata in viajeservicio.DefaultIfEmpty()
-
-                                      join unidad in _dbContext.Unidades on serviciodata.Id equals unidad.ServicesId
-                                      into unidadservicio
-                                      from unidaddata in unidadservicio.DefaultIfEmpty()
-
-                                      join unidadt in _dbContext.Cat_Tipos_Unidades on viajes.IdUnidad equals unidadt.id
-
-                                      select new
-                                      {
-                                          viajes.Id,
-                                          viajes.Folio,
-                                          clienteid = clientedata.id,
-                                          nombrecliente = clientedata.NombreCorto,
-                                          viajes.DireccionRemitente,
-                                          viajes.DireccionDestinatario,
-                                          nombreruta = string.Concat(estadoorigen.nombre, " - ", estadodestino.nombre),
-                                          ruta.tiemporuta,
-                                          viajes.FechaSalida,
-                                          viajes.FechaLlegada,
-                                          viajes.CostoTotal,
-                                          preciototal = viajes.PrecioClienteTotal,
-                                          tipounidadnombre = unidadt.nombre,
-                                          Transportista = serviciodata.IdTransportista,
-                                          viajes.Estatus,
-                                          viajes.SubEstatus,
-                                          viajes.StatusUpdated
-                                      }).FirstOrDefault() : (
-                                 from viajes in _dbContext.Viajes
-                                 join cliente in _dbContext.Clientes on viajes.IdCliente equals cliente.id
-                                 join ciudadorigen in _dbContext.Cat_Ciudad on viajes.IdOrigen equals ciudadorigen.id
-                                 join estadoorigen in _dbContext.Cat_Estado on ciudadorigen.id_estado equals estadoorigen.id
-                                 join ciudaddestino in _dbContext.Cat_Ciudad on viajes.IdDestino equals ciudaddestino.id
-                                 join estadodestino in _dbContext.Cat_Estado on ciudaddestino.id_estado equals estadodestino.id
-                                 join ruta in _dbContext.Ruta on viajes.IdRuta equals ruta.id
-                                 join unidad in _dbContext.Cat_Tipos_Unidades on viajes.IdUnidad equals unidad.id
-                                 join servicio in _dbContext.Servicios on viajes.Id equals servicio.TravelId
-                                 select new
-                                 {
-                                     viajes.Id,
-                                     viajes.Folio,
-                                     clienteid = cliente.id,
-                                     nombrecliente = cliente.NombreCorto,
-                                     viajes.DireccionRemitente,
-                                     viajes.DireccionDestinatario,
-                                     nombreruta = string.Concat(estadoorigen.nombre, " - ", estadodestino.nombre),
-                                     ruta.tiemporuta,
-                                     viajes.FechaSalida,
-                                     viajes.FechaLlegada,
-                                     viajes.CostoTotal,
-                                     preciototal = viajes.PrecioClienteTotal,
-                                     tipounidadnombre = unidad.nombre,
-                                     Transportista = servicio.IdTransportista,
-                                     viajes.Estatus,
-                                     viajes.SubEstatus,
-                                     viajes.StatusUpdated
-                                 }).OrderByDescending(x => x.Id).FirstOrDefault();
-
-                return Ok(viaje);
+                ICollection<SectionType> sectionTypes = await _dbContext.SectionTypes.Where(x => x.Active).ToListAsync();
+                return Ok(sectionTypes);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCarriers()
+        {
+            try
+            {
+                ICollection<Transportista> carriers = await _dbContext.Transportista.Where(x => x.Estatus == 1).ToListAsync();
+                return Ok(carriers);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
+
+        #endregion
+
+        #region Travel
+        [HttpGet("{TravelId}")]
+        public async Task<IActionResult> GetTravel(int TravelId)
+        {
+            try
+            {
+                Travel travel = await _dbContext.Travels.Include(x => x.Sections).Where(x => x.Id == TravelId && x.Active).Select(x => new Travel
+                {
+                    Id = x.Id,
+                    StatusId = x.StatusId,
+                    Status = _dbContext.Statuses.SingleOrDefault(z => z.Active && z.Id == x.StatusId),
+                    SubstatusId = x.SubstatusId,
+                    Folio = x.Folio,
+                    Cat_Tipos_UnidadesId = x.Cat_Tipos_UnidadesId,
+                    Cat_Tipos_Unidades = _dbContext.Cat_Tipos_Unidades.SingleOrDefault(y => y.estatus == 1 && y.id == x.Cat_Tipos_UnidadesId),
+                    Sections = _dbContext.Sections.Include(y => y.Clients).Include(y => y.Services).Where(y => y.TravelId == TravelId && x.Active).ToList(),
+                    Ejecutivo = x.Ejecutivo,
+                    GrupoMonitor = x.GrupoMonitor,
+                    Active = x.Active,
+                    CreatedBy = x.CreatedBy,
+                    UpdatedBy = x.UpdatedBy,
+                    TimeCreated = x.TimeCreated,
+                    TimeUpdated = x.TimeUpdated
+                }).SingleOrDefaultAsync();
+                if (travel is null)
+                {
+                    return NotFound();
+                }
+                return Ok(travel);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
             }
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Travel travel)
+        public async Task<IActionResult> PostTravel(Travel travel)
         {
             try
             {
-                travel.StatusUpdated = DateTime.Now;
-                _dbContext.Viajes.Add(travel);
-                _dbContext.SaveChanges();
-                return Ok(travel);
+                int status = _dbContext.Statuses.FirstOrDefault(x => x.Name.ToLower() == "registrado").Id;
+                int substatus = _dbContext.Substatuses.FirstOrDefault(x => x.Name.ToLower() == "registrado").Id;
+                int lastid = _dbContext.Travels.DefaultIfEmpty().Max(x => x == null ? 1 : x.Id);
+
+                travel.Folio = string.Concat("V", DateTime.Now.ToString("yyMM"), lastid.ToString("D4"));
+                travel.StatusId = status;
+                travel.SubstatusId = substatus;
+
+                await _dbContext.Travels.AddAsync(travel);
+                await _dbContext.SaveChangesAsync();
+
+                return Ok();
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
-            }
-        }
-
-        [HttpGet("[action]/{id}")]
-        public IActionResult GetMercancia(int id)
-        {
-            try
-            {
-                return Ok(_dbContext.Mercancias.OrderBy(x => x.Id).LastOrDefault(x => x.TravelId == id));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
-
-        [HttpPost("[action]")]
-        public IActionResult PostMercancia([FromBody] Mercancia mercancia)
-        {
-            try
-            {
-                _dbContext.Mercancias.Add(mercancia);
-                _dbContext.SaveChanges();
-                return Ok(mercancia);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
-
-        [HttpPost("[action]")]
-        public IActionResult PostService([FromBody] Services service)
-        {
-            try
-            {
-                _dbContext.Servicios.Add(service);
-                _dbContext.SaveChanges();
-                return Ok(service);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
-
-        [HttpPost("[action]")]
-        public IActionResult PostUnit([FromBody] Unidad unidad)
-        {
-            try
-            {
-                _dbContext.Unidades.Add(unidad);
-                _dbContext.SaveChanges();
-                return Ok(unidad);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
-
-        [HttpDelete("[action]/{ServiceId}")]
-        public IActionResult DeleteService(int ServiceId)
-        {
-            try
-            {
-                Services service = _dbContext.Servicios.Find(ServiceId);
-                if (service is null)
-                    return NotFound();
-                _dbContext.Remove(service);
-                _dbContext.SaveChanges();
-
-                return Ok(service);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
-
-        [HttpPut("[action]")]
-        public IActionResult UpdateStatus([FromBody] Travel model)
-        {
-            try
-            {
-                Travel travel = _dbContext.Viajes.Find(model.Id);
-                travel.Estatus = model.Estatus;
-                travel.SubEstatus = model.SubEstatus;
-                travel.StatusUpdated = DateTime.Now;
-
-                _dbContext.SaveChanges();
-
-                return Ok(travel);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
-
-        [HttpPost("[action]")]
-        public IActionResult SetHistorial([FromBody] Historial historial)
-        {
-            try
-            {
-                _dbContext.Historial.Add(historial);
-                _dbContext.SaveChanges();
-
-                return Ok(historial);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
-
-        [HttpGet("[action]/{TravelId}")]
-        public IActionResult GetHistorial(int TravelId)
-        {
-            try
-            {
-                List<Historial> historial = _dbContext.Historial.Where(x => x.TravelId == TravelId).ToList();
-                return Ok(historial);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
-
-        [HttpGet("[action]/{TravelId}")]
-        public IActionResult CartaPorte(int TravelId)
-        {
-            try
-            {
-                CartaPorteModel cartaPorte = _dbContext.Servicios.Where(x => x.TravelId == TravelId).Select(x => new CartaPorteModel
-                {
-                    FolioFacturacion = x.Travel.Folio,
-                    Fecha = DateTime.Now.ToString("d"),
-                    Lugar = "Monterrey",
-                    Ruta = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == _dbContext.Ruta.FirstOrDefault(y => y.id == x.Travel.IdRuta).id_estadoorigen).nombre, ", ",
-                    _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == _dbContext.Ruta.FirstOrDefault(y => y.id == x.Travel.IdRuta).id_ciudadorigen).nombre, " - ",
-                    _dbContext.Cat_Estado.FirstOrDefault(y => y.id == _dbContext.Ruta.FirstOrDefault(y => y.id == x.Travel.IdRuta).id_estadodestino).nombre, ", ",
-                    _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == _dbContext.Ruta.FirstOrDefault(y => y.id == x.Travel.IdRuta).id_ciudaddestino).nombre),
-                    Ejecutivo = _dbContext.Clientes.FirstOrDefault(y => y.id == x.Travel.IdCliente).Ejecutivo,
-                    Origen = string.Concat(
-                        _dbContext.Cl_Has_Origen.Where(y => y.Id == x.Travel.IdOrigen).Select(y => string.Concat(y.Direccion, ", ", y.Cp, ", ",
-                        _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == x.Travel.IdOrigen).Id_Ciudad).nombre, ", ",
-                        _dbContext.Cat_Estado.FirstOrDefault(y => y.id == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == x.Travel.IdOrigen).Id_Estado).nombre))
-                    ),
-                    Destino = string.Concat(
-                        _dbContext.Cl_Has_Destinos.Where(y => y.Id == x.Travel.IdDestino).Select(y => string.Concat(y.Direccion, ", ", y.Cp, ", ",
-                        _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == _dbContext.Cl_Has_Destinos.FirstOrDefault(y => y.Id == x.Travel.IdDestino).Id_Ciudad).nombre, ", ",
-                        _dbContext.Cat_Estado.FirstOrDefault(y => y.id == _dbContext.Cl_Has_Destinos.FirstOrDefault(y => y.Id == x.Travel.IdDestino).Id_Estado).nombre))
-                    ),
-                    Transportistas = _dbContext.Transportista.Where(y => y.id == x.IdTransportista).Select(y => new CartaPorteModel.TransportistaModel
-                    {
-                        Nombre = _dbContext.Transportista.FirstOrDefault(y => y.id == x.IdTransportista).NombreComercial,
-                        Direccion = _dbContext.Transportista.FirstOrDefault(y => y.id == x.IdTransportista).DireccionOficinas
-                    }).ToList(),
-                    Pedido = new string[] { x.Travel.ReferenciaUno, x.Travel.ReferenciaDos, x.Travel.ReferenciaTres },
-                    Unidades = _dbContext.Unidades.Where(y => y.ServicesId == x.Id).Select(y => new CartaPorteModel.UnidadModel
-                    {
-                        Nombre = _dbContext.Tr_Has_Inventario.FirstOrDefault(z => z.Id == y.IdUnidad).Marca,
-                        Placas = _dbContext.Tr_Has_Inventario.FirstOrDefault(z => z.Id == y.IdUnidad).Placa,
-                        Operador = _dbContext.Tr_Has_Operadores.FirstOrDefault(z => z.Id == y.IdUnidad).nombre
-                    }).ToList(),
-                    CitaCarga = DateTime.Now,
-                    CitaDescarga = DateTime.Now
-                }).FirstOrDefault();
-
-                return Ok(cartaPorte);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
                 throw;
             }
         }
+
+        [HttpPut]
+        public async Task<IActionResult> PutTravel(Travel travel)
+        {
+            try
+            {
+                _dbContext.Entry(travel).State = EntityState.Modified;
+                await _dbContext.SaveChangesAsync();
+                return Ok(travel);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
+        #endregion
+
+        #region Section
+        [HttpGet("{SectionId}")]
+        public async Task<IActionResult> GetSection(int SectionId)
+        {
+            try
+            {
+
+                Section section = await _dbContext.Sections.Include(x => x.Services).ThenInclude(x => x.Units).Where(x => x.Id == SectionId).FirstOrDefaultAsync();
+                if (section is null)
+                {
+                    return NotFound();
+                }
+                return Ok(section);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
+
+        [HttpGet("{CustomerId}")]
+        public async Task<IActionResult> GetCustomerOD(int CustomerId)
+        {
+            try
+            {
+                CustomerOD customerOD = new CustomerOD
+                {
+                    Origins = await _dbContext.Cl_Has_Origen.Where(x => x.Estatus == 1 && x.Id_Cliente == CustomerId).ToListAsync(),
+                    Destinations = await _dbContext.Cl_Has_Destinos.Where(x => x.Estatus == 1 && x.Id_Cliente == CustomerId).ToListAsync()
+                };
+                return Ok(customerOD);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> PostSection(Section section)
+        {
+            try
+            {
+                if (section.TravelId == 0)
+                {
+                    return BadRequest();
+                }
+
+                int lastid = _dbContext.Sections.Where(x => x.TravelId == section.TravelId && x.Active).Count() + 1;
+
+                section.Folio = string.Concat("V", DateTime.Now.ToString("yyMM"), section.TravelId.ToString("D4"), "-", lastid.ToString("D2"));
+                section.StatusId = _dbContext.Statuses.FirstOrDefault(x => x.Name.ToLower() == "registrado").Id;
+                section.SubstatusId = _dbContext.Substatuses.FirstOrDefault(x => x.Name.ToLower() == "registrado").Id;
+                section.Cl_Has_OtrosId = _dbContext.Cl_Has_Otros.FirstOrDefault(x => x.Id_Cliente == section.ClientesId).Id;
+
+                await _dbContext.Sections.AddAsync(section);
+                await _dbContext.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> PutSection(Section model)
+        {
+            try
+            {
+                model.StatusId = _dbContext.Statuses.FirstOrDefault(x => x.Name.ToLower() == "registrado").Id;
+                model.SubstatusId = _dbContext.Substatuses.FirstOrDefault(x => x.Name.ToLower() == "registrado").Id;
+                model.Cl_Has_OtrosId = _dbContext.Cl_Has_Otros.FirstOrDefault(x => x.Id_Cliente == model.ClientesId).Id;
+                model.TimeUpdated = DateTime.Now;
+                _dbContext.Entry(model).State = EntityState.Modified;
+                await _dbContext.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
+        #endregion
 
         public class SearchRuta
         {
             public int Id { get; set; }
             public string OD { get; set; }
-            public int OrigenId { get; set; }
-            public int DestinoId { get; set; }
+            public int OriginId { get; set; }
+            public int DestinationId { get; set; }
         }
 
-        [HttpPost("[action]")]
-        public IActionResult GetRuta([FromBody] SearchRuta search)
+        [HttpPost]
+        public IActionResult GetRoute([FromBody] SearchRuta search)
         {
             try
             {
-                //List<SearchRuta> routes = _dbContext.Ruta.Where(x => x.id_ciudadorigen == _dbContext.Cl_Has_Origen.Find(search.OrigenId).Id_Ciudad && x.id_ciudaddestino == _dbContext.Cl_Has_Destinos.Find(search.DestinoId).Id_Ciudad).Select(x => new SearchRuta
-                List<SearchRuta> routes = _dbContext.Ruta.Where(x => x.id_ciudadorigen == _dbContext.Cl_Has_Origen.Find(search.OrigenId).Id_Ciudad && x.id_ciudaddestino == _dbContext.Cl_Has_Destinos.Find(search.DestinoId).Id_Ciudad).Select(x => new SearchRuta
+                List<SearchRuta> routes = _dbContext.Ruta.Where(x => x.id_ciudadorigen == _dbContext.Cl_Has_Origen.Find(search.OriginId).Id_Ciudad && x.id_ciudaddestino == _dbContext.Cl_Has_Destinos.Find(search.DestinationId).Id_Ciudad).Select(x => new SearchRuta
                 {
                     Id = x.id,
                     OD = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.id_estadoorigen).nombre, ", ", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.id_ciudadorigen).nombre, " - ", _dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.id_estadodestino).nombre, ", ", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.id_ciudaddestino).nombre)
-                })
-                .ToList();
+                }).ToList();
                 return Ok(routes);
-
             }
             catch (Exception ex)
             {
@@ -391,26 +281,30 @@ namespace KLS_API.Controllers.Travels
             }
         }
 
-        public class RoutePrice
-        {
-            public decimal Minimo { get; set; }
-            public decimal Maximo { get; set; }
-        }
-
-        [HttpGet("[action]/{RouteId}")]
-        public IActionResult GetRoutePrice(int RouteId)
+        [HttpGet("{Type}/{Id}")]
+        public IActionResult GetAddress(string Type, int Id)
         {
             try
             {
-                return Ok(_dbContext.Ruta.Where(x => x.id == RouteId).Select(x => new RoutePrice
+                if (Id == 0)
                 {
-                    Minimo = x.PrecioMinimo,
-                    Maximo = x.PrecioMaximo
-                }).FirstOrDefault());
+                    return NotFound();
+                }
+
+                string address = string.Empty;
+
+                if (Type == "origin")
+                {
+                    address = _dbContext.Cl_Has_Origen.Find(Id).Direccion;
+                    return Ok(address);
+                }
+
+                address = _dbContext.Cl_Has_Destinos.Find(Id).Direccion;
+                return Ok(address);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
                 throw;
             }
         }

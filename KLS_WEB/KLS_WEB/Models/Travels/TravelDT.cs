@@ -5,6 +5,7 @@ namespace KLS_WEB.Models.Travels
     public class TravelDT
     {
         public int Id { get; set; }
+        public int MainTravelId { get; set; }
         public string Folio { get; set; }
         public string Cliente { get; set; }
         public string Origen { get; set; }

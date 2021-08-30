@@ -1,5 +1,5 @@
 ﻿using KLS_API.Context;
-using KLS_API.Models.Travels;
+using KLS_API.Models.Travel;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -41,13 +41,14 @@ namespace KLS_API.Controllers.Travels
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpPost]
         public async Task<IActionResult> UploadFile([FromBody] Facturacion factura)
         {
             try
             {
-                _context.Facturacion.Add(factura);
-                _context.SaveChanges();
+                await _context.Facturacion.AddAsync(factura);
+                await _context.SaveChangesAsync();
                 return Ok(factura);                
             }
             catch (Exception ex)

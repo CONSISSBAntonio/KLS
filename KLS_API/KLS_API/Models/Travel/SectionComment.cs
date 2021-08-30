@@ -1,24 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace KLS_WEB.Models.Travels
+namespace KLS_API.Models.Travel
 {
-    public class Travel
+    public class SectionComment
     {
         public int Id { get; set; }
+        [Required]
+        public int SectionId { get; set; }
+        public Section Section { get; set; }
+        [Required]
         public int StatusId { get; set; }
         public Status Status { get; set; }
+        [Required]
         public int SubstatusId { get; set; }
         public Substatus Substatus { get; set; }
-        public string Folio { get; set; }
-        public int Cat_Tipos_UnidadesId { get; set; }
-        public Cat_Tipos_Unidades Cat_Tipos_Unidades { get; set; }
-        public ICollection<Section> Sections { get; set; } = new Collection<Section>();
-        public string Ejecutivo { get; set; }
-        public string GrupoMonitor { get; set; }
+        [Required]
+        public string Comment { get; set; }
+        public ICollection<Evidence> Evidences { get; set; }
         public bool Active { get; set; } = true;
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

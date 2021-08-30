@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210824143948_rutauserdetail")]
+    partial class rutauserdetail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1541,45 +1543,6 @@ namespace KLS_API.Migrations
                     b.ToTable("Ruta_Has_Checkpoint");
                 });
 
-            modelBuilder.Entity("KLS_API.Models.Travels.Evidence", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Path")
-                        .IsRequired()
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime>("TimeCreated")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("TimeUpdated")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("TravelCommentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TravelCommentId");
-
-                    b.ToTable("Evidences");
-                });
-
             modelBuilder.Entity("KLS_API.Models.Travels.Facturacion", b =>
                 {
                     b.Property<int>("id")
@@ -1631,53 +1594,6 @@ namespace KLS_API.Migrations
                     b.HasIndex("TravelId");
 
                     b.ToTable("Historial");
-                });
-
-            modelBuilder.Entity("KLS_API.Models.Travels.MainTravel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Ejecutivo")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime>("FechaLlegada")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("FechaSalida")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Folio")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("GrupoMonitor")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("ServiceId")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Subestatus")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime>("TimeCreated")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("TimeUpdated")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MainTravels");
                 });
 
             modelBuilder.Entity("KLS_API.Models.Travels.Mercancia", b =>
@@ -1787,9 +1703,6 @@ namespace KLS_API.Migrations
                     b.Property<string>("DireccionRemitente")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("EnlaceEspejo")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
                     b.Property<string>("Estatus")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
@@ -1821,12 +1734,6 @@ namespace KLS_API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Intercom")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<int>("MainTravelId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NombreCliente")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("PassEspejo")
@@ -1873,50 +1780,7 @@ namespace KLS_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MainTravelId");
-
                     b.ToTable("Viajes");
-                });
-
-            modelBuilder.Entity("KLS_API.Models.Travels.TravelComment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Substatus")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime>("TimeCreated")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("TimeUpdated")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("TravelId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TravelId");
-
-                    b.ToTable("TravelComments");
                 });
 
             modelBuilder.Entity("KLS_API.Models.Travels.Unidad", b =>
@@ -2120,15 +1984,6 @@ namespace KLS_API.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("KLS_API.Models.Travels.Evidence", b =>
-                {
-                    b.HasOne("KLS_API.Models.Travels.TravelComment", "TravelComment")
-                        .WithMany("Evidences")
-                        .HasForeignKey("TravelCommentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("KLS_API.Models.Travels.Facturacion", b =>
                 {
                     b.HasOne("KLS_API.Models.Travels.Travel", "Travel")
@@ -2160,24 +2015,6 @@ namespace KLS_API.Migrations
                 {
                     b.HasOne("KLS_API.Models.Travels.Travel", "Travel")
                         .WithMany("Servicios")
-                        .HasForeignKey("TravelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("KLS_API.Models.Travels.Travel", b =>
-                {
-                    b.HasOne("KLS_API.Models.Travels.MainTravel", "MainTravel")
-                        .WithMany("Travels")
-                        .HasForeignKey("MainTravelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("KLS_API.Models.Travels.TravelComment", b =>
-                {
-                    b.HasOne("KLS_API.Models.Travels.Travel", "Travel")
-                        .WithMany()
                         .HasForeignKey("TravelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

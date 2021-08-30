@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace KLS_API.Models.Travels
+namespace KLS_API.Models.Travel.DTO
 {
     public class CartaPorteModel
     {

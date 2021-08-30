@@ -1,4 +1,4 @@
-﻿@model KLS_WEB.Models.Travels.Travel
+﻿<!--
 
 @{
     ViewData["Title"] = "Detalles del viaje";
@@ -48,6 +48,11 @@
 
     .wrapper > .data-content {
         text-align: unset;
+    }
+
+    .btn-secondary {
+        text-decoration: unset !important;
+        box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 20%) !important;
     }
 </style>
 
@@ -150,10 +155,34 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-5 col-form-label col-form-label-sm">Tipo de SERVICIO</label>
+                        <label class="col-5 col-form-label col-form-label-sm">TIPO DE SERVICIO</label>
                         <div class="col-7">
                             <input asp-for="TipoUnidadNombre" type="text" class="form-control form-control-sm"
                                    id="tipounidad" disabled="disabled" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-5 col-form-label col-form-label-sm">EJECUTIVO</label>
+                        <div class="col-7">
+                            <input asp-for="Ejecutivo" type="text" class="form-control form-control-sm" disabled="disabled" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-5 col-form-label col-form-label-sm">OPERADOR</label>
+                        <div class="col-7">
+                            <input asp-for="CreatedBy" type="text" class="form-control form-control-sm" disabled="disabled" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-5 col-form-label col-form-label-sm">CHOFER</label>
+                        <div class="col-7">
+                            <input asp-for="ChoferNombre" type="text" class="form-control form-control-sm" disabled="disabled" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-5 col-form-label col-form-label-sm">TELÉFONO CHOFER</label>
+                        <div class="col-7">
+                            <input asp-for="ChoferTelefono" type="text" class="form-control form-control-sm" disabled="disabled" required>
                         </div>
                     </div>
 
@@ -215,25 +244,25 @@
                         <div class="name font-barlow">Historial</div>
                     </div>
                 </a>
-                @*<a href="#" class="catalog">
+                <a href="javasript:void(0)" class="catalog" id="monitoreo" onclick="showPanel(this.id)">
                     <div class="content">
-                    <span class="material-icons">
-                    pin_drop
-                    </span>
-                    <div class="name font-barlow">Monitoreo</div>
+                        <span class="material-icons">
+                            pin_drop
+                        </span>
+                        <div class="name font-barlow">Monitoreo</div>
                     </div>
-                    </a>*@
+                </a>
             </div>
         </div>
 
     </div>
 
-    <div class="row mt-4 bottomPanel">
+    <div class="row mt-4 bottomPanel">-->
         @*Facturacion*@
-        <div class="col-6 facturacion d-none">
+        <!--<div class="col-6 facturacion d-none">
             <div class="text-left d-flex justify-content-between mb-3">
                 <h4>FACTURACIÓN</h4>
-                <div style="padding-left:20%;" onclick="">
+                <div style="padding-left:20%;" onclick="selectFactura(this)">
                     <a class="btn btn-sm bg-white" style="font-size:1.8rem;width:3.5rem" href="javascript:void(0);">
                         <span class="material-icons">
                             add
@@ -253,10 +282,10 @@
                 </thead>
                 <tbody id="facturacionInfo"></tbody>
             </table>
-        </div>
+        </div>-->
 
         @*Mercancia*@
-        <div class="col-12 mercancia mb-5 d-none">
+        <!--<div class="col-12 mercancia mb-5 d-none">
             <div class="text-left d-flex justify-content-start mb-3">
                 <h4>MERCANCIA</h4>
             </div>
@@ -264,7 +293,7 @@
                 <div class="col-6 d-flex flex-column justify-content-between">
                     <div class="card mb-3 p-3">
                         <p class="text-left font-weight-bold">DESCRIPCIÓN</p>
-                        <form class="row g-3 text-left" onsubmit="">
+                        <form class="row g-3 text-left" onsubmit="event.preventDefault(), postMercancia(this)">
                             <div class="col-3">
                                 <label for="falto" class="form-label">Alto</label>
                                 <input type="number" class="form-control" id="falto" name="alto">
@@ -429,11 +458,11 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
 
         @* Requisitos *@
-        <div class="row requisitos d-none">
+        <!--<div class="row requisitos d-none">
             <div class="col-6">
                 <h4>REQUISITOS CARGA</h4>
 
@@ -648,13 +677,13 @@
                 </div>
             </div>
 
-        </div>
+        </div>-->
 
         @*HISTORIAL*@
-        <div class="col-12 historial d-none">
+        <!--<div class="col-12 historial d-none">
             <div class="text-left d-flex justify-content-between mb-3">
                 <h4>HISTORIAL</h4>
-                <div style="padding-left:20%;" onclick="">
+                <div style="padding-left:20%;" onclick="selectServicios(this)">
                 </div>
             </div>
 
@@ -669,14 +698,114 @@
                 </thead>
                 <tbody id="historialInfo"></tbody>
             </table>
-        </div>
+        </div>-->
+
+        @*MONITOREO*@
+        <!--<div class="col-12 monitoreo card pb-3 mb-5 mr-3">
+            <div class="text-left d-flex justify-content-between mb-3 mt-3">
+                <div>
+                    <h4>MONITOREO</h4>
+                </div>
+                <div>
+                    <button class="btn btn-sm btn-secondary" onclick="$('#addcomment').modal('show')"><span class="material-icons" style="margin-top: .5rem;">add</span></button>
+                    <button class="btn btn-sm btn-secondary" onclick="$('#checkpointmodal').modal('show')"><span class="material-icons text-danger" style="margin-top: .5rem;">flag</span></button>
+                </div>
+            </div>
+            <div class="d-flex justify-content-around mb-4">
+                <div class="d-flex flex-column">
+                    <label for="monitorselect" class="form-label">GRUPO MONITOR</label>
+                    <input id="grupomonitor" class="form-select" name="grupomonitor" required />
+                </div>
+                <div class="d-flex flex-column">
+                    <label for="cuentaespejo" class="form-label">CUENTA ESPEJO</label>
+                    <input id="cuentaespejo" class="form-select" name="cuentaespejo" required />
+                </div>
+                <div class="d-flex flex-column">
+                    <label for="usuario" class="form-label">USUARIO</label>
+                    <input id="usuario" class="form-select" name="usuario" required />
+                </div>
+                <div class="d-flex flex-column">
+                    <label for="contraseña" class="form-label">CONTRASEÑA</label>
+                    <input id="contraseña" class="form-select" name="contraseña" required />
+                </div>
+            </div>
+            <div class="px-4">
+                <div class="px-3 pt-4 card">
+                    <div class="d-flex justify-content-between">
+                        <p><b>Estatus: En tránsito - A tiempo</b></p>
+                        <p><b>Alberto Garza</b> 17/04/2021 12:45 PM</p>
+                    </div>
+                    <p>Lorem ipsum dolor sit amet, consteteur sadipscing elitr, sed diam nonumy eirmond tempor invidunt ut labore et dolore</p>
+                </div>
+            </div>
+        </div>-->
+
+        @*MODAL MONITOREO*@
+        <!--<div class="modal fade" id="addcomment" tabindex="-1" aria-labelledby="monitoreomodal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="monitoreomodal">AGREGAR COMENTARIO MONITOREO</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form onsubmit="event.preventDefault(), AddComment(this)">
+                            <div class="mb-3">
+                                <label class="form-label">Comentario</label>
+                                <textarea class="form-control" name="comment" rows="5" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="commentfile" class="form-label">Evidencia</label>
+                                <input class="form-control form-control-sm" id="commentfile" type="file" name="evidences" multiple>
+                            </div>
+                            <button type="submit" class="btn btn-dark mt-2 w-50">GUARDAR</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>-->
+        @*MODAL CHECKPOINTS MONITOREO*@
+        <!--<div class="modal fade" id="checkpointmodal" tabindex="-1" aria-labelledby="checkpoint" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="checkpoint">CHECKPOINTS</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-right size-12">Hora de salida: 12/04/2021 12:30 PM</p>
+                        <table id="table" class="table table-striped table-bordered display table-hover table-viajes text-uppercase" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>CHECKPOINT</th>
+                                    <th>HORA ORIGINAL</th>
+                                    <th>HORA ESPERADA</th>
+                                    <th>HORA REAL</th>
+                                    <th>USUARIO</th>
+                                    <th>DONE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>-->
+
+
+        @*END MONITOREO*@
 
 
         @* documentos *@
-        <div class="col-12 documentos d-none">
+        <!--<div class="col-12 documentos d-none">
             <div class="p-4">
                 <h4>DOCUMENTOS</h4>
-                <button class="btn btn-dark px-5" style="border-radius:0px" onclick="">Generar carta porte</button>
+                <button class="btn btn-dark px-5" style="border-radius:0px" onclick="GenerateCartaPorte(this)">Generar carta porte</button>
                 <div class="row">
                     <div class="col-6 mt-3">
                         <div class="text-left d-flex justify-content-between">
@@ -724,7 +853,7 @@
                                             <label class="col-form-label col-form-label-sm">Sello de vigilancia</label>
                                         </div>
                                     </div>
-                                </div>
+                                </div>-->
                                 @*<div class="col-6">
                                         <div class="d-flex">
                                             <h6>TIEMPO DE ENTREGA</h6>
@@ -739,30 +868,29 @@
                                         </div>
 
                                     </div>*@
-                            </div>
+                            <!--</div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         @*Servicios*@
-        <div class="col-12 servicios d-none mb-5">
+        <!--<div class="col-12 servicios d-none mb-5">
             <div class="card p-3">
                 <div class="form-group col-12 d-flex justify-content-between">
                     <h6 class="font-weight-bold">SERVICIOS</h6>
                     <div>
-                        <button class="btn btn-outline-light btn-sm" onclick="">
+                        <button class="btn btn-outline-light btn-sm" onclick="updateServicios(this)">
                             <i class="material-icons text-primary">save</i>
                         </button>
-                        <a class="btn btn-outline-secondary btn-sm" onclick="">
+                        <a class="btn btn-outline-secondary btn-sm" onclick="selectServicios(this)">
                             <i class="material-icons">add</i>
                         </a>
                     </div>
                 </div>
                 <div class="form-group col-12 addServicios">
-                    <div class="border rounded d-flex justify-content-center align-items-center font-weight-bolder"
-                         onclick=""
+                    <div class="border rounded d-flex justify-content-center align-items-center font-weight-bolder" onclick="selectServicios(this)"
                          style="border: 5px dashed #585858 !important; height: 7rem; opacity: 0.2; cursor: pointer;">
                         <h3>AGREGA SERVICIOS</h3>
                     </div>
@@ -780,7 +908,7 @@
 
 
 <!--Modal agregar factura-->
-<div class="modal fade" id="modalFactura" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false"
+<!--<div class="modal fade" id="modalFactura" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false"
      aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -800,10 +928,10 @@
                     </div>
                     <br />
                     <a href="javascript:void(0);" class="btn btn-dark guardar" style="width:100%"
-                       onclick="">
+                       onclick="UploadFile()">
                         Agregar
                     </a>
-                </form>
+                </form>-->
                 @*<form asp-controller="Facturacion" asp-action="UploadFile" method="post"
                     enctype="multipart/form-data">
                     <div class="form-group col-12">
@@ -815,13 +943,13 @@
                     <br />
                     <button type="submit" class="btn btn-dark guardar" style="width:100%">Agregar</button>
                     </form>*@
-            </div>
+            <!--</div>
         </div>
     </div>
-</div>
+</div>-->
 <!--Modal agregar factura-->
 <!--Modal actualizar estado-->
-<div class="modal fade" id="modalEstatus" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false"
+<!--<div class="modal fade" id="modalEstatus" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false"
      aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -836,7 +964,7 @@
                     <div class="row">
                         <div class="col-6 text-left">
                             <b class="size-12">ESTATUS</b>
-                            <select class="form-control form-control-sm" name="estatus" id="estatus" style="width:100%" onchange="">
+                            <select class="form-control form-control-sm" name="estatus" id="estatus" style="width:100%" onchange="listSubestatus(this.value)">
                                 <option value="0" selected disabled>SELECIONA</option>
                                 <option value="confirmado">CONFIRMADO</option>
                                 <option value="entransito">EN TRÁNSITO</option>
@@ -853,17 +981,17 @@
                         </div>
                     </div>
                     <br />
-                    <a href="javascript:void(0);" class="btn btn-dark guardar" style="width:100%" onclick="">
+                    <a href="javascript:void(0);" class="btn btn-dark guardar" style="width:100%" onclick="updateStatus(this)">
                         GUARDAR
                     </a>
                 </form>
             </div>
         </div>
     </div>
-</div>
+</div>-->
 <!--Modal actualizar estado-->
 <!--Modal servicio-->
-<div class="modal fade" id="modalDiv" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false"
+<!--<div class="modal fade" id="modalDiv" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false"
      aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
@@ -878,7 +1006,7 @@
                     <div class="form-check d-flex align-items-center">
                         <input class="form-check-input my-auto" type="checkbox" id="0" name="terrestrenacional">
                         <label class="form-check-label" for="0">Terrestre nacional</label>
-                    </div>
+                    </div>-->
                     @*<div class="form-check">
                             <input class="form-check-input" type="checkbox" id="1" name="naviera">
                             <label class="form-check-label" for="1">
@@ -910,19 +1038,19 @@
                                 Coloaders
                             </label>
                         </div>*@
-                </form>
+                @*</form>
                 <br />
-                <button onclick="" class="btn btn-dark" style="width:100%;">
+                <button onclick="closeModal()" class="btn btn-dark" style="width:100%;">
                     Agregar
                 </button>
 
             </div>
         </div>
     </div>
-</div>
+</div>-->*@
 <!--Modal servicio-->
 <!-- Modal confirm delete -->
-<div class="modal fade" id="popup" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!--<div class="modal fade" id="popup" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -951,6 +1079,25 @@
             getEstatus();
             getEvidencia();
         });
+
+        const AddComment = async e => {
+            const data = new FormData(e);
+            data.append('TravelId', TravelId);
+
+            const params = {
+                method: 'POST',
+                body: data
+            };
+
+            try {
+                const response = await fetch('/Travels/AddComment', params);
+                const data = await response.json();
+                console.log(data);
+            } catch (e) {
+                console.error(e);
+                dToast("error", "OCURRIÓ UN ERROR AL PROCESAR LA SOLICITUD", "Error");
+            }
+        };
 
         const GenerateCartaPorte = e => {
             $(e).prop('disabled', true).removeClass('btn-dark').addClass('btn-secondary').html('Generando...');
@@ -1376,4 +1523,4 @@
         $("#modalDiv").modal("show");
     }
     </script>
-}
+}-->

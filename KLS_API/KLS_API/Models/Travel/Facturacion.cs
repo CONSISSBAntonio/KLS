@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace KLS_API.Models.Travels
+namespace KLS_API.Models.Travel
 {
     public class Facturacion
     {

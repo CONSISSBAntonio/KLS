@@ -5,6 +5,7 @@
     <div class="p-4">
         <div class="text-left mb-3">
             <div class="text-uppercase poppins medium size-24 pl-2">Viajes</div>
+            <a asp-action="AddEdit" asp-route-id="1" class="btn btn-sm btn-outline-secondary float-right"><span class="material-icons">add</span></a>
         </div>
 
         <div class="p-4 shadow bg-white">
@@ -31,7 +32,7 @@
 @section Scripts{
     <script>
         $(document).ready(function (event) {
-            DT();
+            //DT();
         });
 
         DT = () => {
@@ -54,13 +55,13 @@
                     { data: 'llegada' },
                     { data: 'estatus' },
                     {
-                        data: 'id',
-                        render: (Id, type, full, meta) => `
-                                    <a href="/Travels/${Id}">
-                                        <span class="material-icons">
-                                            open_in_new
-                                        </span>
-                                    </a>`
+                        data: 'mainTravelId',
+                        render: (mainTravelId, type, full, meta) => `
+                            <a href="/Travels/AddEditMainTravel/${mainTravelId}">
+                                <span class="material-icons">
+                                    open_in_new
+                                </span>
+                            </a>`
                     }
                 ],
                 language: {
@@ -84,7 +85,7 @@
                     }
                 },
                 initComplete: () => {
-                    $('#table_length').html(`<a href="/Travels/0" class="btn btn-sm btn-outline-secondary float-right"><span class="material-icons">add</span></a>`).show();
+                    $('#table_length').html(`<a href="/Travels/AddEditMainTravel/0" class="btn btn-sm btn-outline-secondary float-right"><span class="material-icons">add</span></a>`).show();
                 }
             });
         }

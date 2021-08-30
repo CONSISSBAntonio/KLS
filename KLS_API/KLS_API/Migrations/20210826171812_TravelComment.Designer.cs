@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210826171812_TravelComment")]
+    partial class TravelComment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1645,25 +1647,10 @@ namespace KLS_API.Migrations
                     b.Property<string>("Ejecutivo")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<DateTime>("FechaLlegada")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("FechaSalida")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Folio")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
                     b.Property<string>("GrupoMonitor")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("ServiceId")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Subestatus")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTime>("TimeCreated")
@@ -1787,9 +1774,6 @@ namespace KLS_API.Migrations
                     b.Property<string>("DireccionRemitente")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("EnlaceEspejo")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
                     b.Property<string>("Estatus")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
@@ -1825,9 +1809,6 @@ namespace KLS_API.Migrations
 
                     b.Property<int>("MainTravelId")
                         .HasColumnType("int");
-
-                    b.Property<string>("NombreCliente")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("PassEspejo")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -2177,7 +2158,7 @@ namespace KLS_API.Migrations
             modelBuilder.Entity("KLS_API.Models.Travels.TravelComment", b =>
                 {
                     b.HasOne("KLS_API.Models.Travels.Travel", "Travel")
-                        .WithMany()
+                        .WithMany("TravelComments")
                         .HasForeignKey("TravelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
