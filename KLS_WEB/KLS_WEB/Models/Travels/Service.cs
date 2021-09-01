@@ -11,12 +11,13 @@ namespace KLS_WEB.Models.Travels
         public int Id { get; set; }
         public int SectionId { get; set; }
         public Section Section { get; set; }
+        public int ServiceTypeId { get; set; }
+        public ServiceType ServiceType { get; set; }
         public int TransportistaId { get; set; }
         public Transportista Transportista { get; set; }
         public int Tr_Has_OperadoresId { get; set; }
         public Tr_Has_Operadores Tr_Has_Operadores { get; set; }
         public ICollection<Unit> Units { get; set; }
-        public string Folio { get; set; }
         public decimal Costo { get; set; }
         public decimal Precio { get; set; }
     }

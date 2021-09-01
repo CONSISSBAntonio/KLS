@@ -16,11 +16,14 @@ namespace KLS_WEB.Models.Travels.DTO
         public class InitSelects
         {
             public List<SelectListItem> Cat_Tipos_Unidades { get; set; } = new List<SelectListItem>();
+            public List<SelectListItem> TravelServices { get; set; } = new List<SelectListItem>();
             public List<SelectListItem> Customers { get; set; } = new List<SelectListItem>();
             public List<SelectListItem> CustomerOrigins { get; set; } = new List<SelectListItem>();
             public List<SelectListItem> CustomerDestinations { get; set; } = new List<SelectListItem>();
             public List<SelectListItem> Routes { get; set; } = new List<SelectListItem>();
             public List<SelectListItem> SectionType { get; set; } = new List<SelectListItem>();
+            public List<SelectListItem> Carriers { get; set; } = new List<SelectListItem>();
+            public List<SelectListItem> Drivers { get; set; } = new List<SelectListItem>();
         }
 
     }

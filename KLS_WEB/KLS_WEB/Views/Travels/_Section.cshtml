@@ -10,77 +10,172 @@
 
     }
     <div>
+        @*<button class="btn btn-dark" onclick="AddEditSection(this, document.getElementsByClassName('serviceform'), document.getElementsByClassName('carrierparams'))">GUARDAR</button>*@
         <button class="btn btn-dark" onclick="AddEditSection(this, document.querySelector('#sectionform'))">GUARDAR</button>
     </div>
 </div>
 
 <div class="col-12 py-3">
     <div class="card col-12 py-3">
-        <div class="d-flex justify-content-end">
-            @*<div class="form-check d-flex align-items-center my-auto">
-                    <input asp-for="Section.IsEmpty" class="form-check-input my-auto" type="checkbox">
-                    <label asp-for="Section.IsEmpty" class="form-check-label size-14">MARCAR TRAMO COMO VACÍO</label>
-                </div>*@
-            <div>
-                <button type="button" class="btn btn-danger d-flex"><span class="material-icons">delete</span>ELIMINAR TRAMO</button>
+        @if (Model.Section.Id > 0)
+        {
+            <div class="d-flex justify-content-end">
+                @*<div class="form-check d-flex align-items-center my-auto">
+                        <input asp-for="Section.IsEmpty" class="form-check-input my-auto" type="checkbox">
+                        <label asp-for="Section.IsEmpty" class="form-check-label size-14">MARCAR TRAMO COMO VACÍO</label>
+                    </div>*@
+                <div>
+                    <button type="button" class="btn btn-danger d-flex" onclick="ConfirmDeleteSection(@Model.Section.Id)"><span class="material-icons">delete</span>ELIMINAR TRAMO</button>
+                </div>
             </div>
-        </div>
+        }
 
-        <form id="sectionform" onsubmit="event.preventDefault()" class="row g-3">
-            @if (Model.Section.Id != 0)
-            {
-                @Html.HiddenFor(x => x.Section.Id)
-                @Html.HiddenFor(x => x.Section.Folio)
-            }
-            <div class="col-12 d-flex">
-                <input asp-for="Section.IsEmpty" class="form-check my-auto mr-1" type="checkbox">
-                <label asp-for="Section.IsEmpty" class="form-label my-auto size-14">MARCAR TRAMO COMO VACÍO</label>
-            </div>
-            <div class="col-6">
-                <label asp-for="Section.ClientesId" class="form-label">CLIENTE</label>
-                <select asp-for="Section.ClientesId" asp-items="Model.Selects.Customers" data-val="true" data-val-required="The Person field is required." class="form-select" onchange="GetCustomerOD(this.value)" required></select>
-            </div>
-            <div class="col-2">
-                <label asp-for="Section.FechaSalida" class="form-label">FECHA DE SALIDA</label>
-                <input asp-for="Section.FechaSalida" class="form-control">
-            </div>
-            <div class="col-2">
-                <label asp-for="Section.FechaLlegada" class="form-label">FECHA DE LLEGADA</label>
-                <input asp-for="Section.FechaLlegada" class="form-control">
-            </div>
-            <div class="col-2">
-                <label asp-for="Section.Anticipacion" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
-                <input asp-for="Section.Anticipacion" class="form-control">
-            </div>
-            <div class="col-6">
+    <form id="sectionform" onsubmit="event.preventDefault()" class="row g-3">
+        @if (Model.Section.Id != 0)
+        {
+            @Html.HiddenFor(x => x.Section.Id)
+            @Html.HiddenFor(x => x.Section.Folio)
+        }
+        <div class="col-12 d-flex">
+            <input asp-for="Section.IsEmpty" class="form-check my-auto mr-1" type="checkbox">
+            <label asp-for="Section.IsEmpty" class="form-label my-auto size-14">MARCAR TRAMO COMO VACÍO</label>
+        </div>
+        <div class="col-6">
+            <label asp-for="Section.ClientesId" class="form-label">CLIENTE</label>
+            <select asp-for="Section.ClientesId" asp-items="Model.Selects.Customers" data-val="true" data-val-required="The Person field is required." class="form-select" onchange="GetCustomerOD(this.value), GetClientReferences(this.value)" required></select>
+        </div>
+        <div class="col-2">
+            <label asp-for="Section.FechaSalida" class="form-label">FECHA DE SALIDA</label>
+            <input asp-for="Section.FechaSalida" class="form-control">
+        </div>
+        <div class="col-2">
+            <label asp-for="Section.FechaLlegada" class="form-label">FECHA DE LLEGADA</label>
+            <input asp-for="Section.FechaLlegada" class="form-control">
+        </div>
+        <div class="col-2">
+            <label asp-for="Section.Anticipacion" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
+            <input asp-for="Section.Anticipacion" class="form-control">
+        </div>
+        <div class="col-6">
+            <div class="d-flex justify-content-between">
                 <label asp-for="Section.Cl_Has_OrigenId" class="form-label">ORIGEN</label>
-                <select asp-for="Section.Cl_Has_OrigenId" asp-items="Model.Selects.CustomerOrigins" class="form-select" onchange="GetRoute(this.value, 'origin')"></select>
+                <a href="javascript:void(0)" class="text-primary" onclick="showModal('AGREGAR','Agregar', 'origen')">AGREGAR</a>
             </div>
-            <div class="col-6">
-                <label asp-for="Section.Cl_Has_Origen.Direccion" class="form-label">DIRECCIÓN REMITENTE</label>
-                <input asp-for="Section.Cl_Has_Origen.Direccion" type="text" class="form-control" disabled>
-            </div>
-            <div class="col-6">
+            <select asp-for="Section.Cl_Has_OrigenId" asp-items="Model.Selects.CustomerOrigins" class="form-select" onchange="GetRoute(this.value, 'origin')"></select>
+        </div>
+        <div class="col-6">
+            <label asp-for="Section.Cl_Has_Origen.Direccion" class="form-label">DIRECCIÓN REMITENTE</label>
+            <input asp-for="Section.Cl_Has_Origen.Direccion" type="text" class="form-control" disabled>
+        </div>
+        <div class="col-6">
+            <div class="d-flex justify-content-between">
                 <label asp-for="Section.Cl_Has_DestinosId" class="form-label">DESTINO</label>
-                <select asp-for="Section.Cl_Has_DestinosId" asp-items="Model.Selects.CustomerDestinations" class="form-select" onchange="GetRoute(this.value, 'destination')"></select>
+                <a href="javascript:void(0)" class="text-primary" onclick="showModal('AGREGAR','Agregar', 'destino')">AGREGAR</a>
             </div>
-            <div class="col-6">
-                <label asp-for="Section.Cl_Has_Destinos.Direccion" class="form-label">DIRECCIÓN DESTINATARIO</label>
-                <input asp-for="Section.Cl_Has_Destinos.Direccion" type="text" class="form-control" disabled>
-            </div>
-            <div class="col-6">
-                <label asp-for="Section.RutaId" class="form-label">RUTA</label>
-                <select asp-for="Section.RutaId" asp-items="Model.Selects.Routes" class="form-select"></select>
-            </div>
-            <div class="col-6">
-                <label asp-for="Section.SectionTypeId" class="form-label">TIPO DE TRAMO</label>
-                <select asp-for="Section.SectionTypeId" asp-items="Model.Selects.SectionType" class="form-select"></select>
-            </div>
-        </form>
+            <select asp-for="Section.Cl_Has_DestinosId" asp-items="Model.Selects.CustomerDestinations" class="form-select" onchange="GetRoute(this.value, 'destination')"></select>
+        </div>
+        <div class="col-6">
+            <label asp-for="Section.Cl_Has_Destinos.Direccion" class="form-label">DIRECCIÓN DESTINATARIO</label>
+            <input asp-for="Section.Cl_Has_Destinos.Direccion" type="text" class="form-control" disabled>
+        </div>
+        <div class="col-6">
+            <label asp-for="Section.RutaId" class="form-label">RUTA</label>
+            <select asp-for="Section.RutaId" asp-items="Model.Selects.Routes" class="form-select"></select>
+        </div>
+        <div class="col-6">
+            <label asp-for="Section.SectionTypeId" class="form-label">TIPO DE TRAMO</label>
+            <select asp-for="Section.SectionTypeId" asp-items="Model.Selects.SectionType" class="form-select"></select>
+        </div>
+        <div class="col-4" id="referencia1">
+            <label asp-for="Section.Referencia1" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
+            <input asp-for="Section.Referencia1" class="form-control">
+        </div>
+        <div class="col-4" id="referencia3">
+            <label asp-for="Section.Referencia2" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
+            <input asp-for="Section.Referencia2" class="form-control">
+        </div>
+        <div class="col-4" id="referencia2">
+            <label asp-for="Section.Referencia3" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
+            <input asp-for="Section.Referencia3" class="form-control">
+        </div>
+    </form>
     </div>
 </div>
 
 <script>
     $('[type=datetime-local]').map((k, e) => $(e).prop('min', new Date().toISOString().substring(0, 16)));
     $('#Section_Cl_Has_OrigenId, #Section_Cl_Has_DestinosId').trigger('change');
+    $('#Section_IsEmpty').on('change', e => {
+        const clienteSelect = $('#Section_ClientesId');
+        const isChecked = $('#Section_IsEmpty').prop('checked');
+        isChecked ? clienteSelect.prop('disabled', true).hide() : clienteSelect.prop('disabled', false).show();
+    });
+
+    @Model.Section.ClientesId > 0 ? GetClientReferences(@Model.Section.ClientesId) : $('#referencia1, #referencia2, #referencia3').hide();
+
+    GetSectionServices = async () => {
+        try {
+            const response = await fetch(`/Travels/GetSectionServices?SectionId=@Model.Section.Id`);
+            const { services } = await response.json();
+
+            setTimeout(() => services ? services.length == 0 && $('.addServicios').show() : null, 500);
+
+            if (services) {
+                services.map(({ serviceType }) => {
+                    const { name } = serviceType
+                    $(`[name=${name.toLowerCase().replace(' ', '')}`).prop('checked', true);
+                });
+
+                $('#btn-getservices').click();
+                let servicename = '';
+                services.map(({
+                    id,
+                    sectionId,
+                    serviceTypeId,
+                    transportistaId,
+                    tr_Has_OperadoresId,
+                    costo,
+                    precio,
+                    serviceType
+                }) => {
+                    const { name } = serviceType;
+                    servicename = name.toLowerCase().replace(' ', '');
+                    setTimeout(() => {
+                        $(`#${servicename}-serviceid`).val(id);
+                        $($(`.${servicename}-form i.my-auto`)[0]).attr('onclick', `confirmDelete('${servicename}', ${id})`);
+                        $(`.${servicename}-form [name=cost]`).val(costo).trigger('change');
+                        $(`.${ servicename}-form [name=price]`).val(precio).trigger('change');
+                        $(`#carrier-${servicename}`).val(transportistaId).trigger('change');
+                        setTimeout(() => $(`#chofer-${servicename}`).val(tr_Has_OperadoresId).trigger('change'), 500);
+                    }, 500);
+                });
+
+                setTimeout(() => {
+                    services.map(({ units }) => {
+                        if (units) {
+                            units.map(({
+                                id,
+                                tr_Has_InventarioId,
+                                cat_Tipos_UnidadesId
+                            }) => {
+                                const elementid = $('.equipocontainer').children().length;
+                                $('#addEquipo').click();
+
+                                setTimeout(() => {
+                                    $(`#${servicename}-unit`).val(id);
+                                    $(`#unidad${elementid}`).val(tr_Has_InventarioId).trigger('change');
+                                    setTimeout(() => $(`#equipo${elementid}`).val(cat_Tipos_UnidadesId).trigger('change'), 1300);
+                                    $(`#unit-${servicename}-${elementid}`).attr('onclick', `DeleteUnit(this, ${id})`);
+                                }, 1000);
+                            });
+                        }
+                    });
+                }, 1000);
+            }
+
+        } catch (e) {
+            console.error(e);
+        }
+    }
+    GetSectionServices();
 </script>

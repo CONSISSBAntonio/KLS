@@ -6,6 +6,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20210831171847_tester.cs" />
+    <Compile Remove="Migrations\20210831171847_tester.Designer.cs" />
+    <Compile Remove="Migrations\20210901014912_service-timecreated.cs" />
+    <Compile Remove="Migrations\20210901014912_service-timecreated.Designer.cs" />
+    <Compile Remove="Migrations\20210901015110_service-timecreated.cs" />
+    <Compile Remove="Migrations\20210901015110_service-timecreated.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.10" />
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="5.0.9" />

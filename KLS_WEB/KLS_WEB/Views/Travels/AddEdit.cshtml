@@ -43,13 +43,29 @@
             </div>
             <div class="card text-center">
                 <div class="card-body pb-0 size-12">
-                    <b>$00.00 MXN</b>
+                    @{ decimal costo = 0; }
+                    @foreach (var section in Model.Travel.Sections)
+                    {
+                        foreach (var service in section.Services)
+                        {
+                            costo += service.Costo;
+                        }
+                    }
+                    <b>@costo.ToString("C") MXN</b>
                     <p class="text-light-grey">COSTO</p>
                 </div>
             </div>
             <div class="card text-center">
                 <div class="card-body pb-0 size-12">
-                    <b>$00.00 MXN</b>
+                    @{ decimal venta = 0; }
+                    @foreach (var section in Model.Travel.Sections)
+                    {
+                        foreach (var service in section.Services)
+                        {
+                            venta += service.Precio;
+                        }
+                    }
+                    <b>@venta.ToString("C") MXN</b>
                     <p class="text-light-grey">VENTA</p>
                 </div>
             </div>
@@ -65,9 +81,9 @@
             <form asp-controller="Travels" asp-action="AddEditTravel" method="post">
                 <div class="row">
                     <div class="col-6 pl-4 pt-3">
-                        <label asp-for="Travel.Cat_Tipos_UnidadesId" class="form-label">TIPO DE SERVICIO</label>
-                        <select asp-for="Travel.Cat_Tipos_UnidadesId" asp-items="Model.Selects.Cat_Tipos_Unidades" class="form-select" style="width: 100%" required></select>
-                        <span asp-validation-for="Travel.Cat_Tipos_UnidadesId" class="text-danger"></span>
+                        <label asp-for="Travel.TravelServiceId" class="form-label">TIPO DE SERVICIO</label>
+                        <select asp-for="Travel.TravelServiceId" asp-items="Model.Selects.TravelServices" class="form-select" style="width: 100%" required></select>
+                        <span asp-validation-for="Travel.TravelServiceId" class="text-danger"></span>
                     </div>
                     <div class="col-6 pt-3 pr-4">
                         <label asp-for="Travel.Ejecutivo" class="form-label">EJECUTIVO</label>
@@ -93,7 +109,7 @@
                 <button class="btn btn-dark cshadow" onclick="GetSection(this, 0)"><span class="material-icons">add</span></button>
             }
         </div>
-        <div style="height: 17rem; overflow-y: scroll;">
+        <div style="height: 17rem; overflow-y: scroll; overflow-x: unset;">
             <table class="table table-striped table-bordered display table-hover text-uppercase table-facturas" width="100%">
                 <thead>
                     <tr>
@@ -126,6 +142,18 @@
             </table>
         </div>
     </div>
+</div>
+
+<div class="sk-cube-grid text-center">
+    <div class="sk-cube sk-cube1"></div>
+    <div class="sk-cube sk-cube2"></div>
+    <div class="sk-cube sk-cube3"></div>
+    <div class="sk-cube sk-cube4"></div>
+    <div class="sk-cube sk-cube5"></div>
+    <div class="sk-cube sk-cube6"></div>
+    <div class="sk-cube sk-cube7"></div>
+    <div class="sk-cube sk-cube8"></div>
+    <div class="sk-cube sk-cube9"></div>
 </div>
 
 <div id="sectioncontainer" class="row w-100 pl-4 mt-3">
@@ -200,7 +228,7 @@
                             </label>
                         </div>*@
                     <br />
-                    <button type="submit" class="btn btn-dark" style="width:100%;">
+                    <button id="btn-getservices" type="submit" class="btn btn-dark" style="width:100%;">
                         Agregar
                     </button>
                 </form>
@@ -302,13 +330,13 @@
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="titulo-modal"></h5>
+                <h5 class="modal-title" id="titulo-modal">CONFIRMAR ACCIÓN</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body text-left">
-                <p>¿Estas seguro de que deseas eliminar el SERVICIO seleccionado?</p>
+                <p class="text-uppercase">¿Estas seguro de que deseas eliminar el SERVICIO seleccionado?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
@@ -318,18 +346,72 @@
     </div>
 </div>
 
+<div class="modal fade" id="popupdeletesection" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">CONFIRMAR ACCIÓN</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                <p class="text-uppercase">¿Estas seguro de que deseas eliminar el tramo seleccionado?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
+                <button id="btn-deletesection" type="button" class="btn">Si</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts{
     <script>
         $(() => {
+            // CÓDIGO AGREGAR ORIGEN DESTINO MODAL
+            loadState();
+            loadCountry();
+            loadUnits();
+            getCatalogos();
+
+            $("#frmOD").submit(function (event) {
+                event.preventDefault();
+                const type = $(this).attr('rel') == 'destino' ? 'Destinations/setDestino' : 'Origins/setOrigen';
+                var jsonData = convertJson($("#frmOD"));
+                jsonData["Id_Cliente"] = $('#Section_ClientesId').val();
+                if (jsonData["Id_Cliente"] == 0) {
+                    dToast("error", "DEBES SELECCIONAR UN CLIENTE PARA AGREGAR ORIGENES/DESTINOS", "Error");
+                    return;
+                }
+                if (parseInt($("#Id_Ciudad").val()) != 0 && parseInt($("#Id_Estado").val()) != 0 && parseInt($("#Id_Colonia").val()) != 0) {
+                    $.post(`/Clients/${type}`, jsonData, function (res) {
+                        dToast("success", "Registro guardado exitosamente.", "Registrado");
+                        $(".guardar").attr("disabled", false);
+                        $('#frmOD').trigger("reset");
+                        $('#Section_ClientesId').val(jsonData["Id_Cliente"]).trigger('change');
+                    }).fail(function (error) {
+                        dToast("error", "Error al tratar de guardar el registro", "Error");
+                        $(".guardar").attr("disabled", false);
+                    });
+                } else {
+                    dToast("error", "Selecciona una opción", "Error");
+                }
+            });
+            // END CODIGO AGREGAR ORIGEN DESTINO
         });
 
         const GetSection = async (b, SectionId) => {
+            $('.sk-cube-grid').show();
+            $('#sectioncontainer, #addservicescontainer').hide();
             b.disabled = true;
+            SectionId === 0 && ($('#servicescontainer').empty(), $('.addServicios').show());
             try {
                 const response = await fetch(`/Travels/GetSection?SectionId=${SectionId}`);
                 const data = await response.text();
-                $('#sectioncontainer').html(data);
+                $('#sectioncontainer').html(data).show();
                 $('#addservicescontainer').show();
+                $('.sk-cube-grid').hide();
             } catch (e) {
                 console.error(e);
             }
@@ -351,6 +433,36 @@
                 });
                 $('#Section_Cl_Has_OrigenId').html(originshtml);
                 $('#Section_Cl_Has_DestinosId').html(destinationshtml);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        const GetClientReferences = async ClientId => {
+            try {
+                const response = await fetch(`/Travels/GetClientReferences?ClientId=${ClientId}`);
+                const data = await response.json();
+                if (!data) {
+                    dToast("warning", 'El cliente seleccionado no tiene parámetros para "OTROS".', "Atencion!");
+                    $('#referencia1, #referencia2, #referencia3').hide();
+                    return;
+                }
+                const {
+                    referencia1,
+                    referencia2,
+                    referencia3,
+                    treferencia1,
+                    treferencia2,
+                    treferencia3
+                } = data;
+                referencia1 ? ($('[for="Section_Referencia1"]').html(treferencia1.toUpperCase()), $('#referencia1').show()) : $('#referencia1').hide();
+                referencia2 ? ($('[for="Section_Referencia2"]').html(treferencia2.toUpperCase()), $('#referencia2').show()) : $('#referencia2').hide();
+                referencia3 ? ($('[for="Section_Referencia3"]').html(treferencia3.toUpperCase()), $('#referencia3').show()) : $('#referencia3').hide();
+                //let referencias = ``;
+                //referencias += referencia1 ? `<div class="col-4" ><label class="form-label">${treferencia1.toUpperCase()}</label><input type="text" class="form-control" id="referencia1" name="referencia1" required></div>` : '';
+                //referencias += referencia2 ? `<div class="col-4" ><label class="form-label">${treferencia2.toUpperCase()}</label><input type="text" class="form-control" id="referencia2" name="referencia2" required></div>` : '';
+                //referencias += referencia3 ? `<div class="col-4" ><label class="form-label">${treferencia3.toUpperCase()}</label><input type="text" class="form-control" id="referencia3" name="referencia3" required></div>` : '';
+                //$('.referencias').html(referencias);
             } catch (e) {
                 console.error(e);
             }
@@ -395,15 +507,83 @@
                 return;
             }
 
+            if ($('#servicesform').serializeArray().length === 0) {
+                dToast('error', 'Los servicios son obligatorios', 'Error');
+                return;
+            }
+
+            let service = {};
+
+            $('#servicesform').serializeArray().map(({ name }) => {
+                $(`.${name}-form`).map((k, form) => {
+                    service = { ...service, ...Object.fromEntries(new FormData(form)) };
+                });
+            });
+
+            const invalidServices = Object.entries(service).some(([k, v]) => {
+                if (v === '' || v == 0) {
+                    return true;
+                }
+                return false;
+            });
+
+            if (invalidServices) {
+                dToast('error', 'Los parámetros de servicios son obligatorios', 'Error');
+                return;
+            }
+
+
+            let units = [];
+            $('.formunit').map((k, v) => {
+                units = [...units, Object.fromEntries([...new FormData(v)])];
+            });
+            service = { ...service, units };
+
+            if (service['units'].length === 0) {
+                dToast('error', 'Las unidades de servicios son obligatorias', 'Error');
+                return;
+            } else {
+                const invalidUnit = service['units'].some(({ typeid, unitid }) => {
+                    if (typeid == 0 || unitid == 0) {
+                        return true;
+                    }
+                    return false;
+                });
+                if (invalidUnit) {
+                    dToast('error', 'Las unidades de servicios son obligatorias', 'Error');
+                    return;
+                }
+            }
+
             b.disabled = true;
-            const params = {
+
+            const newservice = {
                 method: 'POST',
                 body: new FormData(f)
             };
 
             try {
-                const response = await fetch('/Travels/AddEditSection', params);
-                response.ok && dToast("success", "REGISTRO GUARDADO", "Registrado"), setTimeout(() => location.reload(), 1000);
+                const response = await fetch('/Travels/AddEditSection', newservice);
+                if (!response.ok) {
+                    dToast("error", "OCURRIÓ UN ERROR AL PROCESAR LA SOLICITUD", "Error");
+                    return;
+                }
+
+                const params = {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json; charset=utf-8'
+                    },
+                    body: JSON.stringify(service)
+                };
+
+                try {
+                    const response = await fetch('/Travels/AddServices', params);
+                    response.ok && dToast("success", "REGISTRO GUARDADO", "Registrado"), setTimeout(() => location.reload(), 1300);
+                } catch (e) {
+                    console.error(e);
+                    dToast("error", "OCURRIÓ UN ERROR AL PROCESAR LA SOLICITUD", "Error");
+                }
             } catch (e) {
                 console.error(e);
                 dToast("error", "OCURRIÓ UN ERROR AL PROCESAR LA SOLICITUD", "Error");
@@ -442,23 +622,23 @@
             try {
                 const resposne = await fetch('/Travels/GetServices', params);
                 const data = await resposne.text();
-                $('.addServicios').hide();
                 $('#servicescontainer').html(data).show();
+                $('.addServicios').hide();
             } catch (e) {
                 console.error(e);
             }
         }
 
-        const getOperadores = async idtransportista => {
+        const getOperadores = async (idtransportista, service) => {
             const idselected = $('.equipocontainer').attr('rel');
             idselected != idtransportista && $('.equipocontainer select').parent().remove();
             try {
                 const response = await fetch(`/Carriers/Operators/getOperators?Id_Transportista=${idtransportista}`);
                 const data = await response.json();
-                $('#chofer').empty();
-                $('#chofer').append(`<option value="0" selected disabled>SELECCIONA UN CHOFER</option>`)
-                data.length > 0 ? data.map(({ id, nombre, estatus }) => estatus === 1 ? $('#chofer').append(`<option value="${id}">${nombre}</option>`) : null) : $('#chofer').append(`<option value="0">SIN OPERADORES ACTIVOS</option>`);
-                dSelect('chofer');
+                $(`#chofer-${service}`).empty();
+                $(`#chofer-${service}`).append(`<option value="0" selected>SELECCIONA UN CHOFER</option>`)
+                data.length > 0 ? data.map(({ id, nombre, estatus }) => estatus === 1 ? $(`#chofer-${service}`).append(`<option value="${id}">${nombre}</option>`) : null) : $(`#chofer-${service}`).append(`<option value="0">SIN OPERADORES ACTIVOS</option>`);
+                dSelect(`chofer-${service}`);
             } catch (e) {
                 console.error(e);
             }
@@ -478,20 +658,23 @@
 
         const addEquipo = (servicio, element) => {
             const boton = jQuery(element);
-            const idtransportista = $('#transportista').val();
+            const idtransportista = $(`#carrier-${servicio}`).val();
             const elementid = $('.equipocontainer').children().length;
             $('.equipocontainer').attr('rel', idtransportista);
             boton.remove();
             const equipo = `<div class="d-flex justify-content-between equipo mt-2">
-                    <select id="unidad${elementid}" class="form-control form-control-sm col-4 selectunidad" name="unidad${servicio}" required onchange="{selectEquipo(${idtransportista}, this.value, ${elementid});}">
+                <form class="formunit ${servicio} row w-100">
+                    <input id="${servicio}-unit" type="hidden" name="id" value="-1" >
+                    <select id="unidad${elementid}" class="form-control form-control-sm col-4 selectunidad" name="typeid" required onchange="{selectEquipo(${idtransportista}, this.value, ${elementid});}">
                     </select>
                     <div class="col-8 d-flex flex-row justify-content-between">
-                        <select id="equipo${elementid}" class="form-control form-control-sm col-10 selectequipo" name="equipo${servicio}" required>
+                        <select id="equipo${elementid}" class="form-control form-control-sm col-10 selectequipo" name="unitid" required>
                         </select>
-                        <i class="material-icons text-danger" style="cursor: pointer;" onClick="{$(this).parent().parent().remove();}">delete</i>
+                        <i id="unit-${servicio}-${elementid}" class="material-icons text-danger" style="cursor: pointer;" onClick="DeleteUnit(this, 0)">delete</i>
                     </div>
-                </div>
-                <i id="addEquipo" class="material-icons" style="cursor:pointer;" onclick="addEquipo('${servicio}', this);">add_box</i>`;
+                </form>
+            </div>
+            <i id="addEquipo" class="material-icons" style="cursor:pointer;" onclick="addEquipo('${servicio}', this);">add_box</i>`;
             $('.equipocontainer').append(equipo);
             getInventario(idtransportista, elementid);
         }
@@ -534,8 +717,8 @@
             }
         }
 
-        const downloadChofer = element => {
-            const idchofer = $('#chofer').val();
+        const downloadChofer =  (element, ChoferSelector) => {
+            const idchofer = $(`#${ChoferSelector}`).val();
             if (idchofer == 0) {
                 dToast("error", "NO HAY UN CHOFER SELECCIONADO", "Error");
             } else {
@@ -545,6 +728,213 @@
                 a[0].click();
                 a.remove();
             }
+        }
+
+        const ConfirmDeleteSection = (SectionId) => {
+            $('#btn-deletesection').attr('onClick', `DeleteSection(${SectionId});`);
+            $('#popupdeletesection').modal('show');
+        }
+
+        const confirmDelete = (service, serviceid) => {
+            $('#confirm').attr('onClick', `removeService('${service}', ${serviceid});`);
+            $('#popup').modal('show');
+        }
+
+        const DeleteSection = async SectionId => {
+            try {
+                const response = await fetch(`/Travels/DeleteSection?SectionId=${SectionId}`);
+                $('#popupdeletesection').modal('hide');
+                response.ok && dToast("success", "Tramo eliminado", "Eliminado"), setTimeout(() => location.reload(), 1300);
+            } catch (e) {
+                console.error(e);
+            }
+
+        }
+
+        const removeService = async (service, serviceid) => {
+            if (serviceid > 0) {
+                try {
+                    const response = await fetch(`/Travels/DeleteService?ServiceId=${serviceid}`);
+                    if (response.ok) {
+                        $(`#${service}-container`).hide('slow', () => {
+                            $('#popup').modal('hide');
+                            $(`#${service}-container`).remove();
+                            $(`[name=${service}]`).prop('checked', false);
+                            $('#servicescontainer').children().length === 0 ? ($(`.addServicios`).show('slow', () => { $('.addServicios').show(); }), $('#frmServicios input').prop('checked', false)) : null;
+                        });
+                    }
+                } catch (e) {
+                    console.error(e);
+                }
+            } else {
+                $(`#${service}-container`).hide('slow', () => {
+                    $('#popup').modal('hide');
+                    $(`#${service}-container`).remove();
+                    $(`[name=${service}]`).prop('checked', false);
+                    $('#servicescontainer').children().length === 0 ? ($(`.addServicios`).show('slow', () => { $('.addServicios').show(); }), $('#frmServicios input').prop('checked', false)) : null;
+                });
+            }
+        }
+
+        const DeleteUnit = async (e, UnitId) => {
+            if (UnitId > 0) {
+                try {
+                    const response = await fetch(`/Travels/DeleteUnit?UnitId=${UnitId}`);
+                    response.ok && dToast("success", "Registro eliminado", "Eliminado");
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+            $(e).parent().parent().remove();
+        }
+
+        // CÓDIGO AGREGAR ORIGENES DESTINOS MODAL
+        let dataCity = [];
+        let catPais = [];
+        let catEstado = [];
+        let catCiudad = [];
+        let dataOrigenes = [];
+        let dataState = [];
+        let dataColonies = [];
+
+        function showModal(titulo = "Title", accion, type) {
+            $('#frmOD').trigger("reset").attr('rel', type);
+            $(".guardar").html(accion);
+            $("#titulo-modal").empty("");
+            $("#titulo-modal").html(titulo);
+            $("#idEditar").val(idEditar);
+            $("#modalOD").modal("show");
+        }
+
+        //Cargar unidades
+        const loadUnits = () => {
+            $.get("/Catalogs/TypesOfUnits/getUnidades", response => {
+                $("#tipounidad").empty();
+                $.each(response, function (item, key) {
+                    key.estatus === 1 && $("#tipounidad").append(`<option value="${key.id}">${key.nombre}</option>`);
+                });
+                dSelect('tipounidad');
+            }).fail(error => {
+                console.error(error);
+                dToast("error", "Error al obtener ciudades", "Atencion!");
+            });
+        }
+        //Cargar ciudades
+        const loadCity = () => {
+            $.get("/Catalogs/Geography/City/getCity", response => {
+                response.map(data => {
+                    const { id, nombre, estatus } = data;
+                    if (estatus === 1) {
+                        catCiudad = [...catCiudad, data];
+                        $("#origen, #destino").append(`<option value="${id}">${nombre}</option>`);
+                    }
+                });
+                dSelect('origen');
+                dSelect('destino');
+            }).fail(error => {
+                console.error(error);
+                dToast("error", "Error al obtener tipos de unidad", "Atencion!");
+            });
+        }
+        //Cargar paises
+        const loadCountry = () => {
+            $.get("/Catalogs/Geography/Country/getCountry", response => {
+                response.map(data => {
+                    const { id, pais, estatus } = data;
+                    if (estatus === 1) {
+                        catPais = [...catPais, data];
+                        $("#id_pais").append(`<option value="${id}">${pais}</option>`);
+                    }
+                });
+                dSelect('id_pais');
+            }).fail(error => {
+                console.error(error);
+                dToast("error", "Error al obtener paises", "Atencion!");
+            });
+        }
+        //Cargar estados
+        const loadState = () => {
+            $.get("/Catalogs/Geography/State/getState", response => {
+                $("#id_estado").empty();
+                response.map(data => {
+                    const { id, nombre, estatus } = data;
+                    if (estatus === 1) {
+                        $("#id_estado").append(`<option value="${id}">${nombre}</option>`);
+                    }
+                });
+                dSelect('id_estado');
+            }).fail(error => {
+                console.error(error);
+                dToast("error", "Error al obtener los estados", "Atencion!");
+            });
+        }
+        //Catalogos
+        function getCatalogos() {
+            $.get("/Catalogs/Geography/State/getState", function (res) {
+                dataState = res;
+                $("#Id_Estado").empty();
+                $("#Id_Estado").append(`<option value="0" selected disabled>Selecciona una opción</option>`);
+                $.each(dataState, function (item, key) {
+                    if (parseInt(key.estatus) == 1) {
+                        $("#Id_Estado").append(`<option value="${key.id}">${key.nombre}</option>`);
+                    };
+                });
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+            });
+            $.get("/Catalogs/Geography/City/getCity", function (res) {
+                dataCity = res;
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+            });
+            $.get("/Catalogs/Geography/Colonies/getColonies", function (res) {
+                dataColonies = res;
+            }).fail(function (error) {
+                dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
+            });
+        }
+        function searcCP() {
+            var codigoP = $("#Cp").val();
+            $.each(dataColonies, function (item, key) {
+                if (parseInt(key.estatus) == 1 && parseInt(key.cp) == parseInt(codigoP)) {
+                    $('#Id_Estado option[value="' + key.id_estado + '"]').attr("selected", true);
+                    setCiudad(key.id_estado);
+                    $("#Id_Estado").change();
+                    $('#Id_Ciudad option[value="' + key.id_ciudad + '"]').attr("selected", true);
+                    $("#Id_Ciudad").change();
+                    setColonias(key.id_ciudad);
+                    $("#Id_Colonia").change();
+                };
+            });
+        }
+        function setCp(id) {
+            let indice = dataColonies.findIndex(service => service.id == id);
+            if (parseInt(id) != 0) {
+                if (parseInt(indice) >= 0) {
+                    $("#Cp").val(dataColonies[indice].cp);
+                } else {
+                    $("#Cp").val("");
+                    dToast("info", "No se encontro ninguna colonia", "Atención");
+                }
+            }
+        }
+        function setColonias(id) {
+            $("#Id_Colonia").empty();
+            $("#Id_Colonia").append(`<option value="0" selected disabled>Selecciona una opción</option>`);
+            $.each(dataColonies, function (item, key) {
+                if (parseInt(key.estatus) == 1 && parseInt(id) == parseInt(key.id_ciudad)) {
+                    $("#Id_Colonia").append(`<option value="${key.id}">${key.nombre}</option>`);
+                };
+            });
+        }
+        function setCiudad(id) {
+            $("#Id_Ciudad").empty();
+            $("#Id_Ciudad").append(`<option value="0" selected disabled>Selecciona una opción</option>`);
+            $.each(dataCity, function (item, key) {
+                if (parseInt(key.estatus) == 1 && parseInt(id) == parseInt(key.id_estado)) {
+                    $("#Id_Ciudad").append(`<option value="${key.id}">${key.nombre}</option>`);
+                };
+            });
         }
     </script>
 }

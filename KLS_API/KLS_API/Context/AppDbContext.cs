@@ -70,6 +70,8 @@ namespace KLS_API.Context
         public DbSet<SectionComment> SectionComments { get; set; }
         public DbSet<Evidence> Evidences { get; set; }
         public DbSet<Facturacion> Facturacion { get; set; }
+        public DbSet<ServiceType> ServiceTypes { get; set; }
+        public DbSet<TravelService> TravelServices { get; set; }
 
         // Demandas
         public DbSet<Demand> Demands { get; set; }

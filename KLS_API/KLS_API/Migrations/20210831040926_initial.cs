@@ -638,6 +638,22 @@ namespace KLS_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ServiceTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: true),
+                    Active = table.Column<bool>(nullable: false),
+                    TimeCreated = table.Column<DateTime>(nullable: false),
+                    TimeUpdated = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServiceTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Statuses",
                 columns: table => new
                 {
@@ -829,6 +845,21 @@ namespace KLS_API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Transportista", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TravelServices",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(nullable: true),
+                    Active = table.Column<bool>(nullable: false),
+                    TimeCreated = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TravelServices", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -1065,6 +1096,7 @@ namespace KLS_API.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     SubstatusId = table.Column<int>(nullable: false),
+                    TravelServiceId = table.Column<int>(nullable: false),
                     Folio = table.Column<string>(nullable: true),
                     Cat_Tipos_UnidadesId = table.Column<int>(nullable: false),
                     Ejecutivo = table.Column<string>(nullable: true),
@@ -1088,6 +1120,12 @@ namespace KLS_API.Migrations
                         name: "FK_Travels_Substatuses_SubstatusId",
                         column: x => x.SubstatusId,
                         principalTable: "Substatuses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Travels_TravelServices_TravelServiceId",
+                        column: x => x.TravelServiceId,
+                        principalTable: "TravelServices",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1273,9 +1311,9 @@ namespace KLS_API.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     SectionId = table.Column<int>(nullable: false),
+                    ServiceTypeId = table.Column<int>(nullable: false),
                     TransportistaId = table.Column<int>(nullable: false),
                     Tr_Has_OperadoresId = table.Column<int>(nullable: false),
-                    Folio = table.Column<string>(nullable: true),
                     Costo = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Precio = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
@@ -1286,6 +1324,12 @@ namespace KLS_API.Migrations
                         name: "FK_Services_Sections_SectionId",
                         column: x => x.SectionId,
                         principalTable: "Sections",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Services_ServiceTypes_ServiceTypeId",
+                        column: x => x.ServiceTypeId,
+                        principalTable: "ServiceTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -1512,6 +1556,11 @@ namespace KLS_API.Migrations
                 column: "SectionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Services_ServiceTypeId",
+                table: "Services",
+                column: "ServiceTypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Services_Tr_Has_OperadoresId",
                 table: "Services",
                 column: "Tr_Has_OperadoresId");
@@ -1535,6 +1584,11 @@ namespace KLS_API.Migrations
                 name: "IX_Travels_SubstatusId",
                 table: "Travels",
                 column: "SubstatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Travels_TravelServiceId",
+                table: "Travels",
+                column: "TravelServiceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Units_Cat_Tipos_UnidadesId",
@@ -1690,6 +1744,9 @@ namespace KLS_API.Migrations
                 name: "Sections");
 
             migrationBuilder.DropTable(
+                name: "ServiceTypes");
+
+            migrationBuilder.DropTable(
                 name: "Tr_Has_Operadores");
 
             migrationBuilder.DropTable(
@@ -1721,6 +1778,9 @@ namespace KLS_API.Migrations
 
             migrationBuilder.DropTable(
                 name: "Substatuses");
+
+            migrationBuilder.DropTable(
+                name: "TravelServices");
 
             migrationBuilder.DropTable(
                 name: "Statuses");
