@@ -1,0 +1,190 @@
+﻿@model KLS_WEB.Models.Travels.DTO.BoxDTO
+
+@if (Model != null)
+{
+    <div class="col-12 mercancia px-3">
+        <div class="text-left d-flex justify-content-start mb-3">
+            <h4>MERCANCIA</h4>
+        </div>
+        <div class="row">
+            <div class="col-6 d-flex flex-column justify-content-between">
+                <div class="card mb-3 p-3">
+                    <p class="text-left font-weight-bold">DESCRIPCIÓN</p>
+                    <form class="row g-3 text-left" onsubmit="event.preventDefault(), postMercancia(this)">
+                        <div class="col-3">
+                            <label asp-for="Alto" class="form-label">Alto</label>
+                            <input asp-for="Alto" type="number" class="form-control">
+                        </div>
+                        <div class="col-3">
+                            <label asp-for="Ancho" class="form-label">Ancho</label>
+                            <input asp-for="Ancho" type="number" class="form-control">
+                        </div>
+                        <div class="col-3">
+                            <label asp-for="Largo" class="form-label">Largo</label>
+                            <input asp-for="Largo" type="number" class="form-control">
+                        </div>
+                        <div class="col-3">
+                            <label asp-for="Peso" class="form-label">Peso</label>
+                            <input asp-for="Peso" type="number" class="form-control">
+                        </div>
+                        <div class="col-3">
+                            <label asp-for="PesoVolumetrico" class="form-label">Alto</label>
+                            <input asp-for="PesoVolumetrico" type="number" class="form-control">
+                        </div>
+                        <div class="col-9 d-flex justify-content-end align-items-end">
+                            <button type="submit" class="btn btn-sm btn-link"><i class="material-icons">save</i></button>
+                        </div>
+                    </form>
+                </div>
+                @if (Model.Cl_Has_Box != null)
+                {
+                    <div class="card">
+                        <form onsubmit="event.preventDefault()" class="text-left mt-3 pr-4">
+                            <div class="form-group row">
+                                <div class="col-1">
+                                    <input type="checkbox" class="custome-check form-control form-control-sm" disabled>
+                                </div>
+                                <div class="col-5">
+                                    <label class="col-form-label col-form-label-sm pl-0"><strong>TIPOS</strong></label>
+                                </div>
+                                <div class="col-6 text-left">
+                                    <label class="col-form-label col-form-label-sm pl-0">
+                                        <strong>
+                                            COMENTARIOS
+                                            ADICIONALES
+                                        </strong>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-1">
+                                    <input asp-for="Cl_Has_Box.Densidad" type="checkbox" class="custome-check form-control form-control-sm" disabled>
+                                </div>
+                                <div class="col-5">
+                                    <label class="col-form-label col-form-label-sm pl-0">DENSIDAD</label>
+                                </div>
+                                <div class="col-6 text-left">
+                                    <select asp-for="Cl_Has_Box.D_Opcional" class="form-control form-control-sm" name="densidadval" id="densidad" style="width:100%" disabled>
+                                        <option selected disabled>SELECIONAR</option>
+                                        <option value="baja">BAJA</option>
+                                        <option value="media">MEDIA</option>
+                                        <option value="alta">ALTA</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-1">
+                                    <input asp-for="Cl_Has_Box.TipoPresentacion" type="checkbox" class="custome-check form-control form-control-sm" disabled>
+                                </div>
+                                <div class="col-5">
+                                    <label class="col-form-label col-form-label-sm pl-0">TIPO PRESENTACIÓN</label>
+                                </div>
+                                <div class="col-6 text-left">
+                                    <select asp-for="Cl_Has_Box.Tp_Opcional" class="form-control form-control-sm" name="tipopresentacionval" id="tipopresentacion" style="width:100%" disabled>
+                                        <option selected disabled>SELECIONAR</option>
+                                        <option value="envase">ENVASE</option>
+                                        <option value="granel">GRANEL</option>
+                                        <option value="tarima">TARIMA</option>
+                                        <option value="otros">OTROS</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-1">
+                                    <input asp-for="Cl_Has_Box.Peligroso" type="checkbox" class="custome-check form-control form-control-sm" disabled>
+                                </div>
+                                <div class="col-5">
+                                    <label class="col-form-label col-form-label-sm pl-0">PELIGROSO</label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-1">
+                                    <input asp-for="Cl_Has_Box.Material" type="checkbox" class="custome-check form-control form-control-sm" disabled>
+                                </div>
+                                <div class="col-5">
+                                    <label class="col-form-label col-form-label-sm pl-0">MATERIAL</label>
+                                </div>
+                                <div class="col-6 text-left">
+                                    <select asp-for="Cl_Has_Box.M_Opcional" class="form-control form-control-sm" name="materialval" id="material" style="width:100%" disabled>
+                                        <option selected disabled>SELECIONAR</option>
+                                        <option value="materiaprima">MATERIA PRIMA</option>
+                                        <option value="materialdeenvase">MATERIAL DE ENVASE</option>
+                                        <option value="productoterminado">PRODUCTO TERMINADO</option>
+                                        <option value="perecederos">PERECEDEROS</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-1">
+                                    <input asp-for="Cl_Has_Box.Derramable" type="checkbox" class="custome-check form-control form-control-sm" disabled>
+                                </div>
+                                <div class="col-5">
+                                    <label class="col-form-label col-form-label-sm pl-0">DERRAMABLE</label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-1">
+                                    <input asp-for="Cl_Has_Box.Valor" type="checkbox" class="custome-check form-control form-control-sm" disabled>
+                                </div>
+                                <div class="col-5">
+                                    <label class="col-form-label col-form-label-sm pl-0">VALOR</label>
+                                </div>
+                                <div class="col-6 text-left">
+                                    <select asp-for="Cl_Has_Box.V_Opcional" class="form-control form-control-sm" name="valorval" id="valor" style="width:100%" disabled>
+                                        <option selected disabled>SELECIONAR</option>
+                                        <option value="alto">ALTO</option>
+                                        <option value="medio">MEDIO</option>
+                                        <option value="bajo">BAJO</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-1">
+                                    <input asp-for="Cl_Has_Box.Custodia" type="checkbox" class="custome-check form-control form-control-sm" disabled>
+                                </div>
+                                <div class="col-5">
+                                    <label class="col-form-label col-form-label-sm pl-0">CUSTODIA</label>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-1">
+                                    <input asp-for="Cl_Has_Box.OlorPenetrante" type="checkbox" class="custome-check form-control form-control-sm" disabled>
+                                </div>
+                                <div class="col-5">
+                                    <label class="col-form-label col-form-label-sm pl-0">OLOR PENETRANTE</label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                }
+            </div>
+
+            <div class="card col-6 mb-3 p-3">
+                @if (Model.Cl_Has_Box is null)
+                {
+
+
+                    <div class="col-12 px-3 d-flex justify-content-center text-danger size-14 mb-2">
+                        <span class="material-icons my-auto">warning</span>
+                        <p class="text-uppercase my-auto">El cliente de este tramo no tiene parámetros de mercancía configurados</p>
+                    </div>
+                }
+                else
+                {
+
+                    <p class="text-left font-weight-bold">REQUISITOS ESPECIALES</p>
+                    <div class="form-floating">
+                        <textarea asp-for="Cl_Has_Box.Notas" class="form-control" placeholder="OPCIONALES" rows="35" disabled></textarea>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="col-12 px-3 d-flex justify-content-center text-danger">
+        <span class="material-icons my-auto">warning</span>
+        <h4 class="text-uppercase my-auto">El cliente de este tramo no tiene parámetros de mercancía configurados</h4>
+    </div>
+}

@@ -29,7 +29,7 @@
             <a asp-controller="Travels" asp-action="Index" class="my-auto">
                 <div class="material-icons icon-red">arrow_back</div>
             </a>
-            <div class="text-uppercase poppins medium size-24 pl-2">Nuevo viaje</div>
+            <div class="text-uppercase poppins medium size-24 pl-2">@(Model.Travel.Id == 0 ? "Nuevo viaje" : string.Concat("Viaje", " ", Model.Travel.Folio))</div>
         </div>
     </div>
 </div>
@@ -60,9 +60,12 @@
                     @{ decimal venta = 0; }
                     @foreach (var section in Model.Travel.Sections)
                     {
-                        foreach (var service in section.Services)
+                        if (!section.IsEmpty)
                         {
-                            venta += service.Precio;
+                            foreach (var service in section.Services)
+                            {
+                                venta += service.Precio;
+                            }
                         }
                     }
                     <b>@venta.ToString("C") MXN</b>
@@ -72,7 +75,18 @@
             <div class="card text-center">
 
                 <div class="card-body pb-0 size-12">
-                    <b>$00.00 MXN</b>
+                    @{ decimal vacios = 0; }
+                    @foreach (var section in Model.Travel.Sections)
+                    {
+                        if (section.IsEmpty)
+                        {
+                            foreach (var service in section.Services)
+                            {
+                                vacios += service.Precio;
+                            }
+                        }
+                    }
+                    <b>@vacios.ToString("C") MXN</b>
                     <p class="text-light-grey">VACIOS</p>
                 </div>
             </div>
@@ -110,7 +124,7 @@
             }
         </div>
         <div style="height: 17rem; overflow-y: scroll; overflow-x: unset;">
-            <table class="table table-striped table-bordered display table-hover text-uppercase table-facturas" width="100%">
+            <table class="table table-striped table-bordered display table-hover text-uppercase" width="100%">
                 <thead>
                     <tr>
                         <th>TRAMO</th>
@@ -128,7 +142,7 @@
                                 <td><a href="javascript:void(0)" onclick="GetSection(this, @tramo.Id)">@tramo.Folio</a></td>
                                 <td>@(tramo.Services.Any() ? tramo.Services.Sum(x => x.Costo).ToString("C") : 0.ToString("C"))</td>
                                 <td>@(tramo.Services.Any() ? tramo.Services.Sum(x => x.Precio).ToString("C") : 0.ToString("C"))</td>
-                                <td>@tramo.Clients.NombreCorto</td>
+                                <td>@(tramo.IsEmpty ? "-" : tramo.Clients.NombreCorto)</td>
                             </tr>
                         }
                     }
@@ -154,6 +168,71 @@
     <div class="sk-cube sk-cube7"></div>
     <div class="sk-cube sk-cube8"></div>
     <div class="sk-cube sk-cube9"></div>
+</div>
+
+<div id="traveldetails-container" rel="5" class="row w-100 pl-4" style="display: none;">
+    <div class="catalog-list w-100 pl-3 d-flex justify-content-around">
+        <a href="javascript:void(0);" class="catalog" id="servicios" onclick="ShowPanel(this.id)">
+            <div class="content">
+                <span class="material-icons">
+                    people
+                </span>
+                <div class="name font-barlow">Servicios</div>
+            </div>
+        </a>
+        <a href="javascript:void(0);" class="catalog" id="requisitos" onclick="ShowPanel(this.id)">
+            <div class="content" id="requisitos">
+                <span class="material-icons">
+                    inventory_2
+                </span>
+                <div class="name font-barlow">Requisitos</div>
+            </div>
+        </a>
+        <a href="javascript:void(0);" class="catalog" id="mercancia" onclick="ShowPanel(this.id)">
+            <div class="content">
+                <span class="material-icons">
+                    store
+                </span>
+                <div class="name font-barlow">Mercancía</div>
+            </div>
+        </a>
+
+        <a href="javascript:void(0);" class="catalog" id="facturacion" onclick="ShowPanel(this.id)">
+            <div class="content">
+                <span class="material-icons">
+                    receipt_long
+                </span>
+                <div class="name font-barlow">Facturación</div>
+            </div>
+        </a>
+        @*<a href="javascript:void(0);" class="catalog" id="documentos" onclick="ShowPanel(this.id)">
+                <div class="content">
+                    <span class="material-icons">
+                        folder
+                    </span>
+                    <div class="name font-barlow">Documentos</div>
+                </div>
+            </a>*@
+        <a href="javascript:void(0);" class="catalog" id="historial" onclick="ShowPanel(this.id)">
+            <div class="content">
+                <span class="material-icons">
+                    manage_search
+                </span>
+                <div class="name font-barlow">Historial</div>
+            </div>
+        </a>
+        @*<a href="javascript:void(0);" class="catalog" id="historial" onclick="ShowPanel(this.id)">
+                <div class="content">
+                    <span class="material-icons">
+                        pin_drop
+                    </span>
+                    <div class="name font-barlow">Monitoreo</div>
+                </div>
+            </a>*@
+    </div>
+</div>
+
+<div id="panelcontainer" class="row w-100 pl-4 mt-3 col-12">
 </div>
 
 <div id="sectioncontainer" class="row w-100 pl-4 mt-3">
@@ -368,6 +447,8 @@
 
 @section Scripts{
     <script>
+        let _SectionIsEmpty = false;
+        let _CustomerId = 0;
         $(() => {
             // CÓDIGO AGREGAR ORIGEN DESTINO MODAL
             loadState();
@@ -399,18 +480,22 @@
                 }
             });
             // END CODIGO AGREGAR ORIGEN DESTINO
+            dSelect('Travel_TravelServiceId');
         });
 
         const GetSection = async (b, SectionId) => {
+            //SectionId === 0 && $('#traveldetails-container, #panelcontainer').hide();
             $('.sk-cube-grid').show();
-            $('#sectioncontainer, #addservicescontainer').hide();
+            $('#sectioncontainer, #addservicescontainer, #traveldetails-container, #panelcontainer').hide();
             b.disabled = true;
             SectionId === 0 && ($('#servicescontainer').empty(), $('.addServicios').show());
+            $('#traveldetails-container').attr('rel', SectionId);
             try {
                 const response = await fetch(`/Travels/GetSection?SectionId=${SectionId}`);
                 const data = await response.text();
                 $('#sectioncontainer').html(data).show();
                 $('#addservicescontainer').show();
+                SectionId > 0 && $('#traveldetails-container').show();
                 $('.sk-cube-grid').hide();
             } catch (e) {
                 console.error(e);
@@ -502,9 +587,14 @@
         }
 
         const AddEditSection = async (b, f) => {
-            if (!validateForm('#sectionform')) {
-                dToast("error", "TODOS LOS CAMPOS SON OBLIGATORIOS", "Error");
-                return;
+            //console.log([...f]);
+            //[...f].map(e => console.log(e, $(e).is(':disabled')));
+            const isEmpty = $('#Section_IsEmpty').prop('checked');
+            if (!isEmpty) {
+                if (!validateForm('#sectionform')) {
+                    dToast("error", "TODOS LOS CAMPOS SON OBLIGATORIOS", "Error");
+                    return;
+                }
             }
 
             if ($('#servicesform').serializeArray().length === 0) {
@@ -663,18 +753,18 @@
             $('.equipocontainer').attr('rel', idtransportista);
             boton.remove();
             const equipo = `<div class="d-flex justify-content-between equipo mt-2">
-                <form class="formunit ${servicio} row w-100">
-                    <input id="${servicio}-unit" type="hidden" name="id" value="-1" >
-                    <select id="unidad${elementid}" class="form-control form-control-sm col-4 selectunidad" name="typeid" required onchange="{selectEquipo(${idtransportista}, this.value, ${elementid});}">
-                    </select>
-                    <div class="col-8 d-flex flex-row justify-content-between">
-                        <select id="equipo${elementid}" class="form-control form-control-sm col-10 selectequipo" name="unitid" required>
-                        </select>
-                        <i id="unit-${servicio}-${elementid}" class="material-icons text-danger" style="cursor: pointer;" onClick="DeleteUnit(this, 0)">delete</i>
+                        <form class="formunit ${servicio} row w-100">
+                            <input id="${servicio}-unit" type="hidden" name="id" value="-1" >
+                            <select id="unidad${elementid}" class="form-control form-control-sm col-4 selectunidad" name="typeid" required onchange="{selectEquipo(${idtransportista}, this.value, ${elementid});}">
+                            </select>
+                            <div class="col-8 d-flex flex-row justify-content-between">
+                                <select id="equipo${elementid}" class="form-control form-control-sm col-10 selectequipo" name="unitid" required>
+                                </select>
+                                <i id="unit-${servicio}-${elementid}" class="material-icons text-danger" style="cursor: pointer;" onClick="DeleteUnit(this, 0)">delete</i>
+                            </div>
+                        </form>
                     </div>
-                </form>
-            </div>
-            <i id="addEquipo" class="material-icons" style="cursor:pointer;" onclick="addEquipo('${servicio}', this);">add_box</i>`;
+                    <i id="addEquipo" class="material-icons" style="cursor:pointer;" onclick="addEquipo('${servicio}', this);">add_box</i>`;
             $('.equipocontainer').append(equipo);
             getInventario(idtransportista, elementid);
         }
@@ -717,7 +807,7 @@
             }
         }
 
-        const downloadChofer =  (element, ChoferSelector) => {
+        const downloadChofer = (element, ChoferSelector) => {
             const idchofer = $(`#${ChoferSelector}`).val();
             if (idchofer == 0) {
                 dToast("error", "NO HAY UN CHOFER SELECCIONADO", "Error");
@@ -787,6 +877,41 @@
             }
             $(e).parent().parent().remove();
         }
+
+        const GetKLSRoutes = async RouteId => {
+            try {
+                const response = await fetch('/Travels/GetKLSRoutes');
+                const data = await response.json();
+                let routes = '<option value="0" selected>SELECCIONA</option>';
+                data.map(({ id, od }) => routes += `<option value="${id}" ${RouteId == id && 'selected'}>${od}</option>`);
+                $('#Section_RutaId').html(routes);
+            } catch (e) {
+                console.error();
+            }
+        }
+
+        // PANELES
+        const ShowPanel = async Panel => {
+            if (Panel === 'servicios') {
+                $('#sectioncontainer, #addservicescontainer').show();
+                $('#panelcontainer').hide();
+                return;
+            } else {
+                $('#sectioncontainer, #addservicescontainer').hide();
+                $('#panelcontainer').show();
+            }
+
+            const SectionId = $('#traveldetails-container').attr('rel');
+
+            try {
+                const response = await fetch(`/Travels/GetPanel?Panel=${Panel}&SectionId=${SectionId}`);
+                const data = await response.text();
+                $('#panelcontainer').html(data);
+            } catch (e) {
+                console.log(e);
+            }
+        }
+        // END PANELES
 
         // CÓDIGO AGREGAR ORIGENES DESTINOS MODAL
         let dataCity = [];
@@ -936,5 +1061,6 @@
                 };
             });
         }
+                //END CÓDIGO AGREGAR ORIGENES DESTINOS
     </script>
 }

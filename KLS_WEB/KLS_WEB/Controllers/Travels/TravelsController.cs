@@ -1,4 +1,5 @@
-﻿using KLS_WEB.Models;
+﻿using KLS_API.Models.Travel.DTO;
+using KLS_WEB.Models;
 using KLS_WEB.Models.Carriers;
 using KLS_WEB.Models.Clients;
 using KLS_WEB.Models.DT;
@@ -75,8 +76,14 @@ namespace KLS_WEB.Controllers.Travels
 
             return Customers;
         }
-        private async Task<List<SelectListItem>> GetRoute(int OriginId, int DestinationId)
+
+        private async Task<List<SelectListItem>> GetRoute(int? OriginId, int? DestinationId)
         {
+            if (OriginId is null || DestinationId is null)
+            {
+                OriginId = 0;
+                DestinationId = 0;
+            }
             SearchRuta searchRuta = new SearchRuta
             {
                 OriginId = OriginId,
@@ -107,8 +114,12 @@ namespace KLS_WEB.Controllers.Travels
 
             return listItems;
         }
-        private async Task<TravelDTO> GetCustomerOD(int CustomerId)
+        private async Task<TravelDTO> GetCustomerOD(int? CustomerId)
         {
+            if (CustomerId is null)
+            {
+                CustomerId = 0;
+            }
             TravelDTO travelDTO = new TravelDTO
             {
                 Selects =
@@ -199,6 +210,25 @@ namespace KLS_WEB.Controllers.Travels
 
             return RedirectToAction("AddEdit", new { TravelId = ok });
         }
+
+        //public void SetHistorial(string accion)
+        //{
+        //    int TravelId = (int)TempData.Peek("TravelId");
+        //    var UserName = HttpContext.Session.GetString("UserFN");
+        //    if (UserName != null && accion != null)
+        //    {
+        //        HistorialDTO historial = new HistorialDTO
+        //        {
+        //            TravelId = TravelId,
+        //            Registro = accion,
+        //            Usuario = UserName,
+        //            TimeCreated = DateTime.Now
+        //        };
+
+        //        AppContext.Execute<HistorialDTO>(MethodType.POST, Path.Combine(_UrlApi, "SetHistorial"), historial);
+        //    };
+
+        //}
         #endregion
 
         #region Section
@@ -220,15 +250,18 @@ namespace KLS_WEB.Controllers.Travels
 
             // INIT SELECTS
             travelDTO.Selects.Cat_Tipos_Unidades = await GetTiposUnidades();
-            travelDTO.Selects.Customers = await GetCustomers();
-            travelDTO.Selects.SectionType = await GetSectionType();
-            var customerOD = await GetCustomerOD(travelDTO.Section.ClientesId);
-            travelDTO.Selects.CustomerOrigins = customerOD.Selects.CustomerOrigins;
-            travelDTO.Selects.CustomerDestinations = customerOD.Selects.CustomerDestinations;
-            if (travelDTO.Section.Cl_Has_OrigenId != 0 && travelDTO.Section.Cl_Has_DestinosId != 0)
+            if (!travelDTO.Section.IsEmpty)
             {
-                travelDTO.Selects.Routes = await GetRoute(travelDTO.Section.Cl_Has_OrigenId, travelDTO.Section.Cl_Has_DestinosId);
+                travelDTO.Selects.Customers = await GetCustomers();
+                var customerOD = await GetCustomerOD(travelDTO.Section.ClientesId);
+                travelDTO.Selects.CustomerOrigins = customerOD.Selects.CustomerOrigins;
+                travelDTO.Selects.CustomerDestinations = customerOD.Selects.CustomerDestinations;
+                if ((travelDTO.Section.Cl_Has_OrigenId != 0 && travelDTO.Section.Cl_Has_OrigenId != null) && (travelDTO.Section.Cl_Has_DestinosId != 0 && travelDTO.Section.Cl_Has_DestinosId != null))
+                {
+                    travelDTO.Selects.Routes = await GetRoute(travelDTO.Section.Cl_Has_OrigenId, travelDTO.Section.Cl_Has_DestinosId);
+                }
             }
+            travelDTO.Selects.SectionType = await GetSectionType();
             if (SectionId > 0)
             {
                 travelDTO.Selects.Carriers = await GetCarriers();
@@ -240,6 +273,21 @@ namespace KLS_WEB.Controllers.Travels
 
             return PartialView(string.Concat(_UrlView, "_Section.cshtml"), travelDTO);
         }
+
+        [HttpPost]
+        public async Task<JsonResult> GetRoute([FromBody] SearchRuta search)
+        {
+            List<SearchRuta> route = await AppContext.Execute<List<SearchRuta>>(MethodType.POST, Path.Combine(_UrlApi, "GetRoute"), search);
+            return Json(route);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetAddress(string Id, string Type)
+        {
+            string address = await AppContext.Execute<dynamic>(MethodType.GET, Path.Combine(_UrlApi, "GetAddress", Type, Id), null);
+            return Json(address);
+        }
+
         [HttpGet]
         public async Task<JsonResult> GetSectionServices(int SectionId)
         {
@@ -289,6 +337,13 @@ namespace KLS_WEB.Controllers.Travels
         {
             Cl_Has_Otros cl_Has_Otros = await AppContext.Execute<Cl_Has_Otros>(MethodType.GET, Path.Combine(_UrlApi, "GetClientReferences", ClientId), null);
             return Json(cl_Has_Otros);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetKLSRoutes()
+        {
+            List<RouteKLSDTO> route = await AppContext.Execute<List<RouteKLSDTO>>(MethodType.GET, Path.Combine(_UrlApi, "GetKLSRoutes"), null);
+            return Json(route);
         }
         #endregion
 
@@ -344,30 +399,29 @@ namespace KLS_WEB.Controllers.Travels
         }
         #endregion
 
-        public class SearchRuta
-        {
-            public int Id { get; set; }
-            public string OD { get; set; }
-            public int OriginId { get; set; }
-            public int DestinationId { get; set; }
-        }
-
-        [HttpPost]
-        public async Task<JsonResult> GetRoute([FromBody] SearchRuta search)
-        {
-            List<SearchRuta> route = await AppContext.Execute<List<SearchRuta>>(MethodType.POST, Path.Combine(_UrlApi, "GetRoute"), search);
-            return Json(route);
-        }
-
+        #region Paneles
         [HttpGet]
-        public async Task<JsonResult> GetAddress(string Id, string Type)
+        public async Task<PartialViewResult> GetPanel(string Panel, string SectionId)
         {
-            string address = await AppContext.Execute<dynamic>(MethodType.GET, Path.Combine(_UrlApi, "GetAddress", Type, Id), null);
-            return Json(address);
+            switch (Panel)
+            {
+                case "requisitos":
+                    Cl_Has_Requisitos cl_Has_Requisitos = await AppContext.Execute<Cl_Has_Requisitos>(MethodType.GET, Path.Combine(_UrlApi, "GetCustomerRequirements", SectionId), null);
+                    return PartialView(string.Concat(_UrlView, "_Requirements.cshtml"), cl_Has_Requisitos);
+                case "mercancia":
+                    BoxDTO boxDTO = await AppContext.Execute<BoxDTO>(MethodType.GET, Path.Combine(_UrlApi, "GetCustomerBox", SectionId), null);
+                    return PartialView(string.Concat(_UrlView, "_Ware.cshtml"), boxDTO);
+                case "facturacion":
+                    return PartialView(string.Concat(_UrlView, "_Invoicing.cshtml"), SectionId);
+                case "historial":
+                    return PartialView(string.Concat(_UrlView, "_Log.cshtml"));
+                default:
+                    return PartialView();
+            }
         }
+        #endregion
 
         #region DataTableTravels
-
         [HttpPost]
         public async Task<JsonResult> DataTableTravels(DataTablesParameters dtParams)
         {

@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210901173202_section-fknullable")]
+    partial class sectionfknullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1586,7 +1588,7 @@ namespace KLS_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("SectionId")
+                    b.Property<int>("TravelId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("fechacarga")
@@ -1603,7 +1605,7 @@ namespace KLS_API.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("SectionId");
+                    b.HasIndex("TravelId");
 
                     b.ToTable("Facturacion");
                 });
@@ -2233,9 +2235,9 @@ namespace KLS_API.Migrations
 
             modelBuilder.Entity("KLS_API.Models.Travel.Facturacion", b =>
                 {
-                    b.HasOne("KLS_API.Models.Travel.Section", "Section")
+                    b.HasOne("KLS_API.Models.Travel.Travel", "Travel")
                         .WithMany()
-                        .HasForeignKey("SectionId")
+                        .HasForeignKey("TravelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

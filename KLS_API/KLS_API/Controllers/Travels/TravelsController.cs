@@ -131,7 +131,7 @@ namespace KLS_API.Controllers.Travels
                 int substatus = _dbContext.Substatuses.FirstOrDefault(x => x.Name.ToLower() == "registrado").Id;
                 int lastid = _dbContext.Travels.Count() + 1;
 
-                travel.Folio = string.Concat("V", DateTime.Now.ToString("yyMM"), lastid.ToString("D4"));
+                travel.Folio = string.Concat("V-", DateTime.Now.ToString("yyMM"), lastid.ToString("D4"));
                 travel.SubstatusId = substatus;
 
                 await _dbContext.Travels.AddAsync(travel);
@@ -208,16 +208,28 @@ namespace KLS_API.Controllers.Travels
             try
             {
                 Travel travel = await _dbContext.Travels.FindAsync(section.TravelId);
-                if (travel is null)
+                SectionType sectionType = await _dbContext.SectionTypes.FindAsync(section.SectionTypeId);
+                if (travel is null || sectionType is null)
                 {
                     return BadRequest();
                 }
 
+                if (section.IsEmpty)
+                {
+                    section.ClientesId = null;
+                    section.Cl_Has_OrigenId = null;
+                    section.Cl_Has_DestinosId = null;
+                    section.Cl_Has_OtrosId = null;
+                }
+
                 int lastid = _dbContext.Sections.Where(x => x.TravelId == section.TravelId && x.Active).Count() + 1;
 
-                section.Folio = string.Concat("V", DateTime.Now.ToString("yyMM"), travel.Folio.Substring(travel.Folio.Length - 4), "-", lastid.ToString("D2"));
+                section.Folio = string.Concat(sectionType.Acronym, DateTime.Now.ToString("yyMM"), travel.Folio.Substring(travel.Folio.Length - 4), "-", lastid.ToString("D2"));
                 section.SubstatusId = _dbContext.Substatuses.FirstOrDefault(x => x.Name.ToLower() == "registrado").Id;
-                section.Cl_Has_OtrosId = _dbContext.Cl_Has_Otros.FirstOrDefault(x => x.Id_Cliente == section.ClientesId).Id;
+                if (!section.IsEmpty)
+                {
+                    section.Cl_Has_OtrosId = _dbContext.Cl_Has_Otros.FirstOrDefault(x => x.Id_Cliente == section.ClientesId).Id;
+                }
 
                 await _dbContext.Sections.AddAsync(section);
                 await _dbContext.SaveChangesAsync();
@@ -237,7 +249,10 @@ namespace KLS_API.Controllers.Travels
             try
             {
                 model.SubstatusId = _dbContext.Substatuses.FirstOrDefault(x => x.Name.ToLower() == "registrado").Id;
-                model.Cl_Has_OtrosId = _dbContext.Cl_Has_Otros.FirstOrDefault(x => x.Id_Cliente == model.ClientesId).Id;
+                if (!model.IsEmpty)
+                {
+                    model.Cl_Has_OtrosId = _dbContext.Cl_Has_Otros.FirstOrDefault(x => x.Id_Cliente == model.ClientesId).Id;
+                }
                 model.TimeUpdated = DateTime.Now;
                 _dbContext.Entry(model).State = EntityState.Modified;
                 await _dbContext.SaveChangesAsync();
@@ -282,6 +297,79 @@ namespace KLS_API.Controllers.Travels
                     return NotFound();
                 }
                 return Ok(cl_Has_Otros);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetKLSRoutes()
+        {
+            try
+            {
+                ICollection<RouteKLSDTO> travels = await _dbContext.Ruta.Where(x => x.estatus == 1).Select(x => new RouteKLSDTO
+                {
+                    Id = x.id,
+                    OD = string.Concat(_dbContext.Cat_Estado.SingleOrDefault(y => y.id == x.id_estadoorigen).nombre, "-", _dbContext.Cat_Ciudad.SingleOrDefault(y => y.id == x.id_ciudadorigen).nombre, "-", _dbContext.Cat_Estado.SingleOrDefault(y => y.id == x.id_estadodestino).nombre, "-", _dbContext.Cat_Ciudad.SingleOrDefault(y => y.id == x.id_ciudaddestino).nombre)
+                }).ToListAsync();
+                return Ok(travels);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
+
+        [HttpGet("{SectionId}")]
+        public async Task<IActionResult> GetCustomerRequirements(int SectionId)
+        {
+            try
+            {
+                Section section = await _dbContext.Sections.FindAsync(SectionId);
+                if (section is null)
+                {
+                    return NotFound();
+                }
+
+                Cl_Has_Requisitos cl_Has_Requisitos = await _dbContext.Cl_Has_Requisitos.SingleOrDefaultAsync(x => x.Id_Cliente == section.ClientesId);
+                if (cl_Has_Requisitos is null)
+                {
+                    return NotFound();
+                }
+                return Ok(cl_Has_Requisitos);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
+
+        [HttpGet("{SectionId}")]
+        public async Task<IActionResult> GetCustomerBox(int SectionId)
+        {
+            try
+            {
+                BoxDTO box = await _dbContext.Sections.Where(x => x.Id == SectionId).Select(x => new BoxDTO
+                {
+                    SectionId = x.Id,
+                    Alto = x.Alto,
+                    Ancho = x.Ancho,
+                    Largo = x.Largo,
+                    Peso = x.Peso,
+                    PesoVolumetrico = x.PesoVolumetrico,
+                    Cl_Has_Box = _dbContext.Cl_Has_Box.SingleOrDefault(y => y.Id_Cliente == x.ClientesId)
+                }).SingleOrDefaultAsync();
+
+                if (box is null)
+                {
+                    return NotFound();
+                }
+                return Ok(box);
             }
             catch (Exception ex)
             {
@@ -501,7 +589,8 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
-                IEnumerable<TravelDT> sections = await _dbContext.Sections.Where(x => x.Active && x.FechaSalida > DateTime.Now).Select(x => new TravelDT {
+                IEnumerable<TravelDT> sections = await _dbContext.Sections.Where(x => x.Active && x.FechaSalida > DateTime.Now).Select(x => new TravelDT
+                {
                     Id = x.Id,
                     MainTravelId = x.TravelId,
                     Folio = x.Folio,
