@@ -48,7 +48,7 @@ namespace KLS_API.Controllers.Monitoring
             }
         }
 
-        [Route("/getClient")]
+        [Route("getClient")]
         public ActionResult getClient()
         {
             try
@@ -62,20 +62,35 @@ namespace KLS_API.Controllers.Monitoring
             }
         }
 
-        //[HttpGet]
-        //[Route("getClient")]
-        //public ActionResult getClient()
-        //{
-        //    try
-        //    {
-        //        var cnts = context.Clientes.ToList();
-        //        return Ok(cnts);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
+        [HttpGet]
+        [Route("getStatus")]
+        public ActionResult getStatus()
+        {
+            try
+            {
+                var cnts = context.Statuses.ToList();
+                return Ok(cnts);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        
+        [HttpGet]
+        [Route("getSubStatus")]
+        public ActionResult getSubStatus()
+        {
+            try
+            {
+                var cnts = context.Substatuses.ToList();
+                return Ok(cnts);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
     }
 }

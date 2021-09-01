@@ -48,21 +48,22 @@
             </li>
             <li class="nav-item pl-4">
                 <label style="font-size: 12px; font-weight: bold">Estatus</label>
-                <select class="form-control form-control-sm" style="width: 200px;">
+                <select class="form-control form-control-sm" style="width: 200px;" id="sEstatus">
                     <option value="value">Selecciona una opción</option>
                 </select>
             </li>
             <li class="nav-item pl-4">
                 <label style="font-size: 12px; font-weight: bold">Sub estatus</label>
-                <select class="form-control form-control-sm" style="width: 200px;">
+                <select class="form-control form-control-sm" style="width: 200px;" id="sSubEstatus">
                     <option value="value">Selecciona una opción</option>
                 </select>
             </li>
             <li class="nav-item pl-4" >
                 <label style="font-size: 12px; font-weight: bold">Grupo monitor</label>
-                <select class="form-control form-control-sm" style="width: 200px;">
+                <input type="text" class="form-control form-control-md" style="width: 200px;"/>
+                @*<select class="form-control form-control-sm" style="width: 200px;">
                     <option value="value">Selecciona una opción</option>
-                </select>
+                </select>*@
             </li>
             <li class="nav-item ml-auto">
                 <a class="btn btn-sm btn-secondary float-right" href="#">
@@ -95,12 +96,15 @@
         $(document).ready(function () {
             getMonitoring();
             getClients();
+            getStatus();
+            getSubStatus();
         });
 
         function getMonitoring(){
             $.get("Monitoring/getMonitoring", function (res) {
                 $("#table-info").empty();
                 console.log(res);
+                fConteo(res);
                 $.each(res, function (item, key) {
                     $("#table-info").append(`
                     <tr>
@@ -147,11 +151,34 @@
             });
         }
 
+        function fConteo(infoMonitoreo) {
+            
+        }
+
         function getClients() {
             $.get("/Monitoring/getClient", function (res) {
                 $.each(res, function (item, key) {
                     $("#sCliente").append(`
                         <option value="${key.id}">${key.nombreComercial}</option>
+                    `);
+                });
+            });
+        }
+
+        function getStatus() {
+            $.get("/Monitoring/getStatus", function (res) {
+                $.each(res, function (item, key) {
+                    $("#sEstatus").append(`
+                        <option value="${key.id}">${key.name}</option>
+                    `);
+                });
+            });
+        }
+        function getSubStatus() {
+            $.get("/Monitoring/getSubStatus", function (res) {
+                $.each(res, function (item, key) {
+                    $("#sSubEstatus").append(`
+                        <option value="${key.id}">${key.name}</option>
                     `);
                 });
             });

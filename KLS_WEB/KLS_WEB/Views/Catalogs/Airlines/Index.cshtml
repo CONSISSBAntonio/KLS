@@ -126,7 +126,6 @@
 
                 if (parseInt($("#idEditar").val()) != 0) {
                     $.post("Airlines/putAirlines", jsonData, function (res) {
-                        console.log( res );
                         loadTable();
                         dToast("success", "Registro actualizado exitosamente.", "Registrado");
                         $(".guardar").attr("disabled", false);
@@ -182,7 +181,6 @@
             $("#table-info").empty();
             $.get("Airlines/getAirlines", function (res) {
                 DataAirlines = res;
-                //console.log(res);
                 $.each(res, function (item, key) {
                     $("#table-info").append(`
                              <tr>
