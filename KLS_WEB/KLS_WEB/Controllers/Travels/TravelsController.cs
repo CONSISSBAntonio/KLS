@@ -1,6 +1,7 @@
 ﻿using KLS_WEB.Models;
 using KLS_WEB.Models.Carriers;
 using KLS_WEB.Models.Clients;
+using KLS_WEB.Models.DT;
 using KLS_WEB.Models.Travels;
 using KLS_WEB.Models.Travels.DTO;
 using KLS_WEB.Services;
@@ -8,8 +9,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace KLS_WEB.Controllers.Travels
@@ -45,6 +48,19 @@ namespace KLS_WEB.Controllers.Travels
             }
 
             return Cat_Tipos_Unidades;
+        }
+        private async Task<List<SelectListItem>> GetTravelServices()
+        {
+            List<SelectListItem> listItems = new List<SelectListItem> { new SelectListItem { Disabled = true, Selected = true, Value = "0", Text = "SELECCIONA" } };
+            List<TravelService> travelServices = await AppContext.Execute<List<TravelService>>(MethodType.GET, Path.Combine(_UrlApi, "GetTravelServices"), null);
+
+            foreach (var travelService in travelServices)
+            {
+                SelectListItem selectListItem = new SelectListItem { Value = travelService.Id.ToString(), Text = travelService.Name };
+                listItems.Add(selectListItem);
+            }
+
+            return listItems;
         }
         private async Task<List<SelectListItem>> GetCustomers()
         {
@@ -140,7 +156,7 @@ namespace KLS_WEB.Controllers.Travels
             {
                 Selects =
                 {
-                    Cat_Tipos_Unidades = await GetTiposUnidades(),
+                    TravelServices = await GetTravelServices(),
                     Customers = await GetCustomers(),
                     SectionType = await GetSectionType()
                 }
@@ -149,10 +165,9 @@ namespace KLS_WEB.Controllers.Travels
             if (TravelId > 0)
             {
                 travelDTO.Travel = await AppContext.Execute<Travel>(MethodType.GET, Path.Combine(_UrlApi, "GetTravel", TravelId.ToString()), null);
+                TempData["TravelId"] = TravelId;
+                TempData.Keep();
             }
-
-            TempData["TravelId"] = TravelId;
-            TempData.Keep();
 
             return View(travelDTO);
         }
@@ -172,35 +187,17 @@ namespace KLS_WEB.Controllers.Travels
             }
 
             // SETSELECTS
-            model.Selects.Cat_Tipos_Unidades = await GetTiposUnidades();
+            model.Selects.TravelServices = await GetTravelServices();
             model.Selects.Customers = await GetCustomers();
             model.Selects.SectionType = await GetSectionType();
-            //var customerOD = await GetCustomerOD(model.Section.ClientesId);
-            //model.Selects.CustomerOrigins = customerOD.Selects.CustomerOrigins;
-            //model.Selects.CustomerDestinations = customerOD.Selects.CustomerDestinations;
-            //if (model.Section.Cl_Has_OrigenId != 0 && model.Section.Cl_Has_DestinosId != 0)
-            //{
-            //    model.Selects.Routes = await GetRoute(model.Section.Cl_Has_OrigenId, model.Section.Cl_Has_DestinosId);
-            //}
-            // END SETSELECTS
 
             // SET TRAVEL
             MethodType method = model.Travel.Id > 0 ? MethodType.PUT : MethodType.POST;
             string action = model.Travel.Id > 0 ? "PutTravel" : "PostTravel";
 
-            await AppContext.Execute<Travel>(method, Path.Combine(_UrlApi, action), model.Travel);
-            // END SET TRAVEL
+            var ok = await AppContext.Execute<int>(method, Path.Combine(_UrlApi, action), model.Travel);
 
-            // SET SECTION
-            //MethodType sectionMethod = model.Section.Id > 0 ? MethodType.PUT : MethodType.POST;
-            //string sectionAction = model.Section.Id > 0 ? "PutSection" : "PostSection";
-            //model.Section.TravelId = model.;
-            //model.Section.Cl_Has_OtrosId = 1;
-
-            //await AppContext.Execute<Travel>(sectionMethod, Path.Combine(_UrlApi, sectionAction), model.Section);
-            // END SET SECTION
-
-            return View(_UrlView + "AddEdit.cshtml", model);
+            return RedirectToAction("AddEdit", new { TravelId = ok });
         }
         #endregion
 
@@ -232,49 +229,66 @@ namespace KLS_WEB.Controllers.Travels
             {
                 travelDTO.Selects.Routes = await GetRoute(travelDTO.Section.Cl_Has_OrigenId, travelDTO.Section.Cl_Has_DestinosId);
             }
+            if (SectionId > 0)
+            {
+                travelDTO.Selects.Carriers = await GetCarriers();
+            }
             // END INIT SELECTS
+
+            TempData["SectionId"] = SectionId;
+            TempData.Keep();
 
             return PartialView(string.Concat(_UrlView, "_Section.cshtml"), travelDTO);
         }
-
-        public class Tester
+        [HttpGet]
+        public async Task<JsonResult> GetSectionServices(int SectionId)
         {
-            public string Service { get; set; }
-            public Section Section { get; set; }
-            public string Cost { get; set; }
-            public string Price { get; set; }
-            public int CarrierId { get; set; }
-            public int DriverId { get; set; }
-            public Unidad Unit { get; set; }
-            public class Unidad
+            Section section = new Section();
+            if (SectionId > 0)
             {
-                public string TypeId { get; set; }
-                public string UnitId { get; set; }
+                section = await AppContext.Execute<Section>(MethodType.GET, Path.Combine(_UrlApi, "GetSection", SectionId.ToString()), null);
             }
+            return Json(section);
         }
 
         [HttpPost]
-        public async Task<JsonResult> AddEditSection([FromBody]Tester travelDTO)
+        public async Task<JsonResult> AddEditSection(TravelDTO travelDTO)
         {
-            //var UserName = HttpContext.Session.GetString("UserFN");
-            //travelDTO.Section.TravelId = (int)TempData["TravelId"];
-            //TempData.Keep();
+            var UserName = HttpContext.Session.GetString("UserFN");
+            travelDTO.Section.TravelId = (int)TempData["TravelId"];
+            TempData.Keep();
 
-            //if (travelDTO.Section.Id == 0)
-            //{
-            //    travelDTO.Travel.CreatedBy = UserName;
-            //}
-            //else
-            //{
-            //    travelDTO.Travel.UpdatedBy = UserName;
-            //}
+            if (travelDTO.Section.Id == 0)
+            {
+                travelDTO.Travel.CreatedBy = UserName;
+            }
+            else
+            {
+                travelDTO.Travel.UpdatedBy = UserName;
+            }
 
-            //MethodType sectionMethod = travelDTO.Section.Id > 0 ? MethodType.PUT : MethodType.POST;
-            //string sectionAction = travelDTO.Section.Id > 0 ? "PutSection" : "PostSection";
+            MethodType sectionMethod = travelDTO.Section.Id > 0 ? MethodType.PUT : MethodType.POST;
+            string sectionAction = travelDTO.Section.Id > 0 ? "PutSection" : "PostSection";
 
-            //var x = await AppContext.Execute<Travel>(sectionMethod, Path.Combine(_UrlApi, sectionAction), travelDTO.Section);
+            int SectionId = await AppContext.Execute<int>(sectionMethod, Path.Combine(_UrlApi, sectionAction), travelDTO.Section);
+            TempData["SectionId"] = SectionId;
+            TempData.Keep();
 
-            return Json(travelDTO);
+            return Json(SectionId);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> DeleteSection(string SectionId)
+        {
+            Section section = await AppContext.Execute<Section>(MethodType.DELETE, Path.Combine(_UrlApi, "DeleteSection", SectionId), null);
+            return Json(section);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetClientReferences(string ClientId)
+        {
+            Cl_Has_Otros cl_Has_Otros = await AppContext.Execute<Cl_Has_Otros>(MethodType.GET, Path.Combine(_UrlApi, "GetClientReferences", ClientId), null);
+            return Json(cl_Has_Otros);
         }
         #endregion
 
@@ -284,6 +298,49 @@ namespace KLS_WEB.Controllers.Travels
         {
             servicesDTOs.Selects.Carriers = await GetCarriers();
             return PartialView(string.Concat(_UrlView, "_Service.cshtml"), servicesDTOs);
+        }
+
+        public class ServicesModel
+        {
+            public string ServiceId { get; set; }
+            public int SectionId { get; set; }
+            public string Service { get; set; }
+            public string Cost { get; set; }
+            public string Price { get; set; }
+            public string CarrierId { get; set; }
+            public string DriverId { get; set; }
+            public List<Unidad> Units { get; set; }
+            public class Unidad
+            {
+                public string Id { get; set; }
+                public string TypeId { get; set; }
+                public string UnitId { get; set; }
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> AddServices([FromBody] ServicesModel model)
+        {
+            model.SectionId = (int)TempData["SectionId"];
+            TempData.Keep();
+            await AppContext.Execute<ServicesModel>(MethodType.POST, Path.Combine(_UrlApi, "AddEditServices"), model);
+
+            return Json(model);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> DeleteService(string ServiceId)
+        {
+            ServicesDTO service = await AppContext.Execute<ServicesDTO>(MethodType.DELETE, Path.Combine(_UrlApi, "DeleteService", ServiceId), null);
+            //SetHistorial(string.Concat(service.Nombre, ", servicio eliminado"));
+            return Json(ServiceId);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> DeleteUnit(string UnitId)
+        {
+            Unit unit = await AppContext.Execute<Unit>(MethodType.DELETE, Path.Combine(_UrlApi, "DeleteUnit", UnitId), null);
+            return Json(unit);
         }
         #endregion
 
@@ -308,5 +365,16 @@ namespace KLS_WEB.Controllers.Travels
             string address = await AppContext.Execute<dynamic>(MethodType.GET, Path.Combine(_UrlApi, "GetAddress", Type, Id), null);
             return Json(address);
         }
+
+        #region DataTableTravels
+
+        [HttpPost]
+        public async Task<JsonResult> DataTableTravels(DataTablesParameters dtParams)
+        {
+            TravelDTModel data = await AppContext.Execute<TravelDTModel>(MethodType.POST, Path.Combine(_UrlApi, "DataTableTravels"), dtParams);
+
+            return Json(data);
+        }
+        #endregion
     }
 }
