@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210901172132_idservice_oferta")]
+    partial class idservice_oferta
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1589,7 +1591,7 @@ namespace KLS_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("SectionId")
+                    b.Property<int>("TravelId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("fechacarga")
@@ -1606,7 +1608,7 @@ namespace KLS_API.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("SectionId");
+                    b.HasIndex("TravelId");
 
                     b.ToTable("Facturacion");
                 });
@@ -1629,16 +1631,16 @@ namespace KLS_API.Migrations
                     b.Property<string>("Anticipacion")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<int?>("Cl_Has_DestinosId")
+                    b.Property<int>("Cl_Has_DestinosId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Cl_Has_OrigenId")
+                    b.Property<int>("Cl_Has_OrigenId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Cl_Has_OtrosId")
+                    b.Property<int>("Cl_Has_OtrosId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ClientesId")
+                    b.Property<int>("ClientesId")
                         .HasColumnType("int");
 
                     b.Property<string>("Contraseña")
@@ -1744,6 +1746,9 @@ namespace KLS_API.Migrations
                     b.Property<int>("SectionId")
                         .HasColumnType("int");
 
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
                     b.Property<int>("SubstatusId")
                         .HasColumnType("int");
 
@@ -1759,6 +1764,8 @@ namespace KLS_API.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("SectionId");
+
+                    b.HasIndex("StatusId");
 
                     b.HasIndex("SubstatusId");
 
@@ -1777,16 +1784,18 @@ namespace KLS_API.Migrations
                     b.Property<string>("Registro")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<int>("SectionId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("TimeCreated")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<int>("TravelId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Usuario")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TravelId");
 
                     b.ToTable("SectionLogs");
                 });
@@ -2229,9 +2238,9 @@ namespace KLS_API.Migrations
 
             modelBuilder.Entity("KLS_API.Models.Travel.Facturacion", b =>
                 {
-                    b.HasOne("KLS_API.Models.Travel.Section", "Section")
+                    b.HasOne("KLS_API.Models.Travel.Travel", "Travel")
                         .WithMany()
-                        .HasForeignKey("SectionId")
+                        .HasForeignKey("TravelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -2240,19 +2249,27 @@ namespace KLS_API.Migrations
                 {
                     b.HasOne("KLS_API.Models.Clients.Cl_Has_Destinos", "Cl_Has_Destinos")
                         .WithMany()
-                        .HasForeignKey("Cl_Has_DestinosId");
+                        .HasForeignKey("Cl_Has_DestinosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("KLS_API.Models.Clients.Cl_Has_Origen", "Cl_Has_Origen")
                         .WithMany()
-                        .HasForeignKey("Cl_Has_OrigenId");
+                        .HasForeignKey("Cl_Has_OrigenId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("KLS_API.Models.Clients.Cl_Has_Otros", "Cl_Has_Otros")
                         .WithMany()
-                        .HasForeignKey("Cl_Has_OtrosId");
+                        .HasForeignKey("Cl_Has_OtrosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("KLS_API.Models.Clients.Clientes", "Clients")
                         .WithMany()
-                        .HasForeignKey("ClientesId");
+                        .HasForeignKey("ClientesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("KLS_API.Models.Ruta", "Ruta")
                         .WithMany()
@@ -2287,9 +2304,24 @@ namespace KLS_API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("KLS_API.Models.Travel.Status", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("KLS_API.Models.Travel.Substatus", "Substatus")
                         .WithMany()
                         .HasForeignKey("SubstatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("KLS_API.Models.Travel.SectionLog", b =>
+                {
+                    b.HasOne("KLS_API.Models.Travel.Travel", "Travel")
+                        .WithMany()
+                        .HasForeignKey("TravelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -221,14 +221,20 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <label>Transportista</label>
                         <select class="form-control form-control-sm" id="idtransportista" style="width:100%;">
                             <option value="0">Selecciona una opción</option>
                         </select>
                     </div>
+                    <div class="col-md-4">
+                        <label>Tipos de servicios</label>
+                        <select class="form-control form-control-sm" id="tiposServicios" style="width:100%;">
+                            <option value="0">Selecciona una opción</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="row">
+                <div class="row pt-2">
                     <div class="col-md-3">
                         <label>Tipo de unidad</label>
                         <select class="form-control form-control-sm" style="width:100%;" id="idtipounidad">
@@ -249,7 +255,7 @@
                     </div>
                 </div>
 
-                <h5>Origen</h5>
+                <h5 class="pt-2">Origen</h5>
                 <div class="row">
                     <div class="col-md-3">
                         <label>Nivel</label>
@@ -277,7 +283,7 @@
                         <input type="number" class="form-control" id="txtToleranciaOrigen" disabled="disabled"/>
                     </div>
                 </div>
-                <h5>Destino</h5>
+                <h5 class="pt-2">Destino</h5>
                 <div class="row">
                     <div class="col-md-3">
                         <label>Nivel</label>
@@ -365,19 +371,16 @@
             var ciudadD = 0;
 
             var idTransportista = $("#idtransportista").val();
-
             if (parseInt(idTransportista) != 0) {
-
                 var idTipounidad = $("#idtipounidad").val();
-
                 if (parseInt(idTipounidad) != 0) {
-
-                    if ($("#txtRangoEspera").val() != "" && $("#txtRangoEspera").val() !=0 && $("#txtCantidad").val() != "" && $("#txtCantidad").val() != 0 && $("#txtCantidad").val() != null && $("#txtFechaDisponibilidad").val() != "" && $("#txtFechaDisponibilidad").val() != null) {
+                    if ($("#txtRangoEspera").val() != "" && $("#txtRangoEspera").val() != 0 && $("#tiposServicios").val() != "" && $("#tiposServicios").val() !=0 && $("#txtCantidad").val() != "" && $("#txtCantidad").val() != 0 && $("#txtCantidad").val() != null && $("#txtFechaDisponibilidad").val() != "" && $("#txtFechaDisponibilidad").val() != null) {
                         if ($("#txtNivelOrigen").val() != 0) {
                             if ($("#txtNivelDestino").val()!=0) {
                                 //Validaciones
                                 var origen = cUpper($("#txtNivelOrigen").val());
                                 var destino = cUpper($("#txtNivelDestino").val());
+
                                 if (origen == 'REGION') {
                                     regionO = $("#seleccionaOrigen").val();
                                 }
@@ -417,7 +420,8 @@
                                         "estado_Destino": estadoD,
                                         "ciudad_Destino": ciudadD,
                                         "Tolerancia_Destino": $("#txtToleranciaDestino").val(),
-                                        "status": 1
+                                        "status": 1,
+                                        "IdServiceTypes": $("#tiposServicios").val()
                                     },
                                 );
                                 eGuardar();
@@ -506,6 +510,7 @@
         var catTransportista = [];
         var catUnidades = [];
         var catOfertas = [];
+        var ServiceTypes = [];
         //Excel
         function importf(obj) {
             jsonEnv = [];
@@ -573,7 +578,8 @@
                             "estado_Destino": item[itemT[12]],
                             "ciudad_Destino": item[itemT[13]],
                             "Tolerancia_Destino": item[itemT[14]],
-                            "status": item.status
+                            "IdServiceTypes": item[itemT[15]],
+                            "status": item[itemT[16]],
                         },
                     );
                     var fecha = moment(item[itemT[3]]).format('YYYY-DD-MM hh:mm:ss A');
@@ -714,95 +720,112 @@
                 var idestadoD = 0;
                 var idciudadD = 0;
 
+                var tipoServicio = 0;
+
                 if (transportista >= 0) { //Si se encontró el transportista
                     idtran = catTransportista[transportista].id
                     unidades = catUnidades.findIndex(service => cUpper(service.nombre) == cUpper(key.Tipo_De_Unidad));
                     if (unidades >= 0) {//Se encontraron unidades
-                        idunidad = catUnidades[unidades].id;
-                        var Nivel_Origen = cUpper(key.Nivel_Origen);
-                        if (Nivel_Origen != "REGION" && Nivel_Origen != "ESTADO" && Nivel_Origen != "CIUDAD") {
-                            //console.log("Esta region no pertenece  a ningun dato", Nivel_Origen); //<-----------------------------------------------------
-                            jsonEnvIncorrectos.push(key);
-                            return;
-                        } else {
-                            if (Nivel_Origen == "REGION") {
-                                regionOrigen = catRegion.findIndex(r => cUpper(r.nombre) == cUpper(key.Region_Origen));
-                                if (regionOrigen < 0) { //Si se encontro la region
-                                    //console.log("No se encontro region", key.NivelOrigen);
-                                    jsonEnvIncorrectos.push(key);
-                                    return;
-                                } else {
-                                    idregionO = catRegion[regionOrigen].id
-                                }
-                            }
-                            if (Nivel_Origen == "ESTADO") { //Validar cuando la region es estado
-                                estadoOrigen = catEstado.findIndex(es => cUpper(es.nombre) == cUpper(key.Estado_Origen));
-                                if (estadoOrigen < 0) {
-                                    //console.log("No se encontro ningun estado origen", key.Estado_Origen);
-                                    jsonEnvIncorrectos.push(key);
-                                    return;
-                                } else {
-                                    idestadoO = catEstado[estadoOrigen].id
-                                }
-                            }
-                            if (Nivel_Origen == "CIUDAD") {
-                                estadoOrigen = catEstado.findIndex(es => cUpper(es.nombre) == cUpper(key.Estado_Origen));
-                                ciudadOrigen = catCiudad.findIndex(ci => cUpper(ci.nombre) == cUpper(key.ciudad_Origen));
 
-                                if (estadoOrigen < 0 && ciudadOrigen < 0) {
-                                    //console.log("No se encontro nada con ciudad origen", key.Transportista, key.ciudad_Origen);
-                                    jsonEnvIncorrectos.push(key);
-                                    return;
-                                } else {
-                                    idestadoO = catEstado[estadoOrigen].id
-                                    idciudadO = catCiudad[ciudadOrigen].id
-                                }
-                            }
-                        }
+                        console.log(ServiceTypes);
+                        let tipoServiciocat = ServiceTypes.findIndex(service => cUpper(service.name).trim() == cUpper(key.IdServiceTypes).trim());
 
-                        //Nivel Destino <-----------------------------------------------------------------------------------
-                        var Nivel_Destino = cUpper(key.Nivel_Destino);
-                        if (Nivel_Destino != "REGION" && Nivel_Destino != "ESTADO" && Nivel_Destino != "CIUDAD") {
-                            //console.log("Esta region no pertenece  a ningun dato", Nivel_Destino);
-                            jsonEnvIncorrectos.push(key);
-                            return;
-                        } else {
-                            if (Nivel_Destino == "REGION") {
-                                regionDestino = catRegion.findIndex(r => cUpper(r.nombre) == cUpper(key.Region_Destino));
-                                if (regionDestino < 0) { //Si se encontro la region
-                                    //console.log("No se encontro region destino", key.Nivel_Destino);
-                                    jsonEnvIncorrectos.push(key);
-                                    return;
-                                } else {
-                                    idregionD = catRegion[regionDestino].id
+                        if (tipoServiciocat >= 0) {
+
+                            idunidad = catUnidades[unidades].id;
+                            tipoServicio = ServiceTypes[tipoServiciocat].id;
+
+                            var Nivel_Origen = cUpper(key.Nivel_Origen);
+                            if (Nivel_Origen != "REGION" && Nivel_Origen != "ESTADO" && Nivel_Origen != "CIUDAD") {
+                                //console.log("Esta region no pertenece  a ningun dato", Nivel_Origen); //<-----------------------------------------------------
+                                jsonEnvIncorrectos.push(key);
+                                return;
+                            } else {
+                                if (Nivel_Origen == "REGION") {
+                                    regionOrigen = catRegion.findIndex(r => cUpper(r.nombre) == cUpper(key.Region_Origen));
+                                    if (regionOrigen < 0) { //Si se encontro la region
+                                        //console.log("No se encontro region", key.NivelOrigen);
+                                        jsonEnvIncorrectos.push(key);
+                                        return;
+                                    } else {
+                                        idregionO = catRegion[regionOrigen].id
+                                    }
+                                }
+                                if (Nivel_Origen == "ESTADO") { //Validar cuando la region es estado
+                                    estadoOrigen = catEstado.findIndex(es => cUpper(es.nombre) == cUpper(key.Estado_Origen));
+                                    if (estadoOrigen < 0) {
+                                        //console.log("No se encontro ningun estado origen", key.Estado_Origen);
+                                        jsonEnvIncorrectos.push(key);
+                                        return;
+                                    } else {
+                                        idestadoO = catEstado[estadoOrigen].id
+                                    }
+                                }
+                                if (Nivel_Origen == "CIUDAD") {
+                                    estadoOrigen = catEstado.findIndex(es => cUpper(es.nombre) == cUpper(key.Estado_Origen));
+                                    ciudadOrigen = catCiudad.findIndex(ci => cUpper(ci.nombre) == cUpper(key.ciudad_Origen));
+
+                                    if (estadoOrigen < 0 && ciudadOrigen < 0) {
+                                        //console.log("No se encontro nada con ciudad origen", key.Transportista, key.ciudad_Origen);
+                                        jsonEnvIncorrectos.push(key);
+                                        return;
+                                    } else {
+                                        idestadoO = catEstado[estadoOrigen].id
+                                        idciudadO = catCiudad[ciudadOrigen].id
+                                    }
                                 }
                             }
-                            if (Nivel_Destino == "ESTADO") { //Validar cuando la region es estado
-                                estadoDestino = catEstado.findIndex(es => cUpper(es.nombre) == cUpper(key.estado_Destino));
-                                if (estadoDestino < 0) {
-                                    //console.log("No se encontro ningun estado destinp", key.estado_Destino);
-                                    jsonEnvIncorrectos.push(key);
-                                    return;
-                                } else {
-                                    idestadoD= catEstado[estadoDestino].id
+
+                            //Nivel Destino <-----------------------------------------------------------------------------------
+                            var Nivel_Destino = cUpper(key.Nivel_Destino);
+                            if (Nivel_Destino != "REGION" && Nivel_Destino != "ESTADO" && Nivel_Destino != "CIUDAD") {
+                                //console.log("Esta region no pertenece  a ningun dato", Nivel_Destino);
+                                jsonEnvIncorrectos.push(key);
+                                return;
+                            } else {
+                                if (Nivel_Destino == "REGION") {
+                                    regionDestino = catRegion.findIndex(r => cUpper(r.nombre) == cUpper(key.Region_Destino));
+                                    if (regionDestino < 0) { //Si se encontro la region
+                                        //console.log("No se encontro region destino", key.Nivel_Destino);
+                                        jsonEnvIncorrectos.push(key);
+                                        return;
+                                    } else {
+                                        idregionD = catRegion[regionDestino].id
+                                    }
+                                }
+                                if (Nivel_Destino == "ESTADO") { //Validar cuando la region es estado
+                                    estadoDestino = catEstado.findIndex(es => cUpper(es.nombre) == cUpper(key.estado_Destino));
+                                    if (estadoDestino < 0) {
+                                        //console.log("No se encontro ningun estado destinp", key.estado_Destino);
+                                        jsonEnvIncorrectos.push(key);
+                                        return;
+                                    } else {
+                                        idestadoD = catEstado[estadoDestino].id
+                                    }
+                                }
+                                if (Nivel_Destino == "CIUDAD") {
+                                    estadoDestino = catEstado.findIndex(es => cUpper(es.nombre) == cUpper(key.estado_Destino));
+                                    ciudadDestino = catCiudad.findIndex(ci => cUpper(ci.nombre) == cUpper(key.ciudad_Destino));
+                                    if (estadoDestino < 0 && ciudadDestino < 0) {
+                                        //console.log("No se encontro nada con ciudad destino");
+                                        jsonEnvIncorrectos.push(key);
+                                        return;
+                                    } else {
+                                        idestadoD = catEstado[estadoDestino].id
+                                        idciudadD = catCiudad[ciudadDestino].id
+                                    }
                                 }
                             }
-                            if (Nivel_Destino == "CIUDAD") {
-                                estadoDestino = catEstado.findIndex(es => cUpper(es.nombre) == cUpper(key.estado_Destino));
-                                ciudadDestino = catCiudad.findIndex(ci => cUpper(ci.nombre) == cUpper(key.ciudad_Destino));
-                                if (estadoDestino < 0 && ciudadDestino < 0) {
-                                    //console.log("No se encontro nada con ciudad destino");
-                                    jsonEnvIncorrectos.push(key);
-                                    return;
-                                } else {
-                                    idestadoD = catEstado[estadoDestino].id
-                                    idciudadD = catCiudad[ciudadDestino].id
-                                }
-                            }
-                        }
                         //---------------------------------------------
+                        } else {
+                            console.log("No se encontro tipo de unidad");
+                            console.log(key);
+                            jsonEnvIncorrectos.push(key);
+                            return;
+                        }
+
                     } else {//No se encontraron unidades
-                        //console.log("No se encontro unidad", key.Tipo_De_Unidad);
+                        console.log("No se encontro unidad", key.Tipo_De_Unidad);
                         jsonEnvIncorrectos.push(key);
                         return;
                     }
@@ -829,6 +852,7 @@
                         "estado_Destino": idestadoD,
                         "ciudad_Destino": idciudadD,
                         "Tolerancia_Destino": key.Tolerancia_Destino,
+                        "IdServiceTypes": tipoServicio,
                         "status": key.status
                     }
                 );
@@ -1074,6 +1098,7 @@
             cargarUnidades();
             listarRutas();
             selTransportistas();//Obtiene los transportistas
+            getServiceTypes();
         });
 
         //cargar tipo de unidades
@@ -1376,14 +1401,29 @@
                 dToast("error", "Todos los campos son requeridos.", "Atención");
             }
         }
+
+        // ----------------------------------------------------------------------->
         function s2ab(s) {
             var buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
             var view = new Uint8Array(buf);  //create uint8array as viewer
             for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
             return buf;
         }
+
         function remTr(id) {
             $('#re' + id).fadeOut(200, function () { $(this).remove(); });
+        }
+
+
+        //Catalogos ----------------------------------------------------->
+        function getServiceTypes() {
+            $.get("Offer/getServiceTypes", function (res) {
+                ServiceTypes = res;
+                $.each(ServiceTypes, function (item, key) {
+                    $("#tiposServicios").append(`<option value="${key.id}">${key.name}</option>`);
+                });
+                dSelect('tiposServicios');
+            });
         }
     </script>
 } 

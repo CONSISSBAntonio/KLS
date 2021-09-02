@@ -2,6 +2,15 @@
     ViewData["Title"] = "kLS | Monitoreo";
 }
 
+@section Styles{
+    <style>
+        .selected {
+            color: red;
+            background-color: yellow;
+        }
+    </style>
+}
+
 <div class="p-2">
     <div class="d-flex flex-nowrap">
         <div class="p-2">
@@ -15,22 +24,22 @@
         <div class="ml-auto p-2">
             <div class="row">
                 <div class="col-md-4">
-                    <div class="card text-center" style="width: 10rem;">
-                        32
+                    <div class="card text-center shadow-sm p-3 bg-white rounded" style="width: 11rem; height: 6rem;">
+                        3
                         <br />
                         CONFIRMADOS
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card text-center" style="width: 10rem;">
-                        54
+                    <div class="card text-center shadow-sm p-3 bg-white rounded" style="width: 11rem; height: 6rem;">
+                        0
                         <br />
                         EN TRANSITO
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card text-center" style="width: 10rem;">
-                        14
+                    <div class="card text-center shadow-sm p-3 bg-white rounded" style="width: 11rem;height:6rem;">
+                        0
                         <br />
                         CONCLUIDOS
                     </div>
@@ -38,6 +47,7 @@
             </div>
         </div>
     </div>
+
     <div class="p-4 shadow bg-white" style="overflow-x: auto; overflow-y: hidden;">
         <ul class="nav nav-pills" id="pills-tab" role="tablist">
             <li class="nav-item">
@@ -58,16 +68,16 @@
                     <option value="value">Selecciona una opción</option>
                 </select>
             </li>
-            <li class="nav-item pl-4" >
+            <li class="nav-item pl-4">
                 <label style="font-size: 12px; font-weight: bold">Grupo monitor</label>
-                <input type="text" class="form-control form-control-md" style="width: 200px;"/>
+                <input type="text" class="form-control form-control-md" style="width: 200px;" />
                 @*<select class="form-control form-control-sm" style="width: 200px;">
-                    <option value="value">Selecciona una opción</option>
-                </select>*@
+                        <option value="value">Selecciona una opción</option>
+                    </select>*@
             </li>
             <li class="nav-item ml-auto">
                 <a class="btn btn-sm btn-secondary float-right" href="#">
-                    <span class="material-icons">
+                    <span class="material-icons" onclick="descargarExcel();">
                         file_download
                     </span>
                 </a>
@@ -90,9 +100,175 @@
     </div>
 </div>
 
+@*Modal de comentarios*@
+<div class="modal fade" id="comentarioModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">AGREGAR COMENTARIO MONITOREO</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Estatus</label>
+                        <select class="form-control form-control-sm" style="width: 200px;" id="estatusModal">
+                            <option value="value">Selecciona una opción</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Sub Estatus</label>
+                        <select class="form-control form-control-sm" style="width: 200px;" id="subestatusModal">
+                            <option value="value">Selecciona una opción</option>
+                        </select>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>Comentario</label>
+                        <textarea class="form-control" rows="6"></textarea>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Evidencia</label>
+                        <input type="file" class="form-control" />
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-primary" style="width:100%;">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*Modal de comentarios*@
+
+@*Checkpoints*@
+<div class="modal fade" id="checkpointModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">CHECKPOINTS</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table id="table" class="table table-striped table-bordered display table-hover table-monitoreo" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>CHECKPOINT</th>
+                                    <th>HORA ORIGINAL</th>
+                                    <th>HORA ESPERADA</th>
+                                    <th>HORA REAL</th>
+                                    <th>USUARIO</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-ofertas-info">
+                                <tr>
+                                    <td colspan="8">Cargando....</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="row pt-2">
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-primary" style="width:100%;">Guardar</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@*Checkpoints*@
+
+@*´Detalle de viaje*@
+<div class="modal fade" id="detalleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tituloDetalle">CHECKPOINTS</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row pt-2">
+                    <div class="col-md-6">
+                        <b>Transportista</b>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control col-form-label-sm" disabled="disabled" id="transportistaDetalle"/>
+                    </div>
+                </div>
+                <div class="row pt-2">
+                    <div class="col-md-6">
+                        <b>Conductor</b>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control col-form-label-sm" disabled="disabled" id="conductorDetalle"/>
+                    </div>
+                </div>
+                <div class="row pt-2">
+                    <div class="col-md-6">
+                        <b>Dirección Origen'</b>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control col-form-label-sm" disabled="disabled" id="origenDetalle"/>
+                    </div>
+                </div>
+                <div class="row pt-2">
+                    <div class="col-md-6">
+                        <b>Dirección Destino</b>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control col-form-label-sm" disabled="disabled" id="destinoDetalle"/>
+                    </div>
+                </div>
+                <div class="row pt-2">
+                    <div class="col-md-6">
+                        <b>Teléfono</b>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control col-form-label-sm" disabled="disabled" id="telefonoDetalle"/>
+                    </div>
+                </div>
+                <div class="row pt-2">
+                    <div class="col-md-6">
+                        <b>Tipo de Unidad</b>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control col-form-label-sm" disabled="disabled" id="tipoDetalle"/>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@*Detalle de viaje*@
+
 @section Scripts {
+    <script src="@Url.Content("~/js/sheetjs/fileSaver.min.js")"></script>
+    <script src="@Url.Content("~/js/sheetjs/xlsx.full.min.js")"></script>
+    <script src="@Url.Content("~/js/jquery.unobtrusive-ajax.js")"></script>
+
     <script>
-        var DataAirlines = [];
+        var dataMonitoreo = [];
         $(document).ready(function () {
             getMonitoring();
             getClients();
@@ -100,50 +276,51 @@
             getSubStatus();
         });
 
-        function getMonitoring(){
+        function getMonitoring() {
             $.get("Monitoring/getMonitoring", function (res) {
                 $("#table-info").empty();
-                console.log(res);
                 fConteo(res);
+                dataMonitoreo = res;
+                console.log(res);
                 $.each(res, function (item, key) {
                     $("#table-info").append(`
-                    <tr>
-                        <td>
-                            ID VIAJE: ${key.folio}<br />
-                            CLIENTE: ${key.cliente}
-                        </td>
-                        <td>
-                            ORIGEN: ${key.origen}<br />
-                            DESTINO: ${key.destino}
-                        </td>
-                        <td>
-                            FECHA DE LLEGADA : ${key.fechallegada} <br />
-                            FECHA DE LLEGADA : ${key.fechallegada_}
-                        </td>
-                        <td>
-                            SIGUIENTE CONTACTO EN -- MIN <br />
-                            ETA:-- HRS
-                        </td>
-                        <td>
-                            <button class="btn btn-success btn-sm">
-                                En tránsito
-                            </button>
-                            <br />
-                            Demorado (2HRS)
-                        </td>
-                        <td>
-                            <a href="#">
-                                <span class="material-icons">
-                                    control_point
-                                </span>
-                            </a>
-                            <a href="#">
-                                <span class="material-icons">
-                                    assistant_photo
-                                </span>
-                            </a>
-                        </td>
-                    </tr>
+                        <tr class="rows" id="${key.idviaje}">
+                            <td>
+                                ID VIAJE: ${key.folio}<br />
+                                CLIENTE: ${key.cliente}
+                            </td>
+                            <td>
+                                ORIGEN: ${key.origen}<br />
+                                DESTINO: ${key.destino}
+                            </td>
+                            <td>
+                                FECHA DE LLEGADA : ${key.fechallegada} <br />
+                                FECHA DE LLEGADA : ${key.fechallegada_}
+                            </td>
+                            <td>
+                                SIGUIENTE CONTACTO EN -- MIN <br />
+                                ETA:-- HRS
+                            </td>
+                            <td>
+                                <button class="btn btn-success btn-sm">
+                                    En tránsito
+                                </button>
+                                <br />
+                                Demorado (2HRS)
+                            </td>
+                            <td>
+                                <a href="#" data-toggle="modal" data-target="#comentarioModal">
+                                    <span class="material-icons">
+                                        control_point
+                                    </span>
+                                </a>
+                                <a href="#" data-toggle="modal" data-target="#checkpointModal">
+                                    <span class="material-icons">
+                                        assistant_photo
+                                    </span>
+                                </a>
+                            </td>
+                        </tr>
                     `);
                 });
             }).fail(function (error) {
@@ -151,16 +328,35 @@
             });
         }
 
+
+        $("#table").delegate("tr.rows", "click", function () { //Cerrar
+            var id = $(this).attr('id');
+            let indice = dataMonitoreo.findIndex(service => service.idviaje == id);
+            console.log(dataMonitoreo[indice]);
+            $("#tituloDetalle").empty().append('VIAJE: ' + dataMonitoreo[indice].folio);
+
+            $("#transportistaDetalle").val("").val(dataMonitoreo[indice].folio);
+            $("#conductorDetalle").val("").val(dataMonitoreo[indice].cliente);
+            $("#origenDetalle").val("").val(dataMonitoreo[indice].origen);
+            $("#destinoDetalle").val("").val(dataMonitoreo[indice].destino);
+            $("#telefonoDetalle").val("").val('--');
+            $("#tipoDetalle").val("").val("--");
+
+            $("#detalleModal").modal('show');
+        });
+
+
+
         function fConteo(infoMonitoreo) {
-            
+
         }
 
         function getClients() {
             $.get("/Monitoring/getClient", function (res) {
                 $.each(res, function (item, key) {
                     $("#sCliente").append(`
-                        <option value="${key.id}">${key.nombreComercial}</option>
-                    `);
+                                            <option value="${key.id}">${key.nombreComercial}</option>
+                                        `);
                 });
             });
         }
@@ -168,21 +364,47 @@
         function getStatus() {
             $.get("/Monitoring/getStatus", function (res) {
                 $.each(res, function (item, key) {
-                    $("#sEstatus").append(`
-                        <option value="${key.id}">${key.name}</option>
-                    `);
-                });
-            });
-        }
-        function getSubStatus() {
-            $.get("/Monitoring/getSubStatus", function (res) {
-                $.each(res, function (item, key) {
-                    $("#sSubEstatus").append(`
-                        <option value="${key.id}">${key.name}</option>
-                    `);
+                    $("#sEstatus").append(`<option value="${key.id}">${key.name}</option>`);
+                    $("#estatusModal").append(`<option value="${key.id}">${key.name}</option>`);
                 });
             });
         }
 
+        function getSubStatus() {
+            $.get("/Monitoring/getSubStatus", function (res) {
+                $.each(res, function (item, key) {
+                    $("#sSubEstatus").append(`<option value="${key.id}">${key.name}</option>`);
+                    $("#subestatusModal").append(`<option value="${key.id}">${key.name}</option>`);
+                });
+            });
+        }
+
+        function descargarExcel() {
+            var _fileName = "REPORTE.xlsx";
+            var _sheetName = "REPORTE";
+            var wb = XLSX.utils.book_new();
+            wb.Props = {
+                Title: "REPORTE ",
+                Subject: "Excel",
+                Author: "KLS",
+                CreatedDate: new Date(2021, 08, 11)
+            };
+            wb.SheetNames.push(_sheetName);
+            var ws_data = dataMonitoreo;
+            var ws = XLSX.utils.json_to_sheet(ws_data);
+            wb.Sheets[_sheetName] = ws;
+            var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+            saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), _fileName);
+        }
+
+        function s2ab(s) {
+            var buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
+            var view = new Uint8Array(buf);  //create uint8array as viewer
+            for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
+            return buf;
+        }
+        function remTr(id) {
+            $('#re' + id).fadeOut(200, function () { $(this).remove(); });
+        }
     </script>
 } 

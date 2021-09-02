@@ -29,10 +29,10 @@ namespace KLS_WEB.Controllers.Monitoring
         }
 
         [Route("getMonitoring")]
-        public async Task<JsonResult> Get()
+        public async Task<JsonResult> Get(Monitoring mon)
         {
             List<Monitoring> dataMonitoring;
-            dataMonitoring = await this.AppContext.Execute<List<Monitoring>>(MethodType.GET, _UrlApi, null);
+            dataMonitoring = await this.AppContext.Execute<List<Monitoring>>(MethodType.GET, _UrlApi, mon);
             return Json(dataMonitoring);
         }
 
@@ -43,6 +43,7 @@ namespace KLS_WEB.Controllers.Monitoring
             public string  fechallegada {get;set;}
             public string fechallegada_ { get;set;}
             public string estatus { get; set; }
+            public int estatusId { get; set; } //Estatud 
             public int idviaje { get; set; }
             public string cliente { get; set; }
         }
@@ -62,6 +63,7 @@ namespace KLS_WEB.Controllers.Monitoring
             dataClient = await this.AppContext.Execute<List<Status>>(MethodType.GET, _UrlApi+ "/getStatus", null);
             return Json(dataClient);
         }
+
         [Route("getSubStatus")]
         public async Task<JsonResult> getSubStatus()
         {
