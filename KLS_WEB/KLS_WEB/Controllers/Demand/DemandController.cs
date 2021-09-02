@@ -251,5 +251,12 @@ namespace KLS_WEB.Controllers.Demand
             var total = await AppContext.Execute<Total>(MethodType.GET, Path.Combine(_UrlApi, "CountDemands"), null);
             return Json(total);
         }
+
+        [HttpGet]
+        public async Task<JsonResult> GetTravelServices()
+        {
+            ICollection<TravelService> travelServices = await AppContext.Execute<List<TravelService>>(MethodType.GET, Path.Combine(_UrlApi, "GetTravelServices"), null);
+            return Json(travelServices);
+        }
     }
 }

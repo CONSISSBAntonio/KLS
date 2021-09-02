@@ -3,6 +3,7 @@ using KLS_API.Models;
 using KLS_API.Models.Clients;
 using KLS_API.Models.Demands;
 using KLS_API.Models.DT;
+using KLS_API.Models.Travel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -379,6 +380,21 @@ namespace KLS_API.Controllers.Demands
             catch (Exception ex)
             {
                 return BadRequest(ex);
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTravelServices()
+        {
+            try
+            {
+                ICollection<TravelService> travelServices = await _dbContext.TravelServices.Where(x => x.Active).ToListAsync();
+                return Ok(travelServices);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
                 throw;
             }
         }

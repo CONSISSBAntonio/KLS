@@ -660,8 +660,8 @@
                 dToast("error", "Error al obtener clientes", "Atencion!");
             });
 
-            $.get("/Catalogs/TypesOfUnits/getUnidades", response => {
-                response.map(({ id, nombre, estatus }) => estatus === 1 && $(".tipounidad").append(`<option value="${id}">${nombre}</option>`));
+            $.get("/Demand/GetTravelServices", response => {
+                response.map(({ id, name }) => $(".tipounidad").append(`<option value="${id}">${name}</option>`));
                 dSelect('tipounidad');
                 dSelect('addedittipounidad');
             }).fail(error => {
@@ -681,12 +681,33 @@
             });
         };
 
-        const getRoute = () => {
-            const origenid = $('#editorigen').val();
-            const destinoid = $('#editdestino').val();
+        const getRoute = async () => {
+            const OriginId = $('#editorigen').val() ? parseInt($('#editorigen').val()) : 0;
+            const DestinationId = $('#editdestino').val() ? parseInt($('#editdestino').val()) : 0;
+
+            if (OriginId != 0 && DestinationId != 0) {
+                const params = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ OriginId: OriginId, DestinationId: DestinationId })
+                };
+
+                try {
+                    const response = await fetch('/Travels/GetRoute', params);
+                    const data = await response.json();
+                    data && data.length > 0 ? data.map(({ id, od }) => $('#rutaid').empty().append(`<option value="${id}" selected>${od}</option>`)
+                    ) : ($("#rutaid").empty().append(`<option value="0" selected disabled>No se encontraron rutas</option>`));
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+
+            return;
             origenid != null && destinoid != null && (
                 $("#rutaid").empty().append(`<option value="0" selected disabled>Selecciona una opción</option>`),
-                $.post('/Travels/GetRuta', { origenid: origenid, destinoid: destinoid }, response => {
+                $.post('/Travels/GetRoute', { OriginId: origenid, DestinationId: destinoid }, response => {
                     response && response.length > 0 ? response.map(({ id, od }) => $('#rutaid').append(`<option value="${id}" selected>${od}</option>`)
                     ) : ($("#rutaid").empty().append(`<option value="0" selected disabled>No se encontraron rutas</option>`));
                 })
