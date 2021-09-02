@@ -18,15 +18,15 @@ namespace KLS_API.Models.Travel
         public int SubstatusId { get; set; }
         public virtual Substatus Substatus { get; set; }
         public string Folio { get; set; }
-        public int ClientesId { get; set; }
+        public int? ClientesId { get; set; }
         public virtual Clientes Clients { get; set; }
-        public int Cl_Has_OrigenId { get; set; }
+        public int? Cl_Has_OrigenId { get; set; }
         public virtual Cl_Has_Origen Cl_Has_Origen { get; set; }
-        public int Cl_Has_DestinosId { get; set; }
+        public int? Cl_Has_DestinosId { get; set; }
         public virtual Cl_Has_Destinos Cl_Has_Destinos { get; set; }
         public int SectionTypeId { get; set; }
         public virtual SectionType SectionType { get; set; }
-        public int Cl_Has_OtrosId { get; set; }
+        public int? Cl_Has_OtrosId { get; set; }
         public virtual Cl_Has_Otros Cl_Has_Otros { get; set; }
         [Required]
         public int RutaId { get; set; }

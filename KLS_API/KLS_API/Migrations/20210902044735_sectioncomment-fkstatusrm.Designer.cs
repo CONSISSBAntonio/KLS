@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210902044735_sectioncomment-fkstatusrm")]
+    partial class sectioncommentfkstatusrm
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1363,9 +1365,6 @@ namespace KLS_API.Migrations
 
                     b.Property<DateTime>("Fecha_Disponibilidad")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<int>("IdServiceTypes")
-                        .HasColumnType("int");
 
                     b.Property<string>("Nivel_Destino")
                         .HasColumnType("varchar(20)");

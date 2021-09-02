@@ -15,7 +15,7 @@ namespace KLS_WEB.Models.Demand
         public int DestinationId { get; set; }
         public Cl_Has_Destinos Destination { get; set; }
         public int RouteId { get; set; }
-        public Ruta Route { get; set; }
+        public Route Route { get; set; }
         public string Folio { get; set; }
         public DateTime FechaDisponibilidad { get; set; }
         public DateTime FechaLlegada { get; set; }

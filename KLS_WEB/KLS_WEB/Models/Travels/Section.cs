@@ -10,25 +10,22 @@ namespace KLS_WEB.Models.Travels
     {
         public int Id { get; set; }
         public int TravelId { get; set; }
-        public Travel Travel { get; set; }
-        public ICollection<Service> Services { get; set; }
-        public int StatusId { get; set; }
-        public Status Status { get; set; }
+        public virtual ICollection<Service> Services { get; set; }
         public int SubstatusId { get; set; }
-        public Substatus Substatus { get; set; }
+        public virtual Substatus Substatus { get; set; }
         public string Folio { get; set; }
-        public int ClientesId { get; set; }
-        public Clientes Clients { get; set; }
-        public int Cl_Has_OrigenId { get; set; }
-        public Cl_Has_Origen Cl_Has_Origen { get; set; }
-        public int Cl_Has_DestinosId { get; set; }
-        public Cl_Has_Destinos Cl_Has_Destinos { get; set; }
+        public int? ClientesId { get; set; }
+        public virtual Clientes Clients { get; set; }
+        public int? Cl_Has_OrigenId { get; set; }
+        public virtual Cl_Has_Origen Cl_Has_Origen { get; set; }
+        public int? Cl_Has_DestinosId { get; set; }
+        public virtual Cl_Has_Destinos Cl_Has_Destinos { get; set; }
         public int SectionTypeId { get; set; }
-        public SectionType SectionType { get; set; }
-        public int Cl_Has_OtrosId { get; set; }
-        public Cl_Has_Otros Cl_Has_Otros { get; set; }
+        public virtual SectionType SectionType { get; set; }
+        public int? Cl_Has_OtrosId { get; set; }
+        public virtual Cl_Has_Otros Cl_Has_Otros { get; set; }
         public int RutaId { get; set; }
-        public Ruta Ruta { get; set; }
+        public virtual Ruta Ruta { get; set; }
         public DateTime FechaSalida { get; set; }
         public DateTime FechaLlegada { get; set; }
         public string Anticipacion { get; set; }

@@ -11,16 +11,13 @@ namespace KLS_API.Models.Travel
         public int Id { get; set; }
         [Required]
         public int SectionId { get; set; }
-        public Section Section { get; set; }
-        [Required]
-        public int StatusId { get; set; }
-        public Status Status { get; set; }
+        public virtual Section Section { get; set; }
         [Required]
         public int SubstatusId { get; set; }
-        public Substatus Substatus { get; set; }
+        public virtual Substatus Substatus { get; set; }
         [Required]
         public string Comment { get; set; }
-        public ICollection<Evidence> Evidences { get; set; }
+        public virtual ICollection<Evidence> Evidences { get; set; }
         public bool Active { get; set; } = true;
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

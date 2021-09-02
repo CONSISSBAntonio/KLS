@@ -1,0 +1,227 @@
+﻿@model KLS_WEB.Models.Clients.Cl_Has_Requisitos
+
+@if (Model != null)
+{
+    <div class="row requisitos px-3">
+        <div class="col-6">
+            <h4>REQUISITOS CARGA</h4>
+
+            <div class="p-2 card">
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm"><strong>Instrucción</strong></label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" name="equipoSeguridad" @(Model.EquipoSeguridad ? "checked" : "") disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm">
+                        Equipo de seguridad; chaleco
+                        reflejante verde o naranja, casco y botas de casquillo, lentes de seguridad y guantes de
+                        seguridad.
+                    </label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" name="equipoCovid" @(Model.EquipoCovid ? "checked" : "") disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm">
+                        Equipo COVID; guantes, cubrebocas,
+                        careta y lentes
+                    </label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarSua" @(Model.LlevarSua ? "checked" : "") disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm">Llevar SUA en fisico</label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarLicencia" @(Model.LlevarLicencia ? "checked" : "") disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm">
+                        Llevar licencia vigente y en
+                        fisico
+                    </label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarTarjeta" @(Model.LlevarTarjeta ? "checked" : "") disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm">
+                        Llevar tarjeta de circulación de
+                        tracto físico
+                    </label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarCertificado" @(Model.LlevarCertificado ? "checked" : "") disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm">
+                        Llevar certificado de fumigación
+                        impreso
+                    </label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarGatas" @(Model.LlevarGatas ? "checked" : "") disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm">Llevar dos gatas</label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarIne" @(Model.LlevarIne ? "checked" : "") disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm">Llevar INE</label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarPoliza" @(Model.LlevarPoliza ? "checked" : "") disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm">
+                        Llevar póliza de seguro en físico
+                    </label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" name="contarAlarma" @(Model.ContarAlarma ? "checked" : "") disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm">
+                        contar con alarma de reversa que
+                        funcione
+                    </label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" name="unidadCondiciones" @(Model.UnidadCondiciones ? "checked" : "") disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm">Unidad en buenas condiciones</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <h4>REQUISITOS DESCARGA</h4>
+
+            <div class="p-4 card">
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm"><strong>Instrucción</strong></label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" name="equipoSeguridad_" @(Model.EquipoSeguridad_ ? "checked" : "") disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm">
+                        Equipo de seguridad; chaleco
+                        reflejante verde o naranja, casco y botas de casquillo, lentes de seguridad y guantes de
+                        seguridad.
+                    </label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" name="equipoCovid_" @(Model.EquipoCovid_ ? "checked" : "") disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm">
+                        Equipo COVID; guantes, cubrebocas,
+                        careta y lentes
+                    </label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarSua_" @(Model.LlevarSua_ ? "checked" : "") disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm">Llevar SUA en fisico</label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarLicencia_" @(Model.LlevarLicencia_ ? "checked" : "") disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm">
+                        Llevar licencia vigente y en
+                        fisico
+                    </label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarTarjeta_" @(Model.LlevarTarjeta_ ? "checked" : "") disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm">
+                        Llevar tarjeta de circulación de
+                        tracto físico
+                    </label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarCertificado_" @(Model.LlevarCertificado_ ? "checked" : "") disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm">
+                        Llevar certificado de fumigación
+                        impreso
+                    </label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarGatas_" @(Model.LlevarGatas_ ? "checked" : "") disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm">Llevar dos gatas</label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarIne_" @(Model.LlevarIne_ ? "checked" : "") disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm">Llevar INE</label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarPoliza_" @(Model.LlevarPoliza_ ? "checked" : "") disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm">
+                        Llevar póliza de segur en
+                        físico
+                    </label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" name="contarAlarma_" @(Model.ContarAlarma_ ? "checked" : "") disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm">
+                        contar con alarma de reversa que
+                        funcione
+                    </label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" name="presentarseMin_" @(Model.PresentarseMin_ ? "checked" : "") disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm">
+                        Presentarse 40 minutos antes de su
+                        descarga
+                    </label>
+                </div>
+                <div class="form-group row">
+                    <div class="col-1">
+                        <input type="checkbox" class="custome-check form-control form-control-sm" name="llevarTodos_" @(Model.LlevarTodos_ ? "checked" : "") disabled>
+                    </div>
+                    <label class="col-11 col-form-label col-form-label-sm">
+                        Llevar todos los documentos que le
+                        dan al cargar: Hoja de remisión, certificado de calidad, certificado del producto
+                    </label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
+else
+{
+<div class="col-12 px-3 d-flex justify-content-center text-danger">
+    <span class="material-icons my-auto">warning</span>
+    <h4 class="text-uppercase my-auto">El cliente de este tramo no tiene requisitos configurados</h4>
+</div>
+}

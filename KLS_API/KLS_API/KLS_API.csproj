@@ -12,6 +12,8 @@
     <Compile Remove="Migrations\20210901014912_service-timecreated.Designer.cs" />
     <Compile Remove="Migrations\20210901015110_service-timecreated.cs" />
     <Compile Remove="Migrations\20210901015110_service-timecreated.Designer.cs" />
+    <Compile Remove="Migrations\20210901171718_section-fknullable.cs" />
+    <Compile Remove="Migrations\20210901171718_section-fknullable.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

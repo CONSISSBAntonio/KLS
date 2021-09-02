@@ -33,7 +33,7 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {                
-                var result =  _context.Facturacion.Where(x => x.TravelId == facturacion.TravelId).ToList();
+                var result =  _context.Facturacion.Where(x => x.SectionId == facturacion.SectionId).ToList();
                 return Ok(result);
             }
             catch (Exception ex)

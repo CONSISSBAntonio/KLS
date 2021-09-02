@@ -11,8 +11,8 @@ namespace KLS_API.Models.Travel
     {
         [Key]
         public int id { get; set; }
-        public int TravelId { get; set; }
-        public Travel Travel { get; set; }
+        public int SectionId { get; set; }
+        public Section Section { get; set; }
         [Column(TypeName = "VARCHAR(300)")]
         public string nombre { get; set; }
         public string fullpath { get; set; }

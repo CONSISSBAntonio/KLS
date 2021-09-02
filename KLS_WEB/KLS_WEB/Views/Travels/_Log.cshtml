@@ -1,0 +1,34 @@
+﻿@model ICollection<KLS_WEB.Models.Travels.SectionLog>
+<div class="col-12">
+    <div class="text-left d-flex justify-content-between mb-3">
+        <h4>HISTORIAL</h4>
+    </div>
+    <table class="table table-striped table-bordered display table-hover text-uppercase" width="100%">
+        <thead>
+            <tr>
+                <th>REGISTRO</th>
+                <th>USUARIO</th>
+                <th>FECHA</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Any())
+            {
+                foreach (var log in Model)
+                {
+                    <tr>
+                        <td>@log.Registro</td>
+                        <td>@log.Usuario</td>
+                        <td>@log.TimeCreated.ToString("dd/MM/yyyy hh:mm tt")</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td class="text-center" colspan="3">NO HAY REGISTROS QUE MOSTRAR</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
