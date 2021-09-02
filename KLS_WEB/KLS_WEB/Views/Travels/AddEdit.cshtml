@@ -723,7 +723,7 @@
             const idselected = $('.equipocontainer').attr('rel');
             idselected != idtransportista && $('.equipocontainer select').parent().remove();
             try {
-                const response = await fetch(`/Carriers/Operators/getOperators?Id_Transportista=${idtransportista}`);
+                const response = await fetch(`/Travels/GetDrivers?CarrierId=${idtransportista}`);
                 const data = await response.json();
                 $(`#chofer-${service}`).empty();
                 $(`#chofer-${service}`).append(`<option value="0" selected>SELECCIONA UN CHOFER</option>`)
@@ -912,6 +912,19 @@
             }
         }
         // END PANELES
+
+        const PostWare = async f => {
+            try {
+                const params = {
+                    method: 'POST',
+                    body: new FormData(f)
+                };
+                const response = await fetch('/Travels/PostWare', params);
+                response.ok && dToast("success", "Descripción actualizada", "Hecho");
+            } catch (e) {
+                console.error(e);
+            }
+        }
 
         // CÓDIGO AGREGAR ORIGENES DESTINOS MODAL
         let dataCity = [];

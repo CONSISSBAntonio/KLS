@@ -211,24 +211,24 @@ namespace KLS_WEB.Controllers.Travels
             return RedirectToAction("AddEdit", new { TravelId = ok });
         }
 
-        //public void SetHistorial(string accion)
-        //{
-        //    int TravelId = (int)TempData.Peek("TravelId");
-        //    var UserName = HttpContext.Session.GetString("UserFN");
-        //    if (UserName != null && accion != null)
-        //    {
-        //        HistorialDTO historial = new HistorialDTO
-        //        {
-        //            TravelId = TravelId,
-        //            Registro = accion,
-        //            Usuario = UserName,
-        //            TimeCreated = DateTime.Now
-        //        };
+        public void PostSectionLog(string accion)
+        {
+            int SectionId = (int)TempData.Peek("SectionId");
+            var UserName = HttpContext.Session.GetString("UserFN");
+            if (UserName != null && accion != null)
+            {
+                SectionLog sectionLog = new SectionLog
+                {
+                    SectionId = SectionId,
+                    Registro = accion,
+                    Usuario = UserName,
+                    TimeCreated = DateTime.Now
+                };
 
-        //        AppContext.Execute<HistorialDTO>(MethodType.POST, Path.Combine(_UrlApi, "SetHistorial"), historial);
-        //    };
+                AppContext.Execute<SectionLog>(MethodType.POST, Path.Combine(_UrlApi, "PostSectionLog"), sectionLog);
+            };
 
-        //}
+        }
         #endregion
 
         #region Section
@@ -303,8 +303,7 @@ namespace KLS_WEB.Controllers.Travels
         public async Task<JsonResult> AddEditSection(TravelDTO travelDTO)
         {
             var UserName = HttpContext.Session.GetString("UserFN");
-            travelDTO.Section.TravelId = (int)TempData["TravelId"];
-            TempData.Keep();
+            travelDTO.Section.TravelId = (int)TempData.Peek("TravelId");
 
             if (travelDTO.Section.Id == 0)
             {
@@ -321,6 +320,12 @@ namespace KLS_WEB.Controllers.Travels
             int SectionId = await AppContext.Execute<int>(sectionMethod, Path.Combine(_UrlApi, sectionAction), travelDTO.Section);
             TempData["SectionId"] = SectionId;
             TempData.Keep();
+
+            if (travelDTO.Section.Id == 0)
+            {
+                travelDTO.Travel.CreatedBy = UserName;
+                PostSectionLog("Alta de tramo");
+            }
 
             return Json(SectionId);
         }
@@ -344,6 +349,14 @@ namespace KLS_WEB.Controllers.Travels
         {
             List<RouteKLSDTO> route = await AppContext.Execute<List<RouteKLSDTO>>(MethodType.GET, Path.Combine(_UrlApi, "GetKLSRoutes"), null);
             return Json(route);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> PostWare([FromForm] BoxDTO boxDTO)
+        {
+            Section section = await AppContext.Execute<Section>(MethodType.POST, Path.Combine(_UrlApi, "PostWare"), boxDTO);
+            PostSectionLog("Información de mercancía actualizada");
+            return Json(section);
         }
         #endregion
 
@@ -376,8 +389,7 @@ namespace KLS_WEB.Controllers.Travels
         [HttpPost]
         public async Task<JsonResult> AddServices([FromBody] ServicesModel model)
         {
-            model.SectionId = (int)TempData["SectionId"];
-            TempData.Keep();
+            model.SectionId = (int)TempData.Peek("SectionId");
             await AppContext.Execute<ServicesModel>(MethodType.POST, Path.Combine(_UrlApi, "AddEditServices"), model);
 
             return Json(model);
@@ -386,8 +398,7 @@ namespace KLS_WEB.Controllers.Travels
         [HttpGet]
         public async Task<JsonResult> DeleteService(string ServiceId)
         {
-            ServicesDTO service = await AppContext.Execute<ServicesDTO>(MethodType.DELETE, Path.Combine(_UrlApi, "DeleteService", ServiceId), null);
-            //SetHistorial(string.Concat(service.Nombre, ", servicio eliminado"));
+            await AppContext.Execute<ServicesDTO>(MethodType.DELETE, Path.Combine(_UrlApi, "DeleteService", ServiceId), null);
             return Json(ServiceId);
         }
 
@@ -395,7 +406,18 @@ namespace KLS_WEB.Controllers.Travels
         public async Task<JsonResult> DeleteUnit(string UnitId)
         {
             Unit unit = await AppContext.Execute<Unit>(MethodType.DELETE, Path.Combine(_UrlApi, "DeleteUnit", UnitId), null);
+            if (unit.Id > 0)
+            {
+                PostSectionLog("Baja de unidad");
+            }
             return Json(unit);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetDrivers(string CarrierId)
+        {
+            ICollection<Tr_Has_Operadores> tr_Has_Operadores = await AppContext.Execute<List<Tr_Has_Operadores>>(MethodType.GET, Path.Combine(_UrlApi, "GetDrivers", CarrierId), null);
+            return Json(tr_Has_Operadores);
         }
         #endregion
 
@@ -414,7 +436,8 @@ namespace KLS_WEB.Controllers.Travels
                 case "facturacion":
                     return PartialView(string.Concat(_UrlView, "_Invoicing.cshtml"), SectionId);
                 case "historial":
-                    return PartialView(string.Concat(_UrlView, "_Log.cshtml"));
+                    ICollection<SectionLog> sectionLogs = await AppContext.Execute<List<SectionLog>>(MethodType.GET, Path.Combine(_UrlApi, "GetSetcionLogs", SectionId), null);
+                    return PartialView(string.Concat(_UrlView, "_Log.cshtml"), sectionLogs);
                 default:
                     return PartialView();
             }

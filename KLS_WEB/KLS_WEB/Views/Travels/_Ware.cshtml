@@ -10,7 +10,8 @@
             <div class="col-6 d-flex flex-column justify-content-between">
                 <div class="card mb-3 p-3">
                     <p class="text-left font-weight-bold">DESCRIPCIÓN</p>
-                    <form class="row g-3 text-left" onsubmit="event.preventDefault(), postMercancia(this)">
+                    <form class="row g-3 text-left" onsubmit="event.preventDefault(), PostWare(this)">
+                        <input asp-for="SectionId" type="hidden" />
                         <div class="col-3">
                             <label asp-for="Alto" class="form-label">Alto</label>
                             <input asp-for="Alto" type="number" class="form-control">

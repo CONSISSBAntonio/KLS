@@ -67,11 +67,23 @@ namespace KLS_WEB.Controllers.Travels
                     fullpath = rutaFile,
                     fechacarga = DateTime.Now,
                     usuario = HttpContext.Session.GetString("UserFN")
-            };
+                };
 
                 if (isSaved)
                 {
                     var result = await _appContext.Execute<Facturacion>(MethodType.POST, _UrlApi, facturacion);
+
+                    if (result != null)
+                    {
+                        SectionLog sectionLog = new SectionLog
+                        {
+                            SectionId = SectionId,
+                            Registro = string.Concat("Documentación: ", result.nombre),
+                            Usuario = HttpContext.Session.GetString("UserFN"),
+                            TimeCreated = DateTime.Now
+                        };
+                        await _appContext.Execute<SectionLog>(MethodType.POST, Path.Combine("Travels", "PostSectionLog"), sectionLog);
+                    };
                     return Ok(result);
                 }
                 return Ok();

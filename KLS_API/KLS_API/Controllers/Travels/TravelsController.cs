@@ -161,6 +161,37 @@ namespace KLS_API.Controllers.Travels
                 throw;
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> PostSectionLog(SectionLog sectionLog)
+        {
+            try
+            {
+                await _dbContext.SectionLogs.AddAsync(sectionLog);
+                await _dbContext.SaveChangesAsync();
+                return Ok(sectionLog);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
+
+        [HttpGet("{SectionId}")]
+        public async Task<IActionResult> GetSetcionLogs(int SectionId)
+        {
+            try
+            {
+                ICollection<SectionLog> sectionLogs = await _dbContext.SectionLogs.Where(x => x.SectionId == SectionId && x.Active).ToListAsync();
+                return Ok(sectionLogs);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
         #endregion
 
         #region Section
@@ -202,6 +233,7 @@ namespace KLS_API.Controllers.Travels
                 throw;
             }
         }
+
         [HttpPost]
         public async Task<IActionResult> PostSection(Section section)
         {
@@ -377,6 +409,32 @@ namespace KLS_API.Controllers.Travels
                 throw;
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> PostWare(BoxDTO boxDTO)
+        {
+            try
+            {
+                Section section = await _dbContext.Sections.FindAsync(boxDTO.SectionId);
+                if (section is null)
+                {
+                    return NotFound();
+                }
+
+                section.Alto = boxDTO.Alto;
+                section.Ancho = boxDTO.Ancho;
+                section.Largo = boxDTO.Largo;
+                section.Peso = boxDTO.Peso;
+                section.PesoVolumetrico = boxDTO.PesoVolumetrico;
+                await _dbContext.SaveChangesAsync();
+                return Ok(section);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
         #endregion
 
         #region Services
@@ -520,6 +578,21 @@ namespace KLS_API.Controllers.Travels
                 _dbContext.Units.Remove(unit);
                 await _dbContext.SaveChangesAsync();
                 return Ok(unit);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
+
+        [HttpGet("{CarrierId}")]
+        public async Task<IActionResult> GetDrivers(int CarrierId)
+        {
+            try
+            {
+                ICollection<Tr_Has_Operadores> tr_Has_Operadores = await _dbContext.Tr_Has_Operadores.Where(x => x.Id_Transportista == CarrierId && x.estatus == 1 && x.Imss != null && x.NoLicencia != null && x.NoIne != null && x.FotoLicencia != null && x.FotoIne != null && x.FotoSeguro != null).ToArrayAsync();
+                return Ok(tr_Has_Operadores);
             }
             catch (Exception ex)
             {

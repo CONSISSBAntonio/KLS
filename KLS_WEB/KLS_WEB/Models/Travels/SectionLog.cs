@@ -8,8 +8,7 @@ namespace KLS_WEB.Models.Travels
     public class SectionLog
     {
         public int Id { get; set; }
-        public int TravelId { get; set; }
-        public Travel Travel { get; set; }
+        public int SectionId { get; set; }
         public string Registro { get; set; }
         public string Usuario { get; set; }
         public bool Active { get; set; } = true;
