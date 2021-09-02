@@ -180,6 +180,14 @@ namespace KLS_WEB.Controllers.Offer
             dataReport = await this.AppContext.Execute<List<Oferta>>(MethodType.POST, _UrlApi + "/setExpirados", dataModel);
             return Json(dataReport);
         }
+        
+        [Route("getServiceTypes")]
+        public async Task<JsonResult> getServiceTypes()
+        {
+            List<ServiceType> dataReport;
+            dataReport = await this.AppContext.Execute<List<ServiceType>>(MethodType.GET, _UrlApi + "/getServiceTypes", null);
+            return Json(dataReport);
+        }
 
         public class expirados
         {

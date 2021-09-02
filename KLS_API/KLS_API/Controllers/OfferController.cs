@@ -172,7 +172,9 @@ namespace KLS_API.Controllers
                         Region_Destino = item.Region_Destino,
                         estado_Destino = item.estado_Destino,
                         ciudad_Destino = item.ciudad_Destino,
-                        status = item.status
+                        status = item.status,
+                        IdServiceTypes = item.IdServiceTypes
+
                     };
                     context.Oferta.Add(dato_);
                     context.SaveChanges();
@@ -387,6 +389,20 @@ namespace KLS_API.Controllers
             try
             {
                 return Ok(context.Oferta.Find(Id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+                throw;
+            }
+        }
+        
+        [Route("getServiceTypes")]
+        public IActionResult getServiceTypes()
+        {
+            try
+            {
+                return Ok(context.ServiceTypes.ToList());
             }
             catch (Exception ex)
             {

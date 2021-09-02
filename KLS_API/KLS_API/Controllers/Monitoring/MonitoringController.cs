@@ -37,6 +37,7 @@ namespace KLS_API.Controllers.Monitoring
                                  fechallegada = "",
                                  fechallegada_ = "",
                                  estatus = viajes.Substatus.Name,
+                                 estatusId = viajes.Substatus.StatusId,
                                  idviaje = viajes.Id,
                                  cliente = cliente.NombreComercial
                              }).ToList().AsQueryable();
