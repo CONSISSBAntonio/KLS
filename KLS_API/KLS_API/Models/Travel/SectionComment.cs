@@ -22,6 +22,6 @@ namespace KLS_API.Models.Travel
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime TimeCreated { get; set; } = DateTime.Now;
-        public DateTime TimeUpdated { get; set; }
+        public DateTime TimeUpdated { get; set; } = DateTime.Now;
     }
 }

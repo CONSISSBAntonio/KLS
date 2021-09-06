@@ -462,6 +462,7 @@
                     $('#txtFechaDisponibilidad').val(res.fecha_Disponibilidad);
                     $('#txtRangoEspera').val(res.rango_De_Espera);
                     $('#txtNivelOrigen').val(cUpper(res.nivel_Origen)).trigger('change');
+                    $('#tiposServicios').val(cUpper(res.idServiceTypes)).trigger('change');
 
                     if (cUpper(res.nivel_Origen) == "REGION") {
                         $('#seleccionaOrigen').val(parseInt(res.region_Origen)).trigger('change');
@@ -687,6 +688,7 @@
             $("#ciudadOrigen").val(0).trigger('change');
             $("#seleccionaDestino").val(0).trigger('change');
             $("#ciudadDestino").val(0).trigger('change');
+            $('#tiposServicios').val(0).trigger('change');
             $("#txtFechaDisponibilidad").val("");
             $("#txtRangoEspera").val("");
             $("#txtToleranciaOrigen").val("");

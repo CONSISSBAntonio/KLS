@@ -1,6 +1,9 @@
 ﻿using KLS_API.Context;
 using KLS_API.Models.Clients;
+using KLS_API.Models.Monitoring;
+using KLS_API.Models.Travel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +32,10 @@ namespace KLS_API.Controllers.Monitoring
                              join estadoorigen in context.Cat_Estado on origen.Id_Estado equals estadoorigen.id
                              join destino in context.Cl_Has_Destinos on viajes.Cl_Has_DestinosId equals destino.Id
                              join estadodestino in context.Cat_Estado on destino.Id equals estadodestino.id
+                             join ruta in context.Ruta on viajes.RutaId equals ruta.id
+                             join substatus in context.Substatuses on viajes.SubstatusId equals substatus.Id
+                             join status in context.Statuses on substatus.StatusId equals status.Id
+                             where substatus.StatusId == 3
                              select new
                              {
                                  folio = viajes.Folio,
@@ -36,10 +43,17 @@ namespace KLS_API.Controllers.Monitoring
                                  destino = estadodestino.nombre,
                                  fechallegada = "",
                                  fechallegada_ = "",
-                                 estatus = viajes.Substatus.Name,
-                                 estatusId = viajes.Substatus.StatusId,
+                                 estatus = status.Name,//me falta el nombre
+                                 estatusId = status.Id,
+                                 substatus = substatus.Name,
+                                 subestatusId = substatus.Id,
                                  idviaje = viajes.Id,
-                                 cliente = cliente.NombreComercial
+                                 cliente = cliente.NombreComercial,
+                                 fechasalida = viajes.FechaSalida,
+                                 tiemporuta = ruta.tiemporuta,
+                                 idcliente = cliente.id,
+                                 idruta = ruta.id,
+                                 frecuenciaValidacion = ruta.frecvalidacion
                              }).ToList().AsQueryable();
                 return Ok(queryable);
             }
@@ -86,6 +100,72 @@ namespace KLS_API.Controllers.Monitoring
             {
                 var cnts = context.Substatuses.ToList();
                 return Ok(cnts);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("setCommentario")]
+        public ActionResult Post([FromBody] SectionComment secciones)
+        {
+            try
+            {
+                context.SectionComments.Add(secciones);
+                context.SaveChanges();
+
+                Section dato_ = new Section { Id = secciones.SectionId,SubstatusId = secciones.SubstatusId};
+                context.Attach(dato_);
+                context.Entry(dato_).Property("SubstatusId").IsModified = true;
+                context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("getCheckpoints/{id}")]
+        public ActionResult getCheckpoints(int id)
+        {
+            try
+            {
+                var checkpoint = context.Cl_Has_Checkpoint.Where(f => f.Id_Ruta == id).ToList();
+                return Ok(checkpoint);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Route("getSCheckpoints/{id}")]
+        public ActionResult getSCheckpoints(int id)
+        {
+            try
+            {
+                var checkpoint = context.Section_Has_Checkpoint.Where(f => f.idSection == id).ToList();
+                return Ok(checkpoint);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("setSCheckpoints")]
+        public ActionResult setSCheckpoints([FromBody] Section_Has_Checkpoint secciones)
+        {
+            try
+            {
+                context.Section_Has_Checkpoint.Add(secciones);
+                context.SaveChanges();
+                return Ok(secciones);
             }
             catch (Exception ex)
             {
