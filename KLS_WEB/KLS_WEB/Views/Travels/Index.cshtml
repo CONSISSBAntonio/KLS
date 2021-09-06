@@ -52,15 +52,18 @@
                     { data: 'destino' },
                     { data: 'fechaSalida' },
                     { data: 'fechaLlegada' },
-                    { data: 'estatus' },
+                    {
+                        data: 'estatus',
+                        render: (estatus, type, full, meta) => `<span class="text-primary font-weight-bold">${estatus}</span>`
+                    },
                     {
                         data: 'mainTravelId',
                         render: (mainTravelId, type, full, meta) => `
-                            <a href="/Travels/AddEdit/${mainTravelId}">
-                                <span class="material-icons">
-                                    open_in_new
-                                </span>
-                            </a>`
+                        <a href="/Travels/AddEdit/${mainTravelId}">
+                            <span class="material-icons">
+                                open_in_new
+                            </span>
+                        </a>`
                     }
                 ],
                 language: {

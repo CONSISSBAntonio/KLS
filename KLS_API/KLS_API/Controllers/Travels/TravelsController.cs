@@ -11,6 +11,7 @@ using KLS_API.Models.Clients;
 using KLS_API.Models.Travel.DTO;
 using KLS_API.Models.Carriers;
 using KLS_API.Models.DT;
+using KLS_API.Models.Demands;
 
 namespace KLS_API.Controllers.Travels
 {
@@ -147,13 +148,22 @@ namespace KLS_API.Controllers.Travels
         }
 
         [HttpPut]
-        public async Task<IActionResult> PutTravel(Travel travel)
+        public async Task<IActionResult> PutTravel(Travel model)
         {
             try
             {
-                _dbContext.Entry(travel).State = EntityState.Modified;
+                Travel travel = await _dbContext.Travels.FindAsync(model.Id);
+                if (travel is null)
+                {
+                    return NotFound();
+                }
+                travel.TravelServiceId = model.TravelServiceId;
+                travel.Ejecutivo = model.Ejecutivo;
+                travel.GrupoMonitor = model.GrupoMonitor;
+                travel.TimeUpdated = DateTime.Now;
                 await _dbContext.SaveChangesAsync();
-                return Ok(travel);
+
+                return Ok(travel.Id);
             }
             catch (Exception ex)
             {
@@ -254,13 +264,26 @@ namespace KLS_API.Controllers.Travels
                     section.Cl_Has_OtrosId = null;
                 }
 
-                int lastid = _dbContext.Sections.Where(x => x.TravelId == section.TravelId && x.Active).Count() + 1;
-
-                section.Folio = string.Concat(sectionType.Acronym, DateTime.Now.ToString("yyMM"), travel.Folio.Substring(travel.Folio.Length - 4), "-", lastid.ToString("D2"));
-                section.SubstatusId = _dbContext.Substatuses.FirstOrDefault(x => x.Name.ToLower() == "registrado").Id;
-                if (!section.IsEmpty)
+                bool sectionexists = _dbContext.Sections.Any(x => x.TravelId == section.TravelId && x.Active);
+                int autoincrement = 1;
+                if (sectionexists)
                 {
-                    section.Cl_Has_OtrosId = _dbContext.Cl_Has_Otros.FirstOrDefault(x => x.Id_Cliente == section.ClientesId).Id;
+                    Section lastsection = _dbContext.Sections.Where(x => x.TravelId == section.TravelId).ToList().LastOrDefault();
+                    autoincrement = Int32.Parse(lastsection.Folio.Split("-")[1]) + 1;
+                }
+
+                section.Folio = string.Concat(sectionType.Acronym, DateTime.Now.ToString("yyMM"), travel.Folio.Substring(travel.Folio.Length - 4), "-", autoincrement.ToString("D2"));
+                section.SubstatusId = _dbContext.Substatuses.FirstOrDefault(x => x.Name.ToLower() == "registrado").Id;
+
+                Cl_Has_Otros cl_Has_Otros = await _dbContext.Cl_Has_Otros.SingleOrDefaultAsync(x => x.Id_Cliente == section.ClientesId);
+
+                if (!section.IsEmpty && cl_Has_Otros != null)
+                {
+                    section.Cl_Has_OtrosId = cl_Has_Otros.Id;
+                }
+                else
+                {
+                    section.Cl_Has_OtrosId = null;
                 }
 
                 await _dbContext.Sections.AddAsync(section);
@@ -427,6 +450,39 @@ namespace KLS_API.Controllers.Travels
                 section.Peso = boxDTO.Peso;
                 section.PesoVolumetrico = boxDTO.PesoVolumetrico;
                 await _dbContext.SaveChangesAsync();
+                return Ok(section);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
+
+        [HttpGet("{DemandId}")]
+        public async Task<IActionResult> ConvertDemand(int DemandId)
+        {
+            try
+            {
+                Demand demand = await _dbContext.Demands.FindAsync(DemandId);
+                if (demand is null)
+                {
+                    return BadRequest();
+                }
+                Section section = new Section
+                {
+                    ClientesId = demand.ClientId,
+                    Cl_Has_OrigenId = demand.OriginId,
+                    Cl_Has_DestinosId = demand.DestinationId,
+                    RutaId = demand.RouteId,
+                    FechaSalida = demand.FechaDisponibilidad,
+                    Anticipacion = demand.Arribo
+                };
+
+                demand.Status = "convertida a viaje";
+                demand.TimeUpdated = DateTime.Now;
+                await _dbContext.SaveChangesAsync();
+
                 return Ok(section);
             }
             catch (Exception ex)
@@ -667,9 +723,9 @@ namespace KLS_API.Controllers.Travels
                     Id = x.Id,
                     MainTravelId = x.TravelId,
                     Folio = x.Folio,
-                    Cliente = x.Clients.NombreCorto,
-                    Origen = string.Concat(_dbContext.Cat_Estado.SingleOrDefault(y => y.id == x.Cl_Has_Origen.Id_Estado).nombre, "-", _dbContext.Cat_Ciudad.SingleOrDefault(y => y.id == x.Cl_Has_Origen.Id_Ciudad).nombre),
-                    Destino = string.Concat(_dbContext.Cat_Estado.SingleOrDefault(y => y.id == x.Cl_Has_Destinos.Id_Estado).nombre, "-", _dbContext.Cat_Ciudad.SingleOrDefault(y => y.id == x.Cl_Has_Destinos.Id_Ciudad).nombre),
+                    Cliente = x.Clients.NombreCorto ?? "-",
+                    Origen = !x.IsEmpty ? string.Concat(_dbContext.Cat_Estado.SingleOrDefault(y => y.id == x.Cl_Has_Origen.Id_Estado).nombre, "-", _dbContext.Cat_Ciudad.SingleOrDefault(y => y.id == x.Cl_Has_Origen.Id_Ciudad).nombre) : string.Concat(_dbContext.Cat_Estado.SingleOrDefault(y => y.id == x.Ruta.id_estadoorigen).nombre, "-", _dbContext.Cat_Ciudad.SingleOrDefault(y => y.id == x.Ruta.id_ciudadorigen).nombre),
+                    Destino = !x.IsEmpty ? string.Concat(_dbContext.Cat_Estado.SingleOrDefault(y => y.id == x.Cl_Has_Destinos.Id_Estado).nombre, "-", _dbContext.Cat_Ciudad.SingleOrDefault(y => y.id == x.Cl_Has_Destinos.Id_Ciudad).nombre) : string.Concat(_dbContext.Cat_Estado.SingleOrDefault(y => y.id == x.Ruta.id_estadodestino).nombre, "-", _dbContext.Cat_Ciudad.SingleOrDefault(y => y.id == x.Ruta.id_ciudaddestino).nombre),
                     FechaSalida = x.FechaSalida.ToString("dd/MM/yyyy. hh:mm tt"),
                     FechaLlegada = x.FechaLlegada.ToString("dd/MM/yyyy. hh:mm tt"),
                     Estatus = x.Substatus.Name

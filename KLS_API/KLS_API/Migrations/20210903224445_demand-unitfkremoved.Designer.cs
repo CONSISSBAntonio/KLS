@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210903224445_demand-unitfkremoved")]
+    partial class demandunitfkremoved
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1350,29 +1352,6 @@ namespace KLS_API.Migrations
                     b.HasIndex("TravelServiceId");
 
                     b.ToTable("Demands");
-                });
-
-            modelBuilder.Entity("KLS_API.Models.Monitoring.Section_Has_Checkpoint", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime>("HoraReal")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("idCheckpoint")
-                        .HasColumnType("int");
-
-                    b.Property<int>("idSection")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Section_Has_Checkpoint");
                 });
 
             modelBuilder.Entity("KLS_API.Models.Oferta.Oferta", b =>

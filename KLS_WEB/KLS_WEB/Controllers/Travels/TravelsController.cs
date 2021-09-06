@@ -5,6 +5,7 @@ using KLS_WEB.Models.Clients;
 using KLS_WEB.Models.DT;
 using KLS_WEB.Models.Travels;
 using KLS_WEB.Models.Travels.DTO;
+using KLS_WEB.Models.Demand;
 using KLS_WEB.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -13,7 +14,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace KLS_WEB.Controllers.Travels
@@ -180,6 +180,19 @@ namespace KLS_WEB.Controllers.Travels
                 TempData.Keep();
             }
 
+            string convert = (string)TempData["ConvertTravelType"];
+            TempData.Keep();
+
+            if (convert != null)
+            {
+                if (convert == "demand")
+                {
+                    var DemandId = (string)TempData["ConvertTravelId"];
+                    var demand = await AppContext.Execute<DemandDTO>(MethodType.GET, Path.Combine("Demands", "GetDemand", DemandId), null);
+                    travelDTO.Travel.TravelServiceId = demand.TravelServiceId;
+                }
+            }
+
             return View(travelDTO);
         }
 
@@ -211,7 +224,7 @@ namespace KLS_WEB.Controllers.Travels
             return RedirectToAction("AddEdit", new { TravelId = ok });
         }
 
-        public void PostSectionLog(string accion)
+        public async void PostSectionLog(string accion)
         {
             int SectionId = (int)TempData.Peek("SectionId");
             var UserName = HttpContext.Session.GetString("UserFN");
@@ -225,9 +238,18 @@ namespace KLS_WEB.Controllers.Travels
                     TimeCreated = DateTime.Now
                 };
 
-                AppContext.Execute<SectionLog>(MethodType.POST, Path.Combine(_UrlApi, "PostSectionLog"), sectionLog);
+                await AppContext.Execute<SectionLog>(MethodType.POST, Path.Combine(_UrlApi, "PostSectionLog"), sectionLog);
             };
 
+        }
+
+        public IActionResult ConvertTravel(string id, string type)
+        {
+            TempData["ConvertTravelId"] = id;
+            TempData["ConvertTravelType"] = type;
+            TempData.Keep();
+
+            return RedirectToAction("AddEdit", new { TravelId = 0 });
         }
         #endregion
 
@@ -246,6 +268,20 @@ namespace KLS_WEB.Controllers.Travels
             if (SectionId > 0)
             {
                 travelDTO.Section = await AppContext.Execute<Section>(MethodType.GET, Path.Combine(_UrlApi, "GetSection", SectionId.ToString()), null);
+            }
+
+            string convert = (string)TempData["ConvertTravelType"];
+
+            if (convert != null)
+            {
+                if (convert == "demand")
+                {
+                    var DemandId = (string)TempData["ConvertTravelId"];
+                    //var demand = await AppContext.Execute<DemandDTO>(MethodType.GET, Path.Combine("Demands", "GetDemand", DemandId), null);
+                    travelDTO.Section = await AppContext.Execute<Section>(MethodType.GET, Path.Combine(_UrlApi, "ConvertDemand", DemandId), null);
+                    //travelDTO.Travel.TravelServiceId = demand.TravelServiceId;
+                    TempData.Clear();
+                }
             }
 
             // INIT SELECTS
@@ -357,6 +393,13 @@ namespace KLS_WEB.Controllers.Travels
             Section section = await AppContext.Execute<Section>(MethodType.POST, Path.Combine(_UrlApi, "PostWare"), boxDTO);
             PostSectionLog("Información de mercancía actualizada");
             return Json(section);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetRoutePrice(string RouteId)
+        {
+            Route route = await AppContext.Execute<Route>(MethodType.GET, Path.Combine("Route", "GetRoute", RouteId), null);
+            return Json(route);
         }
         #endregion
 

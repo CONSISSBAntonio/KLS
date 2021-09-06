@@ -18,6 +18,11 @@
         text-transform: uppercase;
         width: 100% !important;
     }
+
+    .selected {
+        color: black;
+        box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 20%) !important;
+    }
 </style>
 
 <div class="p-4">
@@ -93,6 +98,7 @@
         </div>
         <div class="card mt-3" style="height: 14.7rem;">
             <form asp-controller="Travels" asp-action="AddEditTravel" method="post">
+                <input asp-for="Travel.Id" type="hidden" />
                 <div class="row">
                     <div class="col-6 pl-4 pt-3">
                         <label asp-for="Travel.TravelServiceId" class="form-label">TIPO DE SERVICIO</label>
@@ -109,7 +115,7 @@
                     </div>
                 </div>
                 <div class="pb-3 pl-2">
-                    <button type="submit" id="guardar" class="btn btn-dark" style="width: 12.8rem;">GUARDAR</button>
+                    <button type="submit" id="guardar" class="btn btn-dark" style="width: 12.8rem;" onclick="dToast('success', 'Información actualizada', 'ACTUALIZADO')">GUARDAR VIAJE</button>
                 </div>
             </form>
         </div>
@@ -172,10 +178,10 @@
 
 <div id="traveldetails-container" rel="5" class="row w-100 pl-4" style="display: none;">
     <div class="catalog-list w-100 pl-3 d-flex justify-content-around">
-        <a href="javascript:void(0);" class="catalog" id="servicios" onclick="ShowPanel(this.id)">
+        <a href="javascript:void(0);" class="catalog selected" id="servicios" onclick="ShowPanel(this.id)">
             <div class="content">
                 <span class="material-icons">
-                    people
+                    travel_explore
                 </span>
                 <div class="name font-barlow">Servicios</div>
             </div>
@@ -183,7 +189,7 @@
         <a href="javascript:void(0);" class="catalog" id="requisitos" onclick="ShowPanel(this.id)">
             <div class="content" id="requisitos">
                 <span class="material-icons">
-                    inventory_2
+                    checklist
                 </span>
                 <div class="name font-barlow">Requisitos</div>
             </div>
@@ -191,7 +197,7 @@
         <a href="javascript:void(0);" class="catalog" id="mercancia" onclick="ShowPanel(this.id)">
             <div class="content">
                 <span class="material-icons">
-                    store
+                    inventory_2
                 </span>
                 <div class="name font-barlow">Mercancía</div>
             </div>
@@ -530,6 +536,7 @@
                 if (!data) {
                     dToast("warning", 'El cliente seleccionado no tiene parámetros para "OTROS".', "Atencion!");
                     $('#referencia1, #referencia2, #referencia3').hide();
+                    $('#Section_Referencia1, #Section_Referencia2, #Section_Referencia3').prop('disabled', true);
                     return;
                 }
                 const {
@@ -540,9 +547,9 @@
                     treferencia2,
                     treferencia3
                 } = data;
-                referencia1 ? ($('[for="Section_Referencia1"]').html(treferencia1.toUpperCase()), $('#referencia1').show()) : $('#referencia1').hide();
-                referencia2 ? ($('[for="Section_Referencia2"]').html(treferencia2.toUpperCase()), $('#referencia2').show()) : $('#referencia2').hide();
-                referencia3 ? ($('[for="Section_Referencia3"]').html(treferencia3.toUpperCase()), $('#referencia3').show()) : $('#referencia3').hide();
+                referencia1 ? ($('[for="Section_Referencia1"]').html(treferencia1.toUpperCase()), $('#referencia1').show(), $('#referencia1 input').prop('disabled', false)) : ($('#referencia1').hide(), $('#Section_Referencia1').prop('disabled', true));
+                referencia2 ? ($('[for="Section_Referencia2"]').html(treferencia2.toUpperCase()), $('#referencia2').show(), $('#referencia2 input').prop('disabled', false)) : ($('#referencia2').hide(), $('#Section_Referencia2').prop('disabled', true));
+                referencia3 ? ($('[for="Section_Referencia3"]').html(treferencia3.toUpperCase()), $('#referencia3').show(), $('#referencia3 input').prop('disabled', false)) : ($('#referencia3').hide(), $('#Section_Referencia3').prop('disabled', true));
                 //let referencias = ``;
                 //referencias += referencia1 ? `<div class="col-4" ><label class="form-label">${treferencia1.toUpperCase()}</label><input type="text" class="form-control" id="referencia1" name="referencia1" required></div>` : '';
                 //referencias += referencia2 ? `<div class="col-4" ><label class="form-label">${treferencia2.toUpperCase()}</label><input type="text" class="form-control" id="referencia2" name="referencia2" required></div>` : '';
@@ -578,8 +585,8 @@
                 try {
                     const response = await fetch('/Travels/GetRoute', params);
                     const data = await response.json();
-                    data && data.length > 0 ? data.map(({ id, od }) => $('#Section_RutaId').empty().append(`<option value="${id}" selected>${od}</option>`)
-                    ) : ($("#Section_RutaId").empty().append(`<option value="0" selected disabled>No se encontraron rutas</option>`));
+                    data && data.length > 0 ? (data.map(({ id, od }) => $('#Section_RutaId').empty().append(`<option value="${id}" selected>${od}</option>`)
+                    ), GetRoutePrice(data[0].id)) : ($("#Section_RutaId").empty().append(`<option value="0" selected disabled>No se encontraron rutas</option>`));
                 } catch (e) {
                     console.error(e);
                 }
@@ -669,7 +676,7 @@
 
                 try {
                     const response = await fetch('/Travels/AddServices', params);
-                    response.ok && dToast("success", "REGISTRO GUARDADO", "Registrado"), setTimeout(() => location.reload(), 1300);
+                    response.ok && dToast("success", "REGISTRO GUARDADO", "Registrado"), setTimeout(() => location.reload(), 1000);
                 } catch (e) {
                     console.error(e);
                     dToast("error", "OCURRIÓ UN ERROR AL PROCESAR LA SOLICITUD", "Error");
@@ -683,7 +690,11 @@
 
         const validateForm = (form) => {
             let isSet = true;
-            $(`${form} select, ${form} input`).map((k, { value }) => {
+            $(`${form} select, ${form} input`).map((k, e) => {
+                const { value } = e;
+                if ($(e).prop('disabled')) {
+                    return;
+                }
                 if (!value || value == 0) {
                     isSet = value === 0 && false;
                     isSet = value === 'cerrado' && true;
@@ -714,6 +725,7 @@
                 const data = await resposne.text();
                 $('#servicescontainer').html(data).show();
                 $('.addServicios').hide();
+                GetRoutePrice($('#Section_RutaId').val());
             } catch (e) {
                 console.error(e);
             }
@@ -753,18 +765,18 @@
             $('.equipocontainer').attr('rel', idtransportista);
             boton.remove();
             const equipo = `<div class="d-flex justify-content-between equipo mt-2">
-                        <form class="formunit ${servicio} row w-100">
-                            <input id="${servicio}-unit" type="hidden" name="id" value="-1" >
-                            <select id="unidad${elementid}" class="form-control form-control-sm col-4 selectunidad" name="typeid" required onchange="{selectEquipo(${idtransportista}, this.value, ${elementid});}">
-                            </select>
-                            <div class="col-8 d-flex flex-row justify-content-between">
-                                <select id="equipo${elementid}" class="form-control form-control-sm col-10 selectequipo" name="unitid" required>
+                            <form class="formunit ${servicio} row w-100">
+                                <input id="${servicio}-unit" type="hidden" name="id" value="-1" >
+                                <select id="unidad${elementid}" class="form-control form-control-sm col-4 selectunidad" name="typeid" required onchange="{selectEquipo(${idtransportista}, this.value, ${elementid});}">
                                 </select>
-                                <i id="unit-${servicio}-${elementid}" class="material-icons text-danger" style="cursor: pointer;" onClick="DeleteUnit(this, 0)">delete</i>
-                            </div>
-                        </form>
-                    </div>
-                    <i id="addEquipo" class="material-icons" style="cursor:pointer;" onclick="addEquipo('${servicio}', this);">add_box</i>`;
+                                <div class="col-8 d-flex flex-row justify-content-between">
+                                    <select id="equipo${elementid}" class="form-control form-control-sm col-10 selectequipo" name="unitid" required>
+                                    </select>
+                                    <i id="unit-${servicio}-${elementid}" class="material-icons text-danger" style="cursor: pointer;" onClick="DeleteUnit(this, 0)">delete</i>
+                                </div>
+                            </form>
+                        </div>
+                        <i id="addEquipo" class="material-icons" style="cursor:pointer;" onclick="addEquipo('${servicio}', this);">add_box</i>`;
             $('.equipocontainer').append(equipo);
             getInventario(idtransportista, elementid);
         }
@@ -834,7 +846,7 @@
             try {
                 const response = await fetch(`/Travels/DeleteSection?SectionId=${SectionId}`);
                 $('#popupdeletesection').modal('hide');
-                response.ok && dToast("success", "Tramo eliminado", "Eliminado"), setTimeout(() => location.reload(), 1300);
+                response.ok && dToast("success", "Tramo eliminado", "Eliminado"), setTimeout(() => location.reload(), 1000);
             } catch (e) {
                 console.error(e);
             }
@@ -892,6 +904,8 @@
 
         // PANELES
         const ShowPanel = async Panel => {
+            $('.catalog').removeClass('selected');
+            $(`#${Panel}`).addClass('selected');
             if (Panel === 'servicios') {
                 $('#sectioncontainer, #addservicescontainer').show();
                 $('#panelcontainer').hide();
@@ -924,6 +938,12 @@
             } catch (e) {
                 console.error(e);
             }
+        }
+
+        const GetRoutePrice = async RouteId => {
+            const response = await fetch(`/Travels/GetRoutePrice?RouteId=${RouteId}`);
+            const { precioMinimo, precioMaximo } = await response.json();
+            precioMinimo && precioMaximo && $('.priceinfo-terrestrenacional').text(`${new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(parseFloat(precioMinimo))} - ${new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(parseFloat(precioMaximo))}`);
         }
 
         // CÓDIGO AGREGAR ORIGENES DESTINOS MODAL
@@ -1074,6 +1094,6 @@
                 };
             });
         }
-                //END CÓDIGO AGREGAR ORIGENES DESTINOS
+                    //END CÓDIGO AGREGAR ORIGENES DESTINOS
     </script>
 }

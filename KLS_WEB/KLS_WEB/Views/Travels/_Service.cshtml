@@ -23,14 +23,14 @@
                                     <div class="form-group row mr-3 my-auto">
                                         <label class="col-5 col-form-label col-form-label-sm">COSTO $</label>
                                         <div class="col-7 my-auto">
-                                            <input type="number" class="form-control form-control-sm cost" name="cost" onkeyup="setCostos(this)" onchange="this.value = parseFloat(this.value).toFixed(2)" required>
+                                            <input type="number" class="form-control form-control-sm cost" name="cost" onchange="this.value = parseFloat(this.value).toFixed(2)" required>
                                         </div>
                                     </div>
                                     <div class="form-group row my-auto">
                                         <label class="col-6 col-form-label col-form-label-sm mr-0">PRECIO A CLIENTE $</label>
                                         <div class="col-6 my-auto">
-                                            <input type="number" class="form-control form-control-sm mb-0 price" name="price" onkeyup="setPrecios(this)" onchange="this.value = parseFloat(this.value).toFixed(2)" required>
-                                            <small class="text-black-50 mt-0 priceinfo"></small>
+                                            <input type="number" class="form-control form-control-sm mb-0 price" name="price" onchange="this.value = parseFloat(this.value).toFixed(2)" required>
+                                            <small class="text-black-50 mt-0 priceinfo-@service" style="font-size: .7rem;"></small>
                                         </div>
                                     </div>
                                 </div>
@@ -117,7 +117,6 @@
                         </div>
                     </div>
                 </div>
-
                 break;
             case "naviera":
                 <p class="text-info">@service</p>

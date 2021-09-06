@@ -3,6 +3,7 @@ using KLS_API.Models;
 using KLS_API.Models.Clients;
 using KLS_API.Models.Demands;
 using KLS_API.Models.DT;
+using KLS_API.Models.Travel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -65,7 +66,7 @@ namespace KLS_API.Controllers.Demands
                 if (entry != null)
                 {
                     entry.ClientId = demand.ClientId;
-                    entry.UnitId = demand.UnitId;
+                    entry.TravelServiceId = demand.TravelServiceId;
                     entry.OriginId = demand.OriginId;
                     entry.DestinationId = demand.DestinationId;
                     entry.RouteId = demand.RouteId;
@@ -118,8 +119,8 @@ namespace KLS_API.Controllers.Demands
                         RouteId = x.RouteId,
                         Folio = x.Folio,
                         Cliente = x.Client.NombreCorto,
-                        UnitId = x.Unit.id,
-                        TipoUnidad = x.Unit.nombre,
+                        UnitId = x.TravelService.Id,
+                        TipoUnidad = x.TravelService.Name,
                         Origen = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Origin.Id_Estado).nombre.Trim(), "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Origin.Id_Ciudad).nombre.Trim()),
                         Destino = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Destination.Id_Estado).nombre.Trim(), "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Destination.Id_Ciudad).nombre.Trim()),
                         FechaDisponibilidad = x.FechaDisponibilidad.ToString("dd/MM/yyyy. hh:mm tt"),
@@ -129,7 +130,7 @@ namespace KLS_API.Controllers.Demands
                         Status = x.Status
                     }).ToList()
                 ) : (
-                _dbContext.Demands.Where(x => (x.Status == "nueva" && x.FechaDisponibilidad >= DateTime.Now) && x.ClientId == dtParams.searchmodel.ClientId || x.UnitId == dtParams.searchmodel.UnitId ||
+                _dbContext.Demands.Where(x => (x.Status == "nueva" && x.FechaDisponibilidad >= DateTime.Now) && x.ClientId == dtParams.searchmodel.ClientId || x.TravelServiceId == dtParams.searchmodel.UnitId ||
                 x.FechaDisponibilidad == dtParams.searchmodel.FechaSalida || x.Origin.Id_Estado == dtParams.searchmodel.EstadoOrigenId ||
                 x.Origin.Id_Ciudad == dtParams.searchmodel.CiudadOrigenId || x.Destination.Id_Estado == dtParams.searchmodel.EstadoDestinoId ||
                 x.Destination.Id_Ciudad == dtParams.searchmodel.CiudadDestinoId || x.Client.Tamanio == dtParams.searchmodel.TamañoEmpresa).Select(x => new DTModel
@@ -141,7 +142,7 @@ namespace KLS_API.Controllers.Demands
                     RouteId = x.RouteId,
                     Folio = x.Folio,
                     Cliente = x.Client.NombreCorto,
-                    TipoUnidad = x.Unit.nombre,
+                    TipoUnidad = x.TravelService.Name,
                     Origen = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Origin.Id_Estado).nombre.Trim(), "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Origin.Id_Ciudad).nombre.Trim()),
                     Destino = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Destination.Id_Estado).nombre.Trim(), "-", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Destination.Id_Ciudad).nombre.Trim()),
                     FechaDisponibilidad = x.FechaDisponibilidad.ToString("dd/MM/yyyy. hh:mm tt"),
@@ -303,13 +304,13 @@ namespace KLS_API.Controllers.Demands
                     if (client != null)
                     {
 
-                        Cat_Tipos_Unidades unit = _dbContext.Cat_Tipos_Unidades.FirstOrDefault(x => x.nombre.Replace(" ", "").ToLower() == demand.TipoUnidad.Replace(" ", "").ToLower());
+                        TravelService travelservice = _dbContext.TravelServices.FirstOrDefault(x => x.Name.Replace(" ", "").ToLower() == demand.TipoUnidad.Replace(" ", "").ToLower());
                         Cl_Has_Origen origin = _dbContext.Cl_Has_Origen.FirstOrDefault(x => x.Id_Cliente == client.id && x.Nombre.Replace(" ", "").ToLower() == demand.Origen.Replace(" ", "").ToLower());
                         Cl_Has_Destinos destination = _dbContext.Cl_Has_Destinos.FirstOrDefault(x => x.Id_Cliente == client.id && x.Nombre.Replace(" ", "").ToLower() == demand.Destino.Replace(" ", "").ToLower());
 
-                        if (unit == null || origin == null || destination == null)
+                        if (travelservice == null || origin == null || destination == null)
                         {
-                            if (unit == null)
+                            if (travelservice == null)
                                 report.NoUnit.Add(demand);
                             if (origin == null)
                                 report.NoOrigin.Add(demand);
@@ -331,7 +332,7 @@ namespace KLS_API.Controllers.Demands
                         Demand demandDTO = new Demand
                         {
                             ClientId = client.id,
-                            UnitId = unit.id,
+                            TravelServiceId = travelservice.Id,
                             OriginId = origin.Id,
                             DestinationId = destination.Id,
                             RouteId = route.id,
@@ -379,6 +380,21 @@ namespace KLS_API.Controllers.Demands
             catch (Exception ex)
             {
                 return BadRequest(ex);
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTravelServices()
+        {
+            try
+            {
+                ICollection<TravelService> travelServices = await _dbContext.TravelServices.Where(x => x.Active).ToListAsync();
+                return Ok(travelServices);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
                 throw;
             }
         }
