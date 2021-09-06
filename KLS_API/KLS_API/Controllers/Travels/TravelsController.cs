@@ -274,9 +274,16 @@ namespace KLS_API.Controllers.Travels
 
                 section.Folio = string.Concat(sectionType.Acronym, DateTime.Now.ToString("yyMM"), travel.Folio.Substring(travel.Folio.Length - 4), "-", autoincrement.ToString("D2"));
                 section.SubstatusId = _dbContext.Substatuses.FirstOrDefault(x => x.Name.ToLower() == "registrado").Id;
-                if (!section.IsEmpty)
+
+                Cl_Has_Otros cl_Has_Otros = await _dbContext.Cl_Has_Otros.SingleOrDefaultAsync(x => x.Id_Cliente == section.ClientesId);
+
+                if (!section.IsEmpty && cl_Has_Otros != null)
                 {
-                    section.Cl_Has_OtrosId = _dbContext.Cl_Has_Otros.FirstOrDefault(x => x.Id_Cliente == section.ClientesId).Id;
+                    section.Cl_Has_OtrosId = cl_Has_Otros.Id;
+                }
+                else
+                {
+                    section.Cl_Has_OtrosId = null;
                 }
 
                 await _dbContext.Sections.AddAsync(section);

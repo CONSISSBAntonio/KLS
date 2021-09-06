@@ -11,7 +11,7 @@
     }
     <div>
         @*<button class="btn btn-dark" onclick="AddEditSection(this, document.getElementsByClassName('serviceform'), document.getElementsByClassName('carrierparams'))">GUARDAR</button>*@
-        <button class="btn btn-dark" onclick="AddEditSection(this, document.querySelector('#sectionform'))">GUARDAR</button>
+        <button class="btn btn-dark" onclick="AddEditSection(this, document.querySelector('#sectionform'))">GUARDAR TRAMO</button>
     </div>
 </div>
 
@@ -54,22 +54,22 @@
 
         @if (!Model.Section.IsEmpty)
         {
-            <div class="col-6 Section_ClientesId">
+            <div class="col-3 Section_ClientesId">
                 <label asp-for="Section.ClientesId" class="form-label">CLIENTE</label>
                 <select asp-for="Section.ClientesId" asp-items="Model.Selects.Customers" data-val="true" data-val-required="The Person field is required." class="form-select" onchange="GetCustomerOD(this.value), GetClientReferences(this.value)" required style="width: 100%;"></select>
             </div>
 
         }
 
-        <div class="col-2">
+        <div class="col-3">
             <label asp-for="Section.FechaSalida" class="form-label">FECHA DE SALIDA</label>
             <input asp-for="Section.FechaSalida" class="form-control">
         </div>
-        <div class="col-2">
+        <div class="col-3">
             <label asp-for="Section.FechaLlegada" class="form-label">FECHA DE LLEGADA</label>
             <input asp-for="Section.FechaLlegada" class="form-control">
         </div>
-        <div class="col-2">
+        <div class="col-3">
             <label asp-for="Section.Anticipacion" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
             <input asp-for="Section.Anticipacion" class="form-control">
         </div>

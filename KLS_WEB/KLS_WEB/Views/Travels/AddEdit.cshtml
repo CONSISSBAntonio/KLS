@@ -115,7 +115,7 @@
                     </div>
                 </div>
                 <div class="pb-3 pl-2">
-                    <button type="submit" id="guardar" class="btn btn-dark" style="width: 12.8rem;" onclick="dToast('success', 'Información actualizada', 'ACTUALIZADO')">GUARDAR</button>
+                    <button type="submit" id="guardar" class="btn btn-dark" style="width: 12.8rem;" onclick="dToast('success', 'Información actualizada', 'ACTUALIZADO')">GUARDAR VIAJE</button>
                 </div>
             </form>
         </div>
@@ -536,6 +536,7 @@
                 if (!data) {
                     dToast("warning", 'El cliente seleccionado no tiene parámetros para "OTROS".', "Atencion!");
                     $('#referencia1, #referencia2, #referencia3').hide();
+                    $('#Section_Referencia1, #Section_Referencia2, #Section_Referencia3').prop('disabled', true);
                     return;
                 }
                 const {
@@ -546,9 +547,9 @@
                     treferencia2,
                     treferencia3
                 } = data;
-                referencia1 ? ($('[for="Section_Referencia1"]').html(treferencia1.toUpperCase()), $('#referencia1').show()) : $('#referencia1').hide();
-                referencia2 ? ($('[for="Section_Referencia2"]').html(treferencia2.toUpperCase()), $('#referencia2').show()) : $('#referencia2').hide();
-                referencia3 ? ($('[for="Section_Referencia3"]').html(treferencia3.toUpperCase()), $('#referencia3').show()) : $('#referencia3').hide();
+                referencia1 ? ($('[for="Section_Referencia1"]').html(treferencia1.toUpperCase()), $('#referencia1').show(), $('#referencia1 input').prop('disabled', false)) : ($('#referencia1').hide(), $('#Section_Referencia1').prop('disabled', true));
+                referencia2 ? ($('[for="Section_Referencia2"]').html(treferencia2.toUpperCase()), $('#referencia2').show(), $('#referencia2 input').prop('disabled', false)) : ($('#referencia2').hide(), $('#Section_Referencia2').prop('disabled', true));
+                referencia3 ? ($('[for="Section_Referencia3"]').html(treferencia3.toUpperCase()), $('#referencia3').show(), $('#referencia3 input').prop('disabled', false)) : ($('#referencia3').hide(), $('#Section_Referencia3').prop('disabled', true));
                 //let referencias = ``;
                 //referencias += referencia1 ? `<div class="col-4" ><label class="form-label">${treferencia1.toUpperCase()}</label><input type="text" class="form-control" id="referencia1" name="referencia1" required></div>` : '';
                 //referencias += referencia2 ? `<div class="col-4" ><label class="form-label">${treferencia2.toUpperCase()}</label><input type="text" class="form-control" id="referencia2" name="referencia2" required></div>` : '';
@@ -689,7 +690,11 @@
 
         const validateForm = (form) => {
             let isSet = true;
-            $(`${form} select, ${form} input`).map((k, { value }) => {
+            $(`${form} select, ${form} input`).map((k, e) => {
+                const { value } = e;
+                if ($(e).prop('disabled')) {
+                    return;
+                }
                 if (!value || value == 0) {
                     isSet = value === 0 && false;
                     isSet = value === 'cerrado' && true;
@@ -720,6 +725,7 @@
                 const data = await resposne.text();
                 $('#servicescontainer').html(data).show();
                 $('.addServicios').hide();
+                GetRoutePrice($('#Section_RutaId').val());
             } catch (e) {
                 console.error(e);
             }

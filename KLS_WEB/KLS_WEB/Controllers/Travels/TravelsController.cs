@@ -188,7 +188,7 @@ namespace KLS_WEB.Controllers.Travels
                 if (convert == "demand")
                 {
                     var DemandId = (string)TempData["ConvertTravelId"];
-                    var demand = await AppContext.Execute<DemandDTO>(MethodType.GET, Path.Combine(_UrlApi, "GetDemand", DemandId), null);
+                    var demand = await AppContext.Execute<DemandDTO>(MethodType.GET, Path.Combine("Demands", "GetDemand", DemandId), null);
                     travelDTO.Travel.TravelServiceId = demand.TravelServiceId;
                 }
             }
@@ -277,9 +277,10 @@ namespace KLS_WEB.Controllers.Travels
                 if (convert == "demand")
                 {
                     var DemandId = (string)TempData["ConvertTravelId"];
-                    var demand = await AppContext.Execute<DemandDTO>(MethodType.GET, Path.Combine(_UrlApi, "GetDemand", DemandId), null);
+                    //var demand = await AppContext.Execute<DemandDTO>(MethodType.GET, Path.Combine("Demands", "GetDemand", DemandId), null);
                     travelDTO.Section = await AppContext.Execute<Section>(MethodType.GET, Path.Combine(_UrlApi, "ConvertDemand", DemandId), null);
-                    travelDTO.Travel.TravelServiceId = demand.TravelServiceId;
+                    //travelDTO.Travel.TravelServiceId = demand.TravelServiceId;
+                    TempData.Clear();
                 }
             }
 
