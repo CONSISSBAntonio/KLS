@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using KLS_API.Controllers.Clients;
 using KLS_API.Models.Demands;
 using KLS_API.Models.Oferta;
+using KLS_API.Models.Monitoring;
 
 namespace KLS_API.Context
 {
@@ -79,5 +80,7 @@ namespace KLS_API.Context
 
         //Ofertas
         public DbSet<Separar> Separar { get; set; }
+        //Monitoreo
+        public DbSet<Section_Has_Checkpoint> Section_Has_Checkpoint { get; set; }
     }
 }

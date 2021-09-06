@@ -60,7 +60,7 @@ namespace KLS_API.Controllers.Catalogs
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Error");
             }
         }
 

@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210905234742_checkpoint_section")]
+    partial class checkpoint_section
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1295,9 +1297,6 @@ namespace KLS_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("Arribo")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
@@ -1334,7 +1333,7 @@ namespace KLS_API.Migrations
                     b.Property<string>("TipoViaje")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<int>("TravelServiceId")
+                    b.Property<int>("UnitId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -1347,7 +1346,7 @@ namespace KLS_API.Migrations
 
                     b.HasIndex("RouteId");
 
-                    b.HasIndex("TravelServiceId");
+                    b.HasIndex("UnitId");
 
                     b.ToTable("Demands");
                 });
@@ -2228,9 +2227,9 @@ namespace KLS_API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("KLS_API.Models.Travel.TravelService", "TravelService")
+                    b.HasOne("KLS_API.Models.Cat_Tipos_Unidades", "Unit")
                         .WithMany()
-                        .HasForeignKey("TravelServiceId")
+                        .HasForeignKey("UnitId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -2307,8 +2306,8 @@ namespace KLS_API.Migrations
 
             modelBuilder.Entity("KLS_API.Models.Travel.SectionComment", b =>
                 {
-                    b.HasOne("KLS_API.Models.Travel.Section", null)
-                        .WithMany("SectionComments")
+                    b.HasOne("KLS_API.Models.Travel.Section", "Section")
+                        .WithMany()
                         .HasForeignKey("SectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
