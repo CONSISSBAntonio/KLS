@@ -22,11 +22,15 @@ namespace KLS_API.Controllers.Route
 
         [HttpGet]
         [Route("getRoute/{id}")]
-        public ActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
-                var ruta = _context.Ruta.FirstOrDefault(f => f.id == id);
+                Ruta ruta = await _context.Ruta.FindAsync(id);
+                if (ruta is null)
+                {
+                    return NotFound();
+                }
                 return Ok(ruta);
             }
             catch (Exception ex)

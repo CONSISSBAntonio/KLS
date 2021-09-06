@@ -59,50 +59,6 @@ namespace KLS_WEB.Controllers.Demand
             return Json(demand);
         }
 
-        //[Route("[controller]/[action]/{DemandId}")]
-        //public async Task<IActionResult> SetTravel(string DemandId)
-        //{
-        //    DemandDTO demand = await AppContext.Execute<DemandDTO>(MethodType.GET, Path.Combine(_UrlApi, "GetDemand", DemandId), null);
-
-        //    Travel lasttravel = await AppContext.Execute<Travel>(MethodType.GET, Path.Combine("Travels", "GetTravel", "0"), null);
-
-        //    Travel travel = new Travel
-        //    {
-        //        Id = lasttravel == null ? 1 : lasttravel.Id,
-        //        ClienteId = demand.ClientId,
-        //        TipoUnidad = demand.UnitId,
-        //        Origen = demand.OriginId,
-        //        Destino = demand.DestinationId,
-        //        Ruta = demand.RouteId,
-        //        FechaSalida = demand.FechaDisponibilidad,
-        //        IsDemand = true
-        //    };
-
-        //    return View("~/Views/Travels/New.cshtml", travel);
-        //}
-
-        //public async Task<IActionResult> SetFullTravel(string DemandId, int CarrierId)
-        //{
-        //    DemandDTO demand = await AppContext.Execute<DemandDTO>(MethodType.GET, Path.Combine(_UrlApi, "GetDemand", DemandId), null);
-
-        //    Travel lasttravel = await AppContext.Execute<Travel>(MethodType.GET, Path.Combine("Travels", "GetTravel", "0"), null);
-
-        //    Travel travel = new Travel
-        //    {
-        //        Id = lasttravel == null ? 1 : lasttravel.Id,
-        //        ClienteId = demand.ClientId,
-        //        TipoUnidad = demand.UnitId,
-        //        Origen = demand.OriginId,
-        //        Destino = demand.DestinationId,
-        //        Ruta = demand.RouteId,
-        //        FechaSalida = demand.FechaDisponibilidad,
-        //        Transportista = CarrierId,
-        //        IsDemand = true
-        //    };
-
-        //    return View("~/Views/Travels/New.cshtml", travel);
-        //}
-
         public class CarrierDT
         {
             public int Id { get; set; }
