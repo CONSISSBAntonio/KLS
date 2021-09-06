@@ -11,6 +11,7 @@ namespace KLS_WEB.Models.Travels
         public int Id { get; set; }
         public int TravelId { get; set; }
         public virtual ICollection<Service> Services { get; set; }
+        public virtual ICollection<SectionComment> SectionComments { get; set; }
         public int SubstatusId { get; set; }
         public virtual Substatus Substatus { get; set; }
         public string Folio { get; set; }

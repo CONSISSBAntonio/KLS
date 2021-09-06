@@ -227,14 +227,14 @@
                 <div class="name font-barlow">Historial</div>
             </div>
         </a>
-        @*<a href="javascript:void(0);" class="catalog" id="historial" onclick="ShowPanel(this.id)">
-                <div class="content">
-                    <span class="material-icons">
-                        pin_drop
-                    </span>
-                    <div class="name font-barlow">Monitoreo</div>
-                </div>
-            </a>*@
+        <a href="javascript:void(0);" class="catalog" id="monitoreo" onclick="ShowPanel(this.id)">
+            <div class="content">
+                <span class="material-icons">
+                    pin_drop
+                </span>
+                <div class="name font-barlow">Monitoreo</div>
+            </div>
+        </a>
     </div>
 </div>
 
@@ -765,18 +765,18 @@
             $('.equipocontainer').attr('rel', idtransportista);
             boton.remove();
             const equipo = `<div class="d-flex justify-content-between equipo mt-2">
-                            <form class="formunit ${servicio} row w-100">
-                                <input id="${servicio}-unit" type="hidden" name="id" value="-1" >
-                                <select id="unidad${elementid}" class="form-control form-control-sm col-4 selectunidad" name="typeid" required onchange="{selectEquipo(${idtransportista}, this.value, ${elementid});}">
-                                </select>
-                                <div class="col-8 d-flex flex-row justify-content-between">
-                                    <select id="equipo${elementid}" class="form-control form-control-sm col-10 selectequipo" name="unitid" required>
+                                <form class="formunit ${servicio} row w-100">
+                                    <input id="${servicio}-unit" type="hidden" name="id" value="-1" >
+                                    <select id="unidad${elementid}" class="form-control form-control-sm col-4 selectunidad" name="typeid" required onchange="{selectEquipo(${idtransportista}, this.value, ${elementid});}">
                                     </select>
-                                    <i id="unit-${servicio}-${elementid}" class="material-icons text-danger" style="cursor: pointer;" onClick="DeleteUnit(this, 0)">delete</i>
-                                </div>
-                            </form>
-                        </div>
-                        <i id="addEquipo" class="material-icons" style="cursor:pointer;" onclick="addEquipo('${servicio}', this);">add_box</i>`;
+                                    <div class="col-8 d-flex flex-row justify-content-between">
+                                        <select id="equipo${elementid}" class="form-control form-control-sm col-10 selectequipo" name="unitid" required>
+                                        </select>
+                                        <i id="unit-${servicio}-${elementid}" class="material-icons text-danger" style="cursor: pointer;" onClick="DeleteUnit(this, 0)">delete</i>
+                                    </div>
+                                </form>
+                            </div>
+                            <i id="addEquipo" class="material-icons" style="cursor:pointer;" onclick="addEquipo('${servicio}', this);">add_box</i>`;
             $('.equipocontainer').append(equipo);
             getInventario(idtransportista, elementid);
         }
@@ -1094,6 +1094,6 @@
                 };
             });
         }
-                    //END CÓDIGO AGREGAR ORIGENES DESTINOS
+                        //END CÓDIGO AGREGAR ORIGENES DESTINOS
     </script>
 }

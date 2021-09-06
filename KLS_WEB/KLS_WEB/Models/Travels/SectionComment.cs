@@ -9,7 +9,6 @@ namespace KLS_WEB.Models.Travels
     {
         public int Id { get; set; }
         public int SectionId { get; set; }
-        public Section Section { get; set; }
         public int StatusId { get; set; }
         public Status Status { get; set; }
         public int SubstatusId { get; set; }

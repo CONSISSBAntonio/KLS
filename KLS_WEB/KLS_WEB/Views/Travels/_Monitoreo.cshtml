@@ -1,0 +1,14 @@
+﻿@model KLS_WEB.Models.Travels.Section
+
+<div class="col-12">
+    <div class="text-left d-flex justify-content-between mb-3">
+        <h4>MONITOREO</h4>
+    </div>
+    @if (Model.SectionComments.Any())
+    {
+        foreach (var comment in Model.SectionComments)
+        {
+            <p>@comment.Comment @comment.CreatedBy @comment.TimeCreated</p>
+        }
+    }
+</div>

@@ -11,7 +11,6 @@ namespace KLS_API.Models.Travel
         public int Id { get; set; }
         [Required]
         public int SectionId { get; set; }
-        public virtual Section Section { get; set; }
         [Required]
         public int SubstatusId { get; set; }
         public virtual Substatus Substatus { get; set; }

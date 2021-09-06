@@ -481,6 +481,9 @@ namespace KLS_WEB.Controllers.Travels
                 case "historial":
                     ICollection<SectionLog> sectionLogs = await AppContext.Execute<List<SectionLog>>(MethodType.GET, Path.Combine(_UrlApi, "GetSetcionLogs", SectionId), null);
                     return PartialView(string.Concat(_UrlView, "_Log.cshtml"), sectionLogs);
+                case "monitoreo":
+                    Section section = await AppContext.Execute<Section>(MethodType.GET, Path.Combine(_UrlApi, "GetSectionComments", SectionId), null);
+                    return PartialView(string.Concat(_UrlView, "_Monitoreo.cshtml"), section);
                 default:
                     return PartialView();
             }

@@ -491,6 +491,25 @@ namespace KLS_API.Controllers.Travels
                 throw;
             }
         }
+
+        [HttpGet("{SectionId}")]
+        public async Task<IActionResult> GetSectionComments(int SectionId)
+        {
+            try
+            {
+                Section section = await _dbContext.Sections.Include(x => x.SectionComments).SingleOrDefaultAsync(x => x.Active && x.Id == SectionId);
+                if (section is null)
+                {
+                    return NotFound();
+                }
+                return Ok(section);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
         #endregion
 
         #region Services
