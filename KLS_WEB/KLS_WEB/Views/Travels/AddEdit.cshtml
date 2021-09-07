@@ -115,7 +115,7 @@
                     </div>
                 </div>
                 <div class="pb-3 pl-2">
-                    <button type="submit" id="guardar" class="btn btn-dark" style="width: 12.8rem;" onclick="dToast('success', 'Información actualizada', 'ACTUALIZADO')">GUARDAR VIAJE</button>
+                    <button type="submit" id="guardar" class="btn btn-dark" style="width: 12.8rem;" onclick="dToast('success', 'Información actualizada', 'ACTUALIZADO')">@(Model.Travel.Id is 0 ? "GENERAR VIAJE" : "ACTUALIZAR VIAJE")</button>
                 </div>
             </form>
         </div>
