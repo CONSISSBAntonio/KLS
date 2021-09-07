@@ -304,7 +304,7 @@ namespace KLS_API.Controllers.Demands
                     if (client != null)
                     {
 
-                        TravelService travelservice = _dbContext.TravelServices.FirstOrDefault(x => x.Name.Replace(" ", "").ToLower() == demand.TipoUnidad.Replace(" ", "").ToLower());
+                        Cat_Tipos_Unidades travelservice = _dbContext.Cat_Tipos_Unidades.FirstOrDefault(x => x.nombre.Replace(" ", "").ToLower() == demand.TipoUnidad.Replace(" ", "").ToLower());
                         Cl_Has_Origen origin = _dbContext.Cl_Has_Origen.FirstOrDefault(x => x.Id_Cliente == client.id && x.Nombre.Replace(" ", "").ToLower() == demand.Origen.Replace(" ", "").ToLower());
                         Cl_Has_Destinos destination = _dbContext.Cl_Has_Destinos.FirstOrDefault(x => x.Id_Cliente == client.id && x.Nombre.Replace(" ", "").ToLower() == demand.Destino.Replace(" ", "").ToLower());
 
@@ -332,7 +332,7 @@ namespace KLS_API.Controllers.Demands
                         Demand demandDTO = new Demand
                         {
                             ClientId = client.id,
-                            TravelServiceId = travelservice.Id,
+                            TravelServiceId = travelservice.id,
                             OriginId = origin.Id,
                             DestinationId = destination.Id,
                             RouteId = route.id,
