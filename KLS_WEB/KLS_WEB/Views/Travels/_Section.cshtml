@@ -109,6 +109,18 @@
             <select asp-for="Section.SectionTypeId" asp-items="Model.Selects.SectionType" class="form-select" style="width: 100%;"></select>
         </div>
 
+        <div class="col-4">
+            <label asp-for="Section.Espejo" class="form-label">CUENTA ESPEJO</label>
+            <input asp-for="Section.Espejo" class="form-control">
+        </div>
+        <div class="col-4">
+            <label asp-for="Section.Usuario" class="form-label">USUARIO</label>
+            <input asp-for="Section.Usuario" class="form-control">
+        </div>
+        <div class="col-4">
+            <label asp-for="Section.Contraseña" class="form-label">CONTRASEÑA</label>
+            <input asp-for="Section.Contraseña" class="form-control">
+        </div>
         @if (!Model.Section.IsEmpty)
         {
             <div class="col-4" id="referencia1">

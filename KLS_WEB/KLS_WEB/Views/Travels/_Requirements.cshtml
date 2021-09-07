@@ -9,7 +9,7 @@
             <div class="p-2 card">
                 <div class="form-group row">
                     <div class="col-1">
-                        <input type="checkbox" class="custome-check form-control form-control-sm" disabled>
+                        <input type="checkbox" class="custome-check form-control form-control-sm" @(Model.Instruccion ? "checked" : "")  disabled>
                     </div>
                     <label class="col-11 col-form-label col-form-label-sm"><strong>Instrucción</strong></label>
                 </div>
@@ -109,7 +109,7 @@
             <div class="p-4 card">
                 <div class="form-group row">
                     <div class="col-1">
-                        <input type="checkbox" class="custome-check form-control form-control-sm" disabled>
+                        <input type="checkbox" class="custome-check form-control form-control-sm" @(Model.IntruccionDescarga ? "checked" : "")  disabled>
                     </div>
                     <label class="col-11 col-form-label col-form-label-sm"><strong>Instrucción</strong></label>
                 </div>

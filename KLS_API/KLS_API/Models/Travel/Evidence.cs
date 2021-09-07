@@ -11,7 +11,6 @@ namespace KLS_API.Models.Travel
         public int Id { get; set; }
         [Required]
         public int SectionCommentId { get; set; }
-        public SectionComment SectionComment { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]
