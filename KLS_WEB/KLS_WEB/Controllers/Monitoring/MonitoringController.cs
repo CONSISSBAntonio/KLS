@@ -174,8 +174,8 @@ namespace KLS_WEB.Controllers.Monitoring
         [Route("getCheckpoints/{id}")]
         public async Task<JsonResult> getCheckpoints(int id)
         {
-            List<Cl_Has_Checkpoint> dataCheck;
-            dataCheck = await this.AppContext.Execute<List<Cl_Has_Checkpoint>>(MethodType.GET, _UrlApi + "/getCheckpoints/"+ id, null);
+            List<Ruta_Has_Checkpoint> dataCheck;
+            dataCheck = await this.AppContext.Execute<List<Ruta_Has_Checkpoint>>(MethodType.GET, _UrlApi + "/getCheckpoints/"+ id, null);
             return Json(dataCheck);
         }
 
