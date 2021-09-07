@@ -36,6 +36,7 @@
     <Folder Include="Controllers\Catalogs\TypesOfUnits\" />
     <Folder Include="Controllers\Catalogs\Subservices\" />
     <Folder Include="Controllers\Catalogs\ShippingCompanies\" />
+    <Folder Include="wwwroot\DemandsExcel\" />
     <Folder Include="wwwroot\Resources\Facturas\" />
   </ItemGroup>
 
