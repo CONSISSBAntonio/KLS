@@ -378,7 +378,7 @@ namespace KLS_API.Controllers.Travels
                 {
                     Id = x.id,
                     OD = string.Concat(_dbContext.Cat_Estado.SingleOrDefault(y => y.id == x.id_estadoorigen).nombre, "-", _dbContext.Cat_Ciudad.SingleOrDefault(y => y.id == x.id_ciudadorigen).nombre, "-", _dbContext.Cat_Estado.SingleOrDefault(y => y.id == x.id_estadodestino).nombre, "-", _dbContext.Cat_Ciudad.SingleOrDefault(y => y.id == x.id_ciudaddestino).nombre)
-                }).OrderBy(x=> x.OD).ToListAsync();
+                }).ToListAsync();
                 return Ok(travels);
             }
             catch (Exception ex)
