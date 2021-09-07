@@ -7,7 +7,6 @@ namespace KLS_API.Models.Travel
     public class Status
     {
         public int Id { get; set; }
-        public ICollection<Substatus> Substatuses { get; set; }
         [Required]
         public string Name { get; set; }
         public bool Active { get; set; } = true;

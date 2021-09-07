@@ -497,7 +497,7 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
-                Section section = await _dbContext.Sections.Include(x => x.SectionComments).ThenInclude(x => x.Evidences).Include(x => x.Substatus).SingleOrDefaultAsync(x => x.Active && x.Id == SectionId);
+                Section section = await _dbContext.Sections.Include(x => x.SectionComments).ThenInclude(x => x.Evidences).Include(x => x.Substatus).Include(x => x.SectionComments).ThenInclude(x => x.Substatus).ThenInclude(x => x.Status).SingleOrDefaultAsync(x => x.Active && x.Id == SectionId);
                 if (section is null)
                 {
                     return NotFound();

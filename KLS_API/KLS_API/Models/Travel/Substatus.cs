@@ -7,7 +7,7 @@ namespace KLS_API.Models.Travel
     {
         public int Id { get; set; }
         public int StatusId { get; set; }
-        public Status Status { get; set; }
+        public virtual Status Status { get; set; }
         [Required]
         public string Name { get; set; }
         public bool Active { get; set; } = true;
