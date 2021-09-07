@@ -63,7 +63,7 @@
 
         <div class="col-3">
             <label asp-for="Section.FechaSalida" class="form-label">FECHA DE SALIDA</label>
-            <input asp-for="Section.FechaSalida" class="form-control">
+            <input asp-for="Section.FechaSalida" class="form-control" onchange="$('#Section_FechaLlegada').prop('min', this.value)">
         </div>
         <div class="col-3">
             <label asp-for="Section.FechaLlegada" class="form-label">FECHA DE LLEGADA</label>
