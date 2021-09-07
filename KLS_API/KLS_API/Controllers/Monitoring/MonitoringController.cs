@@ -35,7 +35,6 @@ namespace KLS_API.Controllers.Monitoring
                              join ruta in context.Ruta on viajes.RutaId equals ruta.id
                              join substatus in context.Substatuses on viajes.SubstatusId equals substatus.Id
                              join status in context.Statuses on substatus.StatusId equals status.Id
-                             where substatus.StatusId == 3
                              select new
                              {
                                  folio = viajes.Folio,
