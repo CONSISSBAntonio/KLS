@@ -888,7 +888,9 @@
                     console.error(e);
                 }
             }
-            $(e).parent().parent().remove();
+            $(e).parent().parent().parent().remove();
+            console.log(e);
+            //$('.equipo').map((k, e) => $(e).remove());
         }
 
         const GetKLSRoutes = async RouteId => {
