@@ -177,25 +177,28 @@
         //frmComentario
         $("#frmComentario").submit(function (event) {
             event.preventDefault();
-            var jsonData = convertJson($("#frmComentario"));
-            var formData = new FormData(document.getElementById("frmComentario"));
-            formData.append('file', $('#FileArchivo')[0].files[0]);
-            $.ajax({
-                url: "/Monitoring/setCommentario",
-                type: "POST",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    dToast("success", "Registro actualizado exitosamente.", "Actualizado");
-                    location.reload();
-                    console.log(data);
-                },
-                error: function (data) {
-                    dToast("error", "Ocurrio un error al intentar guardar el archivo.", "Error");
-                }
-            });
-
+            if ($("#subestatusModal").val() != 0) {
+                var jsonData = convertJson($("#frmComentario"));
+                var formData = new FormData(document.getElementById("frmComentario"));
+                formData.append('file', $('#FileArchivo')[0].files[0]);
+                $.ajax({
+                    url: "/Monitoring/setCommentario",
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        dToast("success", "Registro actualizado exitosamente.", "Actualizado");
+                        location.reload();
+                        console.log(data);
+                    },
+                    error: function (data) {
+                        dToast("error", "Ocurrio un error al intentar guardar el archivo.", "Error");
+                    }
+                });
+            } else {
+                dToast("error", "Todos los campos son necesarios.", "Atención");
+            }
         });
     });
 
