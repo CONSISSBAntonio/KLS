@@ -270,17 +270,18 @@ namespace KLS_WEB.Controllers.Travels
                 travelDTO.Section = await AppContext.Execute<Section>(MethodType.GET, Path.Combine(_UrlApi, "GetSection", SectionId.ToString()), null);
             }
 
-            string convert = (string)TempData["ConvertTravelType"];
+            string convert = (string)TempData.Peek("ConvertTravelType");
 
             if (convert != null)
             {
                 if (convert == "demand")
                 {
-                    var DemandId = (string)TempData["ConvertTravelId"];
+                    var DemandId = (string)TempData.Peek("ConvertTravelId");
                     //var demand = await AppContext.Execute<DemandDTO>(MethodType.GET, Path.Combine("Demands", "GetDemand", DemandId), null);
                     travelDTO.Section = await AppContext.Execute<Section>(MethodType.GET, Path.Combine(_UrlApi, "ConvertDemand", DemandId), null);
                     //travelDTO.Travel.TravelServiceId = demand.TravelServiceId;
-                    TempData.Clear();
+                    TempData.Remove("ConvertTravelId");
+                    TempData.Remove("ConvertTravelType");
                 }
             }
 

@@ -217,10 +217,10 @@
 
                                 setTimeout(() => {
                                     $(`#${servicename}-unit`).val(id);
-                                    $(`#unidad${elementid}`).val(tr_Has_InventarioId).trigger('change');
-                                    setTimeout(() => $(`#equipo${elementid}`).val(cat_Tipos_UnidadesId).trigger('change'), 1300);
+                                    $(`#unidad${elementid}`).val(cat_Tipos_UnidadesId).trigger('change');
+                                    setTimeout(() => $(`#equipo${elementid}`).val(tr_Has_InventarioId).trigger('change'), 1400);
                                     $(`#unit-${servicename}-${elementid}`).attr('onclick', `DeleteUnit(this, ${id})`);
-                                }, 1000);
+                                }, 1200);
                             });
                         }
                     });

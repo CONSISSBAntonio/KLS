@@ -587,7 +587,7 @@ namespace KLS_API.Controllers.Travels
                     Unit unit = new Unit { ServiceId = service.Id };
                     if (unitmodel.Id != -1)
                     {
-                        unit = await _dbContext.Units.FindAsync(unit.Id);
+                        unit = await _dbContext.Units.FindAsync(unitmodel.Id);
                         if (unit is null)
                         {
                             continue;
