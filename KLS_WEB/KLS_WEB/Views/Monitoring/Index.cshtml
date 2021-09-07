@@ -381,6 +381,7 @@
         }
 
         function verCheckpoint(idviaje, idruta, fechasalida) {
+            console.log(fechasalida);
             var catCheckpoints = [];
             var catSecChecpoints = [];
             var horaOriginal = 0;
@@ -438,17 +439,21 @@
                                 if (horaOriginal1 == 0) {
                                     let horadif = moment(horaEsperadaView1).diff(fechaSalidaView, 'minutes');
                                     horadif = horadif * 1;
+
                                     if (horadif >= 1) {
                                         colorCheck = "red";
                                     }
+
                                     let fecha = moment(fechaSalidaView).add(horadif, 'minutes').format('YYYY-MM-DD hh:mm:ss')
                                     hEsperada = `<td>${moment(fecha).add(key.tiempo, 'hours').format('YYYY-MM-DD hh:mm:ss')}</td>`;
                                 } else {
                                     let horadif = moment(horaEsperadaView).diff(fechaSalidaView, 'minutes');
                                     horadif = horadif * 1;
+
                                     if (horadif >= 1) {
                                         colorCheck = "red";
                                     }
+
                                     let fecha = moment(fechaSalidaView).add(horadif, 'minutes').format('YYYY-MM-DD hh:mm:ss')
                                     hEsperada = `<td>${moment(fecha).add(horaOriginal1, 'hours').format('YYYY-MM-DD hh:mm:ss')}</td>`;
                                 }
