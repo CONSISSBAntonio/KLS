@@ -31,7 +31,7 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
-                ICollection<Cat_Tipos_Unidades> cat_Tipos_Unidades = await _dbContext.Cat_Tipos_Unidades.Where(x => x.estatus == 1).ToListAsync();
+                ICollection<Cat_Tipos_Unidades> cat_Tipos_Unidades = await _dbContext.Cat_Tipos_Unidades.Where(x => x.estatus == 1).OrderBy(x => x.nombre).ToListAsync();
                 return Ok(cat_Tipos_Unidades);
             }
             catch (Exception ex)
@@ -45,7 +45,7 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
-                ICollection<TravelService> travelServices = await _dbContext.TravelServices.Where(x => x.Active).ToListAsync();
+                ICollection<TravelService> travelServices = await _dbContext.TravelServices.Where(x => x.Active).OrderBy(x => x.Name).ToListAsync();
                 return Ok(travelServices);
             }
             catch (Exception ex)
@@ -60,7 +60,7 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
-                ICollection<Clientes> customers = await _dbContext.Clientes.Where(x => x.Estatus == 1).ToListAsync();
+                ICollection<Clientes> customers = await _dbContext.Clientes.Where(x => x.Estatus == 1).OrderBy(x => x.NombreCorto).ToListAsync();
                 return Ok(customers);
             }
             catch (Exception ex)
@@ -75,7 +75,7 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
-                ICollection<SectionType> sectionTypes = await _dbContext.SectionTypes.Where(x => x.Active).ToListAsync();
+                ICollection<SectionType> sectionTypes = await _dbContext.SectionTypes.Where(x => x.Active).OrderBy(x => x.Name).ToListAsync();
                 return Ok(sectionTypes);
             }
             catch (Exception ex)
@@ -90,7 +90,7 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
-                ICollection<Transportista> carriers = await _dbContext.Transportista.Where(x => x.Estatus == 1).ToListAsync();
+                ICollection<Transportista> carriers = await _dbContext.Transportista.Where(x => x.Estatus == 1).OrderBy(x => x.NombreComercial).ToListAsync();
                 return Ok(carriers);
             }
             catch (Exception ex)
@@ -232,8 +232,8 @@ namespace KLS_API.Controllers.Travels
             {
                 CustomerOD customerOD = new CustomerOD
                 {
-                    Origins = await _dbContext.Cl_Has_Origen.Where(x => x.Estatus == 1 && x.Id_Cliente == CustomerId).ToListAsync(),
-                    Destinations = await _dbContext.Cl_Has_Destinos.Where(x => x.Estatus == 1 && x.Id_Cliente == CustomerId).ToListAsync()
+                    Origins = await _dbContext.Cl_Has_Origen.Where(x => x.Estatus == 1 && x.Id_Cliente == CustomerId).OrderBy(x => x.Nombre).ToListAsync(),
+                    Destinations = await _dbContext.Cl_Has_Destinos.Where(x => x.Estatus == 1 && x.Id_Cliente == CustomerId).OrderBy(x => x.Nombre).ToListAsync()
                 };
                 return Ok(customerOD);
             }
@@ -250,10 +250,16 @@ namespace KLS_API.Controllers.Travels
             try
             {
                 Travel travel = await _dbContext.Travels.FindAsync(section.TravelId);
-                SectionType sectionType = await _dbContext.SectionTypes.FindAsync(section.SectionTypeId);
+
+                SectionType sectionType = await _dbContext.SectionTypes.FindAsync(1);
+                //SectionType sectionType = await _dbContext.SectionTypes.FindAsync(section.SectionTypeId);
                 if (travel is null || sectionType is null)
                 {
                     return BadRequest();
+                }
+                else
+                {
+                    section.SectionTypeId = 1;
                 }
 
                 if (section.IsEmpty)
@@ -308,6 +314,8 @@ namespace KLS_API.Controllers.Travels
                 {
                     model.Cl_Has_OtrosId = _dbContext.Cl_Has_Otros.FirstOrDefault(x => x.Id_Cliente == model.ClientesId).Id;
                 }
+                //ESTABLECER TIPO DE SECCION FIJA
+                model.SectionTypeId = 1;
                 model.TimeUpdated = DateTime.Now;
                 _dbContext.Entry(model).State = EntityState.Modified;
                 await _dbContext.SaveChangesAsync();
@@ -369,7 +377,7 @@ namespace KLS_API.Controllers.Travels
                 {
                     Id = x.id,
                     OD = string.Concat(_dbContext.Cat_Estado.SingleOrDefault(y => y.id == x.id_estadoorigen).nombre, "-", _dbContext.Cat_Ciudad.SingleOrDefault(y => y.id == x.id_ciudadorigen).nombre, "-", _dbContext.Cat_Estado.SingleOrDefault(y => y.id == x.id_estadodestino).nombre, "-", _dbContext.Cat_Ciudad.SingleOrDefault(y => y.id == x.id_ciudaddestino).nombre)
-                }).ToListAsync();
+                }).OrderBy(x=> x.OD).ToListAsync();
                 return Ok(travels);
             }
             catch (Exception ex)
@@ -666,7 +674,7 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
-                ICollection<Tr_Has_Operadores> tr_Has_Operadores = await _dbContext.Tr_Has_Operadores.Where(x => x.Id_Transportista == CarrierId && x.estatus == 1 && x.Imss != null && x.NoLicencia != null && x.NoIne != null && x.FotoLicencia != null && x.FotoIne != null && x.FotoSeguro != null).ToArrayAsync();
+                ICollection<Tr_Has_Operadores> tr_Has_Operadores = await _dbContext.Tr_Has_Operadores.Where(x => x.Id_Transportista == CarrierId && x.estatus == 1 && x.Imss != null && x.NoLicencia != null && x.NoIne != null && x.FotoLicencia != null && x.FotoIne != null && x.FotoSeguro != null).OrderBy(x => x.nombre).ToArrayAsync();
                 return Ok(tr_Has_Operadores);
             }
             catch (Exception ex)
