@@ -133,7 +133,7 @@ namespace KLS_API.Controllers.Monitoring
         {
             try
             {
-                var checkpoint = context.Cl_Has_Checkpoint.Where(f => f.Id_Ruta == id).ToList();
+                var checkpoint = context.Ruta_Has_Checkpoint.Where(f => f.RutaId == id).ToList();
                 return Ok(checkpoint);
             }
             catch (Exception ex)

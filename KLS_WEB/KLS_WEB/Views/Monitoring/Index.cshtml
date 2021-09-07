@@ -444,22 +444,39 @@
                                     let horadif = moment(horaEsperadaView1).diff(fechaSalidaView, 'minutes');
                                     horadif = horadif * 1;
 
-                                    if (horadif >= 1) {
+                                    //if (horadif >= 1) {
+                                    //    colorCheck = "red";
+                                    //}
+
+                                    let fecha = moment(fechaSalidaView).add(horadif, 'minutes').format('YYYY-MM-DD hh:mm:ss');
+                                    let horaEsp = moment(fecha).add(key.tiempo, 'hours').format('YYYY-MM-DD hh:mm:ss');
+                                    console.log(moment(fechaSalidaView).isAfter(horaEsp));
+                                    //if (moment(fechaSalidaView).diff(horaEsp) > 1) {
+                                    //    colorCheck = "red";
+                                    //}
+                                    if (moment(horaEsp).isAfter(fechaSalidaView)) {
                                         colorCheck = "red";
                                     }
-
-                                    let fecha = moment(fechaSalidaView).add(horadif, 'minutes').format('YYYY-MM-DD hh:mm:ss')
-                                    hEsperada = `<td>${moment(fecha).add(key.tiempo, 'hours').format('YYYY-MM-DD hh:mm:ss')}</td>`;
+                                    hEsperada = `<td>${horaEsp}</td>`;
                                 } else {
                                     let horadif = moment(horaEsperadaView).diff(fechaSalidaView, 'minutes');
                                     horadif = horadif * 1;
 
-                                    if (horadif >= 1) {
+                                    //if (horadif >= 1) {
+                                    //    colorCheck = "red";
+                                    //}
+
+                                    let fecha = moment(fechaSalidaView).add(horadif, 'minutes').format('YYYY-MM-DD hh:mm:ss')
+                                    let horaEsp = moment(fecha).add(horaOriginal1, 'hours').format('YYYY-MM-DD hh:mm:ss');
+
+                                    //if (moment(fechaSalidaView).diff(horaEsp) > 1) {
+                                    //    colorCheck = "red";
+                                    //}
+                                    if (moment(horaEsp).isAfter(fechaSalidaView)) {
                                         colorCheck = "red";
                                     }
 
-                                    let fecha = moment(fechaSalidaView).add(horadif, 'minutes').format('YYYY-MM-DD hh:mm:ss')
-                                    hEsperada = `<td>${moment(fecha).add(horaOriginal1, 'hours').format('YYYY-MM-DD hh:mm:ss')}</td>`;
+                                    hEsperada = `<td>${horaEsp}</td>`;
                                 }
                             }
                         }
