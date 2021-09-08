@@ -12,6 +12,7 @@ using KLS_API.Models.Travel.DTO;
 using KLS_API.Models.Carriers;
 using KLS_API.Models.DT;
 using KLS_API.Models.Demands;
+using KLS_API.Models.Oferta;
 
 namespace KLS_API.Controllers.Travels
 {
@@ -551,7 +552,7 @@ namespace KLS_API.Controllers.Travels
                     return BadRequest();
                 }
 
-                Section section = await _dbContext.Sections.FindAsync(model.SectionId);
+                Section section = await _dbContext.Sections.Include(x => x.Ruta).SingleOrDefaultAsync(x => x.Id == model.SectionId);
                 if (section is null)
                 {
                     return NotFound();
@@ -586,6 +587,30 @@ namespace KLS_API.Controllers.Travels
                         ServiceTypeId = serviceType.Id
                     };
                     await _dbContext.Services.AddAsync(service);
+                    await _dbContext.SaveChangesAsync();
+
+                    //CREAR OFERTA
+                    Oferta oferta = new Oferta
+                    {
+                        Transportista = model.CarrierId,
+                        Tipo_De_Unidad = section.SectionTypeId,
+                        Cantidad = 1,
+                        Fecha_Disponibilidad = section.FechaLlegada,
+                        Rango_De_Espera = 0,
+                        Nivel_Origen = "Ciudad",
+                        Region_Origen = 0,
+                        Estado_Origen = section.Ruta.id_estadoorigen,
+                        ciudad_Origen = section.Ruta.id_ciudadorigen,
+                        Tolerancia_Origen = 0,
+                        Nivel_Destino = "Ciudad",
+                        Region_Destino = 0,
+                        estado_Destino = section.Ruta.id_estadoorigen,
+                        ciudad_Destino = section.Ruta.id_ciudaddestino,
+                        Tolerancia_Destino = 0,
+                        status = 1,
+                        IdServiceTypes = 0
+                    };
+                    await _dbContext.Oferta.AddAsync(oferta);
                     await _dbContext.SaveChangesAsync();
                 }
 
