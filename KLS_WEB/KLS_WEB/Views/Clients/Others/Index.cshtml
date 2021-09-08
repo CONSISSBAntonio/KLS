@@ -253,7 +253,9 @@
         });
 
         function loadOtro() {
-            $.get("/Clients/Others/getOtros/", { "Id_Cliente":@id}, function (res) {
+            $.get("/Clients/Others/getOtros", { "Id_Cliente":@id}, function (res) {
+                console.log("Otrs");
+                console.log(res);
                 if (res != null) {
                     $("#idEditarOtros").val(res.id)
                     $("#Mandatario1").prop('checked', res.mandatario1);
