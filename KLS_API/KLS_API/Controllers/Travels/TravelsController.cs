@@ -788,7 +788,7 @@ namespace KLS_API.Controllers.Travels
 
                 sections = dtParams.order[0].dir[0] == "asc" ? sections.OrderBy(orderFunction) : sections.OrderByDescending(orderFunction);
 
-                sections.Skip(dtParams.start).Take(dtParams.length);
+                sections = sections.Skip(dtParams.start).Take(dtParams.length);
 
                 List<TravelDT> data = sections.ToList();
 
