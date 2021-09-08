@@ -107,15 +107,15 @@
                     </div>
                     <div class="col-6 pt-3 pr-4">
                         <label asp-for="Travel.Ejecutivo" class="form-label">EJECUTIVO</label>
-                        <input asp-for="Travel.Ejecutivo" type="text" class="form-control form-control-sm">
+                        <input asp-for="Travel.Ejecutivo" type="text" class="form-control form-control-sm" placeholder="requerido">
                     </div>
                     <div class="col-6 pl-4 pt-3 pb-4">
                         <label asp-for="Travel.GrupoMonitor" class="form-label">GRUPO MONITOR</label>
-                        <input asp-for="Travel.GrupoMonitor" type="text" class="form-control form-control-sm">
+                        <input asp-for="Travel.GrupoMonitor" type="text" class="form-control form-control-sm" placeholder="requerido">
                     </div>
                 </div>
                 <div class="pb-3 pl-2">
-                    <button type="submit" id="guardar" class="btn btn-dark" style="width: 12.8rem;" onclick="dToast('success', 'Información actualizada', 'ACTUALIZADO')">@(Model.Travel.Id is 0 ? "GENERAR VIAJE" : "ACTUALIZAR VIAJE")</button>
+                    <button type="submit" id="guardar" class="btn btn-dark" style="width: 12.8rem;">@(Model.Travel.Id is 0 ? "GENERAR VIAJE" : "ACTUALIZAR VIAJE")</button>
                 </div>
             </form>
         </div>

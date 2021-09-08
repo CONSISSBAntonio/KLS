@@ -63,15 +63,15 @@
 
         <div class="col-3">
             <label asp-for="Section.FechaSalida" class="form-label">FECHA DE SALIDA</label>
-            <input asp-for="Section.FechaSalida" class="form-control" onchange="$('#Section_FechaLlegada').prop('min', this.value)">
+            <input asp-for="Section.FechaSalida" class="form-control" onchange="$('#Section_FechaLlegada').prop('min', this.value)" placeholder="requerido">
         </div>
         <div class="col-3">
             <label asp-for="Section.FechaLlegada" class="form-label">FECHA DE LLEGADA</label>
-            <input asp-for="Section.FechaLlegada" class="form-control">
+            <input asp-for="Section.FechaLlegada" class="form-control" placeholder="requerido">
         </div>
         <div class="col-3">
             <label asp-for="Section.Anticipacion" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
-            <input asp-for="Section.Anticipacion" class="form-control">
+            <input asp-for="Section.Anticipacion" class="form-control" placeholder="requerido">
         </div>
 
         @if (!Model.Section.IsEmpty)
@@ -112,29 +112,29 @@
 
         <div class="col-4">
             <label asp-for="Section.Espejo" class="form-label">CUENTA ESPEJO</label>
-            <input asp-for="Section.Espejo" class="form-control">
+            <input asp-for="Section.Espejo" class="form-control" placeholder="requerido">
         </div>
         <div class="col-4">
             <label asp-for="Section.Usuario" class="form-label">USUARIO</label>
-            <input asp-for="Section.Usuario" class="form-control">
+            <input asp-for="Section.Usuario" class="form-control" placeholder="requerido">
         </div>
         <div class="col-4">
             <label asp-for="Section.Contraseña" class="form-label">CONTRASEÑA</label>
-            <input asp-for="Section.Contraseña" class="form-control">
+            <input asp-for="Section.Contraseña" class="form-control" placeholder="requerido">
         </div>
         @if (!Model.Section.IsEmpty)
         {
             <div class="col-4" id="referencia1">
                 <label asp-for="Section.Referencia1" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
-                <input asp-for="Section.Referencia1" class="form-control">
+                <input asp-for="Section.Referencia1" class="form-control" placeholder="requerido">
             </div>
             <div class="col-4" id="referencia3">
                 <label asp-for="Section.Referencia2" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
-                <input asp-for="Section.Referencia2" class="form-control">
+                <input asp-for="Section.Referencia2" class="form-control" placeholder="requerido">
             </div>
             <div class="col-4" id="referencia2">
                 <label asp-for="Section.Referencia3" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
-                <input asp-for="Section.Referencia3" class="form-control">
+                <input asp-for="Section.Referencia3" class="form-control" placeholder="requerido">
             </div>
         }
     </form>
