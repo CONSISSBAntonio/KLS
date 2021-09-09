@@ -200,7 +200,7 @@ namespace KLS_API.Controllers
                         var dato_ = new Oferta
                         {
                             Id = item.Id,
-                            status = 3
+                            status = 4
                         };
                         context.Attach(dato_);
                         context.Entry(dato_).Property("status").IsModified = true;

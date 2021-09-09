@@ -113,14 +113,14 @@
             <div class="modal-body">
                 <form id="frmComentario" action="#" method="post">
                     <input type="hidden" name="SectionId" id="Id"/>
-                    <input type="hidden" name="StatusId" id="StatusId"/>
+                    @*<input type="hidden" name="StatusId" id="StatusId"/>*@
                     <div class="row">
                         <div class="col-md-6">
                             <label>Estatus</label>
-                            @*<select class="form-control form-control-sm" style="width: 200px;" id="estatusModal">
+                            <select class="form-control form-control-sm" style="width: 200px;" @*id="estatusModal"*@ id="StatusId">
                                 <option value="value">Selecciona una opción</option>
-                            </select>*@
-                            <input type="text" class="form-control form-control-sm" name="" id="statusComentario" disabled="disabled" />
+                            </select>
+                            @*<input type="text" class="form-control form-control-sm" name="" id="statusComentario" disabled="disabled" />*@
                         </div>
                         <div class="col-md-6">
                             <label>Sub Estatus</label>
@@ -275,8 +275,6 @@
             getClients();
             getStatus();
             getSubStatus();
-
-            //frmComentario
             $("#frmComentario").submit(function (event) {
                 event.preventDefault();
                 if ($("#subestatusModal").val() != 0) {
@@ -314,7 +312,8 @@
 
                     var fechasalida = moment(key.fechasalida).format('YYYY-MM-DD hh:mm:ss');
                     var coloDemorado = "black";
-                    if (parseInt(key.subestatusId) == 9) {
+
+                    if (parseInt(key.subestatusId) == 9){
                         coloDemorado = "red";
                     }
 
@@ -377,7 +376,8 @@
                     }
                 });
                 $("#Id").val(id);
-                $("#StatusId").val(dataMonitoreo[indice].estatusId);
+                //$("#StatusId").val(dataMonitoreo[indice].estatusId);
+                $("#seleccionaDestino").val(dataMonitoreo[indice]).trigger('change');
                 $("#comentarioModal").modal("show");
             } else {
                 console.log("Error al tratar de obtener un comentario");
