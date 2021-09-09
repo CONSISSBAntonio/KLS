@@ -2,15 +2,6 @@
     ViewData["Title"] = "kLS | Monitoreo";
 }
 
-@section Styles{
-    <style>
-        .selected {
-            color: red;
-            background-color: yellow;
-        }
-    </style>
-}
-
 <div class="p-2">
     <div class="d-flex flex-nowrap">
         <div class="p-2">
@@ -86,10 +77,10 @@
         <div class="pt-2">
             <table id="table" class="table table-striped table-bordered display table-hover table-viajes" width="100%">
                 @*<thead>
-                    <tr>
-                        <th colspan="6"></th>
-                    </tr>
-                </thead>*@
+                        <tr>
+                            <th colspan="6"></th>
+                        </tr>
+                    </thead>*@
                 <tbody id="table-info">
                     <tr>
                         <td colspan="6">Cargando...</td>
@@ -111,13 +102,13 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="frmComentario" action="#" method="post">
-                    <input type="hidden" name="SectionId" id="Id"/>
-                    @*<input type="hidden" name="StatusId" id="StatusId"/>*@
+                <form id="frmComentario" onsubmit="event.preventDefault(),setComent()">
+                    <input type="hidden" name="SectionId" id="Id" />
+                    @*<input type="hidden" name="StatusId" id="StatusId" />*@
                     <div class="row">
                         <div class="col-md-6">
                             <label>Estatus</label>
-                            <select class="form-control form-control-sm" style="width: 200px;" @*id="estatusModal"*@ id="StatusId">
+                            <select class="form-control form-control-sm" style="width: 200px;" @*id="estatusModal"*@ id="StatusId" onchange="setsSelect(this.value)">
                                 <option value="value">Selecciona una opción</option>
                             </select>
                             @*<input type="text" class="form-control form-control-sm" name="" id="statusComentario" disabled="disabled" />*@
@@ -125,7 +116,7 @@
                         <div class="col-md-6">
                             <label>Sub Estatus</label>
                             <select class="form-control form-control-sm" style="width: 200px;" name="substatusId" id="subestatusModal">
-                                <option value="0">Selecciona una opción</option>
+                                <option value="value">Selecciona una opción</option>
                             </select>
                         </div>
                     </div>
@@ -138,15 +129,15 @@
                     </div>
                     <br />
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <label>Evidencia</label>
-                            <input type="file" class="form-control" name="FileArchivo" id="FileArchivo" accept=".jpg,.png" required="required"/>
+                            <input type="file" class="form-control" name="FileArchivo" id="FileArchivo" accept=".jpg,.png" />
                         </div>
                     </div>
                     <br />
                     <div class="row">
                         <div class="col-md-6">
-                            <button type="submit" class="btn btn-primary" style="width:100%;">Guardar</button>
+                            <button type="submit" class="btn btn-primary" id="btnComentario" style="width:100%;">Guardar</button>
                         </div>
                     </div>
                 </form>
@@ -263,7 +254,7 @@
 @section Scripts {
     <script src="@Url.Content("~/js/sheetjs/fileSaver.min.js")"></script>
     <script src="@Url.Content("~/js/sheetjs/xlsx.full.min.js")"></script>
-    <script src="@Url.Content("~/js/jquery.unobtrusive-ajax.js")"></script>
+    @*<script src="@Url.Content("~/js/jquery.unobtrusive-ajax.js")"></script>*@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
 
     <script>
@@ -275,33 +266,34 @@
             getClients();
             getStatus();
             getSubStatus();
-            $("#frmComentario").submit(function (event) {
-                event.preventDefault();
-                if ($("#subestatusModal").val() != 0) {
-                    var jsonData = convertJson($("#frmComentario"));
-                    var formData = new FormData(document.getElementById("frmComentario"));
-                    formData.append('file', $('#FileArchivo')[0].files[0]);
-                    $.ajax({
-                        url: "/Monitoring/setCommentario",
-                        type: "POST",
-                        data: formData,
-                        contentType: false,
-                        processData: false,
-                        success: function (data) {
-                            dToast("success", "Registro actualizado exitosamente.", "Actualizado");
-                            location.reload();
-                            console.log(data);
-                        },
-                        error: function (data) {
-                            dToast("error", "Ocurrio un error al intentar guardar el archivo.", "Error");
-                        }
-                    });
-                } else {
-                    dToast("error", "Todos los campos son necesarios.", "Atención");
-                }
-            });
         });
-
+        function setComent() {
+            $("#btnComentario").prop('disabled', true);
+            if ($("#subestatusModal").val() != 0) {
+                var jsonData = convertJson($("#frmComentario"));
+                var formData = new FormData(document.getElementById("frmComentario"));
+                formData.append('file', $('#FileArchivo')[0].files[0]);
+                $.ajax({
+                    url: "/Monitoring/setCommentario",
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        dToast("success", "Registro actualizado exitosamente.", "Actualizado");
+                        $("#btnComentario").prop('disabled', false);
+                        $("#monitoreo").click();
+                    },
+                    error: function (data) {
+                        $("#btnComentario").prop('disabled', false);
+                        dToast("error", "Ocurrio un error al intentar guardar el archivo.", "Error");
+                    }
+                });
+                $("#comentarioModal").modal("hide");
+            } else {
+                dToast("error", "Todos los campos son necesarios.", "Atención");
+            }
+        }
         function getMonitoring() {
             $.get("Monitoring/getMonitoring", function (res) {
                 $("#table-info").empty();
@@ -313,49 +305,49 @@
                     var fechasalida = moment(key.fechasalida).format('YYYY-MM-DD hh:mm:ss');
                     var coloDemorado = "black";
 
-                    if (parseInt(key.subestatusId) == 9){
+                    if (parseInt(key.subestatusId) == 9) {
                         coloDemorado = "red";
                     }
 
                     $("#table-info").append(`
-                        <tr>
-                            <td class="rows" id="${key.idviaje}" style="cursor: pointer;">
-                                ID VIAJE: ${key.folio}<br />
-                                CLIENTE: ${key.cliente}
-                            </td>
-                            <td>
-                                ORIGEN: ${key.origen}<br />
-                                DESTINO: ${key.destino}
-                            </td>
-                            <td>
-                                FECHA DE SALIDA : ${fechasalida} <br />
-                                FECHA DE LLEGADA : ${moment(fechasalida).add(key.tiemporuta, 'days').format('YYYY-MM-DD hh:mm:ss')}
-                            </td>
-                            <td>
-                                SIGUIENTE CONTACTO EN ${key.frecuenciaValidacion} HRS<br />
-                                ETA:${key.tiemporuta} HRS
-                            </td>
-                            <td>
-                                <button class="btn btn-success btn-sm">
-                                    ${key.estatus}
-                                </button>
-                                <br />
-                                <label style="color:${coloDemorado};font-size:12px;">${key.substatus}<label>
-                            </td>
-                            <td>
-                                <a href="#" onclick="agregarComentario(${key.idviaje})">
-                                    <span class="material-icons">
-                                        control_point
-                                    </span>
-                                </a>
-                                <a href="#" onclick="verCheckpoint(${key.idviaje},${key.idruta},'${fechasalida}');">
-                                    <span class="material-icons">
-                                        assistant_photo
-                                    </span>
-                                </a>
-                            </td>
-                        </tr>
-                    `);
+                            <tr>
+                                <td class="rows" id="${key.idviaje}" style="cursor: pointer;">
+                                    ID VIAJE: ${key.folio}<br />
+                                    CLIENTE: ${key.cliente}
+                                </td>
+                                <td>
+                                    ORIGEN: ${key.origen}<br />
+                                    DESTINO: ${key.destino}
+                                </td>
+                                <td>
+                                    FECHA DE SALIDA : ${fechasalida} <br />
+                                    FECHA DE LLEGADA : ${moment(fechasalida).add(key.tiemporuta, 'days').format('YYYY-MM-DD hh:mm:ss')}
+                                </td>
+                                <td>
+                                    SIGUIENTE CONTACTO EN ${key.frecuenciaValidacion} HRS<br />
+                                    ETA:${key.tiemporuta} HRS
+                                </td>
+                                <td>
+                                    <button class="btn btn-success btn-sm">
+                                        ${key.estatus}
+                                    </button>
+                                    <br />
+                                    <label style="color:${coloDemorado};font-size:12px;">${key.substatus}<label>
+                                </td>
+                                <td>
+                                    <a href="#" onclick="agregarComentario(${key.idviaje})">
+                                        <span class="material-icons">
+                                            control_point
+                                        </span>
+                                    </a>
+                                    <a href="#" onclick="verCheckpoint(${key.idviaje},${key.idruta},'${fechasalida}');">
+                                        <span class="material-icons">
+                                            assistant_photo
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                        `);
                 });
             }).fail(function (error) {
                 console.log("Error al tratar de obtener los registros");
@@ -365,23 +357,29 @@
 
         function agregarComentario(id) {
             let indice = dataMonitoreo.findIndex(service => service.idviaje == id);
+            console.log(dataMonitoreo);
             if (indice >= 0) {
-                console.log("Comentario");
-                console.log(dataMonitoreo[indice]);
-                console.log("Comentario");
                 $("#statusComentario").val(dataMonitoreo[indice].estatus);
-                $.each(catSubstatus, function (item, key) {
-                    if (key.statusId == dataMonitoreo[indice].estatusId) {
-                        $("#subestatusModal").append(`<option value="${key.id}">${key.name}</option>`);
-                    }
-                });
                 $("#Id").val(id);
                 //$("#StatusId").val(dataMonitoreo[indice].estatusId);
-                $("#seleccionaDestino").val(dataMonitoreo[indice]).trigger('change');
+                console.log(dataMonitoreo[indice]);
+                setsSelect(dataMonitoreo[indice].estatusId)
+                $("#StatusId").val(dataMonitoreo[indice].estatusId).trigger('change');
+                $("#subestatusModal").val(dataMonitoreo[indice].subestatusId).trigger('change');
                 $("#comentarioModal").modal("show");
             } else {
                 console.log("Error al tratar de obtener un comentario");
             }
+        }
+
+        function setsSelect(id) {
+            $("#subestatusModal").empty();
+            $("#subestatusModal").append(`<option value="0">SELECCIONA UNA OPCION</option>`);
+            $.each(catSubstatus, function (item, key) {
+                if (key.statusId == id) {
+                    $("#subestatusModal").append(`<option value="${key.id}">${key.name}</option>`);
+                }
+            });
         }
 
         function verCheckpoint(idviaje, idruta, fechasalida) {
@@ -411,7 +409,7 @@
                         i++;
                         horaOriginal = horaOriginal + key.tiempo;
                         horaOriginal1 = horaOriginal1 + key.tiempo;
-                        
+
                         fechaSalidaView = moment(fechasalida).add(horaOriginal, 'hours').format('YYYY-MM-DD hh:mm:ss'); //Siempre va
                         var hReal, createdBy, btnActive, hEsperada = ``;
                         let indice = catSecChecpoints.findIndex(service => service.idCheckpoint == key.id);
@@ -428,10 +426,10 @@
                             hReal = `<td><input type="datetime-local" class="form-control form-control-sm" id="horaReal-${idviaje}"></td>`;
                             createdBy = `<td></td>`;
                             btnActive = `<td>
-                                            <button class="btn btn-sm" onclick="saveCheckpoint(${idviaje},${key.id},${idruta},'${fechasalida}');">
-                                                <span class="material-icons">save</span>
-                                            </button>
-                                        </td>`;
+                                                <button class="btn btn-sm" onclick="saveCheckpoint(${idviaje},${key.id},${idruta},'${fechasalida}');">
+                                                    <span class="material-icons">save</span>
+                                                </button>
+                                            </td>`;
                         }
 
                         if (parseInt(i) <= 1) {
@@ -483,7 +481,7 @@
 
                         trInfo += `<td> <div style="height:10px;width:10px;background:${colorCheck};-moz-border-radius:50px;-webkit-border-radius:50px;border-radius:50px;display: inline-block;"></div> ${key.checkpoint}</td>`;
                         trInfo += `<td>${fechaSalidaView}</td>`;
-                        trInfo += hEsperada+hReal + createdBy + btnActive + `</tr>`;
+                        trInfo += hEsperada + hReal + createdBy + btnActive + `</tr>`;
 
                         //Fin pintar tabla
                         if (indice >= 0) {
@@ -500,7 +498,7 @@
             $("#checkpointModal").modal("show");
         }
 
-        function saveCheckpoint(idviaje,idcheckpoint,idruta,fechasalida) {
+        function saveCheckpoint(idviaje, idcheckpoint, idruta, fechasalida) {
             var horaReal = $("#horaReal-" + idviaje).val();
             var jsonData = { "idSection": idviaje, "idCheckpoint": idcheckpoint, "HoraReal": horaReal };
             console.log(jsonData);
@@ -541,7 +539,7 @@
             $.get("/Monitoring/getStatus", function (res) {
                 $.each(res, function (item, key) {
                     $("#sEstatus").append(`<option value="${key.id}">${key.name}</option>`);
-                    $("#estatusModal").append(`<option value="${key.id}">${key.name}</option>`);
+                    $("#StatusId").append(`<option value="${key.id}">${key.name}</option>`);
                 });
             });
         }
@@ -549,10 +547,6 @@
         function getSubStatus() {
             $.get("/Monitoring/getSubStatus", function (res) {
                 catSubstatus = res;
-                $.each(res, function (item, key) {
-                    $("#sSubEstatus").append(`<option value="${key.id}">${key.name}</option>`);
-                    //$("#subestatusModal").append(`<option value="${key.id}">${key.name}</option>`);
-                });
             });
         }
 

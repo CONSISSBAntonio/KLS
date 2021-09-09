@@ -360,8 +360,6 @@
         });
     }
 
-
-
     //Funciones iniciales
     function getClients() {
         $.get("/Monitoring/getClient", function (res) {
@@ -383,10 +381,6 @@
     function getSubStatus() {
         $.get("/Monitoring/getSubStatus", function (res) {
             catSubstatus = res;
-            //$.each(res, function (item, key) {
-            //    $("#sSubEstatus").append(`<option value="${key.id}">${key.name}</option>`);
-            //    //$("#subestatusModal").append(`<option value="${key.id}">${key.name}</option>`);
-            //});
         });
     }
 </script>

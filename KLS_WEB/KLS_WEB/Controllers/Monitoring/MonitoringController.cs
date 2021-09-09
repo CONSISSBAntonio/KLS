@@ -32,7 +32,7 @@ namespace KLS_WEB.Controllers.Monitoring
 
         public IActionResult Index()
         {
-            return View(_UrlView + "/index.cshtml");
+            return View(this._UrlView + "index.cshtml");
         }
 
         [Route("getMonitoring")]
@@ -43,12 +43,13 @@ namespace KLS_WEB.Controllers.Monitoring
             return Json(dataMonitoring);
         }
 
-        public class Monitoring {
+        public class Monitoring
+        {
             public string folio { get; set; }
             public string origen { get; set; }
             public string destino { get; set; }
-            public string  fechallegada {get;set;}
-            public string fechallegada_ { get;set;}
+            public string fechallegada { get; set; }
+            public string fechallegada_ { get; set; }
             public string estatus { get; set; }
             public int estatusId { get; set; } //Estatud
             public string substatus { get; set; }
@@ -66,15 +67,15 @@ namespace KLS_WEB.Controllers.Monitoring
         public async Task<JsonResult> getClient()
         {
             List<Clientes> dataClient;
-            dataClient = await this.AppContext.Execute<List<Clientes>>(MethodType.GET, _UrlApi+"/getClient", null);
+            dataClient = await this.AppContext.Execute<List<Clientes>>(MethodType.GET, _UrlApi + "/getClient", null);
             return Json(dataClient);
         }
-        
+
         [Route("getStatus")]
         public async Task<JsonResult> getStatus()
         {
             List<Status> dataClient;
-            dataClient = await this.AppContext.Execute<List<Status>>(MethodType.GET, _UrlApi+ "/getStatus", null);
+            dataClient = await this.AppContext.Execute<List<Status>>(MethodType.GET, _UrlApi + "/getStatus", null);
             return Json(dataClient);
         }
 
@@ -82,7 +83,7 @@ namespace KLS_WEB.Controllers.Monitoring
         public async Task<JsonResult> getSubStatus()
         {
             List<Substatus> dataClient;
-            dataClient = await this.AppContext.Execute<List<Substatus>>(MethodType.GET, _UrlApi+ "/getSubStatus", null);
+            dataClient = await this.AppContext.Execute<List<Substatus>>(MethodType.GET, _UrlApi + "/getSubStatus", null);
             return Json(dataClient);
         }
 
@@ -94,7 +95,7 @@ namespace KLS_WEB.Controllers.Monitoring
             Random rdn = new Random();
             int rutaRandom = rdn.Next(10000, 100000) + rdn.Next(10000, 100000);
             string rutaHoy = @DateTime.Now.ToString("yyyy/MM/dd") + "/" + jsonData.SectionId + "/" + rutaRandom;
-            string ruta = @Path.Combine(_hostingEnvironment.WebRootPath + "/Resources/Monitoring/" + rutaHoy);
+            string ruta = @Path.Combine(this._hostingEnvironment.WebRootPath + "/Resources/Monitoring/" + rutaHoy);
 
             if (!Directory.Exists(ruta))
             {
@@ -112,11 +113,11 @@ namespace KLS_WEB.Controllers.Monitoring
             }
 
             var evidences = new Evidence();
-            evidences.Name = nombreArchivo; 
-            evidences.Path = rutaHoy; 
-            evidences.Active = true; 
+            evidences.Name = nombreArchivo;
+            evidences.Path = rutaHoy;
+            evidences.Active = true;
             evidences.CreatedBy = HttpContext.Session.GetString("Nombre") + " " + HttpContext.Session.GetString("Apaterno") + " " + HttpContext.Session.GetString("Amaterno"); ;
-            
+
             List<Evidence> icollection = new List<Evidence>();
             icollection.Add(evidences);
 
@@ -153,8 +154,8 @@ namespace KLS_WEB.Controllers.Monitoring
             //DateTime localDate = DateTime.Now;
             //jsonData.FechaEvento = localDate;
 
-            SectionComment asd =  new SectionComment();
-            asd = await this.AppContext.Execute<SectionComment>(MethodType.POST, _UrlApi+ "/setCommentario", jsonData);
+            SectionComment asd = new SectionComment();
+            asd = await this.AppContext.Execute<SectionComment>(MethodType.POST, _UrlApi + "/setCommentario", jsonData);
             return Json(asd);
         }
 
@@ -175,7 +176,7 @@ namespace KLS_WEB.Controllers.Monitoring
         public async Task<JsonResult> getCheckpoints(int id)
         {
             List<Ruta_Has_Checkpoint> dataCheck;
-            dataCheck = await this.AppContext.Execute<List<Ruta_Has_Checkpoint>>(MethodType.GET, _UrlApi + "/getCheckpoints/"+ id, null);
+            dataCheck = await this.AppContext.Execute<List<Ruta_Has_Checkpoint>>(MethodType.GET, _UrlApi + "/getCheckpoints/" + id, null);
             return Json(dataCheck);
         }
 
@@ -193,7 +194,7 @@ namespace KLS_WEB.Controllers.Monitoring
         {
             dataModel.CreatedBy = HttpContext.Session.GetString("Nombre") + " " + HttpContext.Session.GetString("Apaterno") + " " + HttpContext.Session.GetString("Amaterno");
             Section_Has_Checkpoint dataReport;
-            dataReport = await this.AppContext.Execute<Section_Has_Checkpoint>(MethodType.POST, _UrlApi+ "/setSCheckpoints", dataModel);
+            dataReport = await this.AppContext.Execute<Section_Has_Checkpoint>(MethodType.POST, _UrlApi + "/setSCheckpoints", dataModel);
             return Json(dataReport);
         }
 
