@@ -21,15 +21,16 @@
                                 add
                             </span>
                         </button>
-                    </div>
-
-                    <div class="ml-auto pb-2">
-                        <button class="btn btn-sm btn-secondary" onclick="verCheckpoint(@Model.Id,@Model.RutaId,'@Model.FechaSalida.ToString("MM/dd/yyyy HH:mm:ss")');">
+                        <button class="btn btn-sm btn-secondary" onclick="verCheckpoint(@Model.Id,@Model.RutaId,'@Model.FechaSalida.ToString("MM/dd/yyyy HH:mm:ss")');" style="color:chocolate;">
                             <span class="material-icons">
                                 assistant_photo
                             </span>
                         </button>
                     </div>
+
+                    @*<div class="ml-auto pb-2">
+                        
+                    </div>*@
 
                 </div>
 
@@ -82,14 +83,14 @@
             <div class="modal-body">
                 <form id="frmComentario" action="#" method="post">
                     <input type="hidden" name="SectionId" id="Id" />
-                    <input type="hidden" name="StatusId" id="StatusId" />
+                    @*<input type="hidden" name="StatusId" id="StatusId" />*@
                     <div class="row">
                         <div class="col-md-6">
                             <label>Estatus</label>
-                            @*<select class="form-control form-control-sm" style="width: 200px;" id="estatusModal">
+                            <select class="form-control form-control-sm" style="width: 200px;" @*id="estatusModal"*@ id="StatusId" onchange="setsSelect(this.value)">
                                     <option value="value">Selecciona una opción</option>
-                                </select>*@
-                            <input type="text" class="form-control form-control-sm" name="" id="statusComentario" disabled="disabled" />
+                                </select>
+                            @*<input type="text" class="form-control form-control-sm" name="" id="statusComentario" disabled="disabled" />*@
                         </div>
                         <div class="col-md-6">
                             <label>Sub Estatus</label>
@@ -107,7 +108,7 @@
                     </div>
                     <br />
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <label>Evidencia</label>
                             <input type="file" class="form-control" name="FileArchivo" id="FileArchivo" accept=".jpg,.png" required="required"/>
                         </div>
@@ -220,20 +221,25 @@
         console.log(dataMonitoreo);
         if (indice >= 0) {
             $("#statusComentario").val(dataMonitoreo[indice].estatus);
-            $.each(catSubstatus, function (item, key) {
-                if (key.statusId == dataMonitoreo[indice].estatusId) {
-                    $("#subestatusModal").append(`<option value="${key.id}">${key.name}</option>`);
-                }
-            });
             $("#Id").val(id);
-            $("#StatusId").val(dataMonitoreo[indice].estatusId);
+            //$("#StatusId").val(dataMonitoreo[indice].estatusId);
+            setsSelect(dataMonitoreo[indice].estatusId)
+            $("#StatusId").val(dataMonitoreo[indice].estatusId).trigger('change');
             $("#comentarioModal").modal("show");
         } else {
             console.log("Error al tratar de obtener un comentario");
         }
     }
 
-
+    function setsSelect(id) {
+        $("#subestatusModal").empty();
+        $("#subestatusModal").append(`<option value="0">SELECCIONA UNA OPCION</option>`);
+        $.each(catSubstatus, function (item, key) {
+            if (key.statusId == id) {
+                $("#subestatusModal").append(`<option value="${key.id}">${key.name}</option>`);
+            }
+        });
+    }
 
     //Checkpoints
     function verCheckpoint(idviaje, idruta, fechasalida) {
@@ -362,7 +368,7 @@
         $.get("/Monitoring/getStatus", function (res) {
             $.each(res, function (item, key) {
                 $("#sEstatus").append(`<option value="${key.id}">${key.name}</option>`);
-                $("#estatusModal").append(`<option value="${key.id}">${key.name}</option>`);
+                $("#StatusId").append(`<option value="${key.id}">${key.name}</option>`);
             });
         });
     }
@@ -370,10 +376,10 @@
     function getSubStatus() {
         $.get("/Monitoring/getSubStatus", function (res) {
             catSubstatus = res;
-            $.each(res, function (item, key) {
-                $("#sSubEstatus").append(`<option value="${key.id}">${key.name}</option>`);
-                //$("#subestatusModal").append(`<option value="${key.id}">${key.name}</option>`);
-            });
+            //$.each(res, function (item, key) {
+            //    $("#sSubEstatus").append(`<option value="${key.id}">${key.name}</option>`);
+            //    //$("#subestatusModal").append(`<option value="${key.id}">${key.name}</option>`);
+            //});
         });
     }
 </script>

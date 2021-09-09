@@ -1051,22 +1051,11 @@
                     document.querySelector('span#hours' + id + '').textContent = REMAINING_HOURS;
                     document.querySelector('span#minutes' + id + '').textContent = REMAINING_MINUTES;
                     document.querySelector('span#seconds' + id + '').textContent = REMAINING_SECONDS;
-                    //if (moment(fecha).format('YYYY-MM-AA hh:mm') > moment().format('YYYY-MM-AA hh:mm')) {
-                    //    expirados.push({ 'Id': id })
-                    //    expirar();
-                    //}
-                    //if (moment(fecha).format('YYYY-MM-DD H:mm:ss') <= fechaJs) {
-                    //    expirados.push({ 'Id': id })
-                    //    expirar();
-                    //    //Ofertas();
-                    //}
-
                 } catch (e) {
 
                 }
             }, 1000);
         }
-        //--------------------------------------->
         $(document).ready(function () {
             loadState();
             cargarUnidades();
@@ -1074,8 +1063,6 @@
             selTransportistas();//Obtiene los transportistas
             getServiceTypes();
         });
-
-        //cargar tipo de unidades
         function cargarUnidades() {
             $.get("/Catalogs/TypesOfUnits/getUnidades", function (res) {
                 //catUnidades = res;
@@ -1089,10 +1076,8 @@
                         $("#tipounidad").append(`<option value="${id}">${nombre}</option>`);
                     }
                 });
-
                 dSelect('idtipounidad');
                 dSelect('tipounidad');
-
             }).fail(function (error) {
                 console.log(error);
             });
@@ -1371,7 +1356,6 @@
                 dToast("error", "Todos los campos son requeridos.", "Atención");
             }
         }
-
         // ----------------------------------------------------------------------->
         function s2ab(s) {
             var buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
@@ -1379,12 +1363,9 @@
             for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
             return buf;
         }
-
         function remTr(id) {
             $('#re' + id).fadeOut(200, function () { $(this).remove(); });
         }
-
-
         //Catalogos ----------------------------------------------------->
         function getServiceTypes() {
             $.get("Offer/getServiceTypes", function (res) {
