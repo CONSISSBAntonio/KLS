@@ -79,6 +79,8 @@ namespace KLS_API.Controllers
                                      idregionOrigen = oferta.Region_Origen,
                                      idregionDestino = oferta.Region_Destino,
                                      idoferta = oferta.Id,
+                                     SectionId = oferta.SectionId,
+                                     TravelId = oferta.Section.TravelId,
                                  }).ToList().AsQueryable();
 
                 if (busqueda.idestadoorigen != 0)
@@ -243,6 +245,8 @@ namespace KLS_API.Controllers
             public int idregionOrigen { get; set; }
             public int idregionDestino { get; set; }
             public int idoferta { get; set; }
+            public int? SectionId { get; set; }
+            public int TravelId { get; set; }
         }
 
         //Function de obtener listado de todas las rutas del transportista

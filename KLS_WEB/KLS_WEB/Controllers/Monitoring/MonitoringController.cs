@@ -61,6 +61,7 @@ namespace KLS_WEB.Controllers.Monitoring
             public int idcliente { get; set; }
             public int idruta { get; set; }
             public int frecuenciaValidacion { get; set; }
+
         }
 
         [Route("getClient")]

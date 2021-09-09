@@ -955,6 +955,11 @@
                         hrefModal = `<a style="color:` + color(key.status) + `">` + estado(key.status) + `</a>`;
                     }
                     if (key.status != 1) { btndisabled = ""; }
+
+                    let icon = "";
+                    if (key.sectionId != null) {
+                        icon = '<span style="color:blue;" class="material-icons">flight_takeoff</span>';
+                    }
                     if (moment(key.fechadisponibilidad).format('YYYY-MM-DD hh:mm') > moment().format('YYYY-MM-DD hh:mm')) {
                         $("#table-ofertas-info").append(`
                         <tr class="text-uppercase" id="re${key.idoferta}">
@@ -968,7 +973,10 @@
                                 <span id="days${key.idoferta}"></span>d <span id="hours${key.idoferta}"></span>h <span id="minutes${key.idoferta}"></span>m <span id="seconds${key.idoferta}"></span>s
                             </td>
                             <td style="width:7% !important;text-align:center;">${hrefModal}</td>
-                            <td style="width:7% !important;text-align:center;">
+                            <td style="width:10% !important;text-align:right;border-right: 0px;">
+                                <a class="btn btn-sm" href="/Travels/AddEdit/${key.travelId}" target="_blank">
+                                    ${icon}
+                                </a>
                                 <a class="btn btn-sm" href="#" onclick="verModal(${key.idoferta})">
                                     <span style="color:blue;" class="material-icons">edit</span>
                                 </a>
