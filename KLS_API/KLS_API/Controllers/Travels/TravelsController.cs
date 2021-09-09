@@ -109,7 +109,7 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
-                Travel travel = await _dbContext.Travels.Include(x => x.Sections).ThenInclude(y => y.Services).Include(x => x.Sections).ThenInclude(x => x.Clients).SingleOrDefaultAsync(x => x.Id == TravelId);
+                Travel travel = await _dbContext.Travels.Include(x => x.Sections).ThenInclude(y => y.Services).Include(x => x.Sections).ThenInclude(x => x.Clients).Include(x => x.Sections).ThenInclude(x => x.Substatus).SingleOrDefaultAsync(x => x.Id == TravelId);
 
                 if (travel is null)
                 {

@@ -137,6 +137,7 @@
                         <th>COSTO</th>
                         <th>VENTA</th>
                         <th>CLIENTE</th>
+                        <th>ESTATUS</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -149,6 +150,7 @@
                                 <td>@(tramo.Services.Any() ? tramo.Services.Sum(x => x.Costo).ToString("C") : 0.ToString("C"))</td>
                                 <td>@(tramo.Services.Any() ? tramo.Services.Sum(x => x.Precio).ToString("C") : 0.ToString("C"))</td>
                                 <td>@(tramo.IsEmpty ? "-" : tramo.Clients.NombreCorto)</td>
+                                <td class="text-primary font-weight-bold">@tramo.Substatus.Name</td>
                             </tr>
                         }
                     }
@@ -927,7 +929,7 @@
                 const data = await response.text();
                 $('#panelcontainer').html(data);
             } catch (e) {
-                console.log(e);
+                console.error(e);
             }
         }
         // END PANELES
