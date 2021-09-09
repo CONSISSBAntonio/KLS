@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using KLS_WEB.Models.Oferta;
 
 namespace KLS_WEB.Controllers.Travels
 {
@@ -180,16 +181,25 @@ namespace KLS_WEB.Controllers.Travels
                 TempData.Keep();
             }
 
-            string convert = (string)TempData["ConvertTravelType"];
-            TempData.Keep();
-
-            if (convert != null)
+            if (TempData.ContainsKey("ConvertTravelType"))
             {
-                if (convert == "demand")
+                //string convert = TempData["ConvertTravelType"].ToString();
+                string convert = TempData.Peek("ConvertTravelType").ToString();
+
+                if (convert != null)
                 {
-                    var DemandId = (string)TempData["ConvertTravelId"];
-                    var demand = await AppContext.Execute<DemandDTO>(MethodType.GET, Path.Combine("Demands", "GetDemand", DemandId), null);
-                    travelDTO.Travel.TravelServiceId = demand.TravelServiceId;
+                    var Id = TempData.Peek("ConvertTravelId").ToString();
+                    //var Id = TempData["ConvertTravelId"].ToString();
+                    if (convert == "demand")
+                    {
+                        var demand = await AppContext.Execute<DemandDTO>(MethodType.GET, Path.Combine("Demands", "GetDemand", Id), null);
+                        travelDTO.Travel.TravelServiceId = demand.TravelServiceId;
+                    }
+                    else
+                    {
+                        var offer = await AppContext.Execute<Oferta>(MethodType.GET, Path.Combine(_UrlApi, "GetOffer", Id), null);
+                        travelDTO.Travel.TravelServiceId = offer.IdServiceTypes;
+                    }
                 }
             }
 
@@ -270,18 +280,20 @@ namespace KLS_WEB.Controllers.Travels
                 travelDTO.Section = await AppContext.Execute<Section>(MethodType.GET, Path.Combine(_UrlApi, "GetSection", SectionId.ToString()), null);
             }
 
-            string convert = (string)TempData.Peek("ConvertTravelType");
 
-            if (convert != null)
+            if (TempData.ContainsKey("ConvertTravelType"))
             {
+                string convert = TempData.Peek("ConvertTravelType").ToString();
+                ViewBag.ServicesSet = false;
                 if (convert == "demand")
                 {
-                    var DemandId = (string)TempData.Peek("ConvertTravelId");
-                    //var demand = await AppContext.Execute<DemandDTO>(MethodType.GET, Path.Combine("Demands", "GetDemand", DemandId), null);
+                    var DemandId = TempData.ContainsKey("ConvertTravelId").ToString();
                     travelDTO.Section = await AppContext.Execute<Section>(MethodType.GET, Path.Combine(_UrlApi, "ConvertDemand", DemandId), null);
-                    //travelDTO.Travel.TravelServiceId = demand.TravelServiceId;
-                    TempData.Remove("ConvertTravelId");
                     TempData.Remove("ConvertTravelType");
+                }
+                else
+                {
+                    ViewBag.ServicesSet = true;
                 }
             }
 
@@ -364,6 +376,24 @@ namespace KLS_WEB.Controllers.Travels
                 PostSectionLog("Alta de tramo");
             }
 
+            if (TempData.ContainsKey("ConvertTravelType"))
+            {
+                string convert = TempData["ConvertTravelType"].ToString();
+                var Id = TempData["ConvertTravelId"].ToString();
+
+                if (convert == "demand")
+                {
+                    //var demand = await AppContext.Execute<DemandDTO>(MethodType.GET, Path.Combine("Demands", "GetDemand", Id), null);
+                    //travelDTO.Travel.TravelServiceId = demand.TravelServiceId;
+                }
+                else
+                {
+                    var offer = await AppContext.Execute<Oferta>(MethodType.PUT, Path.Combine(_UrlApi, "UpdateOfferConverted", Id), null);
+                    TempData.Remove("ConvertTravelType");
+                    TempData.Remove("ConvertTravelId");
+                }
+            }
+
             return Json(SectionId);
         }
 
@@ -409,6 +439,22 @@ namespace KLS_WEB.Controllers.Travels
         public async Task<IActionResult> GetServices([FromBody] ServicesDTO servicesDTOs)
         {
             servicesDTOs.Selects.Carriers = await GetCarriers();
+            if (TempData.ContainsKey("ConvertTravelType"))
+            {
+                string convert = TempData.Peek("ConvertTravelType").ToString();
+                var Id = TempData.Peek("ConvertTravelId").ToString();
+
+                if (convert == "demand")
+                {
+                    //var demand = await AppContext.Execute<DemandDTO>(MethodType.GET, Path.Combine("Demands", "GetDemand", Id), null);
+                    //travelDTO.Travel.TravelServiceId = demand.TravelServiceId;
+                }
+                else
+                {
+                    var offer = await AppContext.Execute<Oferta>(MethodType.GET, Path.Combine(_UrlApi, "GetOffer", Id), null);
+                    servicesDTOs.CarrierId = offer.Transportista;
+                }
+            }
             return PartialView(string.Concat(_UrlView, "_Service.cshtml"), servicesDTOs);
         }
 

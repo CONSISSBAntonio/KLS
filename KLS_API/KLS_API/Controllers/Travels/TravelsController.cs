@@ -520,6 +520,27 @@ namespace KLS_API.Controllers.Travels
                 throw;
             }
         }
+
+        [HttpPut("{OfferId}")]
+        public async Task<IActionResult> UpdateOfferConverted(int OfferId)
+        {
+            try
+            {
+                Oferta oferta = await _dbContext.Oferta.FindAsync(OfferId);
+                if (oferta is null)
+                {
+                    return NotFound();
+                }
+                oferta.status = 3;
+                await _dbContext.SaveChangesAsync();
+                return Ok(oferta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
         #endregion
 
         #region Services
@@ -613,8 +634,6 @@ namespace KLS_API.Controllers.Travels
                     await _dbContext.Oferta.AddAsync(oferta);
                     await _dbContext.SaveChangesAsync();
                 }
-
-
 
                 foreach (var unitmodel in model.Units)
                 {
@@ -710,6 +729,7 @@ namespace KLS_API.Controllers.Travels
             }
         }
         #endregion
+
         public class SearchRuta
         {
             public int Id { get; set; }
@@ -765,6 +785,24 @@ namespace KLS_API.Controllers.Travels
             }
         }
 
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> GetOffer(int Id)
+        {
+            try
+            {
+                Oferta oferta = await _dbContext.Oferta.FindAsync(Id);
+                if (oferta is null)
+                {
+                    return NotFound();
+                }
+                return Ok(oferta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
         #region DataTableTravels
         [HttpPost]
         public async Task<IActionResult> DataTableTravels(DTParams dtParams)

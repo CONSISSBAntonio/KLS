@@ -726,6 +726,7 @@
                 $('#servicescontainer').html(data).show();
                 $('.addServicios').hide();
                 GetRoutePrice($('#Section_RutaId').val());
+                $('#carrier-terrestrenacional').trigger('change');
                 dSelect('carrier-terrestrenacional');
             } catch (e) {
                 console.error(e);

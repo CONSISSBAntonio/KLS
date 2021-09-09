@@ -7,7 +7,6 @@
         <div>
             <div class="btn btn-dark" style="cursor: unset;">@Model.Section.Folio</div>
         </div>
-
     }
     <div>
         @*<button class="btn btn-dark" onclick="AddEditSection(this, document.getElementsByClassName('serviceform'), document.getElementsByClassName('carrierparams'))">GUARDAR</button>*@
@@ -142,6 +141,12 @@
 </div>
 
 <script>
+    //AUTOREQUEST DE SERVICIOS PARA LA CONVERSIÓN DE OFERTA A VIAJE
+    if (`@ViewBag.ServicesSet` === 'True') {
+        $('[name="terrestrenacional"]').prop('checked', true);
+        $('#btn-getservices').click();
+    }
+
     $('[type=datetime-local]').map((k, e) => $(e).prop('min', new Date().toISOString().substring(0, 16)));
     $('#Section_Cl_Has_OrigenId, #Section_Cl_Has_DestinosId').trigger('change');
 

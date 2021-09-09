@@ -11,6 +11,7 @@ namespace KLS_WEB.Models.Travels.DTO
     {
         public string[] Services { get; set; }
         public SelectList Selects { get; set; } = new SelectList();
+        public int CarrierId { get; set; }
 
         public class SelectList
         {
