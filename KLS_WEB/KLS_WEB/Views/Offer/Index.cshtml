@@ -988,7 +988,7 @@
                         hrefModal = `<a style="color:` + color(key.status) + `">` + estado(key.status) + `</a>`;
                     }
                     if (key.status != 1) { btndisabled = ""; }
-                    if (moment(key.fechadisponibilidad).format('YYYY-MM-AA hh:mm') > moment().format('YYYY-MM-AA hh:mm')) {
+                    if (moment(key.fechadisponibilidad).format('YYYY-MM-DD hh:mm') > moment().format('YYYY-MM-DD hh:mm')) {
                         $("#table-ofertas-info").append(`
                         <tr class="text-uppercase" id="re${key.idoferta}">
                             <td style="width:5% !important;">${key.nombreTran}</td>
