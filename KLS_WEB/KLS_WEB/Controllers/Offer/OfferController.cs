@@ -109,6 +109,8 @@ namespace KLS_WEB.Controllers.Offer
             public int idregionOrigen { get; set; }
             public int idregionDestino { get; set; }
             public int idoferta { get; set; }
+            public int? SectionId { get; set; }
+            public int TravelId { get; set; }
         }
 
         [Route("DownloadLayout")]

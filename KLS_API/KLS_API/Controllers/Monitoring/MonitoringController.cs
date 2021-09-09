@@ -164,8 +164,11 @@ namespace KLS_API.Controllers.Monitoring
         {
             try
             {
-                context.SectionComments.Add(secciones);
-                context.SaveChanges();
+                if (secciones.Comment != null) {
+                    context.SectionComments.Add(secciones);
+                    context.SaveChanges();
+                }
+
                 Section dato_ = new Section { Id = secciones.SectionId,SubstatusId = secciones.SubstatusId};
                 context.Attach(dato_);
                 context.Entry(dato_).Property("SubstatusId").IsModified = true;
