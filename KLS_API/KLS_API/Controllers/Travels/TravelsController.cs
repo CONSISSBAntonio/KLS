@@ -479,6 +479,7 @@ namespace KLS_API.Controllers.Travels
                 {
                     return BadRequest();
                 }
+
                 Section section = new Section
                 {
                     ClientesId = demand.ClientId,
@@ -488,10 +489,6 @@ namespace KLS_API.Controllers.Travels
                     FechaSalida = demand.FechaDisponibilidad,
                     Anticipacion = demand.Arribo
                 };
-
-                demand.Status = "convertida a viaje";
-                demand.TimeUpdated = DateTime.Now;
-                await _dbContext.SaveChangesAsync();
 
                 return Ok(section);
             }
@@ -534,6 +531,29 @@ namespace KLS_API.Controllers.Travels
                 oferta.status = 3;
                 await _dbContext.SaveChangesAsync();
                 return Ok(oferta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
+
+        [HttpPut("{DemandId}")]
+        public async Task<IActionResult> UpdateDemandConverted(int DemandId)
+        {
+            try
+            {
+                Demand demand = await _dbContext.Demands.FindAsync(DemandId);
+                if (demand is null)
+                {
+                    return NotFound();
+                }
+
+                demand.Status = "convertida a viaje";
+                demand.TimeUpdated = DateTime.Now;
+                await _dbContext.SaveChangesAsync();
+                return Ok(demand);
             }
             catch (Exception ex)
             {

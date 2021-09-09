@@ -502,6 +502,7 @@
                 $('#sectioncontainer').html(data).show();
                 $('#addservicescontainer').show();
                 SectionId > 0 && $('#traveldetails-container').show();
+                $('#Section_FechaSalida').trigger('change');
                 $('.sk-cube-grid').hide();
             } catch (e) {
                 console.error(e);

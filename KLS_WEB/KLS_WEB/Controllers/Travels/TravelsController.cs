@@ -189,11 +189,13 @@ namespace KLS_WEB.Controllers.Travels
                 if (convert != null)
                 {
                     var Id = TempData.Peek("ConvertTravelId").ToString();
-                    //var Id = TempData["ConvertTravelId"].ToString();
+
                     if (convert == "demand")
                     {
                         var demand = await AppContext.Execute<DemandDTO>(MethodType.GET, Path.Combine("Demands", "GetDemand", Id), null);
                         travelDTO.Travel.TravelServiceId = demand.TravelServiceId;
+                        //TempData.Remove("ConvertTravelType");
+                        //TempData.Remove("ConvertTravelId");
                     }
                     else
                     {
@@ -287,9 +289,8 @@ namespace KLS_WEB.Controllers.Travels
                 ViewBag.ServicesSet = false;
                 if (convert == "demand")
                 {
-                    var DemandId = TempData.ContainsKey("ConvertTravelId").ToString();
+                    var DemandId = TempData.Peek("ConvertTravelId").ToString();
                     travelDTO.Section = await AppContext.Execute<Section>(MethodType.GET, Path.Combine(_UrlApi, "ConvertDemand", DemandId), null);
-                    TempData.Remove("ConvertTravelType");
                 }
                 else
                 {
@@ -378,20 +379,20 @@ namespace KLS_WEB.Controllers.Travels
 
             if (TempData.ContainsKey("ConvertTravelType"))
             {
-                string convert = TempData["ConvertTravelType"].ToString();
-                var Id = TempData["ConvertTravelId"].ToString();
+                string convert = TempData.Peek("ConvertTravelType").ToString();
+                var Id = TempData.Peek("ConvertTravelId").ToString();
 
                 if (convert == "demand")
                 {
-                    //var demand = await AppContext.Execute<DemandDTO>(MethodType.GET, Path.Combine("Demands", "GetDemand", Id), null);
-                    //travelDTO.Travel.TravelServiceId = demand.TravelServiceId;
+                    var demand = await AppContext.Execute<DemandDTO>(MethodType.PUT, Path.Combine(_UrlApi, "UpdateDemandConverted", Id), null);
                 }
                 else
                 {
                     var offer = await AppContext.Execute<Oferta>(MethodType.PUT, Path.Combine(_UrlApi, "UpdateOfferConverted", Id), null);
-                    TempData.Remove("ConvertTravelType");
-                    TempData.Remove("ConvertTravelId");
                 }
+
+                TempData.Remove("ConvertTravelType");
+                TempData.Remove("ConvertTravelId");
             }
 
             return Json(SectionId);
