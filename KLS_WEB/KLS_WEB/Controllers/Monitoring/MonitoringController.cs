@@ -156,6 +156,10 @@ namespace KLS_WEB.Controllers.Monitoring
 
             SectionComment asd = new SectionComment();
             asd = await this.AppContext.Execute<SectionComment>(MethodType.POST, _UrlApi + "/setCommentario", jsonData);
+            if (jsonData.SubstatusId == 5)
+            {
+                await AppContext.Execute<Section>(MethodType.POST, Path.Combine("Travels", "CreateOffer", jsonData.SectionId.ToString()), null);
+            }
             return Json(asd);
         }
 

@@ -561,6 +561,58 @@ namespace KLS_API.Controllers.Travels
                 throw;
             }
         }
+
+        [HttpPost("{SectionId}")]
+        public async Task<IActionResult> CreateOffer(int SectionId)
+        {
+            try
+            {
+                Section section = await _dbContext.Sections.Include(x => x.Ruta).Include(x => x.Services).SingleOrDefaultAsync(x => x.Id == SectionId);
+                if (section is null)
+                {
+                    return NotFound();
+                }
+                if (section.SubstatusId == 5)
+                {
+                    Oferta oferta = await _dbContext.Oferta.SingleOrDefaultAsync(x => x.SectionId == section.Id);
+
+                    if (oferta is null)
+                    {
+                        int carrierId = section.Services.FirstOrDefault(x => x.Active).TransportistaId;
+                        Oferta newoferta = new Oferta
+                        {
+                            Transportista = carrierId,
+                            Tipo_De_Unidad = 0,
+                            Cantidad = 1,
+                            Fecha_Disponibilidad = section.FechaLlegada,
+                            Rango_De_Espera = 0,
+                            Nivel_Origen = "Ciudad",
+                            Region_Origen = 0,
+                            Estado_Origen = section.Ruta.id_estadoorigen,
+                            ciudad_Origen = section.Ruta.id_ciudadorigen,
+                            Tolerancia_Origen = 0,
+                            Nivel_Destino = "Ciudad",
+                            Region_Destino = 0,
+                            estado_Destino = section.Ruta.id_estadoorigen,
+                            ciudad_Destino = section.Ruta.id_ciudaddestino,
+                            Tolerancia_Destino = 0,
+                            status = 1,
+                            IdServiceTypes = section.SectionTypeId,
+                            SectionId = section.Id
+                        };
+
+                        await _dbContext.Oferta.AddAsync(newoferta);
+                        await _dbContext.SaveChangesAsync();
+                    }
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
         #endregion
 
         #region Services
@@ -628,30 +680,6 @@ namespace KLS_API.Controllers.Travels
                         ServiceTypeId = serviceType.Id
                     };
                     await _dbContext.Services.AddAsync(service);
-                    await _dbContext.SaveChangesAsync();
-
-                    //CREAR OFERTA
-                    Oferta oferta = new Oferta
-                    {
-                        Transportista = model.CarrierId,
-                        Tipo_De_Unidad = 0,
-                        Cantidad = 1,
-                        Fecha_Disponibilidad = section.FechaLlegada,
-                        Rango_De_Espera = 0,
-                        Nivel_Origen = "Ciudad",
-                        Region_Origen = 0,
-                        Estado_Origen = section.Ruta.id_estadoorigen,
-                        ciudad_Origen = section.Ruta.id_ciudadorigen,
-                        Tolerancia_Origen = 0,
-                        Nivel_Destino = "Ciudad",
-                        Region_Destino = 0,
-                        estado_Destino = section.Ruta.id_estadoorigen,
-                        ciudad_Destino = section.Ruta.id_ciudaddestino,
-                        Tolerancia_Destino = 0,
-                        status = 1,
-                        IdServiceTypes = section.SectionTypeId
-                    };
-                    await _dbContext.Oferta.AddAsync(oferta);
                     await _dbContext.SaveChangesAsync();
                 }
 
