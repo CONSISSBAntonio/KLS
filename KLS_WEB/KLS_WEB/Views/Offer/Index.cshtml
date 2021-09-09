@@ -463,7 +463,7 @@
                     console.log(res.fecha_Disponibilidad);
                     $('#txtRangoEspera').val(res.rango_De_Espera);
                     $('#txtNivelOrigen').val(cUpper(res.nivel_Origen)).trigger('change');
-                    $('#tiposServicios').val(cUpper(res.idServiceTypes)).trigger('change');
+                    $('#tiposServicios').val(res.idServiceTypes).trigger('change');
 
                     if (cUpper(res.nivel_Origen) == "REGION") {
                         $('#seleccionaOrigen').val(parseInt(res.region_Origen)).trigger('change');
@@ -1010,7 +1010,7 @@
                                 </a>
                             </td>
                         </tr>`);
-                    ver(key.idoferta, moment(key.fechadisponibilidad).format('YYYY-MM-DD HH:mm:ss A'));
+                    ver(key.idoferta, moment(key.fechadisponibilidad).format('YYYY-MM-DD HH:mm:ss'));
                     } else {
                         expirados.push({ 'Id': key.idoferta })
                         console.log("La key que no paso");
@@ -1073,9 +1073,10 @@
         const MILLISECONDS_OF_A_DAY = MILLISECONDS_OF_A_HOUR * 24
 
         function ver(id, fecha) {
+            console.log(id, fecha);
             var i = 0;
             var timer = setInterval(function () {
-                var fechaJs = moment().format('YYYY-MM-AA H:mm:ss');
+                var fechaJs = moment().format('YYYY-MM-DD H:mm:ss');
                 try {
                     DATE_TARGET = new Date(fecha);
                     const NOW = new Date()
