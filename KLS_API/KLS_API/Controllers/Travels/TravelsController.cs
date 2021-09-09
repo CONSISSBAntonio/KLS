@@ -593,7 +593,7 @@ namespace KLS_API.Controllers.Travels
                     Oferta oferta = new Oferta
                     {
                         Transportista = model.CarrierId,
-                        Tipo_De_Unidad = section.SectionTypeId,
+                        Tipo_De_Unidad = 0,
                         Cantidad = 1,
                         Fecha_Disponibilidad = section.FechaLlegada,
                         Rango_De_Espera = 0,
@@ -608,7 +608,7 @@ namespace KLS_API.Controllers.Travels
                         ciudad_Destino = section.Ruta.id_ciudaddestino,
                         Tolerancia_Destino = 0,
                         status = 1,
-                        IdServiceTypes = 0
+                        IdServiceTypes = section.SectionTypeId
                     };
                     await _dbContext.Oferta.AddAsync(oferta);
                     await _dbContext.SaveChangesAsync();
