@@ -236,7 +236,7 @@
                 <div class="row pt-2">
                     <div class="col-md-3">
                         <label>Tipos de servicios</label>
-                        <select class="form-control form-control-sm" style="width:100%;" id="idtipounidad">
+                        <select class="form-control form-control-sm" style="width:100%;" @*id="idtipounidad"*@ id="tiposServicios">
                             <option value="0">Selecciona una opción</option>
                         </select>
                     </div>
@@ -314,7 +314,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-secondary" onclick="agregarOferta();">Agregar oferta</button>
+                <button type="button" class="btn btn-secondary" onclick="agregarOferta();" id="btnGuardar">Agregar oferta</button>
             </div>
         </div>
     </div>
@@ -360,6 +360,8 @@
     <script>
 
         function agregarOferta() {//Metodo de agregar la oferta
+            $("#btnGuardar").prop("disabled", true);
+            console.log("-------------");
             jsonEnv = [];
             var regionO = 0;
             var estadoO = 0;
@@ -371,9 +373,9 @@
 
             var idTransportista = $("#idtransportista").val();
             if (parseInt(idTransportista) != 0) {
-                var idTipounidad = $("#idtipounidad").val();
-                if (parseInt(idTipounidad) != 0) {
-                    if ($("#txtRangoEspera").val() != "" && $("#txtRangoEspera").val() != 0 && $("#idtipounidad").val() != "" && $("#idtipounidad").val() !=0 && $("#txtCantidad").val() != "" && $("#txtCantidad").val() != 0 && $("#txtCantidad").val() != null && $("#txtFechaDisponibilidad").val() != "" && $("#txtFechaDisponibilidad").val() != null) {
+                var idtiposervicio = $("#tiposServicios").val();
+                if (parseInt(idtiposervicio) != 0) {//-------------------------------------------------------
+                    if ($("#txtRangoEspera").val() != "" && $("#txtRangoEspera").val() != 0  && $("#txtCantidad").val() != "" && $("#txtCantidad").val() != 0 && $("#txtCantidad").val() != null && $("#txtFechaDisponibilidad").val() != "" && $("#txtFechaDisponibilidad").val() != null) {
                         if ($("#txtNivelOrigen").val() != 0) {
                             if ($("#txtNivelDestino").val()!=0) {
                                 //Validaciones
@@ -405,7 +407,7 @@
                                     {
                                         "id": idEditar,
                                         "Transportista": idTransportista,
-                                        "Tipo_De_Unidad": idTipounidad,
+                                        "Tipo_De_Unidad": 0,
                                         "Cantidad": $("#txtCantidad").val(),
                                         "Fecha_Disponibilidad": fechaJs,
                                         "Rango_De_Espera": $("#txtRangoEspera").val(),
@@ -436,7 +438,7 @@
                         dToast("error", "Todos los campos son necesarios.", "Atención");
                     }
                 } else {
-                    dToast("error", "Selecciona un tipo de unidad.", "Atención");
+                    dToast("error", "Selecciona un tipo de servicio.", "Atención");
                 }
             } else {
                 dToast("error", "Selecciona un transportista.", "Atención");
@@ -448,7 +450,6 @@
             $("#txtSearchRutas").hide();
             $("#" + ver).show();
         }
-
         var idEditar = 0;
         function verModal(ide = 0) {
             idEditar = ide;
@@ -456,12 +457,13 @@
                 $.get("Offer/obOferta/" + idEditar, function (res) {
                     console.log(res);
                     $('#idtransportista').val(parseInt(res.transportista)).trigger('change');
-                    $('#idtipounidad').val(parseInt(res.tipo_De_Unidad)).trigger('change');
+                    //$('#idtipounidad').val(parseInt(res.tipo_De_Unidad)).trigger('change');
                     $('#txtCantidad').val(parseInt(res.cantidad));
                     $('#txtFechaDisponibilidad').val(res.fecha_Disponibilidad);
+                    console.log(res.fecha_Disponibilidad);
                     $('#txtRangoEspera').val(res.rango_De_Espera);
                     $('#txtNivelOrigen').val(cUpper(res.nivel_Origen)).trigger('change');
-                    //$('#tiposServicios').val(cUpper(res.idServiceTypes)).trigger('change');
+                    $('#tiposServicios').val(cUpper(res.idServiceTypes)).trigger('change');
 
                     if (cUpper(res.nivel_Origen) == "REGION") {
                         $('#seleccionaOrigen').val(parseInt(res.region_Origen)).trigger('change');
@@ -495,7 +497,6 @@
                 $("#modalAgregar").modal("show");
             }
         }
-
         //Cargar datos de las rutas
         var dataRutas = [];
         var dataCheckpoint = [];
@@ -564,7 +565,7 @@
                     jsonEnv.push(
                         {
                             "Transportista": item[itemT[0]],
-                            "Tipo_De_Unidad": item[itemT[1]],
+                            "IdServiceTypes": item[itemT[1]],
                             "Cantidad": item[itemT[2]],
                             "Fecha_Disponibilidad": fechaJs,
                             "Rango_De_Espera": item[itemT[4]],
@@ -578,7 +579,7 @@
                             "estado_Destino": item[itemT[12]],
                             "ciudad_Destino": item[itemT[13]],
                             "Tolerancia_Destino": item[itemT[14]],
-                            //"IdServiceTypes": item[itemT[15]],
+                            //"Tipo_De_Unidad": item[itemT[15]],
                             "status": item[itemT[15]],
                         },
                     );
@@ -725,13 +726,13 @@
 
                 if (transportista >= 0) { //Si se encontró el transportista
                     idtran = catTransportista[transportista].id
-                    unidades = catUnidades.findIndex(service => cUpper(service.nombre) == cUpper(key.Tipo_De_Unidad));
-                    if (unidades >= 0) {//Se encontraron unidades
+                    //unidades = catUnidades.findIndex(service => cUpper(service.nombre) == cUpper(key.Tipo_De_Unidad));
+                    //if (unidades >= 0) {//Se encontraron unidades
 
                         console.log(ServiceTypes);
-                        //let tipoServiciocat = ServiceTypes.findIndex(service => cUpper(service.name).trim() == cUpper(key.IdServiceTypes).trim());
-                        //if (tipoServiciocat >= 0) {
-                            idunidad = catUnidades[unidades].id;
+                        let tipoServiciocat = ServiceTypes.findIndex(service => cUpper(service.name).trim() == cUpper(key.IdServiceTypes).trim());
+                        if (tipoServiciocat >= 0) {
+                            //idunidad = catUnidades[unidades].id;
                             //tipoServicio = ServiceTypes[tipoServiciocat].id;
                             var Nivel_Origen = cUpper(key.Nivel_Origen);
                             if (Nivel_Origen != "REGION" && Nivel_Origen != "ESTADO" && Nivel_Origen != "CIUDAD") {
@@ -816,18 +817,18 @@
                                 }
                             }
                         //---------------------------------------------
-                        //} else {
-                        //    console.log("No se encontro tipo de unidad");
-                        //    console.log(key);
-                        //    jsonEnvIncorrectos.push(key);
-                        //    return;
-                        //}
+                        } else {
+                            console.log("No se encontro tipo de servicio");
+                            console.log(key);
+                            jsonEnvIncorrectos.push(key);
+                            return;
+                        }
 
-                    } else {//No se encontraron unidades
-                        console.log("No se encontro unidad", key.Tipo_De_Unidad);
-                        jsonEnvIncorrectos.push(key);
-                        return;
-                    }
+                    //} else {//No se encontraron unidades
+                    //    console.log("No se encontro unidad", key.Tipo_De_Unidad);
+                    //    jsonEnvIncorrectos.push(key);
+                    //    return;
+                    //}
                 } else { //No se encontro el transportista
                     console.log("No se encontro transportista", key.Transportista);
                     jsonEnvIncorrectos.push(key);
@@ -851,7 +852,7 @@
                         "estado_Destino": idestadoD,
                         "ciudad_Destino": idciudadD,
                         "Tolerancia_Destino": key.Tolerancia_Destino,
-/*                        "IdServiceTypes": tipoServicio,*/
+                        "IdServiceTypes": tipoServicio,
                         "status": key.status
                     }
                 );
@@ -916,7 +917,7 @@
             if ($("#fechadisp").val() != "" && $("#fechadisp").val() != null) {
                 fechadisp = moment($("#fechadisp").val() + " " + $("#HoraSalida").val()).format('YYYY-MM-DD hh:mm:ss') + ".000000";
             }
-
+            //-------------------------------->Contiene tipo de unidad
             var jsonData = { "seltransportista": transportista, "fechadisponibilidad": fechadisp, "transportista": nivelservicio, "idestadoorigen": esorigen, "idestadodestino": esdestino, "idciudadorigen": ciorigen, "idciudaddestino": cidestino, "idtipounidad": tipounidad };
             $("#table-ofertas-info").empty();
             var stable = $('.table-ofertas').DataTable();
@@ -986,17 +987,15 @@
                     } else {
                         hrefModal = `<a style="color:` + color(key.status) + `">` + estado(key.status) + `</a>`;
                     }
-
                     if (key.status != 1) { btndisabled = ""; }
-
-                    if (moment(key.fechadisponibilidad).format('DD/MM/YYYY hh:mm A') > moment().format('DD/MM/YYYY hh:mm A') ) {
+                    if (moment(key.fechadisponibilidad).format('YYYY-MM-AA hh:mm') > moment().format('YYYY-MM-AA hh:mm')) {
                         $("#table-ofertas-info").append(`
                         <tr class="text-uppercase" id="re${key.idoferta}">
                             <td style="width:5% !important;">${key.nombreTran}</td>
                             <td style="width:12% !important;">${key.tipounidad}</td>
                             <td>${Origen}</td>
                             <td>${Destino}</td>
-                            <td style="width:15% !important;">${moment(key.fechadisponibilidad).format('DD/MM/YYYY hh:mm A')}</td>
+                            <td style="width:15% !important;">${moment(key.fechadisponibilidad).format('YYYY-MM-DD hh:mm A')}</td>
 
                             <td style="width:8% !important;font-size:12px;">
                                 <span id="days${key.idoferta}"></span>d <span id="hours${key.idoferta}"></span>h <span id="minutes${key.idoferta}"></span>m <span id="seconds${key.idoferta}"></span>s
@@ -1011,9 +1010,12 @@
                                 </a>
                             </td>
                         </tr>`);
-                        ver(key.idoferta, moment(key.fechadisponibilidad).format('MM/DD/YYYY HH:mm:ss'));
+                    ver(key.idoferta, moment(key.fechadisponibilidad).format('YYYY-MM-DD HH:mm:ss A'));
                     } else {
                         expirados.push({ 'Id': key.idoferta })
+                        console.log("La key que no paso");
+                        console.log(key);
+                        console.log("La key que no paso");
                     }
                 });
 
@@ -1049,7 +1051,7 @@
                 $("#txtSearch").keyup(function () {
                     $('.table-ofertas').DataTable().search($('#txtSearch').val(), false, true).draw();
                 });
-
+                expirar();
                 $("#modalBuscar").modal('hide');
             }).fail(function (error) {
                 dToast("error", "Error al tratar de obtener los registros, intenta cerrar sesión y volver a iniciar.", "Error");
@@ -1057,6 +1059,7 @@
         }
 
         function expirar() {
+            console.log(expirados);
             $.post("Offer/setExpirados", { "expirado": expirados }, function (res) {
                 expirados = [];
             });
@@ -1068,10 +1071,11 @@
         const MILLISECONDS_OF_A_MINUTE = MILLISECONDS_OF_A_SECOND * 60;
         const MILLISECONDS_OF_A_HOUR = MILLISECONDS_OF_A_MINUTE * 60;
         const MILLISECONDS_OF_A_DAY = MILLISECONDS_OF_A_HOUR * 24
+
         function ver(id, fecha) {
             var i = 0;
             var timer = setInterval(function () {
-                var fechaJs = moment().format('DD/MM/YYYY H:mm:ss');
+                var fechaJs = moment().format('YYYY-MM-AA H:mm:ss');
                 try {
                     DATE_TARGET = new Date(fecha);
                     const NOW = new Date()
@@ -1084,11 +1088,16 @@
                     document.querySelector('span#hours' + id + '').textContent = REMAINING_HOURS;
                     document.querySelector('span#minutes' + id + '').textContent = REMAINING_MINUTES;
                     document.querySelector('span#seconds' + id + '').textContent = REMAINING_SECONDS;
-                    if (moment(fecha).format('DD/MM/YYYY H:mm:ss') <= fechaJs) {
-                        expirados.push({ 'Id': id })
-                        expirar();
-                        Ofertas();
-                    }
+                    //if (moment(fecha).format('YYYY-MM-AA hh:mm') > moment().format('YYYY-MM-AA hh:mm')) {
+                    //    expirados.push({ 'Id': id })
+                    //    expirar();
+                    //}
+                    //if (moment(fecha).format('YYYY-MM-DD H:mm:ss') <= fechaJs) {
+                    //    expirados.push({ 'Id': id })
+                    //    expirar();
+                    //    //Ofertas();
+                    //}
+
                 } catch (e) {
 
                 }
@@ -1118,10 +1127,6 @@
                     }
                 });
 
-                
-                //$.each(res, function (item, key) {
-                    
-                //});
                 dSelect('idtipounidad');
                 dSelect('tipounidad');
 
