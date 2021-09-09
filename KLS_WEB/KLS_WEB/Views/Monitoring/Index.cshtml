@@ -510,6 +510,7 @@
             });
         }
 
+        //Detalle de viaje
         $("#table").delegate("td.rows", "click", function () { //Cerrar
             var id = $(this).attr('id');
             let indice = dataMonitoreo.findIndex(service => service.idviaje == id);
@@ -523,8 +524,6 @@
             $("#tipoDetalle").val("").val("--");
             $("#detalleModal").modal('show');
         });
-
-
 
         function fConteo(infoMonitoreo) {
 
