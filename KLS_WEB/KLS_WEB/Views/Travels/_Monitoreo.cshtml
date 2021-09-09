@@ -53,8 +53,12 @@
                                     <div class="col-md-2">
                                         @if (comment.Evidences.Any())
                                         {
-                                            <img style=" width:30%" src="@("/Resources/Monitoring/"+comment.Evidences.FirstOrDefault().Path+"/"+comment.Evidences.FirstOrDefault().Name)" />
+                                            if (System.IO.File.Exists(System.IO.Directory.GetCurrentDirectory() + "/wwwroot/Resources/Monitoring/" + comment.Evidences.FirstOrDefault().Path + "/" + comment.Evidences.FirstOrDefault().Name))
+                                            {
+                                                <img style=" width:30%" src="@("/Resources/Monitoring/" + comment.Evidences.FirstOrDefault().Path + "/" + comment.Evidences.FirstOrDefault().Name)" />
+                                            }
                                         }
+
                                     </div>
                                     <div class="col-md-10 text-left">
                                         <p>@comment.Comment</p>
@@ -81,7 +85,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="frmComentario" action="#" method="post">
+                <form id="frmComentario" onsubmit="event.preventDefault(),setComent()">
                     <input type="hidden" name="SectionId" id="Id" />
                     @*<input type="hidden" name="StatusId" id="StatusId" />*@
                     <div class="row">
@@ -110,13 +114,13 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label>Evidencia</label>
-                            <input type="file" class="form-control" name="FileArchivo" id="FileArchivo" accept=".jpg,.png" required="required"/>
+                            <input type="file" class="form-control" name="FileArchivo" id="FileArchivo" accept=".jpg,.png"/>
                         </div>
                     </div>
                     <br />
                     <div class="row">
                         <div class="col-md-6">
-                            <button type="submit" class="btn btn-primary" style="width:100%;">Guardar</button>
+                            <button type="submit" class="btn btn-primary" id="btnComentario" style="width:100%;">Guardar</button>
                         </div>
                     </div>
                 </form>
@@ -181,11 +185,11 @@
         getClients();
         getStatus();
         getSubStatus();
+    });
 
-        //frmComentario
-        $("#frmComentario").submit(function (event) {
-            event.preventDefault();
-            if ($("#subestatusModal").val() != 0) {
+    function setComent() {
+        $("#btnComentario").prop('disabled', true);
+        if ($("#subestatusModal").val() != 0) {
                 var jsonData = convertJson($("#frmComentario"));
                 var formData = new FormData(document.getElementById("frmComentario"));
                 formData.append('file', $('#FileArchivo')[0].files[0]);
@@ -197,18 +201,19 @@
                     processData: false,
                     success: function (data) {
                         dToast("success", "Registro actualizado exitosamente.", "Actualizado");
-                        location.reload();
-                        console.log(data);
+                        $("#btnComentario").prop('disabled', false);
+                        $("#monitoreo").click();
                     },
                     error: function (data) {
+                        $("#btnComentario").prop('disabled', false);
                         dToast("error", "Ocurrio un error al intentar guardar el archivo.", "Error");
                     }
                 });
-            } else {
-                dToast("error", "Todos los campos son necesarios.", "Atención");
-            }
-        });
-    });
+            $("#comentarioModal").modal("hide");
+        } else {
+            dToast("error", "Todos los campos son necesarios.", "Atención");
+        }
+    }
 
     function getMonitoring() {
         $.get("/Monitoring/getMonitoring", function (res) {
@@ -223,8 +228,10 @@
             $("#statusComentario").val(dataMonitoreo[indice].estatus);
             $("#Id").val(id);
             //$("#StatusId").val(dataMonitoreo[indice].estatusId);
+            console.log(dataMonitoreo[indice]);
             setsSelect(dataMonitoreo[indice].estatusId)
             $("#StatusId").val(dataMonitoreo[indice].estatusId).trigger('change');
+            $("#subestatusModal").val(dataMonitoreo[indice].subestatusId).trigger('change');
             $("#comentarioModal").modal("show");
         } else {
             console.log("Error al tratar de obtener un comentario");
