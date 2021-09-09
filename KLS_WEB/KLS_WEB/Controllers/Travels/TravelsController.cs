@@ -161,8 +161,8 @@ namespace KLS_WEB.Controllers.Travels
         #endregion
 
         #region Travel
-        [Route("[controller]/[action]/{TravelId}")]
-        public async Task<IActionResult> AddEdit(int TravelId)
+        [Route("[controller]/[action]/{TravelId}/{SectionId}")]
+        public async Task<IActionResult> AddEdit(int TravelId, int SectionId)
         {
             TravelDTO travelDTO = new TravelDTO
             {
@@ -204,6 +204,8 @@ namespace KLS_WEB.Controllers.Travels
                     }
                 }
             }
+
+            ViewBag.ClickSectionId = SectionId;
 
             return View(travelDTO);
         }

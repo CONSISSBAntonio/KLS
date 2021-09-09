@@ -487,13 +487,15 @@
             });
             // END CODIGO AGREGAR ORIGEN DESTINO
             dSelect('Travel_TravelServiceId');
+            const SectionIdClick = @ViewBag.ClickSectionId;
+            SectionIdClick !== 0 && GetSection(null, SectionIdClick);
         });
 
         const GetSection = async (b, SectionId) => {
             //SectionId === 0 && $('#traveldetails-container, #panelcontainer').hide();
             $('.sk-cube-grid').show();
             $('#sectioncontainer, #addservicescontainer, #traveldetails-container, #panelcontainer').hide();
-            b.disabled = true;
+            b && (b.disabled = true);
             SectionId === 0 && ($('#servicescontainer').empty(), $('.addServicios').show());
             $('#traveldetails-container').attr('rel', SectionId);
             try {
@@ -507,7 +509,7 @@
             } catch (e) {
                 console.error(e);
             }
-            b.disabled = false;
+            b && (b.disabled = false);
         }
 
         const GetCustomerOD = async CustomerId => {
@@ -775,7 +777,7 @@
                                     <div class="col-8 d-flex flex-row justify-content-between">
                                         <select id="equipo${elementid}" class="form-control form-control-sm col-10 selectequipo" name="unitid" required>
                                         </select>
-                                        <i id="unit-${servicio}-${elementid}" class="material-icons text-danger" style="cursor: pointer;" onClick="DeleteUnit(this, 0)">delete</i>
+                                        <i id="unit-${servicio}-${elementid}" class="material-icons textTempDatadaTempDatager" style="cursor: pointer;" onClick="DeleteUnit(this, 0)">delete</i>
                                     </div>
                                 </form>
                             </div>
