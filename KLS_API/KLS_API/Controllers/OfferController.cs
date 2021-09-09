@@ -56,7 +56,7 @@ namespace KLS_API.Controllers
             {
                 var queryable = (from oferta in context.Oferta
                                  where oferta.status != 3
-                                 join tipounidad in context.Cat_Tipos_Unidades on oferta.Tipo_De_Unidad equals tipounidad.id
+                                 join tipounidad in context.TravelServices on oferta.IdServiceTypes equals tipounidad.Id
                                  join transportista in context.Transportista on oferta.Transportista equals transportista.id
                                  where transportista.Estatus != 0
                                  orderby oferta.Fecha_Disponibilidad
@@ -66,8 +66,8 @@ namespace KLS_API.Controllers
                                      idestadodestino = oferta.estado_Destino,
                                      idciudadorigen = oferta.ciudad_Origen,
                                      idciudaddestino = oferta.ciudad_Destino,
-                                     tipounidad = tipounidad.nombre,
-                                     idtipounidad = tipounidad.id,
+                                     tipounidad = tipounidad.Name,
+                                     idtipounidad = tipounidad.Id,
                                      fechadisponibilidad = oferta.Fecha_Disponibilidad,
                                      transportista = transportista.Tamanio,
                                      idtransportista = transportista.id,
@@ -208,7 +208,7 @@ namespace KLS_API.Controllers
                     }
                 }
                 
-                return Ok(expirados);
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -402,7 +402,7 @@ namespace KLS_API.Controllers
         {
             try
             {
-                return Ok(context.ServiceTypes.ToList());
+                return Ok(context.TravelServices.ToList());
             }
             catch (Exception ex)
             {
