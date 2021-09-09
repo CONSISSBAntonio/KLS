@@ -14,6 +14,14 @@
     <Compile Remove="Migrations\20210901015110_service-timecreated.Designer.cs" />
     <Compile Remove="Migrations\20210901171718_section-fknullable.cs" />
     <Compile Remove="Migrations\20210901171718_section-fknullable.Designer.cs" />
+    <Compile Remove="Migrations\20210909200006_offer-sectionidfk.cs" />
+    <Compile Remove="Migrations\20210909200006_offer-sectionidfk.Designer.cs" />
+    <Compile Remove="Migrations\20210909200942_offer-sectionidfk.cs" />
+    <Compile Remove="Migrations\20210909200942_offer-sectionidfk.Designer.cs" />
+    <Compile Remove="Migrations\20210909201224_offer-sectionidfk.cs" />
+    <Compile Remove="Migrations\20210909201224_offer-sectionidfk.Designer.cs" />
+    <Compile Remove="Migrations\20210909203916_offer-sectionidfk.cs" />
+    <Compile Remove="Migrations\20210909203916_offer-sectionidfk.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

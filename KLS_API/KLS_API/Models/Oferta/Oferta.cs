@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KLS_API.Models.Travel;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,6 +13,8 @@ namespace KLS_API.Models.Oferta
         [Key]
         public int Id {get;set;}
         public int IdServiceTypes { get;set;}
+        public int? SectionId { get; set; }
+        public virtual Section Section { get; set; }
         public int Transportista { get; set; }
         public int Tipo_De_Unidad { get; set; }
         public int Cantidad { get; set; }
