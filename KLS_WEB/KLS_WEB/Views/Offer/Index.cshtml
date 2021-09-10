@@ -960,6 +960,7 @@
                     if (key.sectionId != null) {
                         icon = '<span style="color:blue;" class="material-icons">flight_takeoff</span>';
                     }
+
                     if (moment(key.fechadisponibilidad).format('YYYY-MM-DD hh:mm') > moment().format('YYYY-MM-DD hh:mm')) {
                         $("#table-ofertas-info").append(`
                         <tr class="text-uppercase" id="re${key.idoferta}">
