@@ -62,11 +62,11 @@
 
         <div class="col-3">
             <label asp-for="Section.FechaSalida" class="form-label">FECHA DE SALIDA</label>
-            <input asp-for="Section.FechaSalida" class="form-control" onchange="$('#Section_FechaLlegada').prop('min', this.value)" placeholder="requerido">
+            <input asp-for="Section.FechaSalida" class="form-control" onchange="$('#Section_FechaLlegada').prop('min', this.value)">
         </div>
         <div class="col-3">
             <label asp-for="Section.FechaLlegada" class="form-label">FECHA DE LLEGADA</label>
-            <input asp-for="Section.FechaLlegada" class="form-control" placeholder="requerido">
+            <input asp-for="Section.FechaLlegada" class="form-control">
         </div>
         <div class="col-3">
             <label asp-for="Section.Anticipacion" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
@@ -148,7 +148,7 @@
     }
 
     $('[type=datetime-local]').map((k, e) => $(e).prop('min', new Date().toISOString().substring(0, 16)));
-    $('#Section_Cl_Has_OrigenId, #Section_Cl_Has_DestinosId').trigger('change');
+    $('#Section_Cl_Has_OrigenId, #Section_Cl_Has_DestinosId, #Section_FechaSalida').trigger('change');
 
     $('#Section_IsEmpty').on('change', e => {
         const customerParams = $('#Section_ClientesId, .Section_ClientesId, #Section_Cl_Has_OrigenId, .Cl_Has_OrigenId, #Section_Cl_Has_DestinosId, .Cl_Has_DestinosId');

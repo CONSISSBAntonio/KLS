@@ -494,7 +494,6 @@
         });
 
         const GetSection = async (b, SectionId) => {
-            //SectionId === 0 && $('#traveldetails-container, #panelcontainer').hide();
             $('.sk-cube-grid').show();
             $('#sectioncontainer, #addservicescontainer, #traveldetails-container, #panelcontainer').hide();
             b && (b.disabled = true);
@@ -508,6 +507,7 @@
                 SectionId > 0 && $('#traveldetails-container').show();
                 $('#Section_FechaSalida').trigger('change');
                 $('.sk-cube-grid').hide();
+                SectionId === 0 && $('[type=datetime-local]').map((k, e) => $(e).prop('value', new Date().toISOString().substring(0, 16)).trigger('change'));
             } catch (e) {
                 console.error(e);
             }
