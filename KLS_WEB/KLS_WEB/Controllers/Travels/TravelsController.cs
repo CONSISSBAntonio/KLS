@@ -260,7 +260,7 @@ namespace KLS_WEB.Controllers.Travels
             TempData["ConvertTravelType"] = type;
             TempData.Keep();
 
-            return RedirectToAction("AddEdit", new { TravelId = 0 });
+            return RedirectToAction("AddEdit", new { TravelId = 0, SectionId = 0 });
         }
         #endregion
 
