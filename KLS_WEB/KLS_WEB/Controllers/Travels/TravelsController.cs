@@ -232,7 +232,7 @@ namespace KLS_WEB.Controllers.Travels
 
             var ok = await AppContext.Execute<int>(method, Path.Combine(_UrlApi, action), model.Travel);
 
-            return RedirectToAction("AddEdit", new { TravelId = ok });
+            return RedirectToAction("AddEdit", new { TravelId = ok, SectionId = 0 });
         }
 
         public async void PostSectionLog(string accion)
