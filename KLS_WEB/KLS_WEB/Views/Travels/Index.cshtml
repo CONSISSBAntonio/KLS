@@ -57,20 +57,18 @@
                         render: (estatus, type, full, meta) => `<span class="text-primary font-weight-bold">${estatus}</span>`
                     },
                     {
-                        data: 'mainTravelId',
-                        render: (mainTravelId, type, full, meta) => `
-                        <a href="/Travels/AddEdit/${mainTravelId}">
-                            <span class="material-icons">
-                                open_in_new
-                            </span>
-                        </a>`
+                        render: (data, type, row) => {
+                            const { mainTravelId, id } = row;
+
+                            return `<a href="/Travels/AddEdit/${mainTravelId}/${id}"><span class="material-icons">open_in_new</span></a>`;
+                        }
                     }
                 ],
                 language: {
                     url: '/json/dt-es.json'
                 },
                 initComplete: () => {
-                    $('#table_length').html(`<a href="/Travels/AddEdit/0" class="btn btn-sm btn-outline-secondary float-right"><span class="material-icons">add</span></a>`).show();
+                    $('#table_length').html(`<a href="/Travels/AddEdit/0/0" class="btn btn-sm btn-outline-secondary float-right"><span class="material-icons">add</span></a>`).show();
                 }
             });
         }

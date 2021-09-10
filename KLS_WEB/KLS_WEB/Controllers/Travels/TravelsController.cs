@@ -161,8 +161,8 @@ namespace KLS_WEB.Controllers.Travels
         #endregion
 
         #region Travel
-        [Route("[controller]/[action]/{TravelId}")]
-        public async Task<IActionResult> AddEdit(int TravelId)
+        [Route("[controller]/[action]/{TravelId}/{SectionId}")]
+        public async Task<IActionResult> AddEdit(int TravelId, int SectionId)
         {
             TravelDTO travelDTO = new TravelDTO
             {
@@ -183,7 +183,6 @@ namespace KLS_WEB.Controllers.Travels
 
             if (TempData.ContainsKey("ConvertTravelType"))
             {
-                //string convert = TempData["ConvertTravelType"].ToString();
                 string convert = TempData.Peek("ConvertTravelType").ToString();
 
                 if (convert != null)
@@ -194,8 +193,6 @@ namespace KLS_WEB.Controllers.Travels
                     {
                         var demand = await AppContext.Execute<DemandDTO>(MethodType.GET, Path.Combine("Demands", "GetDemand", Id), null);
                         travelDTO.Travel.TravelServiceId = demand.TravelServiceId;
-                        //TempData.Remove("ConvertTravelType");
-                        //TempData.Remove("ConvertTravelId");
                     }
                     else
                     {
@@ -204,6 +201,8 @@ namespace KLS_WEB.Controllers.Travels
                     }
                 }
             }
+
+            ViewBag.ClickSectionId = SectionId;
 
             return View(travelDTO);
         }
