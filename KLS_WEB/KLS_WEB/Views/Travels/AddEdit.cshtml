@@ -150,7 +150,7 @@
                                 <td>@(tramo.Services.Any() ? tramo.Services.Sum(x => x.Costo).ToString("C") : 0.ToString("C"))</td>
                                 <td>@(tramo.Services.Any() ? tramo.Services.Sum(x => x.Precio).ToString("C") : 0.ToString("C"))</td>
                                 <td>@(tramo.IsEmpty ? "-" : tramo.Clients.NombreCorto)</td>
-                                <td class="text-primary font-weight-bold">@tramo.Substatus.Name</td>
+                                <td class="text-primary font-weight-bold">@tramo.Substatus.Status.Name-@tramo.Substatus.Name</td>
                             </tr>
                         }
                     }
@@ -555,11 +555,6 @@
                 referencia1 ? ($('[for="Section_Referencia1"]').html(treferencia1.toUpperCase()), $('#referencia1').show(), $('#referencia1 input').prop('disabled', false)) : ($('#referencia1').hide(), $('#Section_Referencia1').prop('disabled', true));
                 referencia2 ? ($('[for="Section_Referencia2"]').html(treferencia2.toUpperCase()), $('#referencia2').show(), $('#referencia2 input').prop('disabled', false)) : ($('#referencia2').hide(), $('#Section_Referencia2').prop('disabled', true));
                 referencia3 ? ($('[for="Section_Referencia3"]').html(treferencia3.toUpperCase()), $('#referencia3').show(), $('#referencia3 input').prop('disabled', false)) : ($('#referencia3').hide(), $('#Section_Referencia3').prop('disabled', true));
-                //let referencias = ``;
-                //referencias += referencia1 ? `<div class="col-4" ><label class="form-label">${treferencia1.toUpperCase()}</label><input type="text" class="form-control" id="referencia1" name="referencia1" required></div>` : '';
-                //referencias += referencia2 ? `<div class="col-4" ><label class="form-label">${treferencia2.toUpperCase()}</label><input type="text" class="form-control" id="referencia2" name="referencia2" required></div>` : '';
-                //referencias += referencia3 ? `<div class="col-4" ><label class="form-label">${treferencia3.toUpperCase()}</label><input type="text" class="form-control" id="referencia3" name="referencia3" required></div>` : '';
-                //$('.referencias').html(referencias);
             } catch (e) {
                 console.error(e);
             }
@@ -599,14 +594,17 @@
         }
 
         const AddEditSection = async (b, f) => {
-            //console.log([...f]);
-            //[...f].map(e => console.log(e, $(e).is(':disabled')));
             const isEmpty = $('#Section_IsEmpty').prop('checked');
             if (!isEmpty) {
                 if (!validateForm('#sectionform')) {
                     dToast("error", "TODOS LOS CAMPOS SON OBLIGATORIOS", "Error");
                     return;
                 }
+            }
+
+            if (!/(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/.test($('#Section_Espejo').val())) {
+                dToast("error", "La cuenta espejo debe ser una URL válida", "Error");
+                return;
             }
 
             if ($('#servicesform').serializeArray().length === 0) {
@@ -951,6 +949,10 @@
             const response = await fetch(`/Travels/GetRoutePrice?RouteId=${RouteId}`);
             const { precioMinimo, precioMaximo } = await response.json();
             precioMinimo && precioMaximo && $('.priceinfo-terrestrenacional').text(`${new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(parseFloat(precioMinimo))} - ${new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(parseFloat(precioMaximo))}`);
+        }
+
+        const OpenMirrorURL = () => {
+            window.open($('#Section_Espejo').val(), '_blank').focus();
         }
 
         // CÓDIGO AGREGAR ORIGENES DESTINOS MODAL

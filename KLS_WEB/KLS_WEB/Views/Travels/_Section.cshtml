@@ -110,28 +110,28 @@
         </div>*@
 
         <div class="col-4">
-            <label asp-for="Section.Espejo" class="form-label">CUENTA ESPEJO</label>
-            <input asp-for="Section.Espejo" class="form-control" placeholder="requerido">
+            <label asp-for="Section.Espejo" class="form-label d-flex align-content-center align-items-center mt-1" style="margin-bottom: .41rem !important;">CUENTA ESPEJO<span class="material-icons my-auto">link</span></label>
+            <input asp-for="Section.Espejo" type="url" class="form-control" placeholder="requerido">
         </div>
         <div class="col-4">
-            <label asp-for="Section.Usuario" class="form-label">USUARIO</label>
+            <label asp-for="Section.Usuario" class="form-label">USUARIO DE CUENTA ESPEJO</label>
             <input asp-for="Section.Usuario" class="form-control" placeholder="requerido">
         </div>
         <div class="col-4">
-            <label asp-for="Section.Contraseña" class="form-label">CONTRASEÑA</label>
+            <label asp-for="Section.Contraseña" class="form-label">CONTRASEÑA DE CUENTA ESPEJO</label>
             <input asp-for="Section.Contraseña" class="form-control" placeholder="requerido">
         </div>
         @if (!Model.Section.IsEmpty)
         {
-            <div class="col-4" id="referencia1">
+            <div class="col-4 mt-0" id="referencia1">
                 <label asp-for="Section.Referencia1" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
                 <input asp-for="Section.Referencia1" class="form-control" placeholder="requerido">
             </div>
-            <div class="col-4" id="referencia3">
+            <div class="col-4" id="referencia2">
                 <label asp-for="Section.Referencia2" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
                 <input asp-for="Section.Referencia2" class="form-control" placeholder="requerido">
             </div>
-            <div class="col-4" id="referencia2">
+            <div class="col-4" id="referencia3">
                 <label asp-for="Section.Referencia3" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
                 <input asp-for="Section.Referencia3" class="form-control" placeholder="requerido">
             </div>
@@ -167,7 +167,10 @@
     _SectionIsEmpty = @(Model.Section.IsEmpty ? "true" : "false") ;
     _CustomerId = @(Model.Section.ClientesId is null ? 0 : Model.Section.ClientesId) ;
 
+    _CustomerId !== 0 && $('[for=Section_Espejo]').addClass('text-primary').prop('style', 'cursor: pointer;').attr('onclick', 'OpenMirrorURL();');
+
     if (!_SectionIsEmpty) {
+        console.log('quwe', _CustomerId);
         _CustomerId > 0 ? GetClientReferences(_CustomerId) : $('#referencia1, #referencia2, #referencia3').hide();
     } else {
         GetKLSRoutes(@Model.Section.RutaId);

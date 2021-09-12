@@ -109,7 +109,7 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
-                Travel travel = await _dbContext.Travels.Include(x => x.Sections).ThenInclude(y => y.Services).Include(x => x.Sections).ThenInclude(x => x.Clients).Include(x => x.Sections).ThenInclude(x => x.Substatus).SingleOrDefaultAsync(x => x.Id == TravelId);
+                Travel travel = await _dbContext.Travels.Include(x => x.Sections).ThenInclude(y => y.Services).Include(x => x.Sections).ThenInclude(x => x.Clients).Include(x => x.Sections).ThenInclude(x => x.Substatus).ThenInclude(x=> x.Status).SingleOrDefaultAsync(x => x.Id == TravelId);
 
                 if (travel is null)
                 {
@@ -867,7 +867,7 @@ namespace KLS_API.Controllers.Travels
                     Destino = !x.IsEmpty ? string.Concat(_dbContext.Cat_Estado.SingleOrDefault(y => y.id == x.Cl_Has_Destinos.Id_Estado).nombre, "-", _dbContext.Cat_Ciudad.SingleOrDefault(y => y.id == x.Cl_Has_Destinos.Id_Ciudad).nombre) : string.Concat(_dbContext.Cat_Estado.SingleOrDefault(y => y.id == x.Ruta.id_estadodestino).nombre, "-", _dbContext.Cat_Ciudad.SingleOrDefault(y => y.id == x.Ruta.id_ciudaddestino).nombre),
                     FechaSalida = x.FechaSalida.ToString("dd/MM/yyyy. hh:mm tt"),
                     FechaLlegada = x.FechaLlegada.ToString("dd/MM/yyyy. hh:mm tt"),
-                    Estatus = x.Substatus.Name
+                    Estatus = string.Concat(x.Substatus.Status.Name, "-", x.Substatus.Name)
                 }).ToListAsync();
 
                 int total = sections.Count();
