@@ -29,114 +29,135 @@
             </div>
         }
 
-    <form id="sectionform" onsubmit="event.preventDefault()" class="row g-3">
-        @if (Model.Section.Id != 0)
-        {
-            @Html.HiddenFor(x => x.Section.Id)
-            @Html.HiddenFor(x => x.Section.Folio)
-        }
+        <form id="sectionform" onsubmit="event.preventDefault()" class="row g-3">
+            @if (Model.Section.Id != 0)
+            {
+                @Html.HiddenFor(x => x.Section.Id)
+                @Html.HiddenFor(x => x.Section.Folio)
+            }
 
-        @if (Model.Section.Id == 0 && !Model.Section.IsEmpty)
-        {
-            <div class="col-12 d-flex">
-                <input asp-for="Section.IsEmpty" class="form-check my-auto mr-1" type="checkbox">
-                <label asp-for="Section.IsEmpty" class="form-label my-auto size-14">MARCAR TRAMO COMO VACÍO</label>
-            </div>
-        }
-        else
-        {
-            <div class="col-12 d-flex">
-                <input asp-for="Section.IsEmpty" class="form-check my-auto mr-1" type="checkbox" hidden>
-                <label asp-for="Section.IsEmpty" class="form-label my-auto size-14 d-none">MARCAR TRAMO COMO VACÍO</label>
-            </div>
-        }
-
-        @if (!Model.Section.IsEmpty)
-        {
-            <div class="col-3 Section_ClientesId">
-                <label asp-for="Section.ClientesId" class="form-label">CLIENTE</label>
-                <select asp-for="Section.ClientesId" asp-items="Model.Selects.Customers" data-val="true" data-val-required="The Person field is required." class="form-select" onchange="GetCustomerOD(this.value), GetClientReferences(this.value)" required style="width: 100%;"></select>
-            </div>
-
-        }
-
-        <div class="col-3">
-            <label asp-for="Section.FechaSalida" class="form-label">FECHA DE SALIDA</label>
-            <input asp-for="Section.FechaSalida" class="form-control" onchange="$('#Section_FechaLlegada').prop('min', this.value)">
-        </div>
-        <div class="col-3">
-            <label asp-for="Section.FechaLlegada" class="form-label">FECHA DE LLEGADA</label>
-            <input asp-for="Section.FechaLlegada" class="form-control">
-        </div>
-        <div class="col-3">
-            <label asp-for="Section.Anticipacion" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
-            <input asp-for="Section.Anticipacion" class="form-control" placeholder="requerido">
-        </div>
-
-        @if (!Model.Section.IsEmpty)
-        {
-            <div class="col-6 Cl_Has_OrigenId">
-                <div class="d-flex justify-content-between">
-                    <label asp-for="Section.Cl_Has_OrigenId" class="form-label">ORIGEN</label>
-                    <a href="javascript:void(0)" class="text-primary" onclick="showModal('AGREGAR','Agregar', 'origen')">AGREGAR</a>
+            @if (Model.Section.Id == 0 && !Model.Section.IsEmpty)
+            {
+                <div class="col-12 d-flex">
+                    <input asp-for="Section.IsEmpty" class="form-check my-auto mr-1" type="checkbox">
+                    <label asp-for="Section.IsEmpty" class="form-label my-auto size-14">MARCAR TRAMO COMO VACÍO</label>
                 </div>
-                <select asp-for="Section.Cl_Has_OrigenId" asp-items="Model.Selects.CustomerOrigins" class="form-select" onchange="GetRoute(this.value, 'origin')" style="width: 100%;"></select>
-            </div>
-            <div class="col-6 Cl_Has_OrigenId">
-                <label asp-for="Section.Cl_Has_Origen.Direccion" class="form-label">DIRECCIÓN REMITENTE</label>
-                <input asp-for="Section.Cl_Has_Origen.Direccion" type="text" class="form-control" disabled>
-            </div>
-            <div class="col-6 Cl_Has_DestinosId">
-                <div class="d-flex justify-content-between">
-                    <label asp-for="Section.Cl_Has_DestinosId" class="form-label">DESTINO</label>
-                    <a href="javascript:void(0)" class="text-primary" onclick="showModal('AGREGAR','Agregar', 'destino')">AGREGAR</a>
+            }
+            else
+            {
+                <div class="col-12 d-flex">
+                    <input asp-for="Section.IsEmpty" class="form-check my-auto mr-1" type="checkbox" hidden>
+                    <label asp-for="Section.IsEmpty" class="form-label my-auto size-14 d-none">MARCAR TRAMO COMO VACÍO</label>
                 </div>
-                <select asp-for="Section.Cl_Has_DestinosId" asp-items="Model.Selects.CustomerDestinations" class="form-select" onchange="GetRoute(this.value, 'destination')" style="width: 100%;"></select>
-            </div>
-            <div class="col-6 Cl_Has_DestinosId">
-                <label asp-for="Section.Cl_Has_Destinos.Direccion" class="form-label">DIRECCIÓN DESTINATARIO</label>
-                <input asp-for="Section.Cl_Has_Destinos.Direccion" type="text" class="form-control" disabled>
-            </div>
-        }
+            }
 
-        <div class="col-6">
-            <label asp-for="Section.RutaId" class="form-label">RUTA</label>
-            <select asp-for="Section.RutaId" asp-items="Model.Selects.Routes" class="form-select" style="width: 100%;"></select>
-        </div>
-        <div class="col-6"></div>
-        @*<div class="col-6">
-            <label asp-for="Section.SectionTypeId" class="form-label">TIPO DE TRAMO</label>
-            <select asp-for="Section.SectionTypeId" asp-items="Model.Selects.SectionType" class="form-select" style="width: 100%;"></select>
-        </div>*@
+            @if (!Model.Section.IsEmpty)
+            {
+                <div class="col-3 Section_ClientesId">
+                    <label asp-for="Section.ClientesId" class="form-label">CLIENTE</label>
+                    <select asp-for="Section.ClientesId" asp-items="Model.Selects.Customers" data-val="true" data-val-required="The Person field is required." class="form-select" onchange="GetCustomerOD(this.value), GetClientReferences(this.value)" required style="width: 100%;"></select>
+                </div>
 
-        <div class="col-4">
-            <label asp-for="Section.Espejo" class="form-label d-flex align-content-center align-items-center mt-1" style="margin-bottom: .41rem !important;">CUENTA ESPEJO<span class="material-icons my-auto">link</span></label>
-            <input asp-for="Section.Espejo" type="url" class="form-control" placeholder="requerido">
-        </div>
-        <div class="col-4">
-            <label asp-for="Section.Usuario" class="form-label">USUARIO DE CUENTA ESPEJO</label>
-            <input asp-for="Section.Usuario" class="form-control" placeholder="requerido">
-        </div>
-        <div class="col-4">
-            <label asp-for="Section.Contraseña" class="form-label">CONTRASEÑA DE CUENTA ESPEJO</label>
-            <input asp-for="Section.Contraseña" class="form-control" placeholder="requerido">
-        </div>
-        @if (!Model.Section.IsEmpty)
-        {
-            <div class="col-4 mt-0" id="referencia1">
-                <label asp-for="Section.Referencia1" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
-                <input asp-for="Section.Referencia1" class="form-control" placeholder="requerido">
+            }
+
+            <div class="col-3">
+                <label asp-for="Section.FechaSalida" class="form-label">FECHA DE SALIDA</label>
+                <input asp-for="Section.FechaSalida" class="form-control" onchange="$('#Section_FechaLlegada').prop('min', this.value)">
             </div>
-            <div class="col-4" id="referencia2">
-                <label asp-for="Section.Referencia2" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
-                <input asp-for="Section.Referencia2" class="form-control" placeholder="requerido">
+            <div class="col-3">
+                <label asp-for="Section.FechaLlegada" class="form-label">FECHA DE LLEGADA</label>
+                <input asp-for="Section.FechaLlegada" class="form-control">
             </div>
-            <div class="col-4" id="referencia3">
-                <label asp-for="Section.Referencia3" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
-                <input asp-for="Section.Referencia3" class="form-control" placeholder="requerido">
+            <div class="col-3">
+                <label asp-for="Section.Anticipacion" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
+                <input asp-for="Section.Anticipacion" class="form-control" placeholder="requerido">
             </div>
-        }
-    </form>
+
+            @if (!Model.Section.IsEmpty)
+            {
+                <div class="col-6 Cl_Has_OrigenId">
+                    <div class="d-flex justify-content-between">
+                        <label asp-for="Section.Cl_Has_OrigenId" class="form-label">ORIGEN</label>
+                        <a href="javascript:void(0)" class="text-primary" onclick="showModal('AGREGAR','Agregar', 'origen')">AGREGAR</a>
+                    </div>
+                    <select asp-for="Section.Cl_Has_OrigenId" asp-items="Model.Selects.CustomerOrigins" class="form-select" onchange="GetRoute(this.value, 'origin')" style="width: 100%;"></select>
+                </div>
+                <div class="col-6 Cl_Has_OrigenId">
+                    <label asp-for="Section.Cl_Has_Origen.Direccion" class="form-label">DIRECCIÓN REMITENTE</label>
+                    <input asp-for="Section.Cl_Has_Origen.Direccion" type="text" class="form-control" disabled>
+                </div>
+                <div class="col-6 Cl_Has_DestinosId">
+                    <div class="d-flex justify-content-between">
+                        <label asp-for="Section.Cl_Has_DestinosId" class="form-label">DESTINO</label>
+                        <a href="javascript:void(0)" class="text-primary" onclick="showModal('AGREGAR','Agregar', 'destino')">AGREGAR</a>
+                    </div>
+                    <select asp-for="Section.Cl_Has_DestinosId" asp-items="Model.Selects.CustomerDestinations" class="form-select" onchange="GetRoute(this.value, 'destination')" style="width: 100%;"></select>
+                </div>
+                <div class="col-6 Cl_Has_DestinosId">
+                    <label asp-for="Section.Cl_Has_Destinos.Direccion" class="form-label">DIRECCIÓN DESTINATARIO</label>
+                    <input asp-for="Section.Cl_Has_Destinos.Direccion" type="text" class="form-control" disabled>
+                </div>
+            }
+
+            <div class="col-6">
+                <label asp-for="Section.RutaId" class="form-label">RUTA</label>
+                <select asp-for="Section.RutaId" asp-items="Model.Selects.Routes" class="form-select" style="width: 100%;"></select>
+            </div>
+            <div class="col-6"></div>
+            @*<div class="col-6">
+                    <label asp-for="Section.SectionTypeId" class="form-label">TIPO DE TRAMO</label>
+                    <select asp-for="Section.SectionTypeId" asp-items="Model.Selects.SectionType" class="form-select" style="width: 100%;"></select>
+                </div>*@
+
+            <div class="col-4">
+                <label asp-for="Section.Espejo" class="form-label d-flex align-content-center align-items-center mt-1" style="margin-bottom: .41rem !important;">CUENTA ESPEJO<span class="material-icons my-auto">link</span></label>
+                <input asp-for="Section.Espejo" type="url" class="form-control" placeholder="requerido">
+            </div>
+            <div class="col-4">
+                <label asp-for="Section.Usuario" class="form-label">USUARIO DE CUENTA ESPEJO</label>
+                <input asp-for="Section.Usuario" class="form-control" placeholder="requerido">
+            </div>
+            <div class="col-4">
+                <label asp-for="Section.Contraseña" class="form-label">CONTRASEÑA DE CUENTA ESPEJO</label>
+                <input asp-for="Section.Contraseña" class="form-control" placeholder="requerido">
+            </div>
+            @if (!Model.Section.IsEmpty)
+            {
+                <div class="col-4 mt-0" id="referencia1">
+                    <label asp-for="Section.Referencia1" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
+                    <input asp-for="Section.Referencia1" class="form-control" placeholder="requerido">
+                </div>
+                <div class="col-4" id="referencia2">
+                    <label asp-for="Section.Referencia2" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
+                    <input asp-for="Section.Referencia2" class="form-control" placeholder="requerido">
+                </div>
+                <div class="col-4" id="referencia3">
+                    <label asp-for="Section.Referencia3" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
+                    <input asp-for="Section.Referencia3" class="form-control" placeholder="requerido">
+                </div>
+            }
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="popupdeletesection" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">CONFIRMAR ACCIÓN</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-left">
+                <p class="text-uppercase">¿Estas seguro de que deseas eliminar el tramo seleccionado?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
+                @*<button id="btn-deletesection" type="button" class="btn">Si</button>*@
+                <a asp-controller="Travels" asp-action="DeleteSection" asp-route-SectionId="@Model.Section.Id" class="btn btn-dark">SI</a>
+            </div>
+        </div>
     </div>
 </div>
 

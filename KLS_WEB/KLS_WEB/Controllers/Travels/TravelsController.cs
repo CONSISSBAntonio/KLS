@@ -310,6 +310,7 @@ namespace KLS_WEB.Controllers.Travels
                     travelDTO.Selects.Routes = await GetRoute(travelDTO.Section.Cl_Has_OrigenId, travelDTO.Section.Cl_Has_DestinosId);
                 }
             }
+
             travelDTO.Selects.SectionType = await GetSectionType();
             if (SectionId > 0)
             {
