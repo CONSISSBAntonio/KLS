@@ -150,7 +150,7 @@
                                 <td>@(tramo.Services.Any() ? tramo.Services.Sum(x => x.Costo).ToString("C") : 0.ToString("C"))</td>
                                 <td>@(tramo.Services.Any() ? tramo.Services.Sum(x => x.Precio).ToString("C") : 0.ToString("C"))</td>
                                 <td>@(tramo.IsEmpty ? "-" : tramo.Clients.NombreCorto)</td>
-                                <td class="text-primary font-weight-bold">@tramo.Substatus.Status.Name-@tramo.Substatus.Name</td>
+                                <td id="estatus-@tramo.Id" class="text-primary font-weight-bold">@tramo.Substatus.Status.Name-@tramo.Substatus.Name</td>
                             </tr>
                         }
                     }
