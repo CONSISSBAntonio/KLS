@@ -188,7 +188,7 @@
     _SectionIsEmpty = @(Model.Section.IsEmpty ? "true" : "false") ;
     _CustomerId = @(Model.Section.ClientesId is null ? 0 : Model.Section.ClientesId) ;
 
-    _CustomerId !== 0 && $('[for=Section_Espejo]').addClass('text-primary').prop('style', 'cursor: pointer;').attr('onclick', 'OpenMirrorURL();');
+    $('[for=Section_Espejo]').addClass('text-primary').prop('style', 'cursor: pointer;').attr('onclick', 'OpenMirrorURL();');
 
     if (!_SectionIsEmpty) {
         console.log('quwe', _CustomerId);
