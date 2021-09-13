@@ -276,7 +276,8 @@ namespace KLS_API.Controllers
                                  estadodestino = estadodestino.nombre,
                                  ciudadorigen = ciudadorigen.nombre,
                                  ciudaddestino = ciudaddestino.nombre,
-                                 costo = tr_r.Costo,
+                                 //costo = tr_r.Costo,
+                                 costo = context.ruta_has_inventario.SingleOrDefault(y => y.Tr_Has_RutaId == tr_r.Id).CostoOne,
                                  estatus = tr_r.Estatus
                              }).ToList().AsQueryable();
 
