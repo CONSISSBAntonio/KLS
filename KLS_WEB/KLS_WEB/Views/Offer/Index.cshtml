@@ -720,7 +720,8 @@
                 if (transportista >= 0) { //Si se encontró el transportista
                     idtran = catTransportista[transportista].id
                         let tipoServiciocat = ServiceTypes.findIndex(service => cUpper(service.name).trim() == cUpper(key.IdServiceTypes).trim());
-                        if (tipoServiciocat >= 0) {
+                    if (tipoServiciocat >= 0) {
+                        tipoServicio = ServiceTypes[tipoServicio].id;
                             var Nivel_Origen = cUpper(key.Nivel_Origen);
                             if (Nivel_Origen != "REGION" && Nivel_Origen != "ESTADO" && Nivel_Origen != "CIUDAD") {
                                 jsonEnvIncorrectos.push(key);
@@ -972,7 +973,6 @@
                                     <span style="color:blue;" class="material-icons">local_shipping</span>
                                 </a>
                      */
-
                     
                     if (moment(key.fechadisponibilidad).format('YYYY-MM-DD hh:mm') > moment().format('YYYY-MM-DD hh:mm')) {
                         $("#table-ofertas-info").append(`
@@ -994,7 +994,6 @@
                                 <a class="btn btn-sm" href="#" onclick="verModal(${key.idoferta})">
                                     <span style="color:blue;" class="material-icons">edit</span>
                                 </a>
-                                
                             </td>
                         </tr>`);
                     ver(key.idoferta, moment(key.fechadisponibilidad).format('YYYY-MM-DD HH:mm:ss'));
