@@ -358,6 +358,17 @@ namespace KLS_API.Controllers.Travels
                     _dbContext.Services.Remove(service);
                 }
 
+                var sectionComments = await _dbContext.SectionComments.Where(x => x.SectionId == SectionId).ToListAsync();
+                foreach (var comment in sectionComments)
+                {
+                    var evidences = await _dbContext.Evidences.Where(x => x.SectionCommentId == comment.Id).ToListAsync();
+                    foreach (var evidence in evidences)
+                    {
+                        _dbContext.Evidences.Remove(evidence);
+                    }
+                    _dbContext.SectionComments.Remove(comment);
+                }
+
                 await _dbContext.SaveChangesAsync();
 
                 _dbContext.Sections.Remove(section);
