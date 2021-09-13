@@ -441,13 +441,14 @@
             } else {
                 dToast("error", "Selecciona un transportista.", "Atención");
             }
-            
         }
+
         function verBuscar(ver) {
-            $("#txtSearch").hide();
-            $("#txtSearchRutas").hide();
-            $("#" + ver).show();
+            //$("#txtSearch").hide();
+            //$("#txtSearchRutas").hide();
+            //$("#" + ver).show();
         }
+
         var idEditar = 0;
         function verModal(ide = 0) {
             idEditar = ide;
@@ -918,7 +919,7 @@
                         try {
                             Origen = catEstado[estado].nombre + " - " + catCiudad[ciudad].nombre;
                         } catch (e) {
-                            console.log(e);
+                            console.log("Error",e);
                         }
                     }
 
@@ -941,7 +942,7 @@
                         try {
                             Destino = catEstado[estado].nombre + " - " + catCiudad[ciudad].nombre;
                         } catch (e) {
-                            console.log(e);
+                            console.log("Error",e);
                         }
                     }
 
@@ -958,9 +959,21 @@
 
                     let icon = "";
                     if (key.sectionId != null) {
+                        /*Este es el boton de ofertas de convertir a viaje
+                         <a class="btn btn-sm" href="/Travels/AddEdit/${key.travelId}/${key.sectionId}" target="_blank">
+                            ${icon}
+                         </a>
+                         */
                         icon = '<span style="color:blue;" class="material-icons">flight_takeoff</span>';
                     }
 
+                    /*boton de crear viaje
+                     * <a class="btn btn-sm ${btndisabled}" href="/Travels/ConvertTravel/${key.idoferta}?type=offer">
+                                    <span style="color:blue;" class="material-icons">local_shipping</span>
+                                </a>
+                     */
+
+                    
                     if (moment(key.fechadisponibilidad).format('YYYY-MM-DD hh:mm') > moment().format('YYYY-MM-DD hh:mm')) {
                         $("#table-ofertas-info").append(`
                         <tr class="text-uppercase" id="re${key.idoferta}">
@@ -981,9 +994,7 @@
                                 <a class="btn btn-sm" href="#" onclick="verModal(${key.idoferta})">
                                     <span style="color:blue;" class="material-icons">edit</span>
                                 </a>
-                                <a class="btn btn-sm ${btndisabled}" href="/Travels/ConvertTravel/${key.idoferta}?type=offer">
-                                    <span style="color:blue;" class="material-icons">local_shipping</span>
-                                </a>
+                                
                             </td>
                         </tr>`);
                     ver(key.idoferta, moment(key.fechadisponibilidad).format('YYYY-MM-DD HH:mm:ss'));
@@ -1162,7 +1173,7 @@
                             <td style="width:8% !important;">${IdGenerado}</td>
                             <td>${key.estadoorigen} - ${key.ciudadorigen}</td>
                             <td>${key.estadodestino} - ${key.ciudaddestino}</td>
-                            <td>${nCon(key.costo)} km</td>
+                            <td>$ ${nCon(key.costo)}</td>
                             <td class="text-center" style="width:3% !important;">${status}</td>
                         </tr>`);
                 });
