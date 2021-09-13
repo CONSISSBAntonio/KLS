@@ -63,6 +63,10 @@ namespace KLS_WEB.Views.Catalogs.City
         {
             Route dataReport;
             dataReport = await this.AppContext.Execute<Route>(MethodType.POST, _UrlApi, dataModel);
+            if (dataReport is null)
+            {
+                return BadRequest();
+            }
             return PartialView(string.Concat(_UrlView, "_Index.cshtml"));
         }
 

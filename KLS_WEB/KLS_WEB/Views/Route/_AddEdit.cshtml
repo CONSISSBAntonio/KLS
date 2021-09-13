@@ -342,9 +342,14 @@
                         dToast("success", "Ruta guardada exitosamente.", "Registrado");
                         loadTable();
                     }).fail(function (error) {
+                        if (error.status === 400) {
+                            dToast("error", "Ya existe una ruta con el mismo origen y destino", "Error");
+                            $(".guardar").attr("disabled", false);
+                            return;
+                        }
                         dToast("error", "Error al tratar de guardar el registro", "Error");
-                        $(".guardar").attr("disabled", false);
                     });
+                    $(".guardar").attr("disabled", false);
                 }
             } else {
                 dToast("error", "LOS CAMPOS DEBEN SER MAYOR A 0", "Error");

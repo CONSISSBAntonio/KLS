@@ -71,10 +71,16 @@ namespace KLS_API.Controllers.Route
 
 
         [HttpPost]
-        public ActionResult Post([FromBody] Ruta ruta)
+        public async Task<ActionResult> Post([FromBody] Ruta ruta)
         {
             try
             {
+                bool routeExists = await _context.Ruta.AnyAsync(x => x.id_ciudadorigen == ruta.id_ciudadorigen && x.id_ciudaddestino == ruta.id_ciudaddestino);
+                if (routeExists)
+                {
+                    return BadRequest();
+                }
+
                 ruta.Folio = string.Concat(ruta.id_ciudadorigen.ToString("D4"), ruta.id_ciudaddestino.ToString("D4"));
                 _context.Ruta.Add(ruta);
                 _context.SaveChanges();
