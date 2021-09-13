@@ -340,6 +340,8 @@ namespace KLS_API.Controllers.Travels
                 {
                     return NotFound();
                 }
+                Oferta oferta = await _dbContext.Oferta.SingleOrDefaultAsync(x => x.SectionId == SectionId);
+                _dbContext.Oferta.Remove(oferta);
                 _dbContext.Sections.Remove(section);
                 await _dbContext.SaveChangesAsync();
                 return Ok(section);

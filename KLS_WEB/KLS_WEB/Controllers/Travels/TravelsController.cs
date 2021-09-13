@@ -398,7 +398,6 @@ namespace KLS_WEB.Controllers.Travels
             return Json(SectionId);
         }
 
-        [HttpGet]
         public async Task<ActionResult> DeleteSection(string SectionId, int TravelId)
         {
             Section section = await AppContext.Execute<Section>(MethodType.DELETE, Path.Combine(_UrlApi, "DeleteSection", SectionId), null);
