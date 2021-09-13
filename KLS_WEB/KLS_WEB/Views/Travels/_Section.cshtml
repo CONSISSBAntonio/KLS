@@ -101,7 +101,7 @@
 
             <div class="col-6">
                 <label asp-for="Section.RutaId" class="form-label">RUTA</label>
-                <select asp-for="Section.RutaId" asp-items="Model.Selects.Routes" class="form-select" style="width: 100%;"></select>
+                <select asp-for="Section.RutaId" asp-items="Model.Selects.Routes" class="form-select" style="width: 100%;" onchange="GetRoutePrice(this.value)"></select>
             </div>
             <div class="col-6"></div>
             @*<div class="col-6">
