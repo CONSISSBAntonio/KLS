@@ -116,7 +116,6 @@ namespace KLS_API.Controllers
                 //{
                 //    queryable = queryable.Where(x => x.fechadisponibilidad.Date.ToString().Contains(busqueda.fechadisponibilidad.Date.ToString()));
                 //}
-
                 return Ok(queryable);
             }
             catch (Exception ex)

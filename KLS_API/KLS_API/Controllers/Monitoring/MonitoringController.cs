@@ -164,10 +164,12 @@ namespace KLS_API.Controllers.Monitoring
         {
             try
             {
-                if (secciones.Comment != null) {
-                    context.SectionComments.Add(secciones);
-                    context.SaveChanges();
+                if (secciones.Comment == null) {
+                    secciones.Comment = "-";
                 }
+
+                context.SectionComments.Add(secciones);
+                context.SaveChanges();
 
                 Section dato_ = new Section { Id = secciones.SectionId,SubstatusId = secciones.SubstatusId};
                 context.Attach(dato_);
