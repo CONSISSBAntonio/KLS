@@ -155,7 +155,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
                 @*<button id="btn-deletesection" type="button" class="btn">Si</button>*@
-                <a asp-controller="Travels" asp-action="DeleteSection" asp-route-SectionId="@Model.Section.Id" class="btn btn-dark">SI</a>
+                <a asp-controller="Travels" asp-action="DeleteSection" asp-route-SectionId="@Model.Section.Id" asp-route-TravelId="@Model.Section.TravelId" class="btn btn-dark">SI</a>
             </div>
         </div>
     </div>

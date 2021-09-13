@@ -399,11 +399,16 @@ namespace KLS_WEB.Controllers.Travels
         }
 
         [HttpGet]
-        public async Task<ActionResult> DeleteSection(string SectionId)
+        public async Task<ActionResult> DeleteSection(string SectionId, int TravelId)
         {
             Section section = await AppContext.Execute<Section>(MethodType.DELETE, Path.Combine(_UrlApi, "DeleteSection", SectionId), null);
 
-            return RedirectToAction("AddEdit", new { TravelId = section.TravelId, SectionId = 0 });
+            if (section is null)
+            {
+                return NotFound();
+            }
+
+            return RedirectToAction("AddEdit", new { TravelId, SectionId = 0 });
         }
 
         [HttpGet]
