@@ -340,11 +340,26 @@ namespace KLS_API.Controllers.Travels
                 {
                     return NotFound();
                 }
+
                 Oferta oferta = await _dbContext.Oferta.SingleOrDefaultAsync(x => x.SectionId == SectionId);
                 if (oferta != null)
                 {
                     _dbContext.Oferta.Remove(oferta);
                 }
+
+                var services = await _dbContext.Services.Where(x => x.SectionId == SectionId).ToListAsync();
+                foreach (var service in services)
+                {
+                    var units = await _dbContext.Units.Where(x => x.ServiceId == service.Id).ToListAsync();
+                    foreach (var unit in units)
+                    {
+                        _dbContext.Units.Remove(unit);
+                    }
+                    _dbContext.Services.Remove(service);
+                }
+
+                await _dbContext.SaveChangesAsync();
+
                 _dbContext.Sections.Remove(section);
                 await _dbContext.SaveChangesAsync();
                 return Ok(section);
