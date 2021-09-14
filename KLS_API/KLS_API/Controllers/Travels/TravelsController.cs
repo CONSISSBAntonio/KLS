@@ -624,7 +624,7 @@ namespace KLS_API.Controllers.Travels
                             Tolerancia_Origen = 0,
                             Nivel_Destino = "Ciudad",
                             Region_Destino = 0,
-                            estado_Destino = section.Ruta.id_estadoorigen,
+                            estado_Destino = section.Ruta.id_estadodestino,
                             ciudad_Destino = section.Ruta.id_ciudaddestino,
                             Tolerancia_Destino = 0,
                             status = 1,
