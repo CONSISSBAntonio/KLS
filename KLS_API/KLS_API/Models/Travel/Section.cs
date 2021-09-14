@@ -15,8 +15,6 @@ namespace KLS_API.Models.Travel
         public int Id { get; set; }
         [Required]
         public int TravelId { get; set; }
-        [JsonIgnore]
-        public virtual Travel Travel { get; set; }
         public virtual ICollection<Service> Services { get; set; }
         public virtual ICollection<SectionComment> SectionComments { get; set; }
         public int SubstatusId { get; set; }

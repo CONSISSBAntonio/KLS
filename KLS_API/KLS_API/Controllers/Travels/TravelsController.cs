@@ -603,6 +603,13 @@ namespace KLS_API.Controllers.Travels
                 {
                     return NotFound();
                 }
+
+                Travel travel = await _dbContext.Travels.FindAsync(section.TravelId);
+                if (travel is null)
+                {
+                    return NotFound();
+                }
+
                 if (section.SubstatusId == 5)
                 {
                     Oferta oferta = await _dbContext.Oferta.SingleOrDefaultAsync(x => x.SectionId == section.Id);
@@ -610,6 +617,7 @@ namespace KLS_API.Controllers.Travels
                     if (oferta is null)
                     {
                         int carrierId = section.Services.FirstOrDefault(x => x.Active).TransportistaId;
+
                         Oferta newoferta = new Oferta
                         {
                             Transportista = carrierId,
@@ -628,7 +636,7 @@ namespace KLS_API.Controllers.Travels
                             ciudad_Destino = section.Ruta.id_ciudaddestino,
                             Tolerancia_Destino = 0,
                             status = 1,
-                            IdServiceTypes = section.Travel.TravelServiceId,
+                            IdServiceTypes = travel.TravelServiceId,
                             SectionId = section.Id
                         };
 
