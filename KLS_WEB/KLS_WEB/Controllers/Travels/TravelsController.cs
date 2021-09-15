@@ -438,6 +438,13 @@ namespace KLS_WEB.Controllers.Travels
             Route route = await AppContext.Execute<Route>(MethodType.GET, Path.Combine("Route", "GetRoute", RouteId), null);
             return Json(route);
         }
+        
+        public async Task<IActionResult> CloneSection(string SectionId)
+        {
+            Section section = await AppContext.Execute<Section>(MethodType.POST, Path.Combine(_UrlApi, "CloneSection", SectionId), null);
+
+            return RedirectToAction("AddEdit", new { TravelId = section.TravelId, SectionId = 0 });
+        }
         #endregion
 
         #region Services
@@ -469,8 +476,8 @@ namespace KLS_WEB.Controllers.Travels
             public string ServiceId { get; set; }
             public int SectionId { get; set; }
             public string Service { get; set; }
-            public string Cost { get; set; }
-            public string Price { get; set; }
+            public string Cost { get; set; } = "0";
+            public string Price { get; set; } = "0";
             public string CarrierId { get; set; }
             public string DriverId { get; set; }
             public List<Unidad> Units { get; set; }
@@ -552,5 +559,12 @@ namespace KLS_WEB.Controllers.Travels
             return Json(data);
         }
         #endregion
+
+        [HttpGet]
+        public async Task<JsonResult> GetSubstatuses()
+        {
+            List<Substatus> substatuses = await AppContext.Execute<List<Substatus>>(MethodType.GET, Path.Combine(_UrlApi, "GetSubstatuses"), null);
+            return Json(substatuses);
+        }
     }
 }

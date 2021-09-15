@@ -35,5 +35,6 @@ namespace KLS_WEB.Models
         public string actualizadopor { get; set; }
         [Column(TypeName = "DateTime")]
         public DateTime? ultimocambio { get; set; }
+        public string URL { get; set; }
     }
 }

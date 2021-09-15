@@ -41,6 +41,7 @@ namespace KLS_API.Models.Travel
         public string Espejo { get; set; }
         public string Usuario { get; set; }
         public string Contraseña { get; set; }
+        public string Empresa { get; set; }
         public string Referencia1 { get; set; }
         public string Referencia2 { get; set; }
         public string Referencia3 { get; set; }

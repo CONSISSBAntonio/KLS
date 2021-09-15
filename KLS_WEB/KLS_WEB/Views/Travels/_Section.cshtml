@@ -69,7 +69,7 @@
                 <input asp-for="Section.FechaLlegada" class="form-control">
             </div>
             <div class="col-3">
-                <label asp-for="Section.Anticipacion" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
+                <label asp-for="Section.Anticipacion" class="form-label">OBSERVACIONES</label>
                 <input asp-for="Section.Anticipacion" class="form-control" placeholder="requerido">
             </div>
 
@@ -103,7 +103,10 @@
                 <label asp-for="Section.RutaId" class="form-label">RUTA</label>
                 <select asp-for="Section.RutaId" asp-items="Model.Selects.Routes" class="form-select" style="width: 100%;" onchange="GetRoutePrice(this.value)"></select>
             </div>
-            <div class="col-6"></div>
+            <div class="col-6">
+                <label class="form-label">URL ruta</label> <br />
+                <a id="routeURL" class="text-primary text-uppercase" href="javascript:void(0)">SIN URL CONFIGURADA</a>
+            </div>
             @*<div class="col-6">
                     <label asp-for="Section.SectionTypeId" class="form-label">TIPO DE TRAMO</label>
                     <select asp-for="Section.SectionTypeId" asp-items="Model.Selects.SectionType" class="form-select" style="width: 100%;"></select>
@@ -111,28 +114,34 @@
 
             <div class="col-4">
                 <label asp-for="Section.Espejo" class="form-label d-flex align-content-center align-items-center mt-1" style="margin-bottom: .41rem !important;">CUENTA ESPEJO<span class="material-icons my-auto">link</span></label>
-                <input asp-for="Section.Espejo" type="url" class="form-control" placeholder="requerido">
+                <input asp-for="Section.Espejo" type="url" class="form-control" placeholder="REQUERIDO">
             </div>
             <div class="col-4">
                 <label asp-for="Section.Usuario" class="form-label">USUARIO DE CUENTA ESPEJO</label>
-                <input asp-for="Section.Usuario" class="form-control" placeholder="requerido">
+                <input asp-for="Section.Usuario" class="form-control" placeholder="REQUERIDO">
             </div>
             <div class="col-4">
                 <label asp-for="Section.Contraseña" class="form-label">CONTRASEÑA DE CUENTA ESPEJO</label>
-                <input asp-for="Section.Contraseña" class="form-control" placeholder="requerido">
+                <input asp-for="Section.Contraseña" class="form-control" placeholder="REQUERIDO">
+            </div>
+            <div class="col-4">
+                <label asp-for="Section.Empresa" class="form-label">EMPRESA</label>
+                <input asp-for="Section.Empresa" class="form-control" placeholder="OPCIONAL">
+            </div>
+            <div class="col-8">
             </div>
             @if (!Model.Section.IsEmpty)
             {
                 <div class="col-4 mt-0" id="referencia1">
-                    <label asp-for="Section.Referencia1" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
+                    <label asp-for="Section.Referencia1" class="form-label">Referencia 1</label>
                     <input asp-for="Section.Referencia1" class="form-control" placeholder="requerido">
                 </div>
                 <div class="col-4" id="referencia2">
-                    <label asp-for="Section.Referencia2" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
+                    <label asp-for="Section.Referencia2" class="form-label">Referencia 2</label>
                     <input asp-for="Section.Referencia2" class="form-control" placeholder="requerido">
                 </div>
                 <div class="col-4" id="referencia3">
-                    <label asp-for="Section.Referencia3" class="form-label">TIEMPO DE ANTICIPACIÓN</label>
+                    <label asp-for="Section.Referencia3" class="form-label">Referencia 3</label>
                     <input asp-for="Section.Referencia3" class="form-control" placeholder="requerido">
                 </div>
             }
@@ -191,7 +200,6 @@
     $('[for=Section_Espejo]').addClass('text-primary').prop('style', 'cursor: pointer;').attr('onclick', 'OpenMirrorURL();');
 
     if (!_SectionIsEmpty) {
-        console.log('quwe', _CustomerId);
         _CustomerId > 0 ? GetClientReferences(_CustomerId) : $('#referencia1, #referencia2, #referencia3').hide();
     } else {
         GetKLSRoutes(@Model.Section.RutaId);

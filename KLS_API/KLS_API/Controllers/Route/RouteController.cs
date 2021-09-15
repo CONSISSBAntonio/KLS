@@ -69,7 +69,6 @@ namespace KLS_API.Controllers.Route
             return Ok(catalogo);
         }
 
-
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] Ruta ruta)
         {
@@ -91,6 +90,7 @@ namespace KLS_API.Controllers.Route
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpPut]
         public ActionResult Put([FromBody] Ruta ruta)
         {

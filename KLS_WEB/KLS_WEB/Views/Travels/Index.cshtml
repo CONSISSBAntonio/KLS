@@ -1,6 +1,13 @@
 @{
     ViewData["Title"] = "Viajes";
 }
+
+<style>
+    .select2-selection__choice__display {
+        font-size: 12px;
+    }
+</style>
+
 <div class="data-content">
     <div class="p-4">
         <div class="text-left mb-3">
@@ -8,6 +15,16 @@
         </div>
 
         <div class="p-4 shadow bg-white">
+            <div class="col-6 d-flex flex-row">
+                <div class="w-100">
+                    <label for="editcliente" class="form-label size-12 font-weight-bold float-left">FILTRAR POR ESTATUS</label>
+                    <select class="form-control form-control-sm cliente" style="width: 100%;" id="filtro" name="filtro[]" multiple="multiple" onchange="DT(null, this)"></select>
+                </div>
+                <div class="w-50">
+                    <input type="search" class="form-control my-4 ml-3" style="background-color:#EDECEC; height: 2.3rem;" placeholder="Buscar" onkeyup="DT(this.value)">
+                </div>
+
+            </div>
             <table id="table" class="table table-striped table-bordered display table-hover table-viajes text-uppercase" width="100%">
                 <thead>
                     <tr>
@@ -32,18 +49,42 @@
     <script>
         $(document).ready(function (event) {
             DT();
+            dSelect('filtro');
+            getSubstatus();
         });
 
-        DT = () => {
+        const getSubstatus = async () => {
+            try {
+                const response = await fetch('/Travels/GetSubstatuses')
+                const data = await response.json()
+                let filter = '';
+                data && data.map(({ id, name, status }) => {
+                    filter += `<option value="${id}">${status.name} - ${name}</option>`;
+                }), $('#filtro').html(filter)
+            } catch (error) {
+                console.error(error)
+            }
+        }
+
+        const DT = (keyword = null, filter) => {
             Table = $('#table').DataTable({
                 destroy: true,
                 responsive: true,
                 autoWidth: true,
                 processing: true,
                 serverSide: true,
+                dom: 'Btp',
                 ajax: {
                     type: 'POST',
-                    url: '/Travels/DataTableTravels'
+                    url: '/Travels/DataTableTravels',
+                    data: data => {
+                        if (keyword) {
+                            data.search.value = keyword;
+                        }
+                        if (filter) {
+                            data.filter = $(filter).val();
+                        }
+                    }
                 },
                 columns: [
                     { data: 'folio' },
