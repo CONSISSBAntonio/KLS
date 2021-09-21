@@ -700,6 +700,38 @@ namespace KLS_API.Controllers.Travels
                 throw;
             }
         }
+
+        [HttpGet("{SectionId}")]
+        public async Task<IActionResult> CartaPorte(int SectionId)
+        {
+            try
+            {
+                Section section = await _dbContext.Sections
+                    .Include(x => x.Ruta)
+                    .Include(x => x.Services)
+                    .ThenInclude(x => x.ServiceType)
+                    .Include(x => x.Services)
+                    .ThenInclude(x => x.Transportista)
+                    .Include(x => x.Services)
+                    .ThenInclude(x => x.Tr_Has_Operadores)
+                    .Include(x => x.Clients)
+                    .Include(x => x.Cl_Has_Origen)
+                    .Include(x => x.Cl_Has_Destinos)
+                    .Include(x => x.SectionType)
+                    //.Include(x => x.Empresa)
+                    .SingleOrDefaultAsync(x => x.Id == SectionId);
+
+                if (section is null)
+                {
+                    return NotFound();
+                }
+                return Ok(section);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         #endregion
 
         #region Services
