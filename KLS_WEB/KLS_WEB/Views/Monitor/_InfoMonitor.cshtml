@@ -1,0 +1,62 @@
+﻿@model KLS_WEB.Models.Monitoring.InfoMonitor
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="tituloDetalle"> VIAJE @Model.viaje</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <b>Transportista</b>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control col-form-label-sm" disabled="disabled" value="@Model.transportista"/>
+                </div>
+            </div>
+            <div class="row pt-2">
+                <div class="col-md-4">
+                    <b>Conductor</b>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control col-form-label-sm" disabled="disabled" value="@Model.conductor"/>
+                </div>
+            </div>
+            <div class="row pt-2">
+                <div class="col-md-4">
+                    <b>Dirección Origen</b>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control col-form-label-sm" disabled="disabled" value="@Model.direccionOrigen" />
+                </div>
+            </div>
+            <div class="row pt-2">
+                <div class="col-md-4">
+                    <b>Dirección Destino</b>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control col-form-label-sm" disabled="disabled" value="@Model.direccionDestino" />
+                </div>
+            </div>
+            <div class="row pt-2">
+                <div class="col-md-4">
+                    <b>Teléfono</b>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control col-form-label-sm" disabled="disabled" value="@Model.telefono" />
+                </div>
+            </div>
+            <div class="row pt-2">
+                <div class="col-md-4">
+                    <b>Tipo de Servicio</b>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control col-form-label-sm" disabled="disabled" value="@Model.tipoUnidad" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

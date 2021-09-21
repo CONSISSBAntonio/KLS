@@ -173,6 +173,15 @@ namespace KLS_WEB.Controllers.Monitor
         }
         #endregion
 
+        #region InfoMonitor
+        public async Task<IActionResult> getInfo(int id)
+        {
+            InfoMonitor infomonitor;
+            infomonitor = await this.AppContext.Execute<InfoMonitor>(MethodType.GET, Path.Combine(_UrlApi, "getInfo?id=" + id), null);
+            return PartialView(_UrlView + "_InfoMonitor.cshtml", infomonitor);
+        }
+        #endregion
+
         #region Checkpoints
         public async Task<IActionResult> Checkpoint(int idviaje, int idruta, string fecha) {
             Checkpoints checkpoints;
@@ -192,10 +201,10 @@ namespace KLS_WEB.Controllers.Monitor
             return Json(dataReport);
         }
 
-        public async Task<JsonResult> getSubStatus(int id)
+        public async Task<JsonResult> getSubStatusFind(int id = 0)
         {
-            Substatus dataReport;
-            dataReport = await this.AppContext.Execute<Substatus>(MethodType.POST, Path.Combine(_UrlApi, "getSubStatus"), id);
+            List<Substatus> dataReport;
+            dataReport = await this.AppContext.Execute<List<Substatus>>(MethodType.POST, Path.Combine(_UrlApi, "getSubStatus?id=" + id), null);
             return Json(dataReport);
         }
 

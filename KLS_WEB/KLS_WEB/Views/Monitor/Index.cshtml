@@ -3,9 +3,6 @@
     <div class="d-flex flex-nowrap">
         <div class="p-2">
             <div class="text-left d-flex p-2">
-                <a href="#">
-                    <div class="material-icons icon-red">arrow_back</div>
-                </a>
                 <div class="text-uppercase poppins medium size-24 pl-2">MONITOREO</div>
             </div>
         </div>
@@ -13,22 +10,19 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="card text-center shadow-sm p-3 bg-white rounded" style="width: 9rem; height: 5rem; font-size: 14px;">
-                        <span id="card-confirmados">0</span>
-                        <br />
+                        <b id="card-confirmados">0</b>
                         CONFIRMADOS
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card text-center shadow-sm p-3 bg-white rounded" style="width: 9rem; height: 5rem; font-size: 14px;">
-                        <span id="card-transito">0</span>
-                        <br />
+                        <b id="card-transito">0</b>
                         EN TRANSITO
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card text-center shadow-sm p-3 bg-white rounded" style="width: 9rem; height: 5rem; font-size: 14px;">
-                        <span id="card-concluidos">0</span>
-                        <br />
+                        <b id="card-concluidos">0</b>
                         CONCLUIDOS
                     </div>
                 </div>
@@ -43,7 +37,7 @@
             </li>
             <li class="nav-item pl-4">
                 <label style="font-size: 12px; font-weight: bold">Estatus</label>
-                <select class="form-control form-control-sm" style="width: 200px;" asp-items="Model.Selects.Status" id="sEstatus" onchange="DT();"></select>
+                <select class="form-control form-control-sm" style="width: 200px;" asp-items="Model.Selects.Status" id="sEstatus" onchange="DT();setsSelectI(this.value)"></select>
             </li>
             <li class="nav-item pl-4">
                 <label style="font-size: 12px; font-weight: bold">Sub estatus</label>
@@ -70,10 +64,10 @@
 </div>
 @*Modal Comentario*@
 <div class="modal fade" id="comentarioModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
-
 @*Modal de checkpoints*@
 <div class="modal fade" id="checkpointModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
-
+@*Detalle del modal*@
+<div class="modal fade" id="detalleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
 @section Scripts{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
     <script src="@Url.Content("~/js/sheetjs/fileSaver.min.js")"></script>
@@ -83,7 +77,6 @@
             DT();
             getConteo();
         });
-
         DT = () => {
             Table = $('#table').DataTable({
                 destroy: true,
@@ -107,7 +100,7 @@
                         data: 'folio',
                         render: (folio, type, row) => {
                             const { idviaje, cliente } = row;
-                            return `<p id="${idviaje}" style="cursor: pointer;">ID VIAJE: ${folio}<br />CLIENTE: ${cliente}</p>`
+                            return `  <p onclick="verInfo(${idviaje})" style="cursor: pointer;">ID VIAJE: ${folio}<br />CLIENTE: ${cliente}</p>`
                         }
                     },
                     {
@@ -121,7 +114,8 @@
                         data: 'fechasalida',
                         render: (fechasalida, type, row) => {
                             const { tiemporuta } = row;
-                            return `FECHA DE SALIDA : ${fechasalida} <br />FECHA DE LLEGADA : ${moment(fechasalida).add(tiemporuta, 'days').format('YYYY-MM-DD hh:mm:ss')}`
+                            //return `FECHA DE SALIDA : ${fechasalida} <br />FECHA DE LLEGADA : ${moment(fechasalida).add(tiemporuta, 'days').format('YYYY-MM-DD hh:mm:ss')}`
+                            return `FECHA DE SALIDA : ${fechasalida} <br />FECHA DE LLEGADA : ${moment(fechasalida).add(tiemporuta, 'hours').format('YYYY-MM-DD hh:mm:ss')}`
                         }
                     },
                     {
@@ -165,14 +159,12 @@
                 }
             });
         }
-
         function agregarComentario(id) {
             $.get(`/Monitor/Comment?id=${id}`, function (data) {
                 $('#comentarioModal').html(data);
                 $('#comentarioModal').modal('show');
             });
         }
-
         function setComent() {
             $("#btnComentario").prop('disabled', true);
             if ($("#subestatusModal").val() != 0) {
@@ -201,27 +193,21 @@
                 dToast("error", "Todos los campos son necesarios.", "Atención");
             }
         }
-
         function verCheckpoint(idviaje, idruta, fechasalida) {
             $.get(`/Monitor/Checkpoint?idviaje=${idviaje}&idruta=${idruta}&fecha=${fechasalida}`, function (data) {
                 $('#checkpointModal').html(data);
                 $('#checkpointModal').modal('show');
             });
         }
-
         function saveCheckpoint(idviaje, idcheckpoint, idruta, fechasalida) {
             var horaReal = $("#horaReal-" + idviaje).val();
             var jsonData = { "idSection": idviaje, "idCheckpoint": idcheckpoint, "HoraReal": horaReal };
-            console.log(jsonData);
             $.post("/Monitor/setSCheckpoints", jsonData, function (res) {
-                console.log(res);
                 verCheckpoint(idviaje, idruta, fechasalida);
             });
         }
-
         function getConteo() {
             $.get("/Monitor/getConteo", function (data) {
-                console.log(data);
                 /*
                  confirmado = 2, entransito = 3,concluidos = 4
                  */
@@ -241,10 +227,28 @@
                 })
             });
         }
-
         function downloadExcel() {
             $.get('/Monitor/downloadExcel', function (res) {
-                var _fileName = "REPORTE.xlsx";
+                var catMonitoreo = [];
+                //console.log(res);
+                $.each(res, function (item, key) {
+                    catMonitoreo.push(
+                        {
+                            "Folio": key.folio,
+                            "Cliente": key.cliente,
+                            "Origen": key.origen,
+                            "Destino": key.destino,
+                            "Fecha de salida": key.fechasalida,
+                            "Fecha de llegada": key.fechasalida,
+                            "Estatus": key.estatus,
+                            "Substatus": key.substatus,
+                        }
+                    );
+                });
+
+                //console.log(catMonitoreo);
+
+                var _fileName = "REPORTEMONITOREO.xlsx";
                 var _sheetName = "REPORTE";
                 var wb = XLSX.utils.book_new();
                 wb.Props = {
@@ -254,20 +258,33 @@
                     CreatedDate: new Date(2021, 08, 11)
                 };
                 wb.SheetNames.push(_sheetName);
-                var ws_data = res;
+                var ws_data = catMonitoreo;
                 var ws = XLSX.utils.json_to_sheet(ws_data);
                 wb.Sheets[_sheetName] = ws;
                 var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
                 saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), _fileName);
             });
         }
-
         function s2ab(s) {
             var buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
             var view = new Uint8Array(buf);  //create uint8array as viewer
             for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
             return buf;
         }
-
+        function verInfo(id) {
+            $.get('/Monitor/getInfo?id=' + id, function (res) {
+                $('#detalleModal').html(res);
+                $("#detalleModal").modal("show");
+            });
+        }
+        function setsSelectI(id) {
+            $.get("/Monitor/getSubStatusFind?id=" + id, function (res) {
+                $("#sSubEstatus").empty();
+                $("#sSubEstatus").append(`<option value="0">SELECCIONA</option>`);
+                $.each(res, function (item, key) {
+                    $("#sSubEstatus").append(`<option value="${key.id}">${key.name}</option>`);
+                });
+            });
+        }
     </script>
 }

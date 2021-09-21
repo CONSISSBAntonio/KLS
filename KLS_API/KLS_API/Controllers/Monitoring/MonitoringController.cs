@@ -30,10 +30,10 @@ namespace KLS_API.Controllers.Monitoring
                 IEnumerable<Monitoring> sections = await context.Sections.Where(x => x.Active).Select(x => new Monitoring
                 {
                     folio = x.Folio,
-                    origen = string.Concat(context.Cat_Estado.SingleOrDefault(y => y.id == x.Cl_Has_Origen.Id_Estado).nombre),
-                    destino = string.Concat(context.Cat_Estado.SingleOrDefault(y => y.id == x.Cl_Has_Destinos.Id_Estado).nombre),
+                    origen = !x.IsEmpty ? context.Cat_Estado.SingleOrDefault(y => y.id == x.Cl_Has_Origen.Id_Estado).nombre : string.Concat(context.Cat_Estado.SingleOrDefault(y => y.id == x.Ruta.id_estadoorigen).nombre),
+                    destino = !x.IsEmpty ? context.Cat_Estado.SingleOrDefault(y => y.id == x.Cl_Has_Destinos.Id_Estado).nombre : string.Concat(context.Cat_Estado.SingleOrDefault(y => y.id == x.Ruta.id_estadodestino).nombre),
                     fechallegada = "",
-                    fechallegada_ = "",
+                    fechallegada_ = x.FechaLlegada.ToString("yyyy-MM-dd hh:mm:ss"),
                     estatus = x.Substatus.Status.Name,//me falta el nombre
                     estatusId = x.Substatus.Status.Id,
                     substatus = x.Substatus.Name,
@@ -220,7 +220,6 @@ namespace KLS_API.Controllers.Monitoring
                 return BadRequest(ex.Message);
             }
         }
-
         public ActionResult getConteo() {
             var q = from c in context.Sections
                     where c.Active == true
@@ -238,8 +237,9 @@ namespace KLS_API.Controllers.Monitoring
                 IEnumerable<Monitoring> sections = await context.Sections.Where(x => x.Active).Select(x => new Monitoring
                 {
                     folio = x.Folio,
-                    origen = string.Concat(context.Cat_Estado.SingleOrDefault(y => y.id == x.Cl_Has_Origen.Id_Estado).nombre),
-                    destino = string.Concat(context.Cat_Estado.SingleOrDefault(y => y.id == x.Cl_Has_Destinos.Id_Estado).nombre),
+                    //origen = string.Concat(context.Cat_Estado.SingleOrDefault(y => y.id == x.Cl_Has_Origen.Id_Estado).nombre),
+                    origen = !x.IsEmpty ? context.Cat_Estado.SingleOrDefault(y => y.id == x.Cl_Has_Origen.Id_Estado).nombre : string.Concat(context.Cat_Estado.SingleOrDefault(y => y.id == x.Ruta.id_estadoorigen).nombre),
+                    destino = !x.IsEmpty ? context.Cat_Estado.SingleOrDefault(y => y.id == x.Cl_Has_Destinos.Id_Estado).nombre : string.Concat(context.Cat_Estado.SingleOrDefault(y => y.id == x.Ruta.id_estadodestino).nombre),
                     fechallegada = "",
                     fechallegada_ = "",
                     estatus = x.Substatus.Status.Name,//me falta el nombre
@@ -262,5 +262,30 @@ namespace KLS_API.Controllers.Monitoring
                 return BadRequest(ex.Message);
             }
         }
+        public async Task<IActionResult> getInfo(int id) {
+            var sections = await context.Sections.Where(x => x.Active && x.Id == id).Select(x => new
+            {
+                viaje = x.Folio,
+                transportista = context.Services.SingleOrDefault(y => y.SectionId == x.Id).Transportista.NombreComercial,
+                direccionOrigen = !x.IsEmpty ?  string.Concat(x.Cl_Has_Origen.Direccion,',', context.Cat_Colonia.SingleOrDefault(y => y.id == x.Cl_Has_Origen.Id_Colonia).nombre , context.Cat_Ciudad.SingleOrDefault(y => y.id == x.Cl_Has_Origen.Id_Ciudad).nombre,',', context.Cat_Estado.SingleOrDefault(y => y.id == x.Cl_Has_Origen.Id_Estado).nombre) :string.Concat(context.Cat_Estado.SingleOrDefault(y => y.id == x.Ruta.id_estadoorigen).nombre),
+                direccionDestino = !x.IsEmpty ? string.Concat(x.Cl_Has_Destinos.Direccion, ',', context.Cat_Colonia.SingleOrDefault(y => y.id == x.Cl_Has_Destinos.Id_Colonia).nombre, context.Cat_Ciudad.SingleOrDefault(y => y.id == x.Cl_Has_Destinos.Id_Ciudad).nombre, ',', context.Cat_Estado.SingleOrDefault(y => y.id == x.Cl_Has_Destinos.Id_Estado).nombre) : string.Concat(context.Cat_Estado.SingleOrDefault(y => y.id == x.Ruta.id_estadodestino).nombre),
+                conductor = context.Services.SingleOrDefault(y=>y.SectionId == x.Id).Tr_Has_Operadores.nombre,
+                telefono = context.Services.SingleOrDefault(y => y.SectionId == x.Id).Tr_Has_Operadores.NoTelefono,
+                tipoUnidad = context.Travels.SingleOrDefault(y=>y.Id == x.TravelId).TravelService.Name,
+            }).FirstOrDefaultAsync();
+            return Ok(sections);
+        }
+
+        public class InfoMonitor
+        {
+            public string viaje { get; set; }
+            public string transportista { get; set; }
+            public string conductor { get; set; }
+            public string direccionOrigen { get; set; }
+            public string direccionDestino { get; set; }
+            public string telefono { get; set; }
+            public string tipoUnidad { get; set; }
+        }
+
     }
 }
