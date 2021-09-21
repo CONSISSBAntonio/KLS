@@ -419,7 +419,7 @@ namespace KLS_API.Controllers.Travels
                 IEnumerable<RouteKLSDTO> travels = await _dbContext.Ruta.Where(x => x.estatus == 1).Select(x => new RouteKLSDTO
                 {
                     Id = x.id,
-                    OD = string.Concat(_dbContext.Cat_Estado.SingleOrDefault(y => y.id == x.id_estadoorigen).nombre, "-", _dbContext.Cat_Ciudad.SingleOrDefault(y => y.id == x.id_ciudadorigen).nombre, "-", _dbContext.Cat_Estado.SingleOrDefault(y => y.id == x.id_estadodestino).nombre, "-", _dbContext.Cat_Ciudad.SingleOrDefault(y => y.id == x.id_ciudaddestino).nombre)
+                    OD = string.Concat("Origen: ", _dbContext.Cat_Estado.SingleOrDefault(y => y.id == x.id_estadoorigen).nombre.Trim(), ", ", _dbContext.Cat_Ciudad.SingleOrDefault(y => y.id == x.id_ciudadorigen).nombre.Trim(), " || Destino: ", _dbContext.Cat_Estado.SingleOrDefault(y => y.id == x.id_estadodestino).nombre.Trim(), ", ", _dbContext.Cat_Ciudad.SingleOrDefault(y => y.id == x.id_ciudaddestino).nombre.Trim())
                 }).ToListAsync();
 
                 travels = travels.OrderBy(x => x.OD);
