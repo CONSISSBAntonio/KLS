@@ -33,6 +33,7 @@ namespace KLS_API.Models.Travel
         [Required]
         public int RutaId { get; set; }
         public virtual Ruta Ruta { get; set; }
+        public string GrupoMonitor { get; set; }
         [Required]
         public DateTime FechaSalida { get; set; }
         [Required]
