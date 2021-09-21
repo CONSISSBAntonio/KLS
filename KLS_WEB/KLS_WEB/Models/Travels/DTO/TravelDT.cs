@@ -16,5 +16,6 @@ namespace KLS_WEB.Models.Travels.DTO
         public string FechaSalida { get; set; }
         public string FechaLlegada { get; set; }
         public string Estatus { get; set; }
+        public int SubstatusId { get; set; }
     }
 }

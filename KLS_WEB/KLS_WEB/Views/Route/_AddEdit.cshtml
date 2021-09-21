@@ -133,6 +133,12 @@
                     }, new { @class = "form-control form-control-sm", @id = "festatus", @required = "" })
                 </div>
             </div>
+            <div class="row">
+                <label for="furl" class="col-sm-4 col-form-label col-form-label-sm">URL</label>
+                <div class="col-sm-8">
+                    @Html.TextBoxFor(x => x.URL, new { @type = "url", @class = "form-control form-control-sm", @id = "furl" })
+                </div>
+            </div>
             <div id="updateinfo" style="display: none;">
                 <div class="row">
                     <label for="fultimocambio" class="col-sm-4 col-form-label col-form-label-sm">Último cambio:</label>

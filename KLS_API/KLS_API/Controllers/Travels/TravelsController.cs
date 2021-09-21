@@ -13,6 +13,7 @@ using KLS_API.Models.Carriers;
 using KLS_API.Models.DT;
 using KLS_API.Models.Demands;
 using KLS_API.Models.Oferta;
+using System.Collections.ObjectModel;
 
 namespace KLS_API.Controllers.Travels
 {
@@ -92,6 +93,15 @@ namespace KLS_API.Controllers.Travels
             try
             {
                 ICollection<Transportista> carriers = await _dbContext.Transportista.Where(x => x.Estatus == 1).OrderBy(x => x.NombreComercial).ToListAsync();
+                //ICollection<Transportista> carrierswithdrivers = new Collection<Transportista>();
+                //foreach (var carrier in carriers)
+                //{
+                //    bool hasOperadores = await _dbContext.Tr_Has_Operadores.AnyAsync(x => x.Id_Transportista == carrier.id);
+                //    if (hasOperadores)
+                //    {
+                //        carrierswithdrivers.Add(carrier);
+                //    }
+                //}
                 return Ok(carriers);
             }
             catch (Exception ex)
@@ -406,11 +416,13 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
-                ICollection<RouteKLSDTO> travels = await _dbContext.Ruta.Where(x => x.estatus == 1).Select(x => new RouteKLSDTO
+                IEnumerable<RouteKLSDTO> travels = await _dbContext.Ruta.Where(x => x.estatus == 1).Select(x => new RouteKLSDTO
                 {
                     Id = x.id,
                     OD = string.Concat(_dbContext.Cat_Estado.SingleOrDefault(y => y.id == x.id_estadoorigen).nombre, "-", _dbContext.Cat_Ciudad.SingleOrDefault(y => y.id == x.id_ciudadorigen).nombre, "-", _dbContext.Cat_Estado.SingleOrDefault(y => y.id == x.id_estadodestino).nombre, "-", _dbContext.Cat_Ciudad.SingleOrDefault(y => y.id == x.id_ciudaddestino).nombre)
                 }).ToListAsync();
+
+                travels = travels.OrderBy(x => x.OD);
                 return Ok(travels);
             }
             catch (Exception ex)
@@ -652,6 +664,42 @@ namespace KLS_API.Controllers.Travels
                 throw;
             }
         }
+
+        [HttpPost("{SectionId}")]
+        public async Task<IActionResult> CloneSection(int SectionId)
+        {
+            try
+            {
+                Section section = await _dbContext.Sections.FindAsync(SectionId);
+                if (section is null)
+                {
+                    return NotFound();
+                }
+
+                Travel travel = await _dbContext.Travels.FindAsync(section.TravelId);
+                if (travel is null)
+                {
+                    return NotFound();
+                }
+
+                Section lastsection = _dbContext.Sections.Where(x => x.TravelId == section.TravelId).ToList().LastOrDefault();
+                int autoincrement = Int32.Parse(lastsection.Folio.Split("-")[1]) + 1;
+
+                section.Id = 0;
+                section.Folio = string.Concat(DateTime.Now.ToString("yyMM"), travel.Folio.Substring(travel.Folio.Length - 4), "-", autoincrement.ToString("D2"));
+                section.TimeCreated = DateTime.Now;
+
+                await _dbContext.Sections.AddAsync(section);
+                await _dbContext.SaveChangesAsync();
+
+                return Ok(section);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                throw;
+            }
+        }
         #endregion
 
         #region Services
@@ -806,7 +854,8 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
-                ICollection<Tr_Has_Operadores> tr_Has_Operadores = await _dbContext.Tr_Has_Operadores.Where(x => x.Id_Transportista == CarrierId && x.estatus == 1 && x.Imss != null && x.NoLicencia != null && x.NoIne != null && x.FotoLicencia != null && x.FotoIne != null && x.FotoSeguro != null).OrderBy(x => x.nombre).ToArrayAsync();
+                ICollection<Tr_Has_Operadores> tr_Has_Operadores = await _dbContext.Tr_Has_Operadores.Where(x => x.Id_Transportista == CarrierId && x.estatus == 1).OrderBy(x => x.nombre).ToArrayAsync();
+                //ICollection<Tr_Has_Operadores> tr_Has_Operadores = await _dbContext.Tr_Has_Operadores.Where(x => x.Id_Transportista == CarrierId && x.estatus == 1 && x.Imss != null && x.NoLicencia != null && x.NoIne != null && x.FotoLicencia != null && x.FotoIne != null && x.FotoSeguro != null).OrderBy(x => x.nombre).ToArrayAsync();
                 return Ok(tr_Has_Operadores);
             }
             catch (Exception ex)
@@ -833,7 +882,7 @@ namespace KLS_API.Controllers.Travels
                 List<SearchRuta> routes = _dbContext.Ruta.Where(x => x.id_ciudadorigen == _dbContext.Cl_Has_Origen.Find(search.OriginId).Id_Ciudad && x.id_ciudaddestino == _dbContext.Cl_Has_Destinos.Find(search.DestinationId).Id_Ciudad).Select(x => new SearchRuta
                 {
                     Id = x.id,
-                    OD = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.id_estadoorigen).nombre, ", ", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.id_ciudadorigen).nombre, " - ", _dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.id_estadodestino).nombre, ", ", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.id_ciudaddestino).nombre)
+                    OD = string.Concat("Origen: ", _dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.id_estadoorigen).nombre, ", ", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.id_ciudadorigen).nombre, " || Destino: ", _dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.id_estadodestino).nombre, ", ", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.id_ciudaddestino).nombre)
                 }).ToList();
                 return Ok(routes);
             }
@@ -890,6 +939,21 @@ namespace KLS_API.Controllers.Travels
                 throw;
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetSubstatuses()
+        {
+            try
+            {
+                ICollection<Substatus> substatuses = await _dbContext.Substatuses.Include(x => x.Status).Where(x => x.Active).OrderBy(x => x.Status.Name).ToListAsync();
+                return Ok(substatuses);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+                throw;
+            }
+        }
         #region DataTableTravels
         [HttpPost]
         public async Task<IActionResult> DataTableTravels(DTParams dtParams)
@@ -906,7 +970,8 @@ namespace KLS_API.Controllers.Travels
                     Destino = !x.IsEmpty ? string.Concat(_dbContext.Cat_Estado.SingleOrDefault(y => y.id == x.Cl_Has_Destinos.Id_Estado).nombre, "-", _dbContext.Cat_Ciudad.SingleOrDefault(y => y.id == x.Cl_Has_Destinos.Id_Ciudad).nombre) : string.Concat(_dbContext.Cat_Estado.SingleOrDefault(y => y.id == x.Ruta.id_estadodestino).nombre, "-", _dbContext.Cat_Ciudad.SingleOrDefault(y => y.id == x.Ruta.id_ciudaddestino).nombre),
                     FechaSalida = x.FechaSalida.ToString("dd/MM/yyyy. hh:mm tt"),
                     FechaLlegada = x.FechaLlegada.ToString("dd/MM/yyyy. hh:mm tt"),
-                    Estatus = string.Concat(x.Substatus.Status.Name, "-", x.Substatus.Name)
+                    Estatus = string.Concat(x.Substatus.Status.Name, "-", x.Substatus.Name),
+                    SubstatusId = x.SubstatusId
                 }).ToListAsync();
 
                 int total = sections.Count();
@@ -922,6 +987,11 @@ namespace KLS_API.Controllers.Travels
                     x.FechaSalida.ToLower().Contains(keyword) ||
                     x.FechaLlegada.ToLower().Contains(keyword) ||
                     x.Estatus.ToLower().Contains(keyword));
+                }
+
+                if (dtParams.Filter.Any())
+                {
+                    sections = sections.Where(x => dtParams.Filter.Contains(x.SubstatusId));
                 }
 
                 long totalFiltered = sections.Count();
