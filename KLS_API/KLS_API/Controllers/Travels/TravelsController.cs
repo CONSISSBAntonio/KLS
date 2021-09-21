@@ -688,6 +688,10 @@ namespace KLS_API.Controllers.Travels
                 section.Id = 0;
                 section.Folio = string.Concat(DateTime.Now.ToString("yyMM"), travel.Folio.Substring(travel.Folio.Length - 4), "-", autoincrement.ToString("D2"));
                 section.TimeCreated = DateTime.Now;
+                section.Espejo = null;
+                section.Usuario = null;
+                section.Contraseña = null;
+                section.Empresa = null;
 
                 await _dbContext.Sections.AddAsync(section);
                 await _dbContext.SaveChangesAsync();
