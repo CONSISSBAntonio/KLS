@@ -36,10 +36,11 @@ namespace KLS_WEB.Controllers.Monitoring
         }
 
         [Route("getMonitoring")]
-        public async Task<JsonResult> Get(Monitoring mon)
+        public async Task<JsonResult> Get(DTParams dtParams)
         {
+
             List<Monitoring> dataMonitoring;
-            dataMonitoring = await this.AppContext.Execute<List<Monitoring>>(MethodType.GET, _UrlApi, mon);
+            dataMonitoring = await this.AppContext.Execute<List<Monitoring>>(MethodType.GET, _UrlApi, dtParams);
             return Json(dataMonitoring);
         }
 

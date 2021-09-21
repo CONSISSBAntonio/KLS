@@ -398,7 +398,7 @@
             $.get("/Monitoring/getCheckpoints/" + idruta, function (res) {
                 catCheckpoints = res;
                 //Obtener los checkpoints de las secciones
-                $.get("/Monitoring/getSCheckpoints/" + idviaje, function (resCheck) {
+                $.get("/Monitoring/getSCheckpoints/" + idviaje, function (resCheck) { //Seccion
                     catSecChecpoints = resCheck;
                     $("#table-checkpoint-info").empty();//Vaciar la tabla de registros de checkpoints
                     var trInfo = `<tr>`;

@@ -74,7 +74,6 @@ namespace KLS_WEB.Controllers.Travels
                 SelectListItem selectListItem = new SelectListItem { Value = customer.id.ToString(), Text = customer.NombreCorto };
                 Customers.Add(selectListItem);
             }
-
             return Customers;
         }
 
@@ -548,7 +547,6 @@ namespace KLS_WEB.Controllers.Travels
         public async Task<JsonResult> DataTableTravels(DataTablesParameters dtParams)
         {
             TravelDTModel data = await AppContext.Execute<TravelDTModel>(MethodType.POST, Path.Combine(_UrlApi, "DataTableTravels"), dtParams);
-
             return Json(data);
         }
         #endregion

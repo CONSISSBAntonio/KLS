@@ -7,14 +7,12 @@
     <div class="p-4 shadow bg-white">
         <div class="row">
             <div class="col-md-12">
-
                 <div class="d-flex flex-nowrap">
                     <div class="">
                         <div class="text-left d-flex">
                             <div class="text-uppercase poppins medium size-24 pl-2">MONITOREO</div>
                         </div>
                     </div>
-
                     <div class="ml-auto pb-2">
                         <button class="btn btn-sm btn-secondary" onclick="agregarComentario(@Model.Id)">
                             <span class="material-icons">
@@ -27,14 +25,7 @@
                             </span>
                         </button>
                     </div>
-
-                    @*<div class="ml-auto pb-2">
-                        
-                    </div>*@
-
                 </div>
-
-
                 @if (Model.SectionComments.Any())
                 {
                     foreach (var comment in Model.SectionComments)
@@ -74,313 +65,64 @@
     </div>
 </div>
 
-@*Modal de comentarios*@
-<div class="modal fade" id="comentarioModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">AGREGAR COMENTARIO MONITOREO</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="frmComentario" onsubmit="event.preventDefault(),setComent()">
-                    <input type="hidden" name="SectionId" id="Id" />
-                    @*<input type="hidden" name="StatusId" id="StatusId" />*@
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>Estatus</label>
-                            <select class="form-control form-control-sm" style="width: 200px;" @*id="estatusModal"*@ id="StatusId" onchange="setsSelect(this.value)">
-                                    <option value="value">Selecciona una opción</option>
-                                </select>
-                            @*<input type="text" class="form-control form-control-sm" name="" id="statusComentario" disabled="disabled" />*@
-                        </div>
-                        <div class="col-md-6">
-                            <label>Sub Estatus</label>
-                            <select class="form-control form-control-sm" style="width: 200px;" name="substatusId" id="subestatusModal">
-                                <option value="value">Selecciona una opción</option>
-                            </select>
-                        </div>
-                    </div>
-                    <br />
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label>Comentario</label>
-                            <textarea class="form-control" rows="6" id="comentario" name="Comment"></textarea>
-                        </div>
-                    </div>
-                    <br />
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label>Evidencia</label>
-                            <input type="file" class="form-control" name="FileArchivo" id="FileArchivo" accept=".jpg,.png"/>
-                        </div>
-                    </div>
-                    <br />
-                    <div class="row">
-                        <div class="col-md-6">
-                            <button type="submit" class="btn btn-primary" id="btnComentario" style="width:100%;">Guardar</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-@*Modal de comentarios*@
+<div class="modal fade" id="comentarioModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
 
-@*Checkpoints*@
-<div class="modal fade" id="checkpointModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header d-block">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5 class="modal-title" id="exampleModalLabel">CHECKPOINTS</h5>
-                    </div>
-                    <div class="col-md-6">
-                        <h5 class="modal-title" id="exampleModalLabel">@Model.FechaSalida.ToString("yyyy-MM-dd HH:mm:ss tt")</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <table id="table" class="table table-striped table-bordered display table-hover table-monitoreo" width="100%">
-                            <thead>
-                                <tr>
-                                    <th>CHECKPOINT</th>
-                                    <th>HORA ORIGINAL</th>
-                                    <th>HORA ESPERADA</th>
-                                    <th>HORA REAL</th>
-                                    <th>USUARIO</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-checkpoint-info">
-                                <tr>
-                                    <td colspan="8">Cargando....</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@*Checkpoints*@
+@*Modal de checkpoints*@
+<div class="modal fade" id="checkpointModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
 <script>
-    var dataMonitoreo = [];
-    var catSubstatus = [];
-
-    $(document).ready(function () {
-        getMonitoring();
-        getClients();
-        getStatus();
-        getSubStatus();
-    });
-
-    function setComent() {
-        $("#btnComentario").prop('disabled', true);
-        if ($("#subestatusModal").val() != 0) {
-                var jsonData = convertJson($("#frmComentario"));
-                var formData = new FormData(document.getElementById("frmComentario"));
-                formData.append('file', $('#FileArchivo')[0].files[0]);
-                $.ajax({
-                    url: "/Monitoring/setCommentario",
-                    type: "POST",
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: function (data) {
-                        dToast("success", "Registro actualizado exitosamente.", "Actualizado");
-                        $("#btnComentario").prop('disabled', false);
-                        $("#monitoreo").click();
-                    },
-                    error: function (data) {
-                        $("#btnComentario").prop('disabled', false);
-                        dToast("error", "Ocurrio un error al intentar guardar el archivo.", "Error");
-                    }
-                });
-            $("#comentarioModal").modal("hide");
-        } else {
-            dToast("error", "Todos los campos son necesarios.", "Atención");
-        }
-    }
-
-    function getMonitoring() {
-        $.get("/Monitoring/getMonitoring", function (res) {
-            dataMonitoreo = res;
-        });
-    }
-
     function agregarComentario(id) {
-        let indice = dataMonitoreo.findIndex(service => service.idviaje == id);
-        console.log(dataMonitoreo);
-        if (indice >= 0) {
-            $("#statusComentario").val(dataMonitoreo[indice].estatus);
-            $("#Id").val(id);
-            //$("#StatusId").val(dataMonitoreo[indice].estatusId);
-            console.log(dataMonitoreo[indice]);
-            setsSelect(dataMonitoreo[indice].estatusId)
-            $("#StatusId").val(dataMonitoreo[indice].estatusId).trigger('change');
-            $("#subestatusModal").val(dataMonitoreo[indice].subestatusId).trigger('change');
-            $("#comentarioModal").modal("show");
-        } else {
-            console.log("Error al tratar de obtener un comentario");
-        }
-    }
-
-    function setsSelect(id) {
-        $("#subestatusModal").empty();
-        $("#subestatusModal").append(`<option value="0">SELECCIONA UNA OPCION</option>`);
-        $.each(catSubstatus, function (item, key) {
-            if (key.statusId == id) {
-                $("#subestatusModal").append(`<option value="${key.id}">${key.name}</option>`);
-            }
+        $.get(`/Monitor/Comment?id=${id}`, function (data) {
+            $('#comentarioModal').html(data);
+            $('#comentarioModal').modal('show');
         });
     }
 
-    //Checkpoints
     function verCheckpoint(idviaje, idruta, fechasalida) {
-        console.log(fechasalida);
-        var catCheckpoints = [];
-        var catSecChecpoints = [];
-        var horaOriginal = 0;
-        var horaOriginal1 = 0;
-        var fechaSalidaView = ``;
-
-        //Dos variables para la validacion de fechas de hora esperada
-        var horaEsperadaView = ``; //La hora esperada que se mostrara en la tabla
-        var horaEsperadaView1 = ``; //La hora esperada que se mostrara en la tabla
-        var banderaHoraEsperada = 0;
-        //Inicio checpoints
-        $.get("/Monitoring/getCheckpoints/" + idruta, function (res) {
-            catCheckpoints = res;
-            //Obtener los checkpoints de las secciones
-            $.get("/Monitoring/getSCheckpoints/" + idviaje, function (resCheck) {
-                catSecChecpoints = resCheck;
-                console.log(resCheck);
-                $("#table-checkpoint-info").empty();//Vaciar la tabla de registros de checkpoints
-                var trInfo = `<tr>`;
-                var i = 0;
-                var colorCheck = "green";
-                //Recorrer catalogo catSecChecpoints
-                $.each(catCheckpoints, function (item, key) {
-                    console.log(key);
-                    i++;
-                    horaOriginal = horaOriginal + key.tiempo;
-                    horaOriginal1 = horaOriginal1 + key.tiempo;
-
-                    fechaSalidaView = moment(fechasalida).add(horaOriginal, 'hours').format('YYYY-MM-DD hh:mm:ss A'); //Siempre va
-                    var hReal, createdBy, btnActive, hEsperada = ``;
-                    let indice = catSecChecpoints.findIndex(service => service.idCheckpoint == key.id);
-
-                    if (indice >= 0) {
-                        banderaHoraEsperada = 1;
-                        //Aqui ya tenemos una hora real
-                        hReal = `<td>${moment(catSecChecpoints[indice].horaReal).format('YYYY-MM-DD hh:mm:ss A')}</td>`;
-                        createdBy = `<td>${catSecChecpoints[indice].createdBy}</td>`;
-                        btnActive = `<td><button class="btn btn-sm" disabled="disabled"><span class="material-icons">save</span></button></td>`;
-                        horaOriginal1 = 0;
-                        horaEsperadaView = catSecChecpoints[indice].horaReal;
-                    } else {
-                        hReal = `<td><input type="datetime-local" class="form-control form-control-sm" id="horaReal-${idviaje}"></td>`;
-                        createdBy = `<td></td>`;
-                        btnActive = `<td>
-                                            <button class="btn btn-sm" onclick="saveCheckpoint(${idviaje},${key.id},${idruta},'${fechasalida}');">
-                                                <span class="material-icons">save</span>
-                                            </button>
-                                        </td>`;
-                    }
-
-                    if (parseInt(i) <= 1) {
-                        hEsperada = `<td>${moment(fechasalida).add(horaOriginal, 'hours').format('YYYY-MM-DD hh:mm:ss A')}</td>`;
-                    } else {
-                        if (banderaHoraEsperada == 0) {
-                            hEsperada = `<td>${moment(fechasalida).add(horaOriginal1, 'hours').format('YYYY-MM-DD hh:mm:ss A')}</td>`;
-                        } else {
-                            if (horaOriginal1 == 0) {
-                                let horadif = moment(horaEsperadaView1).diff(fechaSalidaView, 'minutes');
-                                horadif = horadif * 1;
-
-                                if (horadif >= 1) {
-                                    colorCheck = "red";
-                                }
-
-                                let fecha = moment(fechaSalidaView).add(horadif, 'minutes').format('YYYY-MM-DD hh:mm:ss A')
-                                hEsperada = `<td>${moment(fecha).add(key.tiempo, 'hours').format('YYYY-MM-DD hh:mm:ss A')}</td>`;
-                            } else {
-                                let horadif = moment(horaEsperadaView).diff(fechaSalidaView, 'minutes');
-                                horadif = horadif * 1;
-
-                                if (horadif >= 1) {
-                                    colorCheck = "red";
-                                }
-
-                                let fecha = moment(fechaSalidaView).add(horadif, 'minutes').format('YYYY-MM-DD hh:mm:ss A')
-                                hEsperada = `<td>${moment(fecha).add(horaOriginal1, 'hours').format('YYYY-MM-DD hh:mm:ss A')}</td>`;
-                            }
-                        }
-                    }
-
-                    trInfo += `<td> <div style="height:10px;width:10px;background:${colorCheck};-moz-border-radius:50px;-webkit-border-radius:50px;border-radius:50px;display: inline-block;"></div> ${key.nombre}</td>`;
-                    trInfo += `<td>${moment(fechaSalidaView).format('YYYY-MM-DD hh:mm:ss A')}</td>`;
-                    trInfo += hEsperada + hReal + createdBy + btnActive + `</tr>`;
-
-                    //Fin pintar tabla
-                    if (indice >= 0) {
-                        horaEsperadaView1 = catSecChecpoints[indice].horaReal;
-                    }
-
-                });
-                $("#table-checkpoint-info").append(trInfo);
-                //Fin recorrer catalogo catSecChecpoints
-            });
-            //Obtener los checkpoints de las secciones
+        $.get(`/Monitor/Checkpoint?idviaje=${idviaje}&idruta=${idruta}&fecha=${fechasalida}`, function (data) {
+            $('#checkpointModal').html(data);
+            $('#checkpointModal').modal('show');
         });
-        //Fin checkpoints
-        $("#checkpointModal").modal("show");
     }
 
     function saveCheckpoint(idviaje, idcheckpoint, idruta, fechasalida) {
         var horaReal = $("#horaReal-" + idviaje).val();
         var jsonData = { "idSection": idviaje, "idCheckpoint": idcheckpoint, "HoraReal": horaReal };
         console.log(jsonData);
-        $.post("/Monitoring/setSCheckpoints", jsonData, function (res) {
+        $.post("/Monitor/setSCheckpoints", jsonData, function (res) {
             console.log(res);
             verCheckpoint(idviaje, idruta, fechasalida);
         });
     }
 
-    //Funciones iniciales
-    function getClients() {
-        $.get("/Monitoring/getClient", function (res) {
-            $.each(res, function (item, key) {
-                $("#sCliente").append(`<option value="${key.id}">${key.nombreComercial}</option>`);
+    function setComent() {
+        $("#btnComentario").prop('disabled', true);
+        if ($("#subestatusModal").val() != 0) {
+            var jsonData = convertJson($("#frmComentario"));
+            var formData = new FormData(document.getElementById("frmComentario"));
+            formData.append('file', $('#FileArchivo')[0].files[0]);
+            $.ajax({
+                url: "/Monitor/setCommentario",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    dToast("success", "Registro actualizado exitosamente.", "Actualizado");
+                    $("#btnComentario").prop('disabled', false);
+                    $("#monitoreo").click();
+                    //getConteo();
+                },
+                error: function (data) {
+                    $("#btnComentario").prop('disabled', false);
+                    dToast("error", "Ocurrio un error al intentar guardar el archivo.", "Error");
+                }
             });
-        });
+            $("#comentarioModal").modal("hide");
+        } else {
+            dToast("error", "Todos los campos son necesarios.", "Atención");
+        }
     }
 
-    function getStatus() {
-        $.get("/Monitoring/getStatus", function (res) {
-            $.each(res, function (item, key) {
-                $("#sEstatus").append(`<option value="${key.id}">${key.name}</option>`);
-                $("#StatusId").append(`<option value="${key.id}">${key.name}</option>`);
-            });
-        });
-    }
-
-    function getSubStatus() {
-        $.get("/Monitoring/getSubStatus", function (res) {
-            catSubstatus = res;
-        });
-    }
 </script>

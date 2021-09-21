@@ -14,7 +14,7 @@ namespace KLS_WEB.Models.Travels
         public int SubstatusId { get; set; }
         public Substatus Substatus { get; set; }
         public string Comment { get; set; }
-        public ICollection<Evidence> Evidences { get; set; }
+        public ICollection<Evidence>? Evidences { get; set; }
         public bool Active { get; set; } = true;
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

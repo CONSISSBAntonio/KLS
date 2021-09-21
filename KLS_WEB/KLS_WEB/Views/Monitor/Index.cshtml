@@ -1,0 +1,273 @@
+﻿@model KLS_WEB.Models.Clients.DTO.ClientsDTO
+<div class="p-2">
+    <div class="d-flex flex-nowrap">
+        <div class="p-2">
+            <div class="text-left d-flex p-2">
+                <a href="#">
+                    <div class="material-icons icon-red">arrow_back</div>
+                </a>
+                <div class="text-uppercase poppins medium size-24 pl-2">MONITOREO</div>
+            </div>
+        </div>
+        <div class="ml-auto p-2">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card text-center shadow-sm p-3 bg-white rounded" style="width: 9rem; height: 5rem; font-size: 14px;">
+                        <span id="card-confirmados">0</span>
+                        <br />
+                        CONFIRMADOS
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center shadow-sm p-3 bg-white rounded" style="width: 9rem; height: 5rem; font-size: 14px;">
+                        <span id="card-transito">0</span>
+                        <br />
+                        EN TRANSITO
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center shadow-sm p-3 bg-white rounded" style="width: 9rem; height: 5rem; font-size: 14px;">
+                        <span id="card-concluidos">0</span>
+                        <br />
+                        CONCLUIDOS
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="p-4 shadow bg-white" style="overflow-x: auto; overflow-y: hidden;">
+        <ul class="nav nav-pills" id="pills-tab" role="tablist">
+            <li class="nav-item">
+                <label style="font-size:12px;font-weight:bold;" class="form-label">CLIENTE</label>
+                <select class="form-control form-control-sm" style="width: 200px;" asp-items="Model.Selects.Clientes" id="sCliente" onchange="DT();"></select>
+            </li>
+            <li class="nav-item pl-4">
+                <label style="font-size: 12px; font-weight: bold">Estatus</label>
+                <select class="form-control form-control-sm" style="width: 200px;" asp-items="Model.Selects.Status" id="sEstatus" onchange="DT();"></select>
+            </li>
+            <li class="nav-item pl-4">
+                <label style="font-size: 12px; font-weight: bold">Sub estatus</label>
+                <select class="form-control form-control-sm" style="width: 200px;" asp-items="Model.Selects.SubStatus" id="sSubEstatus" onchange="DT();"></select>
+            </li>
+            <li class="nav-item pl-4">
+                <label style="font-size: 12px; font-weight: bold">Grupo monitor</label>
+                <input type="text" class="form-control form-control-md" style="width: 200px;" />
+            </li>
+            <li class="nav-item ml-auto">
+                <a class="btn btn-sm btn-secondary float-right" href="#">
+                    <span class="material-icons" onclick="downloadExcel();">
+                        file_download
+                    </span>
+                </a>
+            </li>
+        </ul>
+        <div class="pt-2">
+            <table id="table" class="table table-striped table-bordered display table-hover table-viajes" width="100%">
+                <tbody id="table-info"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@*Modal Comentario*@
+<div class="modal fade" id="comentarioModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
+
+@*Modal de checkpoints*@
+<div class="modal fade" id="checkpointModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"></div>
+
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+    <script src="@Url.Content("~/js/sheetjs/fileSaver.min.js")"></script>
+    <script src="@Url.Content("~/js/sheetjs/xlsx.full.min.js")"></script>
+    <script>
+        $(document).ready(function (event) {
+            DT();
+            getConteo();
+        });
+
+        DT = () => {
+            Table = $('#table').DataTable({
+                destroy: true,
+                responsive: true,
+                autoWidth: true,
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    type: 'POST',
+                    url: '/Monitor/DataTableMonitoring',
+                    data: {
+                        "SearchModel": {
+                            "ClientId": $("#sCliente").val(),
+                            "estatusId": $("#sEstatus").val(),
+                            "subestatusId": $("#sSubEstatus").val(),
+                        }
+                    }
+                },
+                columns: [
+                    {
+                        data: 'folio',
+                        render: (folio, type, row) => {
+                            const { idviaje, cliente } = row;
+                            return `<p id="${idviaje}" style="cursor: pointer;">ID VIAJE: ${folio}<br />CLIENTE: ${cliente}</p>`
+                        }
+                    },
+                    {
+                        data: 'origen',
+                        render: (origen, type, row) => {
+                            const { destino } = row;
+                            return `Origen: ${origen}<br />Destino: ${destino}`
+                        }
+                    },
+                    {
+                        data: 'fechasalida',
+                        render: (fechasalida, type, row) => {
+                            const { tiemporuta } = row;
+                            return `FECHA DE SALIDA : ${fechasalida} <br />FECHA DE LLEGADA : ${moment(fechasalida).add(tiemporuta, 'days').format('YYYY-MM-DD hh:mm:ss')}`
+                        }
+                    },
+                    {
+                        data: 'tiemporuta',
+                        render: (tiemporuta, type, row) => {
+                            const { frecuenciaValidacion } = row;
+                            return ` SIGUIENTE CONTACTO EN ${frecuenciaValidacion} HRS<br />ETA:${tiemporuta} HRS`
+                        }
+
+                    },
+                    {
+                        data: 'estatus',
+                        render: (estatus, type, key) => {
+                            return `<button class="btn btn-success btn-sm">${estatus}</button>`;
+                        }
+                    },
+                    {
+                        render: (data, type, row) => {
+                            const { folio, idviaje, idruta, fechasalida } = row;
+                            return `
+                                    <a href="#" onclick="agregarComentario(${idviaje})">
+                                        <span class="material-icons">
+                                            control_point
+                                        </span>
+                                    </a>
+                                    <a href="#" onclick="verCheckpoint(${idviaje},${idruta},'${fechasalida}');">
+                                        <span class="material-icons">
+                                            assistant_photo
+                                        </span>
+                                    </a>
+                                `;
+                        }
+                    }
+                ],
+                language: {
+                    url: '/json/dt-es.json'
+                },
+                initComplete: () => {
+                    $("#table_filter").hide();
+                    //$('#table_length').html(`<a href="/Travels/AddEdit/0/0" class="btn btn-sm btn-outline-secondary float-right"><span class="material-icons">add</span></a>`).show();
+                }
+            });
+        }
+
+        function agregarComentario(id) {
+            $.get(`/Monitor/Comment?id=${id}`, function (data) {
+                $('#comentarioModal').html(data);
+                $('#comentarioModal').modal('show');
+            });
+        }
+
+        function setComent() {
+            $("#btnComentario").prop('disabled', true);
+            if ($("#subestatusModal").val() != 0) {
+                var jsonData = convertJson($("#frmComentario"));
+                var formData = new FormData(document.getElementById("frmComentario"));
+                formData.append('file', $('#FileArchivo')[0].files[0]);
+                $.ajax({
+                    url: "/Monitor/setCommentario",
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        dToast("success", "Registro actualizado exitosamente.", "Actualizado");
+                        $("#btnComentario").prop('disabled', false);
+                        $("#monitoreo").click();
+                        getConteo();
+                    },
+                    error: function (data) {
+                        $("#btnComentario").prop('disabled', false);
+                        dToast("error", "Ocurrio un error al intentar guardar el archivo.", "Error");
+                    }
+                });
+                $("#comentarioModal").modal("hide");
+            } else {
+                dToast("error", "Todos los campos son necesarios.", "Atención");
+            }
+        }
+
+        function verCheckpoint(idviaje, idruta, fechasalida) {
+            $.get(`/Monitor/Checkpoint?idviaje=${idviaje}&idruta=${idruta}&fecha=${fechasalida}`, function (data) {
+                $('#checkpointModal').html(data);
+                $('#checkpointModal').modal('show');
+            });
+        }
+
+        function saveCheckpoint(idviaje, idcheckpoint, idruta, fechasalida) {
+            var horaReal = $("#horaReal-" + idviaje).val();
+            var jsonData = { "idSection": idviaje, "idCheckpoint": idcheckpoint, "HoraReal": horaReal };
+            console.log(jsonData);
+            $.post("/Monitor/setSCheckpoints", jsonData, function (res) {
+                console.log(res);
+                verCheckpoint(idviaje, idruta, fechasalida);
+            });
+        }
+
+        function getConteo() {
+            $.get("/Monitor/getConteo", function (data) {
+                console.log(data);
+                /*
+                 confirmado = 2, entransito = 3,concluidos = 4
+                 */
+                $("#card-confirmados").html("0");
+                $("#card-transito").html("0");
+                $("#card-concluidos").html("0");
+                $.each(data, function (item, key) {
+                    if (key.key == 2) {
+                        $("#card-confirmados").html(key.count);
+                    }
+                    if (key.key == 3) {
+                        $("#card-transito").html(key.count);
+                    }
+                    if (key.key == 4) {
+                        $("#card-concluidos").html(key.count);
+                    }
+                })
+            });
+        }
+
+        function downloadExcel() {
+            $.get('/Monitor/downloadExcel', function (res) {
+                var _fileName = "REPORTE.xlsx";
+                var _sheetName = "REPORTE";
+                var wb = XLSX.utils.book_new();
+                wb.Props = {
+                    Title: "REPORTE ",
+                    Subject: "Excel",
+                    Author: "KLS",
+                    CreatedDate: new Date(2021, 08, 11)
+                };
+                wb.SheetNames.push(_sheetName);
+                var ws_data = res;
+                var ws = XLSX.utils.json_to_sheet(ws_data);
+                wb.Sheets[_sheetName] = ws;
+                var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+                saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), _fileName);
+            });
+        }
+
+        function s2ab(s) {
+            var buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
+            var view = new Uint8Array(buf);  //create uint8array as viewer
+            for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
+            return buf;
+        }
+
+    </script>
+}

@@ -219,6 +219,7 @@
                 </button>
             </div>
             <div class="modal-body">
+                <input type="hidden" name="sectionId" id="sectionId" value="" />
                 <div class="row">
                     <div class="col-md-12">
                         <label>Transportista</label>
@@ -420,7 +421,8 @@
                                         "ciudad_Destino": ciudadD,
                                         "Tolerancia_Destino": $("#txtToleranciaDestino").val(),
                                         "status": 1,
-                                        "IdServiceTypes": $("#tiposServicios").val()
+                                        "IdServiceTypes": $("#tiposServicios").val(),
+                                        "SectionId": $("#sectionId").val()
                                     },
                                 );
                                 eGuardar();
@@ -451,15 +453,21 @@
 
         var idEditar = 0;
         function verModal(ide = 0) {
+            console.log("...........................");
             idEditar = ide;
             if (idEditar != 0) {
                 $("#txtOferta").empty().html("Editar oferta");
                 $.get("Offer/obOferta/" + idEditar, function (res) {
+
+                    console.log(res);
+
                     $('#idtransportista').val(parseInt(res.transportista)).trigger('change');
                     //$('#idtipounidad').val(parseInt(res.tipo_De_Unidad)).trigger('change');
                     $('#txtCantidad').val(parseInt(res.cantidad));
                     $('#txtFechaDisponibilidad').val(res.fecha_Disponibilidad);
                     $('#txtRangoEspera').val(res.rango_De_Espera);
+                    $('#sectionId').val(res.sectionId);
+
                     $('#txtNivelOrigen').val(cUpper(res.nivel_Origen)).trigger('change');
                     $('#tiposServicios').val(res.idServiceTypes).trigger('change');
 
@@ -491,6 +499,7 @@
                 });
                 $("#modalAgregar").modal("show");
             } else {
+                $("#sectionId").val(null);
                 $("#txtOferta").empty().html("Agregar oferta");
                 limpiarCampos();
                 $("#modalAgregar").modal("show");
@@ -721,7 +730,7 @@
                     idtran = catTransportista[transportista].id
                         let tipoServiciocat = ServiceTypes.findIndex(service => cUpper(service.name).trim() == cUpper(key.IdServiceTypes).trim());
                     if (tipoServiciocat >= 0) {
-                        tipoServicio = ServiceTypes[tipoServicio].id;
+                        tipoServicio = ServiceTypes[tipoServiciocat].id;
                             var Nivel_Origen = cUpper(key.Nivel_Origen);
                             if (Nivel_Origen != "REGION" && Nivel_Origen != "ESTADO" && Nivel_Origen != "CIUDAD") {
                                 jsonEnvIncorrectos.push(key);
@@ -737,7 +746,7 @@
                                     }
                                 }
                                 if (Nivel_Origen == "ESTADO") { //Validar cuando la region es estado
-                                    estadoOrigen = catEstado.findIndex(es => cUpper(es.nombre) == cUpper(key.Estado_Origen));
+                                    estadoOrigen = catEstado.findIndex(es => quitarAcentos(cUpper(es.nombre)) == quitarAcentos(cUpper(key.Estado_Origen)));
                                     if (estadoOrigen < 0) {
                                         jsonEnvIncorrectos.push(key);
                                         return;
@@ -746,8 +755,8 @@
                                     }
                                 }
                                 if (Nivel_Origen == "CIUDAD") {
-                                    estadoOrigen = catEstado.findIndex(es => cUpper(es.nombre) == cUpper(key.Estado_Origen));
-                                    ciudadOrigen = catCiudad.findIndex(ci => cUpper(ci.nombre) == cUpper(key.ciudad_Origen).replace(/[^a-zA-Z ]/g, ""));
+                                    estadoOrigen = catEstado.findIndex(es => quitarAcentos(cUpper(es.nombre)) == quitarAcentos(cUpper(key.Estado_Origen)));
+                                    ciudadOrigen = catCiudad.findIndex(ci => quitarAcentos(cUpper(ci.nombre)) == quitarAcentos(cUpper(key.ciudad_Origen)));
                                     if (estadoOrigen < 0 || ciudadOrigen < 0) {
                                         jsonEnvIncorrectos.push(key);
                                         return;
@@ -764,7 +773,7 @@
                                 return;
                             } else {
                                 if (Nivel_Destino == "REGION") {
-                                    regionDestino = catRegion.findIndex(r => cUpper(r.nombre) == cUpper(key.Region_Destino));
+                                    regionDestino = catRegion.findIndex(r => quitarAcentos(cUpper(r.nombre)) == quitarAcentos(cUpper(key.Region_Destino)));
                                     if (regionDestino < 0) { //Si se encontro la region
                                         jsonEnvIncorrectos.push(key);
                                         return;
@@ -773,7 +782,7 @@
                                     }
                                 }
                                 if (Nivel_Destino == "ESTADO") { //Validar cuando la region es estado
-                                    estadoDestino = catEstado.findIndex(es => cUpper(es.nombre) == cUpper(key.estado_Destino));
+                                    estadoDestino = catEstado.findIndex(es => quitarAcentos(cUpper(es.nombre)) == quitarAcentos(cUpper(key.estado_Destino)));
                                     if (estadoDestino < 0) {
                                         jsonEnvIncorrectos.push(key);
                                         return;
@@ -782,8 +791,8 @@
                                     }
                                 }
                                 if (Nivel_Destino == "CIUDAD") {
-                                    estadoDestino = catEstado.findIndex(es => cUpper(es.nombre) == cUpper(key.estado_Destino));
-                                    ciudadDestino = catCiudad.findIndex(ci => cUpper(ci.nombre) == cUpper(quitarAcentos(key.ciudad_Destino)));
+                                    estadoDestino = catEstado.findIndex(es => quitarAcentos(cUpper(es.nombre)) == quitarAcentos(cUpper(key.estado_Destino)));
+                                    ciudadDestino = catCiudad.findIndex(ci => quitarAcentos(cUpper(ci.nombre)) == quitarAcentos(cUpper(key.ciudad_Destino)));
   
                                     if (estadoDestino < 0 || ciudadDestino < 0) {
                                         jsonEnvIncorrectos.push(key);
@@ -853,7 +862,7 @@
             return texto;
         }
         function quitarAcentos(cadena) {
-            const acentos = { 'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u', 'Á': 'A', 'É': 'E', 'Í': 'I', 'Ó': 'O', 'Ú': 'U' };
+            const acentos = { 'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u', 'Á': 'A', 'É': 'E', 'Í': 'I', 'Ó': 'O', 'Ú': 'U','Ü':'U'};
             return cadena.split('').map(letra => acentos[letra] || letra).join('').toString();
         }
         function estado(estado) {
