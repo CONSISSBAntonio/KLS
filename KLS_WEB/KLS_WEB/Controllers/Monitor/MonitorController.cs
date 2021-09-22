@@ -109,7 +109,6 @@ namespace KLS_WEB.Controllers.Monitor
         [HttpPost]
         public async Task<JsonResult> setCommentario(SectionComment jsonData, IFormFile file)
         {
-
             Random rdn = new Random();
             int rutaRandom = rdn.Next(10000, 100000) + rdn.Next(10000, 100000);
             string rutaHoy = @DateTime.Now.ToString("yyyy/MM/dd") + "/" + jsonData.SectionId + "/" + rutaRandom;

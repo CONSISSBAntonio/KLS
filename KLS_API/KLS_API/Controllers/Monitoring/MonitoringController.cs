@@ -27,7 +27,7 @@ namespace KLS_API.Controllers.Monitoring
         {
             try
             {
-                IEnumerable<Monitoring> sections = await context.Sections.Where(x => x.Active).Select(x => new Monitoring
+                IEnumerable<Monitoring> sections = await context.Sections.Where(x => x.Active && x.Substatus.StatusId == 3).Select(x => new Monitoring
                 {
                     folio = x.Folio,
                     origen = !x.IsEmpty ? context.Cat_Estado.SingleOrDefault(y => y.id == x.Cl_Has_Origen.Id_Estado).nombre : string.Concat(context.Cat_Estado.SingleOrDefault(y => y.id == x.Ruta.id_estadoorigen).nombre),
@@ -44,7 +44,8 @@ namespace KLS_API.Controllers.Monitoring
                     tiemporuta = x.Ruta.tiemporuta,
                     idcliente = x.Clients.id,
                     idruta = x.Ruta.id,
-                    frecuenciaValidacion = x.Ruta.frecvalidacion
+                    frecuenciaValidacion = x.Ruta.frecvalidacion,
+                    monitor = x.GrupoMonitor
                 }).ToListAsync();
 
                 if (dtParams.searchmodel.ClientId != 0)
@@ -101,6 +102,7 @@ namespace KLS_API.Controllers.Monitoring
             public int idcliente { get; set; }
             public int idruta { get; set; }
             public int frecuenciaValidacion { get; set; }
+            public string monitor { get; set; }
         }
         public ActionResult getClient()
         {
@@ -234,7 +236,7 @@ namespace KLS_API.Controllers.Monitoring
         public async Task<IActionResult> downloadExcel() {
             try
             {
-                IEnumerable<Monitoring> sections = await context.Sections.Where(x => x.Active).Select(x => new Monitoring
+                IEnumerable<Monitoring> sections = await context.Sections.Where(x => x.Active && x.Substatus.StatusId == 3).Select(x => new Monitoring
                 {
                     folio = x.Folio,
                     //origen = string.Concat(context.Cat_Estado.SingleOrDefault(y => y.id == x.Cl_Has_Origen.Id_Estado).nombre),
@@ -252,7 +254,7 @@ namespace KLS_API.Controllers.Monitoring
                     tiemporuta = x.Ruta.tiemporuta,
                     idcliente = x.Clients.id,
                     idruta = x.Ruta.id,
-                    frecuenciaValidacion = x.Ruta.frecvalidacion
+                    frecuenciaValidacion = x.Ruta.frecvalidacion,
                 }).ToListAsync();
 
                 return Ok(sections);
@@ -275,7 +277,6 @@ namespace KLS_API.Controllers.Monitoring
             }).FirstOrDefaultAsync();
             return Ok(sections);
         }
-
         public class InfoMonitor
         {
             public string viaje { get; set; }
@@ -286,6 +287,9 @@ namespace KLS_API.Controllers.Monitoring
             public string telefono { get; set; }
             public string tipoUnidad { get; set; }
         }
+        //public Task<ActionResult> getGrupo() {
+        //    IEnumerable<Section> noduplicates = context.Sections.Distinct();
+        //}
 
     }
 }
