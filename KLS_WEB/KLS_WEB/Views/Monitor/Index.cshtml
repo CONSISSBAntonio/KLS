@@ -45,7 +45,8 @@
             </li>
             <li class="nav-item pl-4">
                 <label style="font-size: 12px; font-weight: bold">Grupo monitor</label>
-                <input type="text" class="form-control form-control-md" style="width: 200px;" />
+                <select class="form-control form-control-sm" style="width: 200px;" id="grupoMonitor" onchange="DT();"></select>
+                @*<input type="text" class="form-control form-control-md" style="width: 200px;" id="grupoMonitor" />*@
             </li>
             <li class="nav-item ml-auto">
                 <a class="btn btn-sm btn-secondary float-right" href="#">
@@ -76,6 +77,7 @@
         $(document).ready(function (event) {
             DT();
             getConteo();
+            getGrupo();
         });
         DT = () => {
             Table = $('#table').DataTable({
@@ -288,6 +290,15 @@
                 $.each(res, function (item, key) {
                     $("#sSubEstatus").append(`<option value="${key.id}">${key.name}</option>`);
                 });
+            });
+        }
+        function getGrupo() {
+            $.get("/Monitor/getGrupo", function (data) {
+                $("#grupoMonitor").empty();
+                $("#grupoMonitor").append("<option>SELECCIONA</option>");
+                $.each(data, function (item, key) {
+                    $("#grupoMonitor").append(`<option value="${monitor}">${monitor}</option>`);
+                })
             });
         }
     </script>

@@ -287,9 +287,12 @@ namespace KLS_API.Controllers.Monitoring
             public string telefono { get; set; }
             public string tipoUnidad { get; set; }
         }
-        //public Task<ActionResult> getGrupo() {
-        //    IEnumerable<Section> noduplicates = context.Sections.Distinct();
-        //}
+        public ActionResult getGrupo()
+        {
+            var query = context.Sections.Select(s => s.GrupoMonitor).Distinct();
+            return Json(query);
+
+        }
 
     }
 }
