@@ -109,7 +109,6 @@ namespace KLS_WEB.Controllers.Monitor
         [HttpPost]
         public async Task<JsonResult> setCommentario(SectionComment jsonData, IFormFile file)
         {
-
             Random rdn = new Random();
             int rutaRandom = rdn.Next(10000, 100000) + rdn.Next(10000, 100000);
             string rutaHoy = @DateTime.Now.ToString("yyyy/MM/dd") + "/" + jsonData.SectionId + "/" + rutaRandom;
@@ -216,11 +215,10 @@ namespace KLS_WEB.Controllers.Monitor
             return Json(dataReport);
         }
 
-        public class Conteo{
-            public int key { set;get;}
-            public int count { set;get;}
+        public class Conteo {
+            public int key { set; get; }
+            public int count { set; get; }
         }
-
         public async Task<JsonResult> downloadExcel()
         {
             List<Monitor_> dataReport;
@@ -228,6 +226,14 @@ namespace KLS_WEB.Controllers.Monitor
             return Json(dataReport);
         }
 
+        public async Task<JsonResult> getGrupo() {
+            List<grupoMonitor> monitor_ = await this.AppContext.Execute<List<grupoMonitor>>(MethodType.GET, Path.Combine(_UrlApi, "getGrupo"), null);
+            return Json(monitor_);
+        }
+
+        public class grupoMonitor{
+            public string monitor { get; set; }
+        }
     }
 }
 

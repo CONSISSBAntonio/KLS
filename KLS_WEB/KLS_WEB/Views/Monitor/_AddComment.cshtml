@@ -14,12 +14,11 @@
                 <div class="row">
                     <div class="col-md-6">
                         <label>Estatus</label>
-                        <!--<select class="form-control form-control-sm" style="width: 200px;" id="StatusId"--> @*onchange="setsSelect(this.value)"*@ <!--asp-items="Model.Selects.Status"></select>-->
                         <select class="form-control form-control-sm" style="width: 200px;" asp-items="Model.Selects.Status" onchange="setsSelect(this.value)" id="StatusId" name=""></select>
                     </div>
                     <div class="col-md-6">
                         <label>Sub Estatus</label>
-                        <select class="form-control form-control-sm" style="width: 200px;" @*asp-items="Model.Selects.SubStatus"*@ name="substatusId" id="subestatusModal"></select>
+                        <select class="form-control form-control-sm" style="width: 200px;" name="substatusId" id="subestatusModal"></select>
                     </div>
                 </div>
                 <br />
@@ -27,6 +26,13 @@
                     <div class="col-md-12">
                         <label>Comentario</label>
                         <textarea class="form-control" rows="6" id="comentario" name="Comment"></textarea>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>Grupo Monitor</label>
+                        <input type="text" class="form-control" name="GrupoMonitor"/>
                     </div>
                 </div>
                 <br />

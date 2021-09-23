@@ -23,7 +23,7 @@
                 <div class="col-md-4">
                     <div class="card text-center shadow-sm p-3 bg-white rounded" style="width: 9rem; height: 5rem; font-size: 14px;">
                         <b id="card-concluidos">0</b>
-                        CONCLUIDOS
+                        DEMORADOS
                     </div>
                 </div>
             </div>
@@ -45,7 +45,8 @@
             </li>
             <li class="nav-item pl-4">
                 <label style="font-size: 12px; font-weight: bold">Grupo monitor</label>
-                <input type="text" class="form-control form-control-md" style="width: 200px;" />
+                <select class="form-control form-control-sm" style="width: 200px;" id="grupoMonitor" onchange="DT();"></select>
+                @*<input type="text" class="form-control form-control-md" style="width: 200px;" id="grupoMonitor" />*@
             </li>
             <li class="nav-item ml-auto">
                 <a class="btn btn-sm btn-secondary float-right" href="#">
@@ -76,6 +77,7 @@
         $(document).ready(function (event) {
             DT();
             getConteo();
+            getGrupo();
         });
         DT = () => {
             Table = $('#table').DataTable({
@@ -115,21 +117,23 @@
                         render: (fechasalida, type, row) => {
                             const { tiemporuta } = row;
                             //return `FECHA DE SALIDA : ${fechasalida} <br />FECHA DE LLEGADA : ${moment(fechasalida).add(tiemporuta, 'days').format('YYYY-MM-DD hh:mm:ss')}`
-                            return `FECHA DE SALIDA : ${fechasalida} <br />FECHA DE LLEGADA : ${moment(fechasalida).add(tiemporuta, 'hours').format('YYYY-MM-DD hh:mm:ss')}`
+                            return `FECHA DE SALIDA : ${moment(fechasalida).format('YYYY-MM-DD hh:mm:ss A')} <br />FECHA DE LLEGADA : ${moment(fechasalida).add(tiemporuta, 'hours').format('YYYY-MM-DD hh:mm:ss A')}`
                         }
                     },
                     {
                         data: 'tiemporuta',
                         render: (tiemporuta, type, row) => {
-                            const { frecuenciaValidacion } = row;
-                            return ` SIGUIENTE CONTACTO EN ${frecuenciaValidacion} HRS<br />ETA:${tiemporuta} HRS`
+                            const { frecuenciaValidacion, monitor } = row;
+                            return ` SIGUIENTE CONTACTO EN ${frecuenciaValidacion} HRS<br />ETA:${tiemporuta} HRS  Grupo Monitor: ${monitor}`
                         }
 
                     },
                     {
                         data: 'estatus',
-                        render: (estatus, type, key) => {
-                            return `<button class="btn btn-success btn-sm">${estatus}</button>`;
+                        render: (estatus, type, row) => {
+                            const { substatus } = row;
+                            //return `<button class="btn btn-success btn-sm">${estatus}</button> <br>${substatus}`;
+                            return `<b>${estatus}</b> <br>${substatus}`;
                         }
                     },
                     {
@@ -170,6 +174,7 @@
             if ($("#subestatusModal").val() != 0) {
                 var jsonData = convertJson($("#frmComentario"));
                 var formData = new FormData(document.getElementById("frmComentario"));
+
                 formData.append('file', $('#FileArchivo')[0].files[0]);
                 $.ajax({
                     url: "/Monitor/setCommentario",
@@ -181,6 +186,7 @@
                         dToast("success", "Registro actualizado exitosamente.", "Actualizado");
                         $("#btnComentario").prop('disabled', false);
                         $("#monitoreo").click();
+                        DT();
                         getConteo();
                     },
                     error: function (data) {
@@ -284,6 +290,15 @@
                 $.each(res, function (item, key) {
                     $("#sSubEstatus").append(`<option value="${key.id}">${key.name}</option>`);
                 });
+            });
+        }
+        function getGrupo() {
+            $.get("/Monitor/getGrupo", function (data) {
+                $("#grupoMonitor").empty();
+                $("#grupoMonitor").append("<option>SELECCIONA</option>");
+                $.each(data, function (item, key) {
+                    $("#grupoMonitor").append(`<option value="${monitor}">${monitor}</option>`);
+                })
             });
         }
     </script>
