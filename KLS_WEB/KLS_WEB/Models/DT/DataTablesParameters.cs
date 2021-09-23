@@ -13,6 +13,8 @@ namespace KLS_WEB.Models.DT
         public List<Order> order { get; set; }
         public SearchModel searchmodel { get; set; }
         public int[] Filter { get; set; } = new int[] { };
+        public int SubstatusId { get; set; }
+        public string CSType { get; set; }
 
         public class Column
         {
