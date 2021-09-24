@@ -89,18 +89,18 @@
                     @Html.TextBoxFor(x => x.tiemporuta, new { @type = "number", @class = "form-control form-control-sm", @id = "ftiemporuta", @required = "" })
                 </div>
             </div>
-            <div class="row">
-                <label for="fpreciominimo" class="col-sm-4 col-form-label col-form-label-sm">PRECIO MINÍMO</label>
-                <div class="col-sm-8">
-                    @Html.TextBoxFor(x => x.PrecioMinimo, new { @type = "text", @class = "form-control form-control-sm", @id = "fpreciominimo", @required = "", @onchange = "this.value = parseMoney(this.value)" })
+            @*<div class="row">
+                    <label for="fpreciominimo" class="col-sm-4 col-form-label col-form-label-sm">PRECIO MINÍMO</label>
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(x => x.PrecioMinimo, new { @type = "text", @class = "form-control form-control-sm", @id = "fpreciominimo", @required = "", @onchange = "this.value = parseMoney(this.value)" })
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <label for="fpreciomaximo" class="col-sm-4 col-form-label col-form-label-sm">PRECIO MÁXIMO</label>
-                <div class="col-sm-8">
-                    @Html.TextBoxFor(x => x.PrecioMaximo, new { @type = "text", @class = "form-control form-control-sm", @id = "fpreciomaximo", @required = "", @onchange = "this.value = parseMoney(this.value)" })
-                </div>
-            </div>
+                <div class="row">
+                    <label for="fpreciomaximo" class="col-sm-4 col-form-label col-form-label-sm">PRECIO MÁXIMO</label>
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(x => x.PrecioMaximo, new { @type = "text", @class = "form-control form-control-sm", @id = "fpreciomaximo", @required = "", @onchange = "this.value = parseMoney(this.value)" })
+                    </div>
+                </div>*@
             <div class="row">
                 <label for="fseguridad" class="col-sm-4 col-form-label col-form-label-sm">Seguridad</label>
                 <div class="col-sm-8">
@@ -320,11 +320,31 @@
                         $('.frmRegister :input').prop("disabled", false);
                         $(this).attr('rel', 'post');
                     } else {
-                        jsonData['PrecioMaximo'] = jsonData['PrecioMaximo'].replace(/[^\d.]+/g, '');
-                        jsonData['PrecioMinimo'] = jsonData['PrecioMinimo'].replace(/[^\d.]+/g, '');
+                        let frecValida = true;
+
+                        Object.entries(jsonData).map(([k, v]) => {
+                            if (k == 'frecvalidacion') {
+                                if (v == 0) {
+                                    frecValida = false;
+                                    return;
+                                }
+                            }
+                        });
+
+                        if (!frecValida) {
+                            dToast("error", "La frecuencia de validación no debe ser 0", "Error");
+                            botonse.attr("disabled", false);
+                            return;
+                        }
+
+                        jsonData['PrecioMaximo'] = 0;
+                        jsonData['PrecioMinimo'] = 0;
+                        //jsonData['PrecioMaximo'] = jsonData['PrecioMaximo'].replace(/[^\d.]+/g, '');
+                        //jsonData['PrecioMinimo'] = jsonData['PrecioMinimo'].replace(/[^\d.]+/g, '');
                         $('.frmRegister :input').prop("disabled", true);
                         botonse.removeClass('btn-outline-info').addClass('btn-outline-secondary').html(`<i class="material-icons">edit</i>`).attr('disabled', true);
                         $(this).attr('rel', 'edit');
+
                         $.post("Route/putRoute", jsonData, function (res) {
                             const origen = $('#fciudadorigen').val();
                             const destino = $('#fciudaddestino').val();
@@ -340,8 +360,10 @@
                         });
                     }
                 } else {
-                    jsonData['PrecioMaximo'] = jsonData['PrecioMaximo'].replace(/[^\d.]+/g, '');
-                    jsonData['PrecioMinimo'] = jsonData['PrecioMinimo'].replace(/[^\d.]+/g, '');
+                    jsonData['PrecioMaximo'] = 0;
+                    jsonData['PrecioMinimo'] = 0;
+                    //jsonData['PrecioMaximo'] = jsonData['PrecioMaximo'].replace(/[^\d.]+/g, '');
+                    //jsonData['PrecioMinimo'] = jsonData['PrecioMinimo'].replace(/[^\d.]+/g, '');
                     botonse.attr('disabled', true);
                     $.post("Route/setRoute", jsonData, function (res) {
                         $('.body').html(res);

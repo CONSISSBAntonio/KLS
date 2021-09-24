@@ -151,7 +151,7 @@ namespace KLS_WEB.Controllers.Travels
 
             foreach (var carrier in carriers)
             {
-                SelectListItem listItem = new SelectListItem { Value = carrier.id.ToString(), Text = carrier.NombreComercial };
+                SelectListItem listItem = new SelectListItem { Value = carrier.id.ToString(), Text = carrier.RazonSocial ?? carrier.NombreComercial };
                 listItems.Add(listItem);
             }
 

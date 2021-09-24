@@ -3,14 +3,16 @@ using System;
 using KLS_API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace KLS_API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210923202952_rutainventario-travelservicefk")]
+    partial class rutainventariotravelservicefk
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1725,9 +1727,6 @@ namespace KLS_API.Migrations
 
                     b.Property<int>("SectionTypeId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("StatusUpdatedAt")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("SubstatusId")
                         .HasColumnType("int");

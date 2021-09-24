@@ -28,7 +28,13 @@
         <div class="w-25 my-auto">
             <h3>MONITOREO</h3>
         </div>
-        <div class="w-50 d-flex flex-row justify-content-end">
+        <div class="w-75 d-flex flex-row justify-content-end">
+            <div class="card text-center w-25 mr-3 custom-filter" onclick="DT()">
+                <div class="card-body size-12">
+                    <b>@Model.Todos</b>
+                    <p class="text-light-grey">TODOS</p>
+                </div>
+            </div>
             <div class="card text-center w-25 mr-3 custom-filter" onclick="DT(null, 'status', true, 2)">
                 <div class="card-body size-12">
                     <b>@Model.Confirmados</b>
@@ -57,21 +63,27 @@
                     <label class="form-label size-14">CLIENTE</label>
                     <select asp-items="Model.Selects.Customers" multiple="multiple" name="customers[]" class="form-select" onchange="DT(null, this)" style="width: 100%;" data-selected-text-format="count" data-live-search="true"></select>
                 </div>
-                <div class="col-3">
-                    <label class="form-label size-14">ESTATUS</label>
-                    <select asp-items="Model.Selects.Statuses" class="form-select" onchange="DT(null, 'status', true, this.value), GetSubstatuses(this.value)" style="width: 100%;" data-live-search="true"></select>
-                </div>
+                @*<div class="col-3">
+                        <label class="form-label size-14">ESTATUS</label>
+                        <select asp-items="Model.Selects.Statuses" class="form-select" onchange="DT(null, 'status', true, this.value), GetSubstatuses(this.value)" style="width: 100%;" data-live-search="true"></select>
+                    </div>*@
                 <div class="col-3">
                     <label class="form-label size-14">SUBESTATUS</label>
                     <select id="substatuses" class="form-select" onchange="DT(null, 'substatus', true, this.value)" style="width: 100%;" data-live-search="true"></select>
                 </div>
-                <div class="col-3">
-                    <label class="form-label size-14">VIAJE</label>
-                    <input type="text" class="form-control" onkeyup="DT(this.value)">
+                <div class="col-3 my-auto">
+                    <input type="text" class="form-control" onkeyup="DT(this.value)" placeholder="BUSCAR">
                 </div>
+                @*<div class="col-1 my-auto">
+                        <a class="btn btn-sm btn-secondary float-right" href="#">
+                            <span class="material-icons" onclick="descargarExcel();">
+                                file_download
+                            </span>
+                        </a>
+                    </div>*@
             </div>
             <table id="table" class="table table-striped table-bordered display table-hover table-viajes text-uppercase" width="100%">
-                <thead>
+                <thead style="display: none;">
                     <tr>
                         @*<th>ID Viaje</th>*@
                         <th>Cliente</th>
@@ -114,13 +126,13 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label>COMENTARIO</label>
-                            <textarea class="form-control" rows="6" name="comment"></textarea>
+                            <textarea class="form-control text-uppercase" rows="6" name="comment" required></textarea>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
                             <label>GRUPO MONITOR</label>
-                            <input class="form-control" name="grupomonitor" />
+                            <input class="form-control text-uppercase" name="grupomonitor" />
                         </div>
                     </div>
                     <br />
@@ -142,16 +154,53 @@
     </div>
 </div>
 
+<!-- Modal detalle -->
+<div class="modal fade" id="sectiondetail" tabindex="-1" aria-labelledby="sectiondetailLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sectiondetailLabel">VIAJE</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row mb-3">
+                        <label for="inputEmail3" class="col-sm-2 col-form-label size-12 text-uppercase">Email</label>
+                        <div class="col-10">
+                            <input type="email" class="form-control" id="inputEmail3">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="inputPassword3" class="col-sm-2 col-form-label size-12 text-uppercase">Password</label>
+                        <div class="col-10">
+                            <input type="password" class="form-control" id="inputPassword3">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CERRAR</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
     <!-- (Optional) Latest compiled and minified JavaScript translation files -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-es_ES.min.js"></script>
+    <script src="@Url.Content("~/js/sheetjs/fileSaver.min.js")"></script>
+    <script src="@Url.Content("~/js/sheetjs/xlsx.full.min.js")"></script>
 
     <script>
         $(() => {
+            //GetSubstatuses(3);
             $('select').selectpicker();
             DT();
         })
@@ -179,7 +228,55 @@
             try {
                 const response = await fetch('/Tracking/AddSectionComment', params);
                 const data = await response.json();
-                console.log('asdas', data);
+                if (data) {
+                    $(e)[0].reset();
+                    Table.draw();
+                    $('#comentarioModal').modal('hide');
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function descargarExcel() {
+            dataMonitoreo = [];
+            $.get("/Monitoring/getMonitoring", function (res) {
+                $("#table-info").empty();
+                dataMonitoreo = res;
+            });
+
+            console.log(dataMonitoreo);
+            return;
+            var _fileName = "REPORTE.xlsx";
+            var _sheetName = "REPORTE";
+            var wb = XLSX.utils.book_new();
+            wb.Props = {
+                Title: "REPORTE ",
+                Subject: "Excel",
+                Author: "KLS",
+                CreatedDate: new Date(2021, 08, 11)
+            };
+            wb.SheetNames.push(_sheetName);
+            var ws_data = dataMonitoreo;
+            var ws = XLSX.utils.json_to_sheet(ws_data);
+            wb.Sheets[_sheetName] = ws;
+            var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+            saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), _fileName);
+        }
+
+        function s2ab(s) {
+            var buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
+            var view = new Uint8Array(buf);  //create uint8array as viewer
+            for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
+            return buf;
+        }
+
+        const GetDetails = async SectionId => {
+            try {
+                const response = await fetch(`/Tracking/GetDetails?SectionId=${SectionId}`);
+                const data = await response.json();
+                response.ok && $('#sectiondetail').modal('show');
+                console.log(data);
             } catch (e) {
                 console.error(e);
             }
@@ -192,6 +289,7 @@
                 autoWidth: true,
                 processing: true,
                 serverSide: true,
+                iDisplayLength: 100,
                 dom: 'Btp',
                 ajax: {
                     type: 'POST',
@@ -214,11 +312,15 @@
                         }
                     }
                 },
+                'createdRow': (row, data, index) => {
+                    const { sectionId } = data;
+                    $('td', row).eq(3).attr('id', `timer${sectionId}`).html('PROCESANDO');
+                },
                 columns: [
                     {
                         render: (data, type, row) => {
-                            const { folio, cliente } = row;
-                            const html = `<p>FOLIO: ${folio}</p><p>CLIENTE: ${cliente}</p>`;
+                            const { sectionId, folio, cliente } = row;
+                            const html = `<p>FOLIO: <a href="javascript:void(0)" onclick="GetDetails(${sectionId})">${folio}</a></p><p>CLIENTE: ${cliente}</p>`;
                             return html;
                         }
                     },
@@ -238,9 +340,28 @@
                     },
                     {
                         render: (data, type, row) => {
-                            const { siguienteContacto, eta, grupoMonitor } = row;
-                            const html = `<p>SIGUIENTE CONTACTO EN: ${siguienteContacto}</p><p>ETA: ${eta}</p> <p>GRUPO MONITOR: ${grupoMonitor}</p>`;
-                            return html;
+                            const { siguienteContacto, eta, grupoMonitor, sectionId, } = row;
+
+                            const countDownDate = new Date(siguienteContacto).getTime();
+
+                            let countdown = setInterval(() => {
+                                const now = new Date().getTime();
+                                const distance = countDownDate - now;
+
+                                const days = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+                                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+                                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+                                const seconds = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
+
+                                const countDown = `${days}d ${hours}:${minutes}:${seconds}`;
+                                const html = `<p>SIGUIENTE CONTACTO EN:<br> <b>${countDown}</b></p><p>ETA: ${eta}</p> <p>GRUPO MONITOR: ${grupoMonitor}</p>`;
+                                document.querySelector(`#timer${sectionId}`).innerHTML = html;
+                                if (distance < 0) {
+                                    document.querySelector(`#timer${sectionId}`).innerHTML = `<p>SIGUIENTE CONTACTO EN:<br> <b class="text-danger">DEMORADO</b></p><p>ETA: ${eta}</p> <p>GRUPO MONITOR: ${grupoMonitor}</p>`;
+                                }
+                            }, 1000);
+
+                            return countdown;
                         }
                     },
                     {
@@ -248,8 +369,9 @@
                     },
                     {
                         render: (data, type, row) => {
-                            const { checkpoint, sectionId } = row;
-                            const html = `<a href="javascript:void(0)" onclick="$('#comentarioModal').modal('show'), $('[name=SectionId]').val(${sectionId})"><span class="material-icons">control_point</span></a> <a href="javascript:void(0)" class="d-flex flex-column text-danger"><span class="material-icons">assistant_photo</span>${checkpoint}</a> `;
+                            const { hasCheckpoint, sectionId } = row;
+                            let html = `<a href="javascript:void(0)" onclick="$('#comentarioModal').modal('show'), $('[name=SectionId]').val(${sectionId})"><span class="material-icons">control_point</span></a>`;
+                            html += hasCheckpoint ? `<a href="javascript:void(0)" class="d-flex flex-column text-danger"><span class="material-icons">assistant_photo</span>${checkpoint}</a> ` : '';
                             return html;
                         }
                     }

@@ -1,9 +1,13 @@
 ﻿using KLS_API.Context;
 using KLS_API.Models;
+using KLS_API.Models.Travel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace KLS_API.Controllers.Catalogs.TypesOfUnits
 {
@@ -46,7 +50,7 @@ namespace KLS_API.Controllers.Catalogs.TypesOfUnits
         }
 
         [HttpPost]
-        public ActionResult Post([FromBody] Cat_Tipos_Unidades tipos_Unidades) 
+        public ActionResult Post([FromBody] Cat_Tipos_Unidades tipos_Unidades)
         {
             try
             {
@@ -59,9 +63,9 @@ namespace KLS_API.Controllers.Catalogs.TypesOfUnits
                 return BadRequest(ex.Message);
             }
         }
-        
+
         [HttpPut]
-        public ActionResult Put([FromBody] Cat_Tipos_Unidades tipos_Unidades) 
+        public ActionResult Put([FromBody] Cat_Tipos_Unidades tipos_Unidades)
         {
             try
             {
@@ -74,7 +78,7 @@ namespace KLS_API.Controllers.Catalogs.TypesOfUnits
                 return BadRequest(ex.Message);
             }
         }
-        
+
         //[HttpDelete("{id}")]
         //public ActionResult Delete(int id) 
         //{
@@ -97,5 +101,20 @@ namespace KLS_API.Controllers.Catalogs.TypesOfUnits
         //        return BadRequest(ex.Message);
         //    }
         //}
+
+        [HttpGet]
+        [Route("GetTravelServices")]
+        public async Task<IActionResult> GetTravelServices()
+        {
+            try
+            {
+                ICollection<TravelService> travelServices = await context.TravelServices.Where(x => x.Active).OrderBy(x => x.Name).ToListAsync();
+                return Ok(travelServices);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

@@ -48,5 +48,6 @@ namespace KLS_WEB.Models.Travels
         public bool Active { get; set; } = true;
         public DateTime TimeCreated { get; set; } = DateTime.Now;
         public DateTime TimeUpdated { get; set; }
+        public DateTime StatusUpdatedAt { get; set; }
     }
 }

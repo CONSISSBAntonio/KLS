@@ -68,6 +68,7 @@ namespace KLS_WEB.Controllers.Tracking
 
             TrackingDTO tracking = new TrackingDTO
             {
+                Todos = counter.Todos,
                 Confirmados = counter.Confirmados,
                 EnTransito = counter.EnTransito,
                 Demorados = counter.Demorados,
@@ -92,12 +93,13 @@ namespace KLS_WEB.Controllers.Tracking
         [HttpPost]
         public async Task<JsonResult> AddSectionComment([FromForm] AddSectionComment addSectionComment)
         {
+            bool grupoMonitor = string.IsNullOrEmpty(addSectionComment.GrupoMonitor?.Trim());
             SectionCommentDTO newSectionComment = new SectionCommentDTO
             {
                 SectionId = addSectionComment.SectionId,
                 SubstatusId = addSectionComment.SubstatusId,
                 Comment = addSectionComment.Comment,
-                GrupoMonitor = addSectionComment.GrupoMonitor,
+                GrupoMonitor = grupoMonitor ? null : addSectionComment.GrupoMonitor.Trim(),
                 CreatedBy = HttpContext.Session.GetString("UserFN")
             };
 
@@ -148,6 +150,14 @@ namespace KLS_WEB.Controllers.Tracking
         }
         #endregion
 
+        #region Events
+        [HttpGet]
+        public async Task<JsonResult> GetDetails(string SectionId)
+        {
+            Section section = await _appContext.Execute<Section>(MethodType.GET, Path.Combine(_UrlApi, "GetDetails", SectionId), null);
+            return Json(section);
+        }
+        #endregion
         #region DataTable
         [HttpPost]
         public async Task<JsonResult> DataTable(DataTablesParameters dtParams)

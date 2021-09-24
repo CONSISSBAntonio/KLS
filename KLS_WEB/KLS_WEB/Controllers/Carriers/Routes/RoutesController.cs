@@ -4,6 +4,7 @@ using KLS_WEB.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace KLS_WEB.Controllers.Carriers.CarriersRoutes
@@ -67,6 +68,31 @@ namespace KLS_WEB.Controllers.Carriers.CarriersRoutes
             Tr_Has_Rutas dataReport;
             dataReport = await this.AppContext.Execute<Tr_Has_Rutas>(MethodType.PUT, _UrlApi, dataModel);
             return Json(dataReport);
+        }
+
+        public class TravelServicePrice
+        {
+            public int CarrierRouteId { get; set; }
+            public int TravelServiceId { get; set; }
+            public decimal OneWayPrice { get; set; }
+            public decimal TwoWayPrice { get; set; }
+            public decimal CircuiteablePrice { get; set; }
+        }
+
+        [HttpPost]
+        [Route("[action]")]
+        public async Task<JsonResult> AddEditInventario([FromBody] ICollection<TravelServicePrice> travelServicePrices)
+        {
+            var response = await AppContext.Execute<List<TravelServicePrice>>(MethodType.POST, Path.Combine(_UrlApi, "AddEditTravelServicePrice"), travelServicePrices);
+            return Json(response);
+        }
+
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<JsonResult> GetRutaInventario(string Tr_Has_RutaId)
+        {
+            var rutaInventario = await AppContext.Execute<List<ruta_has_inventario>>(MethodType.GET, Path.Combine(_UrlApi, "GetRutaInventario", Tr_Has_RutaId), null);
+            return Json(rutaInventario);
         }
 
         [Route("obRutas")]

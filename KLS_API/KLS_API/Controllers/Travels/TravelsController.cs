@@ -92,7 +92,7 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
-                ICollection<Transportista> carriers = await _dbContext.Transportista.Where(x => x.Estatus == 1).OrderBy(x => x.NombreComercial).ToListAsync();
+                ICollection<Transportista> carriers = await _dbContext.Transportista.Where(x => x.Estatus == 1).OrderBy(x => x.RazonSocial).ToListAsync();
                 //ICollection<Transportista> carrierswithdrivers = new Collection<Transportista>();
                 //foreach (var carrier in carriers)
                 //{
@@ -997,7 +997,7 @@ namespace KLS_API.Controllers.Travels
         {
             try
             {
-                IEnumerable<TravelDT> sections = await _dbContext.Sections.Where(x => x.Active && x.FechaSalida > DateTime.Now).Select(x => new TravelDT
+                IEnumerable<TravelDT> sections = await _dbContext.Sections.Where(x => x.Active).Select(x => new TravelDT
                 {
                     Id = x.Id,
                     MainTravelId = x.TravelId,

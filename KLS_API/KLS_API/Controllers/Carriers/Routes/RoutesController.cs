@@ -44,16 +44,20 @@ namespace KLS_API.Controllers.Carriers.Routes
             {
                 var rutas = context.Ruta.Where(f => f.estatus == 1).ToList().AsQueryable();
 
-                if (tr_rutas.id_ciudadorigen!=0) {
-                    rutas = rutas.Where(f=> f.id_ciudadorigen == tr_rutas.id_ciudadorigen);
+                if (tr_rutas.id_ciudadorigen != 0)
+                {
+                    rutas = rutas.Where(f => f.id_ciudadorigen == tr_rutas.id_ciudadorigen);
                 }
-                if (tr_rutas.id_estadoorigen != 0) {
+                if (tr_rutas.id_estadoorigen != 0)
+                {
                     rutas = rutas.Where(f => f.id_estadoorigen == tr_rutas.id_estadoorigen);
                 }
-                if (tr_rutas.id_ciudaddestino != 0) {
+                if (tr_rutas.id_ciudaddestino != 0)
+                {
                     rutas = rutas.Where(f => f.id_ciudaddestino == tr_rutas.id_ciudaddestino);
                 }
-                if (tr_rutas.id_estadodestino != 0) {
+                if (tr_rutas.id_estadodestino != 0)
+                {
                     rutas = rutas.Where(f => f.id_estadodestino == tr_rutas.id_estadodestino);
                 }
                 return Ok(rutas);
@@ -63,7 +67,7 @@ namespace KLS_API.Controllers.Carriers.Routes
                 return BadRequest(ex.Message);
             }
         }
-        
+
         [Route("obRutas")]
         public ActionResult obRutas()
         {
@@ -98,27 +102,69 @@ namespace KLS_API.Controllers.Carriers.Routes
         {
             try
             {
-
-                var datas = context.ruta_has_inventario.Where(b => EF.Property<int>(b, "Tr_Has_RutaId") == tr_rutas.Id);
-                context.ruta_has_inventario.RemoveRange(datas);
-                context.SaveChanges();
-
-                if (tr_rutas.ruta_has_inventario.Count() > 0)
-                {
-                    foreach (var item in tr_rutas.ruta_has_inventario)
-                    {
-                        var dato_ = new ruta_has_inventario { Tr_Has_RutaId = tr_rutas.Id, Id_Inventario = item.Id_Inventario,Circuito = item.Circuito,CostoOne=item.CostoOne, CostoTwo = item.CostoTwo };
-                        context.ruta_has_inventario.Add(dato_);
-                        context.SaveChanges();
-                    }
-                }
-
                 context.Entry(tr_rutas).State = EntityState.Modified;
                 context.SaveChanges();
 
                 return Ok(tr_rutas);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        public class TravelServicePrice
+        {
+            public int CarrierRouteId { get; set; }
+            public int TravelServiceId { get; set; }
+            public decimal OneWayPrice { get; set; }
+            public decimal TwoWayPrice { get; set; }
+            public decimal CircuiteablePrice { get; set; }
+        }
 
+        [HttpPost]
+        [Route("[action]")]
+        public async Task<IActionResult> AddEditTravelServicePrice([FromBody] ICollection<TravelServicePrice> travelServicePrices)
+        {
+            try
+            {
+                foreach (var travelservice in travelServicePrices)
+                {
+                    ruta_has_inventario rutaInventario = await context.ruta_has_inventario.SingleOrDefaultAsync(x => x.Tr_Has_RutaId == travelservice.CarrierRouteId && x.TravelServiceId == travelservice.TravelServiceId);
+                    if (rutaInventario is null)
+                    {
+                        ruta_has_inventario newRutaInventario = new ruta_has_inventario
+                        {
+                            Tr_Has_RutaId = travelservice.CarrierRouteId,
+                            TravelServiceId = travelservice.TravelServiceId,
+                            CostoOne = travelservice.OneWayPrice,
+                            CostoTwo = travelservice.TwoWayPrice,
+                            Circuito = travelservice.CircuiteablePrice
+                        };
+                        await context.ruta_has_inventario.AddAsync(newRutaInventario);
+                        bool success = await context.SaveChangesAsync() > 0;
 
+                        if (!success)
+                        {
+                            return BadRequest();
+                        }
+                    }
+                    else
+                    {
+                        rutaInventario.Tr_Has_RutaId = travelservice.CarrierRouteId;
+                        rutaInventario.TravelServiceId = travelservice.TravelServiceId;
+                        rutaInventario.CostoOne = travelservice.OneWayPrice;
+                        rutaInventario.CostoTwo = travelservice.TwoWayPrice;
+                        rutaInventario.Circuito = travelservice.CircuiteablePrice;
+
+                        await context.SaveChangesAsync();
+                        //bool success = await context.SaveChangesAsync() > 0;
+                        //if (!success)
+                        //{
+                        //    return BadRequest();
+                        //}
+                    }
+                }
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -126,5 +172,19 @@ namespace KLS_API.Controllers.Carriers.Routes
             }
         }
 
+        [HttpGet]
+        [Route("[action]/{Tr_Has_RutaId}")]
+        public async Task<IActionResult> GetRutaInventario(int Tr_Has_RutaId)
+        {
+            try
+            {
+                ICollection<ruta_has_inventario> ruta_Has_Inventarios = await context.ruta_has_inventario.Where(x => x.Tr_Has_RutaId == Tr_Has_RutaId).ToListAsync();
+                return Ok(ruta_Has_Inventarios);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

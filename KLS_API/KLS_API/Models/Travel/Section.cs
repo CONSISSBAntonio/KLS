@@ -62,5 +62,6 @@ namespace KLS_API.Models.Travel
         public bool Active { get; set; } = true;
         public DateTime TimeCreated { get; set; } = DateTime.Now;
         public DateTime TimeUpdated { get; set; }
+        public DateTime StatusUpdatedAt { get; set; } = DateTime.Now;
     }
 }

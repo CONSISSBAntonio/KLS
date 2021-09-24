@@ -8,6 +8,7 @@ namespace KLS_WEB.Models.Tracking
 {
     public class TrackingDTO
     {
+        public int Todos { get; set; }
         public int Confirmados { get; set; }
         public int EnTransito { get; set; }
         public int Demorados { get; set; }

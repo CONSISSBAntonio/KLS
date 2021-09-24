@@ -17,10 +17,12 @@ namespace KLS_WEB.Models.Travels.DTO
         public string Destino { get; set; }
         public string FechaSalida { get; set; }
         public string FechaLlegada { get; set; }
-        public string SiguienteContacto { get; set; }
+        public DateTime NowDateTime { get; set; }
+        public DateTime SiguienteContacto { get; set; }
         public string ETA { get; set; }
         public string GrupoMonitor { get; set; }
         public string Status { get; set; }
         public string Checkpoint { get; set; }
+        public bool HasCheckpoints { get; set; }
     }
 }

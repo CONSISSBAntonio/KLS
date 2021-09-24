@@ -76,6 +76,8 @@ namespace KLS_API.Controllers.Tracking
             {
                 var counter = new
                 {
+                    //Todos = await _dbContext.Sections.Include(x => x.Substatus).ThenInclude(x => x.Status).Where(x => x.Active && x.Substatus.StatusId == 3).CountAsync(),
+                    Todos = await _dbContext.Sections.Where(x => x.Active).CountAsync(),
                     Confirmados = await _dbContext.Sections.Include(x => x.Substatus).Where(x => x.Substatus.StatusId == 2 && x.Active).CountAsync(),
                     EnTransito = await _dbContext.Sections.Include(x => x.Substatus).Where(x => x.Substatus.StatusId == 3 && x.Active).CountAsync(),
                     Demorados = await _dbContext.Sections.Where(x => x.SubstatusId == 9 && x.Active).CountAsync()
@@ -112,7 +114,8 @@ namespace KLS_API.Controllers.Tracking
 
                 await _dbContext.SectionComments.AddAsync(newSectionComment);
 
-                section.GrupoMonitor = sectionComment.GrupoMonitor;
+                section.SubstatusId = sectionComment.SubstatusId;
+                section.GrupoMonitor = sectionComment.GrupoMonitor ?? section.GrupoMonitor;
                 section.SubstatusId = sectionComment.SubstatusId;
                 section.UpdatedBy = sectionComment.CreatedBy;
                 section.TimeUpdated = DateTime.Now;
@@ -175,11 +178,12 @@ namespace KLS_API.Controllers.Tracking
                     Destino = _dbContext.Cat_Estado.SingleOrDefault(y => y.id == x.Ruta.id_estadodestino).nombre,
                     FechaSalida = x.FechaSalida.ToString("dd/MM/yyyy hh:mm tt"),
                     FechaLlegada = x.FechaLlegada.ToString("dd/MM/yyyy hh:mm tt"),
-                    SiguienteContacto = string.Concat(x.Ruta.frecvalidacion.ToString(), " HRS"),
+                    SiguienteContacto = x.StatusUpdatedAt.AddHours(x.Ruta.frecvalidacion),
                     ETA = string.Concat(x.Ruta.tiemporuta, " HRS"),
                     GrupoMonitor = x.GrupoMonitor,
                     Status = string.Concat(x.Substatus.Status.Name, " - ", x.Substatus.Name),
-                    Checkpoint = "2hr"
+                    Checkpoint = "2hr",
+                    HasCheckpoints = _dbContext.Ruta_Has_Checkpoint.Any(y => y.RutaId == x.RutaId)
                 }).ToListAsync();
 
                 int total = sections.Count();
@@ -194,6 +198,9 @@ namespace KLS_API.Controllers.Tracking
                     x.Destino.ToLower().Contains(keyword) ||
                     x.FechaSalida.ToLower().Contains(keyword) ||
                     x.FechaLlegada.ToLower().Contains(keyword) ||
+                    x.SiguienteContacto.ToString().ToLower().Contains(keyword) ||
+                    x.ETA.ToLower().Contains(keyword) ||
+                    x.GrupoMonitor.ToLower().Contains(keyword) ||
                     x.Status.ToLower().Contains(keyword));
                 }
 
@@ -242,11 +249,35 @@ namespace KLS_API.Controllers.Tracking
 
                 return Json(new
                 {
-                    aaData = data,
+                    aaData = data.OrderBy(x => x.SiguienteContacto),
                     dtParams.draw,
                     iTotalRecords = total,
                     iTotalDisplayRecords = totalFiltered
                 });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        #endregion
+
+        #region Events
+        [HttpGet("{SectionId}")]
+        public async Task<IActionResult> GetDetails(int SectionId)
+        {
+            try
+            {
+                Section section = await _dbContext.Sections
+                    .Include(x => x.Ruta)
+                    .Include(x => x.Services)
+                    .Include(x => x.Services)
+                    .ThenInclude(x => x.Transportista)
+                    .Include(x => x.Services)
+                    .ThenInclude(x => x.Tr_Has_Operadores)
+                    .SingleOrDefaultAsync(x => x.Id == SectionId);
+
+                return Ok(section);
             }
             catch (Exception ex)
             {

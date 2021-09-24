@@ -97,9 +97,9 @@
                     </div>
                     <div class="row pt-3">
                         @*<div class="col-md-6">
-                            <label class="">Costo</label>
-                            <input type="number" class="form-control" name="Costo" id="Costo" />
-                        </div>*@
+                                <label class="">Costo</label>
+                                <input type="number" class="form-control" name="Costo" id="Costo" />
+                            </div>*@
                         <div class="col-md-4">
                             <label class="">Estatus</label>
                             <select class="form-control form-control-sm" name="Estatus" id="Estatus">
@@ -108,7 +108,7 @@
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="row pt-3">
                         <div class="col-md-12">
                             <label class="">Inventario</label>
@@ -131,10 +131,9 @@
                     </button>
 
                     @*<a href="#" class="btn btn-dark" style="width:31%;" onclick="guardarInventarios();">
-            Guardar inventario
-        </a>*@
+                            Guardar inventario
+                        </a>*@
                 </form>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn" data-dismiss="modal">Cerrar</button>
@@ -161,41 +160,87 @@
                 jsonData["Id_Transportista"] = @id;
                 var idruta = $("#Id_Ruta").val();
 
-                var jsonInv = [];
-                $.each(dataInventory, function (item, key) {
-                    //jsonInv.push({
-                    //    "Id_Inventario": key.id,
-                    //    "Circuito": $("#cir-" + key.id).val(),
-                    //    "CostoOne": $("#one-" + key.id).val(),
-                    //    "CostoTwo": $("#two-" + key.id).val(),
-                    //    });
-
-                    jsonInv.push({
-                        "id_inventario": key.id,
-                        "circuito": convertirDecimal("cir-" + key.id),
-                        "costoone": convertirDecimal("one-" + key.id),
-                        "costotwo": convertirDecimal("two-" + key.id),
-                    });
-
-                });
-
-                jsonData["ruta_has_inventario"] = jsonInv;
                 if (parseInt(idruta) != 0) {
                     if (parseInt($("#idEditar").val()) != 0) {
                         $.post("/Carriers/Routes/putRoutes", jsonData, function (res) {
                             getRuta();
                             dToast("success", "Registro actualizado exitosamente.", "Registrado");
                             $(".guardar").attr("disabled", false);
+
+                            fetch("../../Catalogs/TypesOfUnits/getTravelServices")
+                                .then(response => response.json())
+                                .then(data => {
+                                    const CarrierRouteId = $('#idEditar').val();
+                                    let serviceprices = [];
+
+                                    data.map(({ id }) => {
+                                        const travelservice = {
+                                            CarrierRouteId: parseInt(CarrierRouteId),
+                                            travelserviceid: id,
+                                            onewayprice: $(`#onewayprice-${id}`).val().trim() === '' ? 0 : parseFloat($(`#onewayprice-${id}`).val().trim()),
+                                            twowayprice: $(`#twowayprice-${id}`).val().trim() === '' ? 0 : parseFloat($(`#twowayprice-${id}`).val().trim()),
+                                            circuiteableprice: $(`#circuiteableprice-${id}`).val().trim() === '' ? 0 : parseFloat($(`#circuiteableprice-${id}`).val().trim())
+                                        };
+                                        serviceprices = [...serviceprices, travelservice];
+                                    });
+
+                                    console.log(serviceprices);
+
+                                    const params = {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-type': 'application/json'
+                                        },
+                                        body: JSON.stringify(serviceprices)
+                                    };
+
+                                    fetch('/Carriers/Routes/AddEditInventario', params)
+                                        .catch(error => console.error(error))
+                                })
+                                .catch(error => console.error())
                         }).fail(function (error) {
                             dToast("error", "Error al tratar de guardar el registro", "Error");
                             $(".guardar").attr("disabled", false);
                         });
+
                     } else {
                         $.post("/Carriers/Routes/setRoutes", jsonData, function (res) {
-                            getRuta();
+                            console.log('nuevo registro:', res);
+                            if (res.id > 0) {
+                                fetch("../../Catalogs/TypesOfUnits/getTravelServices")
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        let serviceprices = [];
+
+                                        data.map(({ id }) => {
+                                            const travelservice = {
+                                                CarrierRouteId: res.id,
+                                                travelserviceid: id,
+                                                onewayprice: $(`#onewayprice-${id}`).val().trim() === '' ? 0 : parseFloat($(`#onewayprice-${id}`).val().trim()),
+                                                twowayprice: $(`#twowayprice-${id}`).val().trim() === '' ? 0 : parseFloat($(`#twowayprice-${id}`).val().trim()),
+                                                circuiteableprice: $(`#circuiteableprice-${id}`).val().trim() === '' ? 0 : parseFloat($(`#circuiteableprice-${id}`).val().trim())
+                                            };
+                                            console.log('new travelservice', travelservice);
+                                            serviceprices = [...serviceprices, travelservice];
+                                        });
+
+                                        const params = {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-type': 'application/json'
+                                            },
+                                            body: JSON.stringify(serviceprices)
+                                        };
+
+                                        fetch('/Carriers/Routes/AddEditInventario', params)
+                                            .then(response => response.ok && $('.inventario').map((k, e) => $(e).val('')), $('#frmRegister').trigger("reset"), getRuta())
+                                            .catch(error => console.error(error))
+                                    })
+                                    .catch(error => console.error())
+                            }
+
                             dToast("success", "Se guardó el registro", "Registrado");
                             $(".guardar").attr("disabled", false);
-                            $('#frmRegister').trigger("reset");
 
                             $("#EstadoOrigen").val(0).trigger('change');
                             $("#CiudadOrigen").val(0).trigger('change');
@@ -352,7 +397,6 @@
                         }
 
                         var costoOne = 0;
-                        console.log(key);
                         var inventario = key.ruta_has_inventario;
                         if (inventario.length) {
                             costoOne = inventario[0].costoOne;
@@ -401,12 +445,24 @@
                     getRutas(catRutas[rutaI].id);
                     $('#Estatus option[value="' + DataAirlines[indice].estatus + '"]').attr("selected", true);
 
-                    $.each(DataAirlines[indice].ruta_has_inventario, function (item, keyc) {
-                        console.log(keyc);
-                        $("#cir-" + keyc.id_Inventario).val(conversion(keyc.circuito));
-                        $("#one-" + keyc.id_Inventario).val(conversion(keyc.costoOne));
-                        $("#two-" + keyc.id_Inventario).val(conversion(keyc.costoTwo));
-                    });
+                    if (idEditar > 0) {
+                        fetch(`/Carriers/Routes/GetRutaInventario?Tr_Has_RutaId=${idEditar}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                data.map(({
+                                    travelServiceId,
+                                    costoOne,
+                                    costoTwo,
+                                    circuito
+                                }, k) => {
+                                    $(`#travelserviceid-${travelServiceId}`).val(travelServiceId);
+                                    $(`#onewayprice-${travelServiceId}`).val(parseFloat(costoOne).toFixed(2));
+                                    $(`#twowayprice-${travelServiceId}`).val(parseFloat(costoTwo).toFixed(2));
+                                    $(`#circuiteableprice-${travelServiceId}`).val(parseFloat(circuito).toFixed(2));
+                                });
+                            })
+                            .catch(error => console.error(error))
+                    }
 
                     $("#modalDiv").modal("show");
                 } catch (error) {
@@ -424,22 +480,18 @@
 
         function getInventario() {
             $("#info-inventario").empty();
-            $.get("/Carriers/Inventory/getInventory/", { "IdTransportista":@id}, function (res) {
-                /*dataInventory = res;*/
-                var uniqueArray = removeDuplicates(res, "tipoUnidad");
-                dataInventory = uniqueArray;
-                $.each(uniqueArray, function (item, key) {
-                    let indice = catUnidad.findIndex(service => service.id === key.tipoUnidad);
-                    console.log(catUnidad[indice]);
+            $.get("../../Catalogs/TypesOfUnits/getTravelServices", function (res) {
+                $.each(res, function (item, key) {
                     $("#info-inventario").append(
-                        `<tr>
-                            <td>${nCon(catUnidad[indice].nombre)}</td>
+                        `<tr class="travelservice">
+                            <td>${key.name.toUpperCase()}</td>
                             <td>
+                                <input type="number" name="travelserviceid" class="form-control form-control-sm" id="travelserviceid-${key.id}" value="${key.id}" hidden>
                              <div class="input-group">
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">$</div>
                                 </div>
-                                <input type="text" class="form-control form-control-sm" id="one-${nCon(key.id)}" onkeyup="convertirUnidad(this.value,'one-${key.id}')">
+                                <input type="number" step=".01" name="onewayprice" class="form-control form-control-sm inventario" id="onewayprice-${key.id}" onkeyup="convertirUnidad(this.value,'one-${key.id}')">
                               </div>
                             </td>
                             <td>
@@ -447,7 +499,7 @@
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">$</div>
                                 </div>
-                                <input type="text" class="form-control form-control-sm" id="two-${nCon(key.id)}" onkeyup="convertirUnidad(this.value,'two-${key.id}')">
+                                <input type="number" step=".01" name="twowayprice" class="form-control form-control-sm inventario" id="twowayprice-${key.id}" onkeyup="convertirUnidad(this.value,'two-${key.id}')">
                               </div>
                             </td>
                             <td>
@@ -455,7 +507,7 @@
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">$</div>
                                 </div>
-                                <input type="text" class="form-control form-control-sm" id="cir-${nCon(key.id)}" onkeyup="convertirUnidad(this.value,'cir-${key.id}')">
+                                <input type="number" step=".01" name="circuiteableprice" class="form-control form-control-sm inventario" id="circuiteableprice-${key.id}" onkeyup="convertirUnidad(this.value,'cir-${key.id}')">
                               </div>
                             </td>
                         </tr>`

@@ -8,8 +8,9 @@ namespace KLS_WEB.Models.Carriers
     {
         [Key]
         public int Id { get; set; }
-        public int Id_Tr_Has_RutasId { get; set; }
-        public int Id_Inventario { get; set; }
+        public int Tr_Has_RutaId { get; set; }
+        public int TravelServiceId { get; set; }
+
         [Column(TypeName = "decimal(18,2)")]
         public Decimal CostoOne { get; set; }
 
