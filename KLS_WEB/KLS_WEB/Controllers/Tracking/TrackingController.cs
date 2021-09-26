@@ -154,10 +154,11 @@ namespace KLS_WEB.Controllers.Tracking
         [HttpGet]
         public async Task<JsonResult> GetDetails(string SectionId)
         {
-            Section section = await _appContext.Execute<Section>(MethodType.GET, Path.Combine(_UrlApi, "GetDetails", SectionId), null);
+            SectionDetailDTO section = await _appContext.Execute<SectionDetailDTO>(MethodType.GET, Path.Combine(_UrlApi, "GetDetails", SectionId), null);
             return Json(section);
         }
         #endregion
+
         #region DataTable
         [HttpPost]
         public async Task<JsonResult> DataTable(DataTablesParameters dtParams)

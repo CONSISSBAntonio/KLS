@@ -114,11 +114,12 @@ namespace KLS_API.Controllers.Tracking
 
                 await _dbContext.SectionComments.AddAsync(newSectionComment);
 
+                section.StatusUpdatedAt = section.SubstatusId == sectionComment.SubstatusId ? section.StatusUpdatedAt : DateTime.Now;
                 section.SubstatusId = sectionComment.SubstatusId;
                 section.GrupoMonitor = sectionComment.GrupoMonitor ?? section.GrupoMonitor;
-                section.SubstatusId = sectionComment.SubstatusId;
                 section.UpdatedBy = sectionComment.CreatedBy;
                 section.TimeUpdated = DateTime.Now;
+
 
                 await _dbContext.SaveChangesAsync();
 
@@ -168,7 +169,9 @@ namespace KLS_API.Controllers.Tracking
             {
                 IEnumerable<TrackingDT> sections = await _dbContext.Sections.Include(x => x.Ruta).Include(x => x.Substatus).ThenInclude(x => x.Status).Where(x => x.Active).Select(x => new TrackingDT
                 {
+                    TravelId = x.TravelId,
                     SectionId = x.Id,
+                    RutaId = x.RutaId,
                     CustomerId = x.ClientesId ?? 0,
                     StatusId = x.Substatus.StatusId,
                     SubstatusId = x.SubstatusId,
@@ -182,7 +185,7 @@ namespace KLS_API.Controllers.Tracking
                     ETA = string.Concat(x.Ruta.tiemporuta, " HRS"),
                     GrupoMonitor = x.GrupoMonitor,
                     Status = string.Concat(x.Substatus.Status.Name, " - ", x.Substatus.Name),
-                    Checkpoint = "2hr",
+                    Checkpoint = string.Concat(x.Ruta.frecvalidacion, " HRS"),
                     HasCheckpoints = _dbContext.Ruta_Has_Checkpoint.Any(y => y.RutaId == x.RutaId)
                 }).ToListAsync();
 
@@ -268,14 +271,25 @@ namespace KLS_API.Controllers.Tracking
         {
             try
             {
-                Section section = await _dbContext.Sections
+                SectionDetailDTO section = await _dbContext.Sections
                     .Include(x => x.Ruta)
                     .Include(x => x.Services)
                     .Include(x => x.Services)
                     .ThenInclude(x => x.Transportista)
                     .Include(x => x.Services)
                     .ThenInclude(x => x.Tr_Has_Operadores)
-                    .SingleOrDefaultAsync(x => x.Id == SectionId);
+                    .Include(x => x.Cl_Has_Origen)
+                    .Include(x=> x.Cl_Has_Destinos)
+                    .Where(x => x.Id == SectionId)
+                    .Select(x => new SectionDetailDTO
+                    {
+                        Transportista = x.Services.FirstOrDefault().Transportista.RazonSocial,
+                        Conductor = x.Services.FirstOrDefault().Tr_Has_Operadores.nombre,
+                        Origen = x.IsEmpty ? string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Ruta.id_estadoorigen).nombre, ", ", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Ruta.id_ciudadorigen).nombre) : x.Cl_Has_Origen.Direccion,
+                        Destino = x.IsEmpty ? string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Ruta.id_estadodestino).nombre, ", ", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Ruta.id_ciudaddestino).nombre) : x.Cl_Has_Destinos.Direccion,
+                        Telefono = x.Services.FirstOrDefault().Tr_Has_Operadores.NoTelefono,
+                        TipoDeUnidad = _dbContext.Travels.Include(x => x.TravelService).SingleOrDefault(y => y.Id == x.TravelId).TravelService.Name
+                    }).SingleOrDefaultAsync();
 
                 return Ok(section);
             }

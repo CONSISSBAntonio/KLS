@@ -7,7 +7,9 @@ namespace KLS_API.Models.Travel.DTO
 {
     public class TrackingDT
     {
+        public int TravelId { get; set; }
         public int SectionId { get; set; }
+        public int RutaId { get; set; }
         public int CustomerId { get; set; }
         public int StatusId { get; set; }
         public int SubstatusId { get; set; }
