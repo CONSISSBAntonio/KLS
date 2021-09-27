@@ -7,6 +7,7 @@ namespace KLS_API.Models.Travel.DTO
 {
     public class SectionDetailDTO
     {
+        public string Folio { get; set; }
         public string Transportista { get; set; }
         public string Conductor { get; set; }
         public string Origen { get; set; }

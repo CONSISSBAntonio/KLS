@@ -926,12 +926,15 @@
                     { data: 'costo' },
                     {
                         render: (data, type, row) => {
-                            const { carrierId } = row;
-                            return `<a href="/Demand/SetFullTravel?DemandId=${DemandId}&CarrierId=${carrierId}">
+                            const { id } = row;
+                            return `<a href="/Travels/ConvertTravel?id=${DemandId}|${id}&type=fulldemand">
                                                             <span class="material-icons details">
                                                                 local_shipping
                                                             </span>
-                                                        </a>`
+                                                        </a>`;
+                            //return `<a class="btn btn-sm href="/Travels/ConvertTravel?id=${DemandId}${id}&type=fulldemand">
+                            //        <span style="color:blue;" class="material-icons">local_shipping</span>
+                            //    </a>`;
                         }
                     }
                 ],

@@ -238,13 +238,13 @@ namespace KLS_API.Controllers.Demands
                 int[] regions = _dbContext.Region_Has_Estado.Where(x => x.id_estado == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == OriginId).Id_Estado).Select(x => x.Cat_RegionId).ToArray();
 
                 List<CarrierDT> carriers = _dbContext.Oferta.Where(x => (x.ciudad_Destino == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == OriginId && x.Fecha_Disponibilidad > DateTime.Now).Id_Ciudad
-                && x.Tipo_De_Unidad == UnidadId) || (x.Nivel_Destino.ToLower() == "region" && regions.Contains(x.Region_Destino)) || (x.Nivel_Destino.ToLower() == "estado" && x.estado_Destino == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == OriginId && x.Fecha_Disponibilidad > DateTime.Now).Id_Estado)).Select(x => new CarrierDT
+                && x.IdServiceTypes == UnidadId) || (x.Nivel_Destino.ToLower() == "region" && regions.Contains(x.Region_Destino)) || (x.Nivel_Destino.ToLower() == "estado" && x.estado_Destino == _dbContext.Cl_Has_Origen.FirstOrDefault(y => y.Id == OriginId && x.Fecha_Disponibilidad > DateTime.Now).Id_Estado)).Select(x => new CarrierDT
                 {
                     Id = x.Id,
                     CarrierId = x.Transportista,
                     Carrier = _dbContext.Transportista.FirstOrDefault(y => y.id == x.Transportista).NombreComercial,
-                    UnitId = x.Tipo_De_Unidad,
-                    Unit = _dbContext.Cat_Tipos_Unidades.FirstOrDefault(y => y.id == x.Tipo_De_Unidad).nombre,
+                    UnitId = x.IdServiceTypes,
+                    Unit = _dbContext.ServiceTypes.FirstOrDefault(y => y.Id == x.IdServiceTypes).Name,
                     Origin = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Estado_Origen).nombre.Trim(), "-",
                     _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.ciudad_Origen).nombre.Trim(), " (",
                     x.Tolerancia_Origen, " km)"),

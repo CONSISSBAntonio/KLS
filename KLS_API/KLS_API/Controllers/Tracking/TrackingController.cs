@@ -1,4 +1,5 @@
 ﻿using KLS_API.Context;
+using KLS_API.Models;
 using KLS_API.Models.Clients;
 using KLS_API.Models.DT;
 using KLS_API.Models.Travel;
@@ -279,10 +280,11 @@ namespace KLS_API.Controllers.Tracking
                     .Include(x => x.Services)
                     .ThenInclude(x => x.Tr_Has_Operadores)
                     .Include(x => x.Cl_Has_Origen)
-                    .Include(x=> x.Cl_Has_Destinos)
+                    .Include(x => x.Cl_Has_Destinos)
                     .Where(x => x.Id == SectionId)
                     .Select(x => new SectionDetailDTO
                     {
+                        Folio = x.Folio,
                         Transportista = x.Services.FirstOrDefault().Transportista.RazonSocial,
                         Conductor = x.Services.FirstOrDefault().Tr_Has_Operadores.nombre,
                         Origen = x.IsEmpty ? string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Ruta.id_estadoorigen).nombre, ", ", _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.Ruta.id_ciudadorigen).nombre) : x.Cl_Has_Origen.Direccion,
@@ -292,6 +294,37 @@ namespace KLS_API.Controllers.Tracking
                     }).SingleOrDefaultAsync();
 
                 return Ok(section);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCheckpoints(int RouteId, int SectionId)
+        {
+            try
+            {
+                Section section = await _dbContext.Sections
+                    .Include(x => x.Ruta)
+                    .ThenInclude(x => x.Ruta_Has_Checkpoints)
+                    .SingleOrDefaultAsync(x => x.Id == SectionId);
+
+                if (section is null)
+                {
+                    return NotFound();
+                }
+
+                ICollection<CheckpointsDTO> checkpoints = await _dbContext.Ruta_Has_Checkpoint.Where(x => x.RutaId == RouteId).Select(x => new CheckpointsDTO
+                {
+                    Checkpoint = x.nombre,
+                    HoraOriginal = section.FechaSalida.ToString("dd/MM/yyyy hh:mm tt"),
+                    HoraEsperada = section.FechaSalida.AddHours(x.tiempo).ToString("dd/MM/yyyy hh:mm tt"),
+                    HoraReal = "-",
+                    Usuario = "-"
+                }).ToListAsync();
+                return Ok(checkpoints);
             }
             catch (Exception ex)
             {

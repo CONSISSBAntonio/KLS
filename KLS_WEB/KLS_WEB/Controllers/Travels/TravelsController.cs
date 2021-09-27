@@ -193,10 +193,17 @@ namespace KLS_WEB.Controllers.Travels
                         var demand = await AppContext.Execute<DemandDTO>(MethodType.GET, Path.Combine("Demands", "GetDemand", Id), null);
                         travelDTO.Travel.TravelServiceId = demand.TravelServiceId;
                     }
-                    else
+                    else if(convert == "offer")
                     {
                         var offer = await AppContext.Execute<Oferta>(MethodType.GET, Path.Combine(_UrlApi, "GetOffer", Id), null);
                         travelDTO.Travel.TravelServiceId = offer.IdServiceTypes;
+                    }
+                    else
+                    {
+                        string demandid = Id.Split("|")[0];
+                        var demand = await AppContext.Execute<DemandDTO>(MethodType.GET, Path.Combine("Demands", "GetDemand", demandid), null);
+                        travelDTO.Travel.TravelServiceId = demand.TravelServiceId;
+
                     }
                 }
             }
@@ -290,8 +297,16 @@ namespace KLS_WEB.Controllers.Travels
                     var DemandId = TempData.Peek("ConvertTravelId").ToString();
                     travelDTO.Section = await AppContext.Execute<Section>(MethodType.GET, Path.Combine(_UrlApi, "ConvertDemand", DemandId), null);
                 }
+                else if(convert == "offer")
+                {
+                    ViewBag.ServicesSet = true;
+                }
                 else
                 {
+                    var DemandId = TempData.Peek("ConvertTravelId").ToString();
+                    string demandid = DemandId.Split("|")[0];
+                    string offerid = DemandId.Split("|")[1];
+                    travelDTO.Section = await AppContext.Execute<Section>(MethodType.GET, Path.Combine(_UrlApi, "ConvertDemand", demandid), null);
                     ViewBag.ServicesSet = true;
                 }
             }
@@ -461,9 +476,15 @@ namespace KLS_WEB.Controllers.Travels
                     //var demand = await AppContext.Execute<DemandDTO>(MethodType.GET, Path.Combine("Demands", "GetDemand", Id), null);
                     //travelDTO.Travel.TravelServiceId = demand.TravelServiceId;
                 }
-                else
+                else if(convert == "offer")
                 {
                     var offer = await AppContext.Execute<Oferta>(MethodType.GET, Path.Combine(_UrlApi, "GetOffer", Id), null);
+                    servicesDTOs.CarrierId = offer.Transportista;
+                }
+                else
+                {
+                    string offerid = Id.Split("|")[1];
+                    var offer = await AppContext.Execute<Oferta>(MethodType.GET, Path.Combine(_UrlApi, "GetOffer", offerid), null);
                     servicesDTOs.CarrierId = offer.Transportista;
                 }
             }

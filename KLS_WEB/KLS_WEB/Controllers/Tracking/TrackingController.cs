@@ -134,6 +134,11 @@ namespace KLS_WEB.Controllers.Tracking
                     }
                 }
             }
+
+            if (addSectionComment.SubstatusId == 5)
+            {
+                await _appContext.Execute<Section>(MethodType.POST, Path.Combine("Travels", "CreateOffer", addSectionComment.SectionId.ToString()), null);
+            }
             return Json(sectionComment);
         }
 
@@ -156,6 +161,14 @@ namespace KLS_WEB.Controllers.Tracking
         {
             SectionDetailDTO section = await _appContext.Execute<SectionDetailDTO>(MethodType.GET, Path.Combine(_UrlApi, "GetDetails", SectionId), null);
             return Json(section);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetCheckpoints(string RouteId, string SectionId)
+        {
+            ICollection<Ruta_Has_Checkpoint> checkpoints = await _appContext.Execute<List<Ruta_Has_Checkpoint>>(MethodType.GET, Path.Combine(_UrlApi, $"GetCheckpoints?RouteId={RouteId}&SectionId={SectionId}"), null);
+            return Json(checkpoints);
+
         }
         #endregion
 

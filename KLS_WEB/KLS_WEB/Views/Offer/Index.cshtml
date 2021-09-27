@@ -1090,7 +1090,22 @@
             listarRutas();
             selTransportistas();//Obtiene los transportistas
             getServiceTypes();
+            GetTypeOfService();
         });
+        function GetTypeOfService() {
+            $.get("/Catalogs/TypesOfUnits/getTravelServices", function (res) {
+                res.map(data => {
+                    const { active, id, name } = data;
+                    if (active) {
+                        catUnidades = [...catUnidades, data];
+                        $("#tipounidad").append(`<option value="${id}">${name}</option>`);
+                    }
+                });
+                dSelect('tipounidad');
+            }).fail(function (error) {
+                console.log(error);
+            });
+        }
         function cargarUnidades() {
             $.get("/Catalogs/TypesOfUnits/getUnidades", function (res) {
                 //catUnidades = res;
@@ -1101,11 +1116,9 @@
                     if (estatus == 1) {
                         catUnidades = [...catUnidades, data];
                         $("#idtipounidad").append(`<option value="${id}">${nombre}</option>`);
-                        $("#tipounidad").append(`<option value="${id}">${nombre}</option>`);
                     }
                 });
                 dSelect('idtipounidad');
-                dSelect('tipounidad');
             }).fail(function (error) {
                 console.log(error);
             });

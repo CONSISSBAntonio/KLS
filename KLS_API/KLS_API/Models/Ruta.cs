@@ -40,5 +40,6 @@ namespace KLS_API.Models
         [Column(TypeName = "DateTime")]
         public DateTime? ultimocambio { get; set; }
         public string URL { get; set; }
+        public ICollection<Ruta_Has_Checkpoint> Ruta_Has_Checkpoints { get; set; }
     }
 }
