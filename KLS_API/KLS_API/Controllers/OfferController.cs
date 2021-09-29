@@ -68,7 +68,7 @@ namespace KLS_API.Controllers
                                      idciudaddestino = oferta.ciudad_Destino,
                                      tipounidad = tipounidad.Name,
                                      idtipounidad = tipounidad.Id,
-                                     fechadisponibilidad = oferta.Fecha_Disponibilidad,
+                                     fechadisponibilidad = oferta.Fecha_Disponibilidad.AddHours(oferta.Rango_De_Espera),
                                      transportista = transportista.Tamanio,
                                      idtransportista = transportista.id,
                                      status = oferta.status,

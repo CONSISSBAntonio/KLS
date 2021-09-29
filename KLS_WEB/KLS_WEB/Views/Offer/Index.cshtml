@@ -250,7 +250,7 @@
                         <input type="datetime-local" class="form-control" id="txtFechaDisponibilidad"/>
                     </div>
                     <div class="col-md-3">
-                        <label>Rango de espera</label>
+                        <label class="size-14">Rango de espera (hrs)</label>
                         <input type="number" class="form-control" id="txtRangoEspera" />
                     </div>
                 </div>
@@ -279,8 +279,8 @@
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label>Tolerancia</label>
-                        <input type="number" class="form-control" id="txtToleranciaOrigen" disabled="disabled"/>
+                        <label class="size-14">Tolerancia (km)</label>
+                        <input type="number" class="form-control" id="txtToleranciaOrigen" disabled="disabled" />
                     </div>
                 </div>
                 <h5 class="pt-2">Destino</h5>
@@ -307,8 +307,8 @@
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label>Tolerancia</label>
-                        <input type="number" class="form-control" name="name" id="txtToleranciaDestino" disabled="disabled"/>
+                        <label class="size-14">Tolerancia (km)</label>
+                        <input type="number" class="form-control" name="name" id="txtToleranciaDestino" disabled="disabled" />
                     </div>
                 </div>
 
@@ -374,7 +374,7 @@
             if (parseInt(idTransportista) != 0) {
                 var idtiposervicio = $("#tiposServicios").val();
                 if (parseInt(idtiposervicio) != 0) {//-------------------------------------------------------
-                    if ($("#txtRangoEspera").val() != "" && $("#txtRangoEspera").val() != 0  && $("#txtCantidad").val() != "" && $("#txtCantidad").val() != 0 && $("#txtCantidad").val() != null && $("#txtFechaDisponibilidad").val() != "" && $("#txtFechaDisponibilidad").val() != null) {
+                    if ($("#txtRangoEspera").val() != "" && $("#txtCantidad").val() != "" && $("#txtCantidad").val() != 0 && $("#txtCantidad").val() != null && $("#txtFechaDisponibilidad").val() != "" && $("#txtFechaDisponibilidad").val() != null) {
                         if ($("#txtNivelOrigen").val() != 0) {
                             if ($("#txtNivelDestino").val()!=0) {
                                 //Validaciones
@@ -638,6 +638,7 @@
                     $.post("/Offer/setRouteMult", { "catCarga": jsonGuardar }, function (res) {
                         Ofertas();
                         limpiarCampos();
+                        $('#modalAgregar').modal('hide');
                         dToast("success", "Datos guardados con éxito", "Atención");
                         $("#btnGuardar").attr("disabled", false);
                         jsonGuardar.length = 0;
@@ -648,15 +649,18 @@
 
                         jsonEnv.length = 0;
                         jsonEnv = [];
+                        setTimeout(() => location.reload(), 1000);
 
                     }).fail(function (error) {
                         $("#btnGuardar").attr("disabled", false);
                         dToast("error", "Error al insertar", "Error");
                     });
                 } else {
-                    $.post("Offer/putOferta", jsonGuardar[0] , function (res) {
+                    $.post("Offer/putOferta", jsonGuardar[0], function (res) {
+                        $('#modalAgregar').modal('hide');
                         Ofertas();
                         dToast("success", "Datos actualizados con éxito", "Atención");
+                        setTimeout(() => location.reload(), 1000);
                     }).fail(function (error) {
                         dToast("error", "Error al insertar", "Error");
                     });
@@ -982,8 +986,13 @@
                                     <span style="color:blue;" class="material-icons">local_shipping</span>
                                 </a>
                      */
+
+                    const expire = new Date(key.fechadisponibilidad).getTime();
+                    const now = new Date().getTime();
+                    const distance = expire - now;
+                    const isDelayed = distance < 0;
                     
-                    if (moment(key.fechadisponibilidad).format('YYYY-MM-DD hh:mm') > moment().format('YYYY-MM-DD hh:mm')) {
+                    if (!isDelayed) {
                         $("#table-ofertas-info").append(`
                         <tr class="text-uppercase" id="re${key.idoferta}">
                             <td style="width:5% !important;">${key.nombreTran}</td>
