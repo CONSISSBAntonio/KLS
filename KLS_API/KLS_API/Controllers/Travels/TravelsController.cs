@@ -738,6 +738,23 @@ namespace KLS_API.Controllers.Travels
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTiempoRuta(int RouteId)
+        {
+            try
+            {
+                Ruta ruta = await _dbContext.Ruta.FindAsync(RouteId);
+                if (ruta is null)
+                    return NotFound();
+
+                return Ok(ruta.tiemporuta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         #endregion
 
         #region Services

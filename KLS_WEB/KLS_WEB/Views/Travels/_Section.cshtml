@@ -62,11 +62,11 @@
 
             <div class="col-3">
                 <label asp-for="Section.FechaSalida" class="form-label">FECHA DE SALIDA</label>
-                <input asp-for="Section.FechaSalida" class="form-control" onchange="$('#Section_FechaLlegada').prop('min', this.value)">
+                <input asp-for="Section.FechaSalida" class="form-control" onchange="$('#Section_FechaLlegada').prop('min', this.value), GetTiempoRuta($('#Section_RutaId').val())">
             </div>
             <div class="col-3">
                 <label asp-for="Section.FechaLlegada" class="form-label">FECHA DE LLEGADA</label>
-                <input asp-for="Section.FechaLlegada" class="form-control">
+                <input asp-for="Section.FechaLlegada" class="form-control" readonly>
             </div>
             <div class="col-3">
                 <label asp-for="Section.Anticipacion" class="form-label">OBSERVACIONES</label>
@@ -101,7 +101,7 @@
 
             <div class="col-6">
                 <label asp-for="Section.RutaId" class="form-label">RUTA</label>
-                <select asp-for="Section.RutaId" asp-items="Model.Selects.Routes" class="form-select" style="width: 100%;" onchange="GetRoutePrice(this.value)"></select>
+                <select asp-for="Section.RutaId" asp-items="Model.Selects.Routes" class="form-select" style="width: 100%;" onchange="GetRoutePrice(this.value), GetTiempoRuta(this.value)"></select>
             </div>
             <div class="col-6">
                 <label class="form-label">URL RUTA</label> <br />

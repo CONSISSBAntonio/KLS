@@ -43,8 +43,8 @@
     <div class="col-6">
         <!--<div class="d-flex justify-content-around">
             <div class="my-auto">-->
-                @*@{int id = Model.Travel.Id; }*@
-                <!--<h4 class="text-secondary size-14" id="folio">@Model.Travel.Folio</h4>
+        @*@{int id = Model.Travel.Id; }*@
+        <!--<h4 class="text-secondary size-14" id="folio">@Model.Travel.Folio</h4>
             </div>
 
             <div class="card text-center">
@@ -112,9 +112,9 @@
                         <input asp-for="Travel.GrupoMonitor" type="text" class="form-control form-control-sm" placeholder="requerido">
                     </div>
                     @*<div class="col-6 pl-4 pt-3 pb-4">
-                        <label asp-for="Travel.GrupoMonitor" class="form-label">GRUPO MONITOR</label>
-                        <input asp-for="Travel.GrupoMonitor" type="text" class="form-control form-control-sm" placeholder="requerido">
-                    </div>*@
+                            <label asp-for="Travel.GrupoMonitor" class="form-label">GRUPO MONITOR</label>
+                            <input asp-for="Travel.GrupoMonitor" type="text" class="form-control form-control-sm" placeholder="requerido">
+                        </div>*@
                 </div>
                 <div class="pb-3 pl-2 mt-3">
                     <button type="submit" id="guardar" class="btn btn-dark" style="width: 12.8rem;">@(Model.Travel.Id is 0 ? "GENERAR VIAJE" : "ACTUALIZAR VIAJE")</button>
@@ -128,7 +128,7 @@
             <b class="my-auto size-12">ADMINISTRACIÓN DE TRAMOS</b>
             @if (Model.Travel.Id > 0)
             {
-                <button id="addsection" class="btn btn-dark cshadow" onclick="GetSection(this, 0)"><span class="material-icons">add</span></button>
+            <button id="addsection" class="btn btn-dark cshadow" onclick="GetSection(this, 0)"><span class="material-icons">add</span></button>
             }
         </div>
         <div style="height: 17rem; overflow-y: scroll; overflow-x: unset;">
@@ -137,7 +137,7 @@
                     <tr>
                         <th>TRAMO</th>
                         @*<th>COSTO</th>
-                        <th>VENTA</th>*@
+                            <th>VENTA</th>*@
                         <th>CLIENTE</th>
                         <th>ESTATUS</th>
                         <th>CLONAR</th>
@@ -148,21 +148,21 @@
                     {
                         foreach (var tramo in Model.Travel.Sections)
                         {
-                            <tr>
-                                <td><a href="javascript:void(0)" onclick="GetSection(this, @tramo.Id)">@tramo.Folio</a></td>
-                                @*<td>@(tramo.Services.Any() ? tramo.Services.Sum(x => x.Costo).ToString("C") : 0.ToString("C"))</td>
-                                <td>@(tramo.Services.Any() ? tramo.Services.Sum(x => x.Precio).ToString("C") : 0.ToString("C"))</td>*@
-                                <td>@(tramo.IsEmpty ? "-" : tramo.Clients.NombreCorto)</td>
-                                <td id="estatus-@tramo.Id" class="text-primary font-weight-bold">@tramo.Substatus.Status.Name-@tramo.Substatus.Name</td>
-                                <td><a asp-controller="Travels" asp-action="CloneSection" asp-route-SectionId="@tramo.Id">CLONAR TRAMO</a></td>
-                            </tr>
+                    <tr>
+                        <td><a href="javascript:void(0)" onclick="GetSection(this, @tramo.Id)">@tramo.Folio</a></td>
+                        @*<td>@(tramo.Services.Any() ? tramo.Services.Sum(x => x.Costo).ToString("C") : 0.ToString("C"))</td>
+                            <td>@(tramo.Services.Any() ? tramo.Services.Sum(x => x.Precio).ToString("C") : 0.ToString("C"))</td>*@
+                        <td>@(tramo.IsEmpty ? "-" : tramo.Clients.NombreCorto)</td>
+                        <td id="estatus-@tramo.Id" class="text-primary font-weight-bold">@tramo.Substatus.Status.Name-@tramo.Substatus.Name</td>
+                        <td><a asp-controller="Travels" asp-action="CloneSection" asp-route-SectionId="@tramo.Id">CLONAR TRAMO</a></td>
+                    </tr>
                         }
                     }
                     else
                     {
-                        <tr>
-                            <td class="text-center" colspan="5">AGREGA UN TRAMO PARA COMENZAR</td>
-                        </tr>
+                    <tr>
+                        <td class="text-center" colspan="5">AGREGA UN TRAMO PARA COMENZAR</td>
+                    </tr>
                     }
                 </tbody>
             </table>
@@ -438,6 +438,7 @@
 </div>
 
 @section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script>
         let _SectionIsEmpty = false;
         let _CustomerId = 0;
@@ -570,7 +571,7 @@
                     const response = await fetch('/Travels/GetRoute', params);
                     const data = await response.json();
                     data && data.length > 0 ? (data.map(({ id, od }) => $('#Section_RutaId').empty().append(`<option value="${id}" selected>${od}</option>`)
-                    ), GetRoutePrice(data[0].id)) : ($("#Section_RutaId").empty().append(`<option value="0" selected disabled>No se encontraron rutas</option>`));
+                    ), GetTiempoRuta(data[0].id)) : ($("#Section_RutaId").empty().append(`<option value="0" selected disabled>No se encontraron rutas</option>`));
                 } catch (e) {
                     console.error(e);
                 }
@@ -888,6 +889,18 @@
                 $('#Section_RutaId').html(routes);
             } catch (e) {
                 console.error();
+            }
+        }
+
+        const GetTiempoRuta = async RouteId => {
+            try {
+                const response = await fetch(`/Travels/GetTiempoRuta?RouteId=${RouteId}`);
+                const tiemporuta = await response.json();
+                const leavedate = new Date($('#Section_FechaSalida').val());
+                const arrivedate = moment(leavedate).add(tiemporuta, 'h').format('yyyy-MM-DDTHH:mm');
+                $('#Section_FechaLlegada').val(arrivedate).trigger('change');
+            } catch (e) {
+                console.error(e);
             }
         }
 

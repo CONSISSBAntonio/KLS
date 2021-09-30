@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -105,26 +106,28 @@ namespace KLS_API.Controllers.Tracking
                     return NotFound();
                 }
 
-                SectionComment newSectionComment = new SectionComment
-                {
-                    SectionId = sectionComment.SectionId,
-                    SubstatusId = sectionComment.SubstatusId,
-                    Comment = sectionComment.Comment,
-                    CreatedBy = sectionComment.CreatedBy
-                };
-
-                await _dbContext.SectionComments.AddAsync(newSectionComment);
-
                 section.StatusUpdatedAt = section.SubstatusId == sectionComment.SubstatusId ? section.StatusUpdatedAt : DateTime.Now;
                 section.SubstatusId = sectionComment.SubstatusId;
                 section.GrupoMonitor = sectionComment.GrupoMonitor ?? section.GrupoMonitor;
                 section.UpdatedBy = sectionComment.CreatedBy;
                 section.TimeUpdated = DateTime.Now;
 
+                if (!string.IsNullOrEmpty(sectionComment.Comment?.Trim()))
+                {
+                    SectionComment newSectionComment = new SectionComment
+                    {
+                        SectionId = sectionComment.SectionId,
+                        SubstatusId = sectionComment.SubstatusId,
+                        Comment = sectionComment.Comment,
+                        CreatedBy = sectionComment.CreatedBy
+                    };
 
+                    await _dbContext.SectionComments.AddAsync(newSectionComment);
+                    return Ok(newSectionComment);
+                }
                 await _dbContext.SaveChangesAsync();
 
-                return Ok(newSectionComment);
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -187,7 +190,8 @@ namespace KLS_API.Controllers.Tracking
                     GrupoMonitor = x.GrupoMonitor,
                     Status = string.Concat(x.Substatus.Status.Name, " - ", x.Substatus.Name),
                     Checkpoint = string.Concat(x.Ruta.frecvalidacion, " HRS"),
-                    HasCheckpoints = _dbContext.Ruta_Has_Checkpoint.Any(y => y.RutaId == x.RutaId)
+                    HasCheckpoints = _dbContext.Ruta_Has_Checkpoint.Any(y => y.RutaId == x.RutaId),
+                    ExitDate = x.FechaSalida
                 }).ToListAsync();
 
                 int total = sections.Count();
@@ -281,9 +285,13 @@ namespace KLS_API.Controllers.Tracking
                     .ThenInclude(x => x.Tr_Has_Operadores)
                     .Include(x => x.Cl_Has_Origen)
                     .Include(x => x.Cl_Has_Destinos)
+                    .Include(x => x.Substatus)
+                    .ThenInclude(x => x.Status)
                     .Where(x => x.Id == SectionId)
                     .Select(x => new SectionDetailDTO
                     {
+                        StatusId = x.Substatus.Status.Id,
+                        SubstatusId = x.SubstatusId,
                         Folio = x.Folio,
                         Transportista = x.Services.FirstOrDefault().Transportista.RazonSocial,
                         Conductor = x.Services.FirstOrDefault().Tr_Has_Operadores.nombre,
@@ -331,6 +339,34 @@ namespace KLS_API.Controllers.Tracking
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetGrupoMonitor()
+        {
+            try
+            {
+                var grupomonitor = await _dbContext.Sections.Where(x => x.Active).Select(x => x.GrupoMonitor).GroupBy(x => x).OrderBy(x => x.Count()).Select(x => x.Key).ToArrayAsync();
+                Array.Sort(grupomonitor);
+                return Ok(grupomonitor);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //[HttpGet]
+        //public async Task<IActionResult> GetSectionStatus(int SectionId)
+        //{
+        //    try
+        //    {
+        //        var section = 
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
         #endregion
     }
 }

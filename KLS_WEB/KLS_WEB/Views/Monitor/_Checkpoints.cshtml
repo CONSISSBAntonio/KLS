@@ -110,7 +110,7 @@
                     }
                 }
             }
-            trInfo += `<td> <div style="height:10px;width:10px;background:${colorCheck};-moz-border-radius:50px;-webkit-border-radius:50px;border-radius:50px;display: inline-block;"></div> ${key.nombre}</td>`;
+            trInfo += `<td> <div style="height:10px;width:10px;background:${colorCheck};-moz-border-radius:50px;-webkit-border-radius:50px;border-radius:50px;display: inline-block;"></div> ${key.nombre.toUpperCase()}</td>`;
             trInfo += `<td>${moment(fechaSalidaView).format('YYYY-MM-DD hh:mm:ss A')}</td>`;
             trInfo += hEsperada + hReal + createdBy + btnActive + `</tr>`;
             //Fin pintar tabla

@@ -459,6 +459,13 @@ namespace KLS_WEB.Controllers.Travels
 
             return RedirectToAction("AddEdit", new { TravelId = section.TravelId, SectionId = 0 });
         }
+
+        [HttpGet]
+        public async Task<JsonResult> GetTiempoRuta(int RouteId)
+        {
+            var tiemporuta = await AppContext.Execute<dynamic>(MethodType.GET, Path.Combine(_UrlApi, $"GetTiempoRuta?RouteId={RouteId}"), null);
+            return Json(tiemporuta);
+        }
         #endregion
 
         #region Services

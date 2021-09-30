@@ -244,7 +244,7 @@ namespace KLS_API.Controllers.Demands
                     CarrierId = x.Transportista,
                     Carrier = _dbContext.Transportista.FirstOrDefault(y => y.id == x.Transportista).NombreComercial,
                     UnitId = x.IdServiceTypes,
-                    Unit = _dbContext.ServiceTypes.FirstOrDefault(y => y.Id == x.IdServiceTypes).Name,
+                    Unit = _dbContext.TravelServices.FirstOrDefault(y => y.Id == x.IdServiceTypes).Name,
                     Origin = string.Concat(_dbContext.Cat_Estado.FirstOrDefault(y => y.id == x.Estado_Origen).nombre.Trim(), "-",
                     _dbContext.Cat_Ciudad.FirstOrDefault(y => y.id == x.ciudad_Origen).nombre.Trim(), " (",
                     x.Tolerancia_Origen, " km)"),

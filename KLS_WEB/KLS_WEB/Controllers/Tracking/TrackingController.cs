@@ -94,6 +94,8 @@ namespace KLS_WEB.Controllers.Tracking
         public async Task<JsonResult> AddSectionComment([FromForm] AddSectionComment addSectionComment)
         {
             bool grupoMonitor = string.IsNullOrEmpty(addSectionComment.GrupoMonitor?.Trim());
+            bool emptyComment = string.IsNullOrEmpty(addSectionComment.Comment?.Trim());
+
             SectionCommentDTO newSectionComment = new SectionCommentDTO
             {
                 SectionId = addSectionComment.SectionId,
@@ -105,32 +107,36 @@ namespace KLS_WEB.Controllers.Tracking
 
             SectionComment sectionComment = await _appContext.Execute<SectionComment>(MethodType.POST, Path.Combine(_UrlApi, "AddSectionComment"), newSectionComment);
 
-            if (addSectionComment.File != null && sectionComment != null)
+            if (!emptyComment)
             {
-                string path = @DateTime.Now.ToString("yyyy/MM/dd") + "/" + sectionComment.Id + "/";
-                string ruta = @Path.Combine(_hostingEnvironment.WebRootPath + "/Resources/Monitoring/" + path);
 
-                if (!Directory.Exists(ruta))
+                if (addSectionComment.File != null && sectionComment != null)
                 {
-                    Directory.CreateDirectory(ruta);
-                }
+                    string path = @DateTime.Now.ToString("yyyy/MM/dd") + "/" + sectionComment.Id + "/";
+                    string ruta = @Path.Combine(_hostingEnvironment.WebRootPath + "/Resources/Monitoring/" + path);
 
-                foreach (var file in addSectionComment.File)
-                {
-                    Evidence evidence = new Evidence
+                    if (!Directory.Exists(ruta))
                     {
-                        SectionCommentId = sectionComment.Id,
-                        Name = file.FileName,
-                        Path = path,
-                        CreatedBy = HttpContext.Session.GetString("UserFN")
-                    };
+                        Directory.CreateDirectory(ruta);
+                    }
 
-                    Evidence newEvidence = await _appContext.Execute<Evidence>(MethodType.POST, Path.Combine(_UrlApi, "AddEvidence"), evidence);
-                    if (newEvidence != null)
+                    foreach (var file in addSectionComment.File)
                     {
-                        string nombreArchivo = string.Format("{0}{1:yyyyMMdd_HHmm_ss}{2}", Path.GetFileNameWithoutExtension(file.FileName), DateTime.Now, Path.GetExtension(file.FileName));
-                        string archivoPath = @Path.Combine(ruta, nombreArchivo);
-                        await SaveFile(file, archivoPath);
+                        Evidence evidence = new Evidence
+                        {
+                            SectionCommentId = sectionComment.Id,
+                            Name = file.FileName,
+                            Path = path,
+                            CreatedBy = HttpContext.Session.GetString("UserFN")
+                        };
+
+                        Evidence newEvidence = await _appContext.Execute<Evidence>(MethodType.POST, Path.Combine(_UrlApi, "AddEvidence"), evidence);
+                        if (newEvidence != null)
+                        {
+                            string nombreArchivo = string.Format("{0}{1:yyyyMMdd_HHmm_ss}{2}", Path.GetFileNameWithoutExtension(file.FileName), DateTime.Now, Path.GetExtension(file.FileName));
+                            string archivoPath = @Path.Combine(ruta, nombreArchivo);
+                            await SaveFile(file, archivoPath);
+                        }
                     }
                 }
             }
@@ -139,7 +145,8 @@ namespace KLS_WEB.Controllers.Tracking
             {
                 await _appContext.Execute<Section>(MethodType.POST, Path.Combine("Travels", "CreateOffer", addSectionComment.SectionId.ToString()), null);
             }
-            return Json(sectionComment);
+
+            return Json(true);
         }
 
         private async Task<bool> SaveFile(IFormFile file, string fullpath)
@@ -169,6 +176,19 @@ namespace KLS_WEB.Controllers.Tracking
             ICollection<Ruta_Has_Checkpoint> checkpoints = await _appContext.Execute<List<Ruta_Has_Checkpoint>>(MethodType.GET, Path.Combine(_UrlApi, $"GetCheckpoints?RouteId={RouteId}&SectionId={SectionId}"), null);
             return Json(checkpoints);
 
+        }
+
+        public async Task<JsonResult> GetGrupoMonitor()
+        {
+            var grupomonitor = await _appContext.Execute<List<object>>(MethodType.GET, Path.Combine(_UrlApi, "GetGrupoMonitor"), null);
+            return Json(grupomonitor);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetSectionStatus(int SectionId)
+        {
+            var status = await _appContext.Execute<dynamic>(MethodType.GET, Path.Combine(_UrlApi, $"GetSectionStatus?SectionId={SectionId}"), null);
+            return Json(status);
         }
         #endregion
 
