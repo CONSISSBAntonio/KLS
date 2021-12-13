@@ -28,6 +28,7 @@
                 <tr>
                     <th>País</th>
                     <th>ID SEPOMEX</th>
+                    <th>Clave SAT</th>
                     <th>Estado</th>
                     <th>Estatus</th>
                     <th>Acciones</th>
@@ -76,6 +77,10 @@
                                 <option value="2">Inactivo</option>
                             </select>
                         </div>
+                        <div class="col-md-3 pb-3">
+                            <label class="">Clave SAT</label>
+                            <input type="text" class="form-control" name="ClaveSat" id="claveSat" value="" required maxlength="10" />
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-dark guardar" style="width:20%;" id="btnAccion">
                         Guardar
@@ -102,7 +107,7 @@
             loadTable();
             $("#frmRegister").submit(function (event) {
                 event.preventDefault();
-                var jsonData = convertJson($("#frmRegister"));
+                var jsonData = convertJson($("#frmRegister"));                
                 if (parseInt($("#idEditar").val()) != 0) {
                     $.post("State/putState", jsonData, function (res) {
                         console.log(res);
@@ -148,6 +153,7 @@
                     let indice = dataState.findIndex(service => service.id === idEditar);
                     $("#nombre").val(dataState[indice].nombre);
                     $("#id_sepomex").val(dataState[indice].id_sepomex);
+                    $("#claveSat").val(dataState[indice].claveSat);
                     $('#estatus option[value="' + dataState[indice].estatus + '"]').attr("selected", true);
                     $('#id_pais option[value="' + dataState[indice].id_pais + '"]').attr("selected", true);
                     $("#modalDiv").modal("show");
@@ -193,6 +199,7 @@
                              <tr>
                                 <td>${catPais[indice].pais}</td>
                                 <td>${nCon(key.id_sepomex)}</td>
+                                <td>${nCon(key.claveSat)}</td>
                                 <td>${nCon(key.nombre)}</td>
                                 <td>`+ statusTable(key.estatus) + `</td>
                                 <td>

@@ -16,6 +16,9 @@ namespace KLS_API.Models
         public int cp { get; set; }
         [Column(TypeName = "varchar(50)")]
         public string nombre { get; set; }
+        [Required]
+        [Column(TypeName = "varchar(10)")]
+        public string ClaveSat { get; set; }
         public int estatus { get; set; }
     }
 }
