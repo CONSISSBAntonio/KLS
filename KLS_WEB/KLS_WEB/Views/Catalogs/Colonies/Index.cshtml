@@ -198,7 +198,7 @@
                 if (parseInt($("#id_estado").val()) != 0) {
                     if (parseInt($("#idEditar").val()) != 0) {
                         $.post("Colonies/putColonies", jsonData, function (res) {
-                            //loadTable();
+                            loadTable();
                             dToast("success", "Registro actualizado exitosamente.", "Registrado");
                             $(".guardar").attr("disabled", false);
                             //Table.draw();
@@ -208,7 +208,7 @@
                         });
                     } else {
                         $.post("Colonies/setColonies", jsonData, function (res) {
-                            //loadTable();
+                            loadTable();
                             //Table.draw();
                             dToast("success", "Se guardó el registro", "Registrado");
                             $(".guardar").attr("disabled", false);
